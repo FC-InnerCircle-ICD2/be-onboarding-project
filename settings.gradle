@@ -1,0 +1,5 @@
+rootProject.name = 'survey'
+include 'api'
+include 'db'
+include 'api'
+
