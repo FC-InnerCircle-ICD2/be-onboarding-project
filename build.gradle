@@ -38,6 +38,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+<<<<<<< HEAD
 
 bootJar {
 	enabled = false
@@ -46,3 +47,5 @@ bootJar {
 jar {
 	enabled = false
 }
+=======
+>>>>>>> origin/main
