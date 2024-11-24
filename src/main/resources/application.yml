@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: surveryProject
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger
+  override-with-generic-response: false
+logging:
+  level:
+    org:
+      springdoc: DEBUG
