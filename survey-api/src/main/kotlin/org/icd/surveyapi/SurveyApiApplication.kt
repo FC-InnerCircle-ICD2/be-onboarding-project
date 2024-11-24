@@ -1,11 +1,11 @@
-package org.icd.survey
+package org.icd.surveyapi
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SurveyApplication
+class SurveyApiApplication
 
 fun main(args: Array<String>) {
-	runApplication<SurveyApplication>(*args)
+	runApplication<SurveyApiApplication>(*args)
 }
