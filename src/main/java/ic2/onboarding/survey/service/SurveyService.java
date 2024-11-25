@@ -1,7 +1,6 @@
 package ic2.onboarding.survey.service;
 
 import ic2.onboarding.survey.repository.SurveyRepository;
-import ic2.onboarding.survey.global.ItemInputType;
 import ic2.onboarding.survey.dto.SurveyCreationRequest;
 import ic2.onboarding.survey.dto.SurveyCreationResponse;
 import ic2.onboarding.survey.entity.Survey;
@@ -36,7 +35,7 @@ public class SurveyService {
                         survey,
                         formItem.name(),
                         formItem.description(),
-                        ItemInputType.fromString(formItem.inputType()),
+                        formItem.inputTypeAsEnum(),
                         formItem.required(),
                         formItem.choicesAsString()))
                 .toList();
