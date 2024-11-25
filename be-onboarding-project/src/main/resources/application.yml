@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: be-onboarding-project
+
+  datasource:
+    url: jdbc:h2:mem:survey
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
