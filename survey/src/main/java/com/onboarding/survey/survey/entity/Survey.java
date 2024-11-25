@@ -9,10 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Entity
+@Builder
 public class Survey extends BaseEntity {
 
   @Id
@@ -22,6 +24,7 @@ public class Survey extends BaseEntity {
   private String name;
   private String description;
 
+  @Builder.Default
   @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Question> questions = new ArrayList<>();
 
