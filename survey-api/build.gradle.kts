@@ -9,7 +9,10 @@ plugins {
 extra["snippetsDir"] = file("build/generated-snippets")
 
 dependencies {
+    implementation("com.h2database:h2")
+    implementation(project(":survey-core"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 

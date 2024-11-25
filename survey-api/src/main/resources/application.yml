@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: info
+spring:
+  application:
+    name: survey-api
+  datasource:
+    url: jdbc:h2:mem:survey
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect

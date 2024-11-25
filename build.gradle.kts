@@ -22,7 +22,6 @@ repositories {
 
 extra["snippetsDir"] = file("build/generated-snippets")
 
-
 subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
