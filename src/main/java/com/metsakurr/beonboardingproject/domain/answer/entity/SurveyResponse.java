@@ -2,10 +2,7 @@ package com.metsakurr.beonboardingproject.domain.answer.entity;
 
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyResponse extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_idx", referencedColumnName = "idx", nullable = false)
     private Survey survey;
