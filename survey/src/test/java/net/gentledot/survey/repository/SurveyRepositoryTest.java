@@ -68,10 +68,10 @@ class SurveyRepositoryTest {
         assertThat(savedSurvey.getId()).isNotBlank();
         List<SurveyQuestion> questions = savedSurvey.getQuestions();
         assertThat(questions).hasSize(2);
-        assertThat(questions.get(0).getId()).isNotNull();
-        List<SurveyQuestionOption> options = questions.get(0).getOptions();
+        assertThat(questions.getFirst().getId()).isNotNull();
+        List<SurveyQuestionOption> options = questions.getFirst().getOptions();
         assertThat(options).hasSize(2);
-        assertThat(options.get(0).getId()).isNotNull();
-        assertThat(options.get(0).getOptionText()).isEqualTo("option1");
+        assertThat(options.getFirst().getId()).isNotNull();
+        assertThat(options.getFirst().getOptionText()).isEqualTo("option1");
     }
 }
