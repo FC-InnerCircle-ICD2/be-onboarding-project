@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = "surveyQuestion")
 @Entity
 public class SurveyQuestionOption {
     @Id
