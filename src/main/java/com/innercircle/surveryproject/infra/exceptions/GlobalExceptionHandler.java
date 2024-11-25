@@ -1,5 +1,6 @@
 package com.innercircle.surveryproject.infra.exceptions;
 
+import com.innercircle.surveryproject.modules.dto.ResponseUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,10 +13,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 사용자 입력 오류시 해당에러 리턴
+     *
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(InvalidInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> invalidInputException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity invalidInputException(Exception ex) {
+        return ResponseUtils.error(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 }

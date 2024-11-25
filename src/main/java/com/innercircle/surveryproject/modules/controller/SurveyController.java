@@ -1,5 +1,6 @@
 package com.innercircle.surveryproject.modules.controller;
 
+import com.innercircle.surveryproject.modules.dto.ResponseUtils;
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyDto;
 import com.innercircle.surveryproject.modules.service.SurveyService;
@@ -33,15 +34,15 @@ public class SurveyController {
      */
     @Operation(summary = "Get example data", description = "Returns example data for demonstration purposes")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved data"),
+        @ApiResponse(responseCode = "200", description = "성공하였습니다."),
         @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @PostMapping
-    public ResponseEntity<SurveyDto> createSurvey(@RequestBody @Validated SurveyCreateDto surveyCreateDto) {
+    public ResponseEntity createSurvey(@RequestBody @Validated SurveyCreateDto surveyCreateDto) {
 
         SurveyDto surveyDto = surveyService.createSurvey(surveyCreateDto);
 
-        return ResponseEntity.ok(surveyDto);
+        return ResponseUtils.created(surveyDto, "성공하였습니다.");
     }
 
 }
