@@ -5,20 +5,29 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.survey.db.surveyitem.ItemInputType;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SurveyRequest {
+public class SurveyItemRequest {
+
+    @NotNull
+    private Long surveyId;
 
     @NotBlank
-    private String title;
+    private String name;
 
-    @NotBlank
+
     private String description;
 
     @NotNull
-    private List<String> items;
+    private ItemInputType inputType;
+
+    @NotNull
+    private Boolean required;
+
+    private List<String> selectOptions;
 }
