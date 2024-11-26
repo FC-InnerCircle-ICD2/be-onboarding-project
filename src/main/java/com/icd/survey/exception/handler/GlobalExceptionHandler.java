@@ -1,8 +1,10 @@
 package com.icd.survey.exception.handler;
 
+import com.icd.survey.exception.response.ExceptionResponse;
+import com.icd.survey.exception.response.emums.ExceptionResponseType;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,22 +17,47 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException e) {
+        logError(e);
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponse
+                        .builder()
+                        .message(e.getMessage())
+                        .code(ExceptionResponseType.ENTITY_NOT_FNOUND.getCode())
+                        .build());
+    }
+
     /* IllegalArgumentException Handler*/
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
-        log.error("IllegalArgumentException : {}", e.getMessage());
+        logError(e);
         return ResponseEntity
                 .badRequest()
-                .body(new ExceptionResponse(e.getMessage()));
+                .body(ExceptionResponse
+                        .builder()
+                        .message(e.getMessage())
+                        .code(ExceptionResponseType.ILLEGAL_ARGUMENT.getCode())
+                        .build());
     }
 
     /* Validation Handler*/
     @ExceptionHandler({MethodArgumentNotValidException.class})
     protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException : {}", e.getMessage());
+        logError(e);
         return ResponseEntity
                 .badRequest()
-                .body(new ExceptionResponse(createValidationMessage(e.getBindingResult())));
+                .body(ExceptionResponse
+                        .builder()
+                        .message(createValidationMessage(e.getBindingResult()))
+                        .code(ExceptionResponseType.VALIDATION_EXCEPTION.getCode())
+                        .build()
+                );
+    }
+
+    private void logError(Exception e) {
+        log.error("{} : {}", e.getClass().getSimpleName(), e.getMessage());
     }
 
     private static String createValidationMessage(BindingResult result) {
