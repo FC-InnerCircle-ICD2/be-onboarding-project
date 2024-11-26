@@ -1,5 +1,6 @@
 package com.metsakurr.beonboardingproject.domain.survey.service;
 
+import com.metsakurr.beonboardingproject.domain.survey.dto.RegistSurveyResponse;
 import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyRequest;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Option;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
@@ -18,7 +19,7 @@ public class SurveyService {
     private final OptionRepository optionRepository;
     private final QuestionRepository questionRepository;
 
-    public Survey regist(SurveyRequest request) {
+    public RegistSurveyResponse regist(SurveyRequest request) {
         Survey survey = Survey.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -42,7 +43,7 @@ public class SurveyService {
 
             questionRepository.save(question);
         });
-        return surveyRepository.save(survey);
+        return new RegistSurveyResponse(surveyRepository.save(survey));
     }
 
 }
