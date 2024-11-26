@@ -15,6 +15,7 @@ import java.util.List;
 @ToString
 public class SurveyItemRequest {
 
+    private Long itemSeq;
     @NotBlank(message = "항목의 이름을 입력해 주세요.")
     @Size(min = 1, max = 255, message = "설문조사 이름의 길이를 확인하세요.")
     private String itemName;

@@ -20,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class SurveyService {
-    private static final String TEST = "TEST";
+
     private final SurveyRepository surveyRepository;
     private final SurveyItemRepository surveyItemRepository;
     private final ResponseOptionRepository responseOptionRepository;
@@ -55,7 +55,7 @@ public class SurveyService {
 
             SurveyItem surveyItem = surveyItemRepository.save(surveyItemRequest);
 
-            if (itemRequest.isChoiceType()) {
+            if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
 
                 List<ItemOptionRequest> optionRequestList = itemRequest.getOptionList();
 

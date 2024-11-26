@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ItemOptionRequest {
+    private Long optionSeq;
     private String option;
 
     public void validationCheck() {

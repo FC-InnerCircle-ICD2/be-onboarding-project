@@ -18,6 +18,9 @@ import java.util.List;
 @ToString
 public class SurveyRequest {
 
+    private Long surveySeq;
+    private String ipAddress;
+
     @NotBlank(message = "설문조사 이름을 입력해 주세요.")
     @Size(min = 1, max = 255, message = "설문조사 이름의 길이는 최소 1 ~ 최대 255 자 입니다.")
     private String surveyName;
@@ -41,7 +44,7 @@ public class SurveyRequest {
                 .builder()
                 .surveyName(this.surveyName)
                 .surveyDescription(this.surveyDescription)
-                .ipAddress(CommonUtils.getRequestIp())
+                .ipAddress(this.ipAddress == null ? CommonUtils.getRequestIp() : this.ipAddress)
                 .build();
     }
 }

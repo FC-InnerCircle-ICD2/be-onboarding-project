@@ -1,5 +1,6 @@
 package com.icd.survey.api.entity.survey;
 
+import com.icd.survey.api.dto.survey.request.SurveyRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,4 +37,14 @@ public class Survey extends BaseEntity {
 
     @OneToMany(mappedBy = "survey")
     private List<SurveyItem> surbeyItemList = new ArrayList<>();
+
+    public SurveyRequest of() {
+        return SurveyRequest
+                .builder()
+                .surveySeq(this.surveySeq)
+                .surveyName(this.surveyName)
+                .surveyDescription(this.surveyDescription)
+                .ipAddress(this.ipAddress)
+                .build();
+    }
 }
