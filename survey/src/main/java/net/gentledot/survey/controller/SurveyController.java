@@ -4,6 +4,7 @@ import net.gentledot.survey.dto.common.ServiceResponse;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.response.SurveyCreateResponse;
 import net.gentledot.survey.service.SurveyService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ServiceResponse<SurveyCreateResponse> createSurvey(SurveyCreateRequest surveyRequest) {
-        return ServiceResponse.success(surveyService.createSurvey(surveyRequest));
+    public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(SurveyCreateRequest surveyRequest) {
+        return ResponseEntity.ok(ServiceResponse.success(surveyService.createSurvey(surveyRequest)));
     }
 }
