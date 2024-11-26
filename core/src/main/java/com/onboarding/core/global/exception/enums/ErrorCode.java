@@ -8,7 +8,9 @@ public enum ErrorCode {
   INTERNAL_SERVER_ERROR("Internal server error"),
   INVALID_TYPE_VALUE("Invalid type value"),
   HANDLE_ACCESS_DENIED("Access is denied"),
-  INVALID__REQUEST("Invalid request");
+  INVALID__REQUEST("Invalid request"),
+  MUST_BE_CHOICES("Choices must be provided for single or multiple choice questions."),
+  SURVEY_CANT_MORE_THAN_10("A survey cannot have more than 10 questions");
 
   private final String message;
 

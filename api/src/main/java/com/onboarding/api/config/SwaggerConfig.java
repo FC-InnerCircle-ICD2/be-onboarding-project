@@ -1,4 +1,4 @@
-package com.onboarding.core.global.config;
+package com.onboarding.api.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.context.annotation.Configuration;

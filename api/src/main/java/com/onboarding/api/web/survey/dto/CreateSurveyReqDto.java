@@ -25,6 +25,7 @@ public record CreateSurveyReqDto(
             .isRequired(question.isRequired())
             .description(question.description())
             .orderIndex(question.orderIndex())
+            .choices(question.choices())
             .build()).toList();
   }
 }
