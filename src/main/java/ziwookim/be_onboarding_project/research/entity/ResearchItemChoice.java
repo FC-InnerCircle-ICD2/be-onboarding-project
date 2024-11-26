@@ -3,28 +3,23 @@ package ziwookim.be_onboarding_project.research.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
-@Table(name = "RESEARCH")
+@Table(name = "RESEARCHITEMCHOICE")
 @Getter
 @Setter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(access = AccessLevel.PROTECTED)
-@ToString(of = {"id", "title", "description"})
-public class Research {
+@ToString(of = {"id", "content"})
+public class ResearchItemChoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String title;
+    @ManyToOne
+    private ResearchItem researchItem;
 
     @Column
-    private String description;
-
-    @OneToMany
-    private List<ResearchItem> researchItems;
+    private String content;
 }
