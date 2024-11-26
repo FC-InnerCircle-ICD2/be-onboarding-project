@@ -1,6 +1,8 @@
 package com.onboarding.survey.survey.entity;
 
 import com.onboarding.core.global.entity.BaseEntity;
+import com.onboarding.core.global.exception.CustomException;
+import com.onboarding.core.global.exception.enums.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,9 @@ public class Survey extends BaseEntity {
   }
 
   public void addQuestion(Question question) {
+    if (questions.size() > 10) {
+      throw new CustomException(ErrorCode.SURVEY_CANT_MORE_THAN_10);
+    }
     questions.add(question);
     question.setSurvey(this);
   }
