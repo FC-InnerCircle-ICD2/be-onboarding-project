@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.brinst.surveycommon.dto.SurveyDTO;
-import org.springframework.util.CollectionUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,16 +25,29 @@ public class Survey {
 	private Long id;
 	private String name;
 	private String description;
-	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
-	private List<SurveyQuestion> surveyQuestions = new ArrayList<>();
+	private int version;
+	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SurveyVersion> surveyVersions = new ArrayList<>();
 
 	public Survey(SurveyDTO.ReqDTO surveyReqDTO) {
 		if (surveyReqDTO != null) {
 			this.name = surveyReqDTO.getName();
 			this.description = surveyReqDTO.getDescription();
-			if (!CollectionUtils.isEmpty(surveyReqDTO.getItemList())) {
-				this.surveyQuestions.addAll(surveyReqDTO.getItemList().stream().map(SurveyQuestion::new).toList());
-			}
+			this.version = addVersion();
+			this.surveyVersions.add(new SurveyVersion(this.version, surveyReqDTO.getItemList(), this));
 		}
+	}
+
+	public void modifySurvey(SurveyDTO.ReqDTO surveyReqDTO) {
+		if (surveyReqDTO != null) {
+			this.name = surveyReqDTO.getName();
+			this.description = surveyReqDTO.getDescription();
+			this.version = addVersion();
+			this.surveyVersions.add(new SurveyVersion(this.version, surveyReqDTO.getItemList(), this));
+		}
+	}
+
+	private int addVersion() {
+		return this.version + 1;
 	}
 }

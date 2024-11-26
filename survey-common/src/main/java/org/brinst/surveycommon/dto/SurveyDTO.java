@@ -6,24 +6,37 @@ import org.brinst.surveycommon.enums.OptionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class SurveyDTO {
 
 	@Getter
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class ReqDTO {
-		private final String name;
-		private final String description;
-		private final List<ReqItemDTO> itemList;
+		private String name;
+		private String description;
+		private List<ItemDTO> itemList;
 	}
 
 	@Getter
+	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class ReqItemDTO {
-		private final String name;
-		private final String description;
-		private final boolean required;
-		private final OptionType type;
-		private final List<String> options;
+	public static class ItemDTO {
+		private String name;
+		private String description;
+		private boolean required;
+		private OptionType type;
+		private List<String> options;
+	}
+
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ResDTO {
+		private String name;
+		private String description;
+		private int version;
+		private List<ItemDTO> itemList;
 	}
 }

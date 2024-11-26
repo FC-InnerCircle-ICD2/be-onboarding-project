@@ -28,23 +28,24 @@ public class SurveyQuestion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private long version;
 	private String name;
 	private String description;
 	private boolean required;
 	@Enumerated(EnumType.STRING)
 	private OptionType optionType;
 	@ManyToOne
-	private Survey survey;
-	@OneToMany(mappedBy = "surveyQuestion", cascade = CascadeType.ALL)
-	private List<SurveyOption> options = new ArrayList<>();
+	private SurveyVersion surveyVersion;
+	@OneToMany(mappedBy = "surveyQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SurveyOption> surveyOptions = new ArrayList<>();
 
-	public SurveyQuestion(SurveyDTO.ReqItemDTO reqItemDTO) {
-		this.name = reqItemDTO.getName();
-		this.description = reqItemDTO.getDescription();
-		this.optionType = reqItemDTO.getType();
-		if (!CollectionUtils.isEmpty(reqItemDTO.getOptions())) {
-			this.options.addAll(reqItemDTO.getOptions().stream().map(SurveyOption::new).toList());
+	public SurveyQuestion(SurveyDTO.ItemDTO itemDTO, SurveyVersion surveyVersion) {
+		this.name = itemDTO.getName();
+		this.description = itemDTO.getDescription();
+		this.optionType = itemDTO.getType();
+		this.surveyVersion = surveyVersion;
+		if (!CollectionUtils.isEmpty(itemDTO.getOptions())) {
+			this.surveyOptions.addAll(itemDTO.getOptions().stream().map(option
+				-> new SurveyOption(option, this)).toList());
 		}
 	}
 }

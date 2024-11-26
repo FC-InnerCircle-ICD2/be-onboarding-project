@@ -3,7 +3,6 @@ package org.brinst.surveycore.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.brinst.surveycommon.dto.SurveyDTO;
 import org.brinst.surveycommon.enums.OptionType;
@@ -42,7 +41,7 @@ public class SurveyServiceTests {
 	@DisplayName("단답형 설문조사를 추가 할 수 있다.")
 	void test2() {
 		//given
-		SurveyDTO.ReqItemDTO item1 = new SurveyDTO.ReqItemDTO("단답형1", "단답형1의 설명입니다.", true, OptionType.SHORT_ANSWER,
+		SurveyDTO.ItemDTO item1 = new SurveyDTO.ItemDTO("단답형1", "단답형1의 설명입니다.", true, OptionType.SHORT_ANSWER,
 			null);
 		SurveyDTO.ReqDTO reqDTO = new SurveyDTO.ReqDTO("test", "test description", List.of(
 			item1
@@ -65,14 +64,14 @@ public class SurveyServiceTests {
 	@DisplayName("여러개의 단답형 장문형 설문조사를 추가 할 수 있다.")
 	void test3() {
 		//given
-		SurveyDTO.ReqItemDTO item1 = new SurveyDTO.ReqItemDTO("단답형1", "단답형1의 설명입니다.", true, OptionType.SHORT_ANSWER,
+		SurveyDTO.ItemDTO item1 = new SurveyDTO.ItemDTO("단답형1", "단답형1의 설명입니다.", true, OptionType.SHORT_ANSWER,
 			null);
-		SurveyDTO.ReqItemDTO item2 = new SurveyDTO.ReqItemDTO("단답형2", "단답형2의 설명입니다.", true, OptionType.SHORT_ANSWER,
+		SurveyDTO.ItemDTO item2 = new SurveyDTO.ItemDTO("단답형2", "단답형2의 설명입니다.", true, OptionType.SHORT_ANSWER,
 			null);
-		SurveyDTO.ReqItemDTO item3 = new SurveyDTO.ReqItemDTO("장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1",
+		SurveyDTO.ItemDTO item3 = new SurveyDTO.ItemDTO("장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1장문형1",
 			"장문형1의 설명입니다.", false, OptionType.LONG_ANSWER,
 			null);
-		SurveyDTO.ReqItemDTO item4 = new SurveyDTO.ReqItemDTO("장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2",
+		SurveyDTO.ItemDTO item4 = new SurveyDTO.ItemDTO("장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2장문형2",
 			"장문형2의 설명입니다.", true, OptionType.LONG_ANSWER,
 			null);
 		SurveyDTO.ReqDTO reqDTO = new SurveyDTO.ReqDTO("test", "test description", List.of(

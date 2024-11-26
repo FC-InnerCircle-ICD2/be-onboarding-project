@@ -19,7 +19,8 @@ public class SurveyOption {
 	@ManyToOne
 	private SurveyQuestion surveyQuestion;
 
-	public SurveyOption(String option) {
+	public SurveyOption(String option, SurveyQuestion surveyQuestion) {
 		this.option = option;
+		this.surveyQuestion = surveyQuestion;
 	}
 }
