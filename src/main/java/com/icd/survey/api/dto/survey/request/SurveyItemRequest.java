@@ -1,11 +1,11 @@
-package com.icd.survey.api.dto.request;
+package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.enums.ResponseType;
+import com.icd.survey.api.entity.survey.SurveyItem;
+import com.icd.survey.api.enums.survey.ResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -31,7 +31,8 @@ public class SurveyItemRequest {
 
     private List<ItemOptionRequest> optionList = new ArrayList<>();
 
-    private Boolean isEssential;
+    @Builder.Default
+    private Boolean isEssential = Boolean.FALSE;
 
     public void validationCheck() throws IllegalArgumentException {
         if (Boolean.TRUE.equals(isChoiceType()) && optionList.isEmpty()) {
@@ -42,5 +43,15 @@ public class SurveyItemRequest {
     public Boolean isChoiceType() {
         return this.itemResponseType.equals(ResponseType.SINGLE_CHOICE.getType())
                 || this.itemResponseType.equals(ResponseType.MULTI_CHOICE.getType());
+    }
+
+    public SurveyItem toEntity() {
+        return SurveyItem
+                .builder()
+                .itemName(this.itemName)
+                .itemDescription(this.itemDescription)
+                .itemResponseType(this.itemResponseType)
+                .isEssential(this.isEssential)
+                .build();
     }
 }

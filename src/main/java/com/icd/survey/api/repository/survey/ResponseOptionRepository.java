@@ -1,6 +1,6 @@
-package com.icd.survey.api.repository;
+package com.icd.survey.api.repository.survey;
 
-import com.icd.survey.api.entity.ItemResponseOption;
+import com.icd.survey.api.entity.survey.ItemResponseOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,12 @@
-package com.icd.survey.api.repository;
+package com.icd.survey.api.repository.survey;
 
-import com.icd.survey.api.entity.Survey;
+import com.icd.survey.api.entity.survey.Survey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
+    Optional<Survey> findBySurveyNameAndIpAddress(Survey survey);
 }

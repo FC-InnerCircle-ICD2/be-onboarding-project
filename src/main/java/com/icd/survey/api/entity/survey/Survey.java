@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity;
+package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.base.BaseEntity;
 import jakarta.persistence.*;

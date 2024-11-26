@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity;
+package com.icd.survey.api.entity.survey;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,16 +12,18 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "item_response")
-public class ItemResponse {
+@Table(name = "item_response_option")
+public class ItemResponseOption {
     @Id
-    @Column(name = "response_seq", nullable = false)
+    @Column(name = "option_seq", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long responseSeq;
-    @Column(name = "response", nullable = false)
-    private String response;
+    private Long optionSeq;
+    @Column(name = "option", nullable = false)
+    private String option;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "item_seq")
     private SurveyItem surveyItem;
+
 }

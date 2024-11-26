@@ -1,4 +1,4 @@
-package com.icd.survey.api.enums;
+package com.icd.survey.api.enums.survey;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

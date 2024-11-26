@@ -1,5 +1,6 @@
 package com.icd.survey.exception.handler;
 
+import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.ExceptionResponse;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +18,19 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ApiException.class)
+    protected ResponseEntity<ExceptionResponse> handleCustomApiException(ApiException e) {
+        logError(e);
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponse
+                        .builder()
+                        .code(e.getType().getCode())
+                        .message(e.getMessage())
+                        .build()
+                );
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException e) {
         logError(e);
@@ -29,7 +43,6 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    /* IllegalArgumentException Handler*/
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
         logError(e);

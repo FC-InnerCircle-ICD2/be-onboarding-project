@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity;
+package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.base.BaseEntity;
 import jakarta.persistence.*;
@@ -37,6 +37,7 @@ public class SurveyItem extends BaseEntity {
     private Boolean isEssential = Boolean.FALSE;
 
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "survey_seq", nullable = false)
     private Survey survey;
@@ -45,4 +46,6 @@ public class SurveyItem extends BaseEntity {
     private List<ItemResponseOption> responseOptionList = new ArrayList<>();
     @OneToMany(mappedBy = "surveyItem", fetch = FetchType.LAZY)
     private List<ItemResponse> responseList = new ArrayList<>();
+
+
 }
