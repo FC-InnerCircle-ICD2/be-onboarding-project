@@ -14,7 +14,7 @@ public class Option {
 
     @JsonIgnore
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "question_idx", referencedColumnName = "idx")
     private Question question;
 
@@ -22,7 +22,11 @@ public class Option {
     private String name;
 
     @Builder
-    public Option(String name) {
+    public Option(
+            Question question,
+            String name
+    ) {
+        this.question = question;
         this.name = name;
     }
 }
