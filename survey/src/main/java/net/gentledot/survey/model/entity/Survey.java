@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.model.entity.common.BaseEntity;
 
 import java.util.List;
 import java.util.UUID;

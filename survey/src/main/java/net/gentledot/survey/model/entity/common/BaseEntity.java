@@ -1,4 +1,4 @@
-package net.gentledot.survey.model.entity;
+package net.gentledot.survey.model.entity.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
