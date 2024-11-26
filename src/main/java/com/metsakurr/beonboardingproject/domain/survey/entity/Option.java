@@ -1,9 +1,8 @@
 package com.metsakurr.beonboardingproject.domain.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "option")
 @Getter
@@ -13,10 +12,17 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @JsonIgnore
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_idx", referencedColumnName = "idx")
     private Question question;
 
     @Column(nullable = false)
     private String name;
+
+    @Builder
+    public Option(String name) {
+        this.name = name;
+    }
 }

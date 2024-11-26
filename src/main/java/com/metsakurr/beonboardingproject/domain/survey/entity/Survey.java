@@ -3,10 +3,12 @@ package com.metsakurr.beonboardingproject.domain.survey.entity;
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "survey")
@@ -26,6 +28,19 @@ public class Survey extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
+    public void addQuestion(Question question) {
+        question.setSurvey(this);
+        this.questions.add(question);
+    }
+
+    @Builder
+    public Survey(
+            String name,
+            String description
+    ) {
+        this.name = name;
+        this.description = description;
+    }
 }

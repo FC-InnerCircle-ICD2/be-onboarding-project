@@ -1,12 +1,14 @@
 package com.metsakurr.beonboardingproject.domain.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "question")
 @Getter
@@ -16,6 +18,8 @@ public class Question extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @JsonIgnore
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_idx", referencedColumnName = "idx", nullable = false)
     private Survey survey;
@@ -36,4 +40,26 @@ public class Question extends BaseEntity {
     @ColumnDefault("false")
     @Column(name = "required_yn", nullable = false)
     private boolean isRequired;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    private List<Option> options = new ArrayList<>();
+
+    public void addOption(Option option) {
+        option.setQuestion(this);
+        this.options.add(option);
+    }
+
+    @Builder
+    public Question(
+            Survey survey,
+            String name,
+            String description,
+            QuestionType questionType
+    ) {
+        this.survey = survey;
+        this.name = name;
+        this.description = description;
+        this.questionType = questionType;
+    }
 }
+
