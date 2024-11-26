@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Survey extends BaseEntity {
 
@@ -34,8 +35,15 @@ public class Survey extends BaseEntity {
     }
 
 
+    public void update(String name, String description) {
+
+        this.name = name;
+        this.description = description;
+    }
+
+
     public void addItem(SurveyItem item) {
-        items.add(item);
+        this.items.add(item);
         item.setSurvey(this);
     }
 
@@ -47,10 +55,17 @@ public class Survey extends BaseEntity {
     }
 
 
-    public void removeItem(SurveyItem item) {
-        if (items.remove(item)) {
-            item.setSurvey(null);
-        }
+    public void removeNotContainedItemsInIdSet(Set<Long> ids) {
+
+        this.items.removeIf(storedItem -> !ids.contains(storedItem.getId()));
     }
 
+
+    public void updateItemInfo(Long targetId, SurveyItem newItemInfo) {
+
+        this.items.stream()
+                .filter(storedItem -> storedItem.getId().equals(targetId))
+                .findAny()
+                .ifPresent(storedItem -> storedItem.update(newItemInfo));
+    }
 }
