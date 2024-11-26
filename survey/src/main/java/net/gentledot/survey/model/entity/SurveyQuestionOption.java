@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,5 +32,9 @@ public class SurveyQuestionOption {
 
     public static SurveyQuestionOption of(String optionText) {
         return new SurveyQuestionOption(null, optionText, null);
+    }
+
+    public static SurveyQuestionOption from(SurveyQuestionOptionRequest surveyQuestionOptionRequest) {
+        return SurveyQuestionOption.of(surveyQuestionOptionRequest.getOptionText());
     }
 }

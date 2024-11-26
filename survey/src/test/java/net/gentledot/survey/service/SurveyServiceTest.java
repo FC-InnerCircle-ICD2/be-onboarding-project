@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SurveyServiceTest {
     SurveyGenerateRequest surveyRequest;
+    ;
 
     @BeforeEach
     void setUp() {
@@ -56,7 +57,36 @@ class SurveyServiceTest {
         );
 
         assertThat(survey).isNotNull();
+        assertThat(survey.getId()).isNotBlank();
+        assertThat(survey.getName()).isEqualTo(surveyRequest.getName());
+        assertThat(survey.getDescription()).isEqualTo(surveyRequest.getDescription());
+    }
 
+    @DisplayName("service 구상 및 제약조건 설정 로직 구상 - SurveyRequest 로 Question과 Option 생성되도록 변경")
+    @Test
+    void createServiceTestVer2() {
+        Survey survey = generateSurvey();
+
+        assertThat(survey).isNotNull();
+        assertThat(survey.getId()).isNotBlank();
+        assertThat(survey.getName()).isEqualTo(surveyRequest.getName());
+        assertThat(survey.getDescription()).isEqualTo(surveyRequest.getDescription());
+    }
+
+    private Survey generateSurvey() {
+        List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
+
+        return Survey.of(
+                surveyRequest.getName(),
+                surveyRequest.getDescription(),
+                questions
+        );
+    }
+
+    private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
+        return questionRequests.stream()
+                .map(SurveyQuestion::from)
+                .collect(Collectors.toList());
     }
 
     private SurveyQuestion convertToSurveyQuestion(SurveyQuestionRequest questionRequest) {
@@ -77,5 +107,4 @@ class SurveyServiceTest {
     private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest) {
         return SurveyQuestionOption.of(optionRequest.getOptionText());
     }
-
 }

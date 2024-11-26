@@ -16,10 +16,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,4 +53,17 @@ public class SurveyQuestion {
         return surveyQuestion;
     }
 
+    public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {
+        List<SurveyQuestionOption> options = questionRequest.getOptions().stream()
+                .map(SurveyQuestionOption::from)
+                .collect(Collectors.toList());
+
+        return SurveyQuestion.of(
+                questionRequest.getItemName(),
+                questionRequest.getItemDescription(),
+                questionRequest.getItemType(),
+                questionRequest.getRequired(),
+                options
+        );
+    }
 }
