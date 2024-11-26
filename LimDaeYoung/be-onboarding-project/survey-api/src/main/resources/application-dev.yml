@@ -6,10 +6,26 @@ server:
       enabled: false
       charset: UTF-8
       force: true
+  error:
+    path: /surveyError
+    whitelabel:
+      enabled: false
 
-pring:
-  ## JPA Setting Info
+spring:
+  datasource:
+    url: jdbc:h2:mem:surveyDb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+#      schema: classpath:h2/schema.sql
+#      data: classpath:h2/data.sql
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create  # option type: create, create-drop, update, validate, none
     properties:
@@ -18,8 +34,7 @@ pring:
         show_sql: true  # sql 쿼리를 보여줍니다.
         format_sql: true  # sql query formatting
         use_sql_comments: true  # sql 쿼리의 추가정보를 보여줍니다.
-  jackson:
-    property-naming-strategy: SNAKE_CASE
+        default_batch_fetch_size: 1000
 
 logging:
   level:
