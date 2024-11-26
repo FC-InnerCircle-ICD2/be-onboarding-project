@@ -1,4 +1,4 @@
-package org.icd.surveyapi.config
+package org.icd.surveyapi.support.config
 
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Configuration
