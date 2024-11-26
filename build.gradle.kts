@@ -19,10 +19,18 @@ subprojects {
     apply(plugin = "java")
 
     dependencies {
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-        implementation("org.springframework.boot:spring-boot-starter-web")
-        runtimeOnly("com.h2database:h2")
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.4.0")
+        implementation("org.springframework.boot:spring-boot-starter-web:3.4.0")
+        implementation("org.projectlombok:lombok:1.18.36")
+
+        implementation("org.apache.commons:commons-lang3:3.17.0")
+        implementation("org.apache.commons:commons-collections4:4.4")
+
+        annotationProcessor("org.projectlombok:lombok:1.18.36")
+
+        runtimeOnly("com.h2database:h2:2.3.232")
+
+        testImplementation("org.springframework.boot:spring-boot-starter-test:3.4.0")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
