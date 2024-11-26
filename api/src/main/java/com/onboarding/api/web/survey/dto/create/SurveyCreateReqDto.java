@@ -1,25 +1,25 @@
-package com.onboarding.api.web.survey.dto;
+package com.onboarding.api.web.survey.dto.create;
 
-import com.onboarding.survey.survey.dto.QuestionDto;
-import com.onboarding.survey.survey.dto.SurveyObjectDto;
+import com.onboarding.survey.survey.dto.QuestionObject;
+import com.onboarding.survey.survey.dto.SurveyObject;
 import java.util.List;
 
-public record CreateSurveyReqDto(
+public record SurveyCreateReqDto(
     String name,
     String description,
-    List<CreateQuestionReqDto> questions
+    List<QuestionCreateReqDto> questions
 ) {
-  public SurveyObjectDto surveyObjectOf() {
-    return SurveyObjectDto.builder()
+  public SurveyObject surveyObjectOf() {
+    return SurveyObject.builder()
         .surveyName(name)
         .surveyDescription(description)
         .questions(questionOf())
         .build();
   }
 
-  public List<QuestionDto> questionOf() {
+  public List<QuestionObject> questionOf() {
     return questions.stream()
-        .map(question -> QuestionDto.builder()
+        .map(question -> QuestionObject.builder()
             .title(question.title())
             .type(question.type())
             .isRequired(question.isRequired())
