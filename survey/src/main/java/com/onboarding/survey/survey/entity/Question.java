@@ -52,6 +52,7 @@ public class Question extends BaseEntity {
   @ElementCollection
   @CollectionTable(name = "question_choices", joinColumns = @JoinColumn(name = "question_id"))
   @Column(name = "choice")
+  @Builder.Default
   private List<String> choices = new ArrayList<>();
 
   public Question() {

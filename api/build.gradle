@@ -1,4 +1,9 @@
-// api 모듈 build.gradle
+plugins {
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
 dependencies {
     implementation project(':survey')
     implementation project(':response')
@@ -8,9 +13,17 @@ dependencies {
 }
 
 bootJar {
-    enabled = true
+    enabled = true // 실행 가능한 JAR 파일 생성
 }
 
 jar {
-    enabled = false
+    enabled = false // 일반 JAR 파일은 생성하지 않음
+}
+
+test {
+    exclude '**/*'
+}
+
+springBoot {
+    mainClass.set("com.onboarding.ApiApplication") // API 애플리케이션 메인 클래스 설정
 }

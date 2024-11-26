@@ -1,10 +1,21 @@
-// core 모듈 build.gradle
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
+bootJar {
+    enabled = false // 실행 가능한 JAR이 필요하지 않음
+}
+
 jar {
-    enabled = true
+    enabled = true // 일반 JAR은 활성화
+}
+
+test {
+    exclude '**/*'
 }
