@@ -1,0 +1,16 @@
+// api 모듈 build.gradle
+dependencies {
+    implementation project(':survey')
+    implementation project(':response')
+    implementation project(':core')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}

@@ -4,27 +4,14 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'com.onboarding'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+	group = 'com.onboarding'
+	version = '0.0.1-SNAPSHOT'
 
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-
-repositories {
-	// 외부 라이브러리를 다운로드할 저장소 추가
-	mavenCentral()
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation project(':api')
-	implementation project(':core')
-	implementation project(':survey')
-	implementation project(':response')
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	repositories {
+		// 외부 라이브러리를 다운로드할 저장소 추가
+		mavenCentral()
+	}
 }
 
 subprojects {
@@ -47,45 +34,3 @@ subprojects {
 	}
 }
 
-// API 모듈 설정
-project(':api') {
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation project(':survey')
-		implementation project(':response')
-	}
-}
-
-// Response 모듈 설정
-project(':response') {
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation project(':core')
-	}
-}
-
-// Survey 모듈 설정
-project(':survey') {
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		runtimeOnly 'com.h2database:h2'
-		implementation project(':core')
-	}
-}
-
-// Core 모듈 설정
-project(':core') {
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation 'org.springframework.boot:spring-boot-starter-validation'
-		runtimeOnly 'com.h2database:h2'
-	}
-}
-
-// JUnit 설정
-tasks.named('test') {
-	useJUnitPlatform()
-}
