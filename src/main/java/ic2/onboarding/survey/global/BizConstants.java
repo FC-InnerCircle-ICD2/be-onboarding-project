@@ -12,4 +12,10 @@ public final class BizConstants {
     public static final int MIN_DESCRIPTION_LENGTH = 2;
     public static final int MAX_DESCRIPTION_LENGTH = 500;
 
+    public static final int MIN_ITEMS_SIZE = 1;
+    public static final int MAX_ITEMS_SIZE = 10;
+
+    public static final int MIN_CHOICES_SIZE = 0;
+    public static final int MAX_CHOICES_SIZE = 5;
+
 }

@@ -27,6 +27,9 @@ public record SurveyFormItem(Long id,
                              @NotNull(message = "{required.notNull}")
                              Boolean required,
 
+                             @Size(min = BizConstants.MIN_CHOICES_SIZE,
+                                     max = BizConstants.MAX_CHOICES_SIZE,
+                                     message = "{choices.size}")
                              List<String> choices) {
 
     public static SurveyFormItem fromEntity(SurveyItem item) {
