@@ -77,6 +77,7 @@ class SurveyServiceTest {
         assertThat(survey.getDescription()).isEqualTo(surveyRequest.getDescription());
     }
 
+    @DisplayName("Survey 생성 요청 시 질문 없이 요청하는 경우 예외 발생")
     @Test
     void testFailWhenRequestWithNoQuestion() {
         SurveyGenerateRequest requestWithNoQuestions = SurveyGenerateRequest.builder()
@@ -87,14 +88,32 @@ class SurveyServiceTest {
 
         assertThatThrownBy(() -> generateSurvey(requestWithNoQuestions))
                 .isInstanceOf(SurveyCreationException.class);
+    }
 
+    @DisplayName("Survey 생성 요청 시 단일 또는 다중선택을 설정했음에도 옵션을 입력하지 않으면 예외 발생")
+    @Test
+    void createSurveyQuestionWithMultiSelectButNoOptions() {
+        SurveyGenerateRequest requestWithMultiSelectNoOptions = SurveyGenerateRequest.builder()
+                .name("test survey with multi-select question but no options")
+                .description("description")
+                .questions(List.of(
+                        SurveyQuestionRequest.builder()
+                                .itemName("question1")
+                                .itemDescription("question1 description")
+                                .itemType(SurveyItemType.MULTI_SELECT)
+                                .required(ItemRequired.REQUIRED)
+                                .options(Collections.emptyList())
+                                .build()
+                ))
+                .build();
+
+        assertThatThrownBy(() -> generateSurvey(requestWithMultiSelectNoOptions))
+                .isInstanceOf(SurveyCreationException.class);
     }
 
 
     private Survey generateSurvey(SurveyGenerateRequest surveyRequest) {
-        if (surveyRequest.getQuestions().isEmpty()) {
-            throw new SurveyCreationException(ServiceError.SURVEY_CREATION_INSUFFICIENT_QUESTIONS);
-        }
+        validateCreateRequest(surveyRequest);
 
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
 
@@ -103,6 +122,23 @@ class SurveyServiceTest {
                 surveyRequest.getDescription(),
                 questions
         );
+    }
+
+    private void validateCreateRequest(SurveyGenerateRequest surveyRequest) {
+        List<SurveyQuestionRequest> questions = surveyRequest.getQuestions();
+
+        if (questions == null) {
+            throw new SurveyCreationException(ServiceError.CREATION_INVALID_REQUEST);
+        } else if (questions.isEmpty() || questions.size() > 10) {
+            throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_QUESTIONS);
+        }
+
+        for (SurveyQuestionRequest question : questions) {
+            if ((question.getItemType() == SurveyItemType.SINGLE_SELECT || question.getItemType() == SurveyItemType.MULTI_SELECT)
+                && (question.getOptions() == null || question.getOptions().isEmpty())) {
+                throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_OPTIONS);
+            }
+        }
     }
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
