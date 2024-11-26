@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SurveyService {
+    public static final int MAXIMUM_QUESTION_COUNT = 10;
     private final SurveyRepository surveyRepository;
 
     public SurveyService(SurveyRepository surveyRepository) {
@@ -48,7 +49,7 @@ public class SurveyService {
 
         if (questions == null) {
             throw new SurveyCreationException(ServiceError.CREATION_INVALID_REQUEST);
-        } else if (questions.isEmpty() || questions.size() > 10) {
+        } else if (questions.isEmpty() || questions.size() > MAXIMUM_QUESTION_COUNT) {
             throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_QUESTIONS);
         }
 
