@@ -1,6 +1,6 @@
 package net.gentledot.survey.service;
 
-import net.gentledot.survey.dto.request.SurveyGenerateRequest;
+import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.exception.ServiceError;
@@ -22,12 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SurveyServiceTest {
-    SurveyGenerateRequest surveyRequest;
+    SurveyCreateRequest surveyRequest;
     ;
 
     @BeforeEach
     void setUp() {
-        surveyRequest = SurveyGenerateRequest.builder()
+        surveyRequest = SurveyCreateRequest.builder()
                 .name("test")
                 .description("survey description")
                 .questions(List.of(
@@ -80,7 +80,7 @@ class SurveyServiceTest {
     @DisplayName("Survey 생성 요청 시 질문 없이 요청하는 경우 예외 발생")
     @Test
     void testFailWhenRequestWithNoQuestion() {
-        SurveyGenerateRequest requestWithNoQuestions = SurveyGenerateRequest.builder()
+        SurveyCreateRequest requestWithNoQuestions = SurveyCreateRequest.builder()
                 .name("no questions!")
                 .description("description")
                 .questions(Collections.emptyList())
@@ -93,7 +93,7 @@ class SurveyServiceTest {
     @DisplayName("Survey 생성 요청 시 단일 또는 다중선택을 설정했음에도 옵션을 입력하지 않으면 예외 발생")
     @Test
     void createSurveyQuestionWithMultiSelectButNoOptions() {
-        SurveyGenerateRequest requestWithMultiSelectNoOptions = SurveyGenerateRequest.builder()
+        SurveyCreateRequest requestWithMultiSelectNoOptions = SurveyCreateRequest.builder()
                 .name("test survey with multi-select question but no options")
                 .description("description")
                 .questions(List.of(
@@ -112,7 +112,7 @@ class SurveyServiceTest {
     }
 
 
-    private Survey generateSurvey(SurveyGenerateRequest surveyRequest) {
+    private Survey generateSurvey(SurveyCreateRequest surveyRequest) {
         validateCreateRequest(surveyRequest);
 
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
@@ -124,7 +124,7 @@ class SurveyServiceTest {
         );
     }
 
-    private void validateCreateRequest(SurveyGenerateRequest surveyRequest) {
+    private void validateCreateRequest(SurveyCreateRequest surveyRequest) {
         List<SurveyQuestionRequest> questions = surveyRequest.getQuestions();
 
         if (questions == null) {

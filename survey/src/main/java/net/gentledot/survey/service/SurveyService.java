@@ -1,8 +1,9 @@
 package net.gentledot.survey.service;
 
 import jakarta.transaction.Transactional;
-import net.gentledot.survey.dto.request.SurveyGenerateRequest;
+import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
+import net.gentledot.survey.dto.response.SurveyCreateResponse;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyCreationException;
 import net.gentledot.survey.model.entity.Survey;
@@ -24,7 +25,7 @@ public class SurveyService {
     }
 
     @Transactional
-    public Survey createSurvey(SurveyGenerateRequest surveyRequest) {
+    public SurveyCreateResponse createSurvey(SurveyCreateRequest surveyRequest) {
         validateCreateRequest(surveyRequest);
 
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
@@ -35,7 +36,9 @@ public class SurveyService {
                 questions
         );
 
-        return surveyRepository.save(survey);
+        surveyRepository.save(survey);
+
+        return new SurveyCreateResponse(survey.getId(), survey.getCreatedAt());
     }
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
@@ -44,7 +47,7 @@ public class SurveyService {
                 .collect(Collectors.toList());
     }
 
-    private void validateCreateRequest(SurveyGenerateRequest surveyRequest) {
+    private void validateCreateRequest(SurveyCreateRequest surveyRequest) {
         List<SurveyQuestionRequest> questions = surveyRequest.getQuestions();
 
         if (questions == null) {

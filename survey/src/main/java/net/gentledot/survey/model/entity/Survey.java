@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 @ToString(exclude = "questions")
 @Entity
-public class Survey {
+public class Survey extends BaseEntity {
     @Id
     private String id;
     private String name;

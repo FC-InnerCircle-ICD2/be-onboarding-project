@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 @Getter
 @AllArgsConstructor
-public class SurveyGenerateRequest {
+public class SurveyCreateRequest {
     private String name;
     private String description;
     private List<SurveyQuestionRequest> questions;
