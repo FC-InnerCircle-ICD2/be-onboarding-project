@@ -6,10 +6,10 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record SurveyObjectDto(
+public record SurveyObject(
     String surveyName,
     String surveyDescription,
-    List<QuestionDto> questions
+    List<QuestionObject> questions
 ) {
   public Survey of(List<Question> questions) {
     return Survey.builder()

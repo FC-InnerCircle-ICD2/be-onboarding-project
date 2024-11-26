@@ -1,5 +1,7 @@
 package com.onboarding.survey.survey.entity;
 
+import static com.onboarding.survey.survey.entity.Survey.reorderQuestionsForNew;
+
 import com.onboarding.core.global.entity.BaseEntity;
 import com.onboarding.core.global.exception.CustomException;
 import com.onboarding.core.global.exception.enums.ErrorCode;
@@ -39,6 +41,7 @@ public class Question extends BaseEntity {
 
   private boolean isRequired;
 
+  @Setter
   private Integer orderIndex;
 
   @Setter
@@ -53,6 +56,46 @@ public class Question extends BaseEntity {
 
   public Question() {
   }
+
+  public void updateDetails(String title, String description, QuestionType type, boolean isRequired, List<String> choices) {
+    if (title != null && !title.isBlank()) {
+      this.title = title;
+    }
+    if (description != null && !description.isBlank()) {
+      this.description = description;
+    }
+    if (type != null) {
+      this.type = type;
+    }
+    this.isRequired = isRequired;
+
+    if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
+      if (choices == null || choices.isEmpty()) {
+        throw new CustomException(ErrorCode.MUST_BE_CHOICES);
+      }
+      this.choices = new ArrayList<>(choices);
+    }
+
+    // orderIndex가 변경될 경우 처리
+    if (orderIndex != null && !orderIndex.equals(this.orderIndex)) {
+      int oldOrderIndex = this.orderIndex;
+      int newOrderIndex = orderIndex;
+
+      // 기존 질문의 orderIndex를 업데이트하고, 변경된 순서를 재조정
+      survey.getQuestions().stream()
+          .filter(q -> q.getOrderIndex() >= newOrderIndex && !q.getId().equals(this.id))
+          .forEach(q -> q.setOrderIndex(q.getOrderIndex() + 1));
+
+      this.orderIndex = newOrderIndex;
+
+      // 기존 위치에 있던 질문들의 순서를 조정하여 중복 제거
+      survey.getQuestions().stream()
+          .filter(q -> q.getOrderIndex() > oldOrderIndex)
+          .forEach(q -> q.setOrderIndex(q.getOrderIndex() - 1));
+    }
+  }
+
+
 
   public Question(Long id, String title, String description, QuestionType type, boolean isRequired,
       Integer orderIndex, Survey survey, List<String> choices) {
