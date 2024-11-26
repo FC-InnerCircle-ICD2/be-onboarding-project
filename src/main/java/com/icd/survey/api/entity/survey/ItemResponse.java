@@ -1,5 +1,6 @@
 package com.icd.survey.api.entity.survey;
 
+import com.icd.survey.api.entity.dto.ItemResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -24,4 +25,12 @@ public class ItemResponse {
     @ManyToOne
     @JoinColumn(name = "item_seq")
     private SurveyItem surveyItem;
+
+    public ItemResponseDto of() {
+        return ItemResponseDto
+                .builder()
+                .responseSeq(this.responseSeq)
+                .response(this.response)
+                .build();
+    }
 }

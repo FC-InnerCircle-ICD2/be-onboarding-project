@@ -1,11 +1,14 @@
 package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.dto.survey.request.SurveyRequest;
+import com.icd.survey.api.dto.survey.request.SurveyUpdateRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
+import com.icd.survey.api.entity.dto.SurveyDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +41,22 @@ public class Survey extends BaseEntity {
     @OneToMany(mappedBy = "survey")
     private List<SurveyItem> surbeyItemList = new ArrayList<>();
 
-    public SurveyRequest of() {
-        return SurveyRequest
+    public SurveyDto of() {
+        return SurveyDto
                 .builder()
                 .surveySeq(this.surveySeq)
                 .surveyName(this.surveyName)
                 .surveyDescription(this.surveyDescription)
                 .ipAddress(this.ipAddress)
                 .build();
+    }
+
+    public void update(SurveyUpdateRequest request) {
+        if (StringUtils.hasText(request.getSurveyName())) {
+            this.surveyName = request.getSurveyName();
+        }
+        if (StringUtils.hasText(request.getSurveyDescription())) {
+            this.surveyDescription = request.getSurveyDescription();
+        }
     }
 }

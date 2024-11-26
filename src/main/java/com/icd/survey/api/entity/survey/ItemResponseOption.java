@@ -1,6 +1,6 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
+import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -27,8 +27,8 @@ public class ItemResponseOption {
     @JoinColumn(name = "item_seq")
     private SurveyItem surveyItem;
 
-    public ItemOptionRequest of() {
-        return ItemOptionRequest
+    public ItemResponseOptionDto of() {
+        return ItemResponseOptionDto
                 .builder()
                 .optionSeq(this.optionSeq)
                 .option(this.option)

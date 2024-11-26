@@ -2,6 +2,7 @@ package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
+import com.icd.survey.api.entity.dto.SurveyItemDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "survey_item")
+@ToString
 public class SurveyItem extends BaseEntity {
     @Id
     @Column(name = "item_seq", nullable = false)
@@ -48,8 +50,8 @@ public class SurveyItem extends BaseEntity {
     @OneToMany(mappedBy = "surveyItem", fetch = FetchType.LAZY)
     private List<ItemResponse> responseList = new ArrayList<>();
 
-    public SurveyItemRequest of() {
-        return SurveyItemRequest
+    public SurveyItemDto of() {
+        return SurveyItemDto
                 .builder()
                 .itemSeq(this.itemSeq)
                 .itemName(this.itemName)
