@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ public class SurveyItem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "SURVEY_ID",
@@ -43,14 +45,12 @@ public class SurveyItem extends BaseEntity {
     private String choices;
 
 
-    public SurveyItem(Survey survey,
-                      String name,
+    public SurveyItem(String name,
                       String description,
                       ItemInputType inputType,
                       Boolean required,
                       String choices) {
 
-        this.survey = survey;
         this.name = name;
         this.description = description;
         this.inputType = inputType;

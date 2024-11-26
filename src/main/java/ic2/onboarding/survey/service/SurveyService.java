@@ -32,7 +32,6 @@ public class SurveyService {
         List<SurveyItem> surveyItems = request.items()
                 .stream()
                 .map(formItem -> new SurveyItem(
-                        survey,
                         formItem.name(),
                         formItem.description(),
                         formItem.inputTypeAsEnum(),
