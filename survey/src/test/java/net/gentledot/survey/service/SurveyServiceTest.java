@@ -113,7 +113,7 @@ class SurveyServiceTest {
 
 
     private Survey generateSurvey(SurveyCreateRequest surveyRequest) {
-        validateCreateRequest(surveyRequest);
+        validateRequest(surveyRequest);
 
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
 
@@ -124,7 +124,7 @@ class SurveyServiceTest {
         );
     }
 
-    private void validateCreateRequest(SurveyCreateRequest surveyRequest) {
+    private void validateRequest(SurveyCreateRequest surveyRequest) {
         List<SurveyQuestionRequest> questions = surveyRequest.getQuestions();
 
         if (questions == null) {

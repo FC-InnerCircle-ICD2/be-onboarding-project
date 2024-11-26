@@ -3,9 +3,12 @@ package net.gentledot.survey.service;
 import jakarta.transaction.Transactional;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
+import net.gentledot.survey.dto.request.SurveyRequest;
+import net.gentledot.survey.dto.request.SurveyUpdateRequest;
 import net.gentledot.survey.dto.response.SurveyCreateResponse;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyCreationException;
+import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.model.entity.Survey;
 import net.gentledot.survey.model.entity.SurveyQuestion;
 import net.gentledot.survey.model.enums.SurveyItemType;
@@ -26,7 +29,7 @@ public class SurveyService {
 
     @Transactional
     public SurveyCreateResponse createSurvey(SurveyCreateRequest surveyRequest) {
-        validateCreateRequest(surveyRequest);
+        validateRequest(surveyRequest);
 
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
 
@@ -41,13 +44,27 @@ public class SurveyService {
         return new SurveyCreateResponse(survey.getId(), survey.getCreatedAt());
     }
 
+    @Transactional
+    public void updateSurvey(SurveyUpdateRequest surveyRequest) {
+        validateRequest(surveyRequest);
+
+        String surveyId = surveyRequest.getId();
+        Survey survey = surveyRepository.findById(surveyId)
+                .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND));
+
+        List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
+        survey.updateSurvey(surveyRequest.getName(), surveyRequest.getDescription(), questions);
+
+        surveyRepository.save(survey);
+    }
+
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
         return questionRequests.stream()
                 .map(SurveyQuestion::from)
                 .collect(Collectors.toList());
     }
 
-    private void validateCreateRequest(SurveyCreateRequest surveyRequest) {
+    private void validateRequest(SurveyRequest surveyRequest) {
         List<SurveyQuestionRequest> questions = surveyRequest.getQuestions();
 
         if (questions == null) {

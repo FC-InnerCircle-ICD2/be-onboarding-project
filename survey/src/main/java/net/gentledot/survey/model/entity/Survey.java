@@ -37,5 +37,21 @@ public class Survey extends BaseEntity {
         });
         return survey;
     }
+
+    public void updateSurvey(String name, String description, List<SurveyQuestion> surveyQuestions) {
+        this.name = name;
+        this.description = description;
+        disconnectRelationFromSurvey(); // update 시 Survey와의 관계 끊기
+        this.questions.clear();
+        this.questions.addAll(surveyQuestions);
+        surveyQuestions.forEach(surveyQuestion -> {
+            surveyQuestion.setSurvey(this);
+            surveyQuestion.getOptions().forEach(option -> option.setSurveyQuestion(surveyQuestion));
+        });
+    }
+
+    private void disconnectRelationFromSurvey() {
+        this.questions.forEach(question -> question.setSurvey(null));
+    }
 }
 
