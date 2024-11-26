@@ -9,6 +9,7 @@ import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.repository.survey.ResponseOptionRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
 import com.icd.survey.api.repository.survey.SurveyRepository;
+import com.icd.survey.common.CommonUtils;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +33,15 @@ public class SurveyService {
 
         // 유효성 검사
         request.validationCheck();
-        // survey insert request entity
-        Survey surveyRequest = request.toEntity();
 
-        surveyRepository.findBySurveyNameAndIpAddress(surveyRequest)
-                .orElseThrow(() -> new ApiException(ExceptionResponseType.VALIDATION_EXCEPTION, "동일 ip당 같은 이름의 설문조사는 만들 수 없습니다."));
+        Survey saerchSurvey = surveyRepository.findBySurveyNameAndIpAddress(request.getSurveyName(), CommonUtils.getRequestIp())
+                .orElse(null);
 
-        Survey surveyEntity = surveyRepository.save(surveyRequest);
+        if (saerchSurvey != null) {
+            throw new ApiException(ExceptionResponseType.VALIDATION_EXCEPTION, "동일 ip당 같은 이름의 설문조사는 만들 수 없습니다.");
+        }
+
+        Survey surveyEntity = surveyRepository.save(request.toEntity());
 
         // 항목 request 객체
         List<SurveyItemRequest> itemRequestList = request.getSurveyItemList();

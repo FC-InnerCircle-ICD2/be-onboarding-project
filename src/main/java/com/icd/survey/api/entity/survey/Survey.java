@@ -14,9 +14,10 @@ import java.util.List;
 @Builder
 @DynamicInsert
 @DynamicUpdate
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "survey")
+@ToString
 public class Survey extends BaseEntity {
     @Id
     @Column(name = "survey_seq")

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
-    Optional<Survey> findBySurveyNameAndIpAddress(Survey survey);
+    Optional<Survey> findBySurveyNameAndIpAddress(String surveyName, String ipAddress);
 }
