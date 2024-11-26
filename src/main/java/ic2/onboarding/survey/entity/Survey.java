@@ -36,16 +36,21 @@ public class Survey extends BaseEntity {
 
     public void addItem(SurveyItem item) {
         items.add(item);
+        item.setSurvey(this);
     }
 
 
     public void addAllItems(List<SurveyItem> items) {
-        this.items.addAll(items);
+        if (this.items.addAll(items)) {
+            items.forEach(item -> item.setSurvey(this));
+        }
     }
 
 
     public void removeItem(SurveyItem item) {
-        items.remove(item);
+        if (items.remove(item)) {
+            item.setSurvey(null);
+        }
     }
 
 }
