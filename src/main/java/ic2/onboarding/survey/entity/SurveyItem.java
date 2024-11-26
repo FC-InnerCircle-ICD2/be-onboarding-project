@@ -66,4 +66,14 @@ public class SurveyItem extends BaseEntity {
         }
         return Arrays.stream(choices.split("\\|")).toList();
     }
+
+
+    public void update(SurveyItem surveyItem) {
+
+        this.name = surveyItem.getName();
+        this.description = surveyItem.getDescription();
+        this.inputType = surveyItem.getInputType();
+        this.required = surveyItem.getRequired();
+        this.choices = surveyItem.getChoices();
+    }
 }
