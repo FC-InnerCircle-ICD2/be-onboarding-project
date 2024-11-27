@@ -2,13 +2,12 @@ package com.innercircle.command.domain.survey.question;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface QuestionRepository {
 
-	QuestionId generateId();
+	String generateId();
 
 	List<Question> saveAll(List<Question> questions);
 
-	Optional<Question> findById(UUID id);
+	Optional<Question> findById(String id);
 }

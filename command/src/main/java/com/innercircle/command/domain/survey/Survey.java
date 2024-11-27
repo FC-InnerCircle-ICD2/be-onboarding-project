@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 public class Survey {
 
 	@Id
-	private SurveyId id;
+	private String id;
 	private String name;
 	private String description;
 
-	public Survey(SurveyId id, String name, String description) {
+	public Survey(String id, String name, String description) {
 		this.id = id;
 		this.name = name;
 		this.description = description;

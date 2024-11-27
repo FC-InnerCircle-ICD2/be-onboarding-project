@@ -1,6 +1,5 @@
 package com.innercircle.command.domain.survey.question;
 
-import com.innercircle.command.domain.survey.SurveyId;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -25,8 +24,8 @@ public class Question {
 	private static final int MAX_OPTION_SIZE = 3;
 
 	@Id
-	private QuestionId id;
-	private SurveyId surveyId;
+	private String id;
+	private String surveyId;
 	private String name;
 	private String description;
 	private boolean required;
@@ -36,7 +35,7 @@ public class Question {
 	@CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
 	private List<String> options;
 
-	public Question(QuestionId id, SurveyId surveyId, String name, String description, boolean required, QuestionType type, List<String> options) {
+	public Question(String id, String surveyId, String name, String description, boolean required, QuestionType type, List<String> options) {
 		this.id = id;
 		this.surveyId = surveyId;
 		this.name = name;

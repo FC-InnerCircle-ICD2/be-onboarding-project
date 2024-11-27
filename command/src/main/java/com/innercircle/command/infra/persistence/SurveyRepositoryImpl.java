@@ -1,11 +1,10 @@
 package com.innercircle.command.infra.persistence;
 
 import com.innercircle.command.domain.survey.Survey;
-import com.innercircle.command.domain.survey.SurveyId;
 import com.innercircle.command.domain.survey.SurveyRepository;
+import com.innercircle.command.infra.persistence.generator.IdGenerator;
 import com.innercircle.command.infra.persistence.jparepository.SurveyJpaRepository;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,8 +17,8 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 	}
 
 	@Override
-	public SurveyId generateId() {
-		return new SurveyId(UUID.randomUUID().toString());
+	public String generateId() {
+		return IdGenerator.generate().toString();
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 	}
 
 	@Override
-	public Optional<Survey> findById(UUID id) {
+	public Optional<Survey> findById(String id) {
 		return jpaRepository.findById(id);
 	}
 }

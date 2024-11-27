@@ -5,8 +5,8 @@ import com.innercircle.command.application.survey.question.MultipleChoiceQuestio
 import com.innercircle.command.application.survey.question.QuestionInput;
 import com.innercircle.command.application.survey.question.ShortTextQuestionInput;
 import com.innercircle.command.application.survey.question.SingleChoiceQuestionInput;
+import com.innercircle.command.domain.Identifier;
 import com.innercircle.command.domain.survey.Survey;
-import com.innercircle.command.domain.survey.SurveyId;
 import com.innercircle.command.domain.survey.SurveyRepository;
 import com.innercircle.command.domain.survey.question.Question;
 import com.innercircle.command.domain.survey.question.QuestionRepository;
@@ -30,7 +30,7 @@ public class SurveyService {
 	}
 
 	@Transactional
-	public SurveyId create(String name, String description, List<QuestionInput> questionInputs) {
+	public Identifier create(String name, String description, List<QuestionInput> questionInputs) {
 		if (StringUtils.isAnyBlank(name, description)) {
 			throw new IllegalArgumentException("Survey name or description must not be empty");
 		}
@@ -45,10 +45,10 @@ public class SurveyService {
 
 		questionRepository.saveAll(questions);
 		surveyRepository.save(survey);
-		return survey.getId();
+		return new Identifier(survey.getId());
 	}
 
-	private List<Question> getQuestions(SurveyId surveyId, List<QuestionInput> questionInputs) {
+	private List<Question> getQuestions(String surveyId, List<QuestionInput> questionInputs) {
 		return questionInputs.stream()
 				.map(input -> {
 					var questionId = questionRepository.generateId();
