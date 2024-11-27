@@ -33,16 +33,14 @@ public class ResponseItem extends BaseTime{
     private LocalDateTime submittedAt;
 
     @Column(columnDefinition = "TEXT")
-    private String value;
+    private String responseValue ;
 
     @ManyToOne
     @JoinColumn(name = "response_id")
-    @Column(nullable = false)
     private Response response;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    @Column(nullable = false)
     private SurveyItem surveyItem;
 
 }
