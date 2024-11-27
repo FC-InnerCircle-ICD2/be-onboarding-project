@@ -16,4 +16,16 @@ class SurveyItemOption(
     val name: String,
     @Comment("현재 사용 여부")
     var isActive: Boolean = true
-)
+) {
+    companion object {
+        fun of(
+            surveyItem: SurveyItem,
+            name: String
+        ): SurveyItemOption {
+            return SurveyItemOption(
+                surveyItem = surveyItem,
+                name = name
+            )
+        }
+    }
+}

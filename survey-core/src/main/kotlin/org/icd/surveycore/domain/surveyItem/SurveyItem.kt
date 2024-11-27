@@ -2,6 +2,7 @@ package org.icd.surveycore.domain.surveyItem
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.icd.surveycore.domain.survey.Survey
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -15,7 +16,11 @@ class SurveyItem(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @Comment("설문조사 아이디")
-    val surveyId: Long,
+    @ManyToOne
+    @JoinColumn(name = "survey_id", nullable = false)
+    val survey: Survey,
+    @Comment("항목 순서")
+    val sequence: Int,
     @Comment("항목 이름")
     val name: String,
     @Comment("항목 설명")
@@ -25,11 +30,33 @@ class SurveyItem(
     val itemType: ItemType = ItemType.SHORT_ANSWER,
     @Comment("선택 항목 리스트")
     @OneToMany(mappedBy = "surveyItem", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val options: List<SurveyItemOption> = mutableListOf(),
+    val options: MutableList<SurveyItemOption> = mutableListOf(),
     @Comment("현재 사용 여부")
     val isActive: Boolean = true,
     @CreatedDate
     var createdAt: OffsetDateTime? = null,
     @LastModifiedDate
     var updatedAt: OffsetDateTime? = null
-)
+) {
+    companion object {
+        fun of(
+            survey: Survey,
+            sequence: Int,
+            name: String,
+            description: String?,
+            itemType: ItemType,
+        ): SurveyItem {
+            return SurveyItem(
+                survey = survey,
+                sequence = sequence,
+                name = name,
+                description = description,
+                itemType = itemType,
+            )
+        }
+    }
+
+    fun addOptions(surveyItemOptions: List<SurveyItemOption>?) {
+        surveyItemOptions?.let { this.options.addAll(it) }
+    }
+}
