@@ -19,9 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 @Transactional
 @Service
@@ -33,45 +30,48 @@ public class SurveyService {
     private final ResponseOptionRepository responseOptionRepository;
 
     public void createSurvey(SurveyRequest request) {
+
         request.validationCheck();
 
         request.setIpAddress(CommonUtils.getRequestIp());
 
         /* ip 당 설문조사 이름 체크 */
-        Survey existingSurvey = surveyRepository.findBySurveyNameAndIpAddress(request.getSurveyName(), request.getIpAddress())
+        Survey existingSurvey = surveyRepository.findBySurveyNameAndIpAddressAndIsDeletedFalse(request.getSurveyName(), request.getIpAddress())
                 .orElse(null);
 
         if (existingSurvey != null) {
             throw new ApiException(ExceptionResponseType.ALREADY_EXISTS, "ip 당 설문 조사 이름은 중복될 수 없습니다.");
         }
 
+        /* 설문 조사 엔티티 save */
         Survey survey = surveyRepository.save(Survey.createSurveyRequest(request.createSurveyDtoRequest()));
 
-        List<SurveyItem> surveyItemList = new ArrayList<>();
-
+        /* 설문 조사 항목 save */
         for (SurveyItemRequest itemRequest : request.getSurveyItemList()) {
 
             itemRequest.validationCheck();
 
             SurveyItemDto itemDto = itemRequest.createSurveyItemDtoRequest();
             SurveyItem surveyItem = SurveyItem.createSurveyItemRequest(itemDto);
-            surveyItem.setSurveySeq(survey.getSurveySeq());
-            /* 선택 형 문항의 경우 option list 처리 */
-            if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
-                List<ItemResponseOption> responseOptionList = new ArrayList<>();
+            surveyItem.surveyKeySet(survey.getSurveySeq());
+            surveyItem = surveyItemRepository.save(surveyItem);
 
+            /* 선택형 문항의 경우 option list 처리 */
+            if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
+
+                /* 선택형 문항의 선택 옵션 save */
                 for (ItemOptionRequest optionRequest : itemRequest.getOptionList()) {
                     optionRequest.validationCheck();
 
                     ItemResponseOptionDto optionDto = optionRequest.createItemREsponseOptionDto();
-                    responseOptionList.add(ItemResponseOption.createItemResponseOptionRequest(optionDto));
+                    ItemResponseOption option = ItemResponseOption.createItemResponseOptionRequest(optionDto);
+                    option.itemKeySet(surveyItem.getItemSeq());
+                    responseOptionRepository.save(option);
                 }
-                surveyItem.saveResponseOptionList(responseOptionList);
-                surveyItemRepository.save(surveyItem);
             }
-            surveyItemList.add(surveyItem);
         }
-        survey.saveSurveyItemList(surveyItemList);
     }
+
+
 
 }

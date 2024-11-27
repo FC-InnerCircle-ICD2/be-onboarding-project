@@ -37,7 +37,6 @@ public class SurveyItem extends BaseEntity {
     private Boolean isEssential = Boolean.FALSE;
 
     @Column(name = "survey_Seq")
-    @Setter
     private Long surveySeq;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -48,23 +47,9 @@ public class SurveyItem extends BaseEntity {
     @JoinColumn(name = "item_seq")
     private List<ItemResponse> responseList;
 
-    public List<ItemResponseOption> createResponseOptionList() {
-        responseOptionList = new ArrayList<>();
-        return responseOptionList;
-    }
 
-
-    public List<ItemResponse> createResponseList() {
-        responseList = new ArrayList<>();
-        return responseList;
-    }
-
-    public void saveResponseOptionList(List<ItemResponseOption> request) {
-        responseOptionList = request;
-    }
-
-    public void saveResponseList(List<ItemResponse> request) {
-        responseList = request;
+    public void surveyKeySet(Long surveySeq) {
+        this.surveySeq = surveySeq;
     }
 
     public static SurveyItem createSurveyItemRequest(SurveyItemDto dto) {

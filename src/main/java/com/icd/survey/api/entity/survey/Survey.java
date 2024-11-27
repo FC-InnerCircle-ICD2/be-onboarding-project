@@ -40,16 +40,6 @@ public class Survey extends BaseEntity {
     @JoinColumn(name = "survey_seq")
     private List<SurveyItem> surveyItemList;
 
-
-    public List<SurveyItem> createSurveyItemList() {
-        surveyItemList = new ArrayList<>();
-        return surveyItemList;
-    }
-
-    public void saveSurveyItemList(List<SurveyItem> request) {
-        surveyItemList = request;
-    }
-
     public static Survey createSurveyRequest(SurveyDto dto) {
         Survey survey = new Survey();
         survey.surveyName = dto.getSurveyName();
