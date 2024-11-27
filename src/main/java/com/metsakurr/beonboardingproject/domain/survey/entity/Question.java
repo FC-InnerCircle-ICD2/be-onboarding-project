@@ -46,12 +46,14 @@ public class Question extends BaseEntity {
             Survey survey,
             String name,
             String description,
-            QuestionType questionType
+            QuestionType questionType,
+            boolean isRequired
     ) {
         this.survey = survey;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
+        this.isRequired = isRequired;
     }
 }
 

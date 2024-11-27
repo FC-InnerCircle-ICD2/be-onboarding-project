@@ -1,7 +1,9 @@
 package com.metsakurr.beonboardingproject.common.dto;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import lombok.Getter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -26,6 +28,13 @@ public class ErrorResponse {
         );
     }
 
+    public static ErrorResponse of(HttpMessageNotReadableException ex) {
+        return new ErrorResponse(
+                ResponseCode.NOT_VALID_TYPE,
+                FieldError.of(ex)
+        );
+    }
+
     @Getter
     public static class FieldError {
         private final String field;
@@ -47,6 +56,19 @@ public class ErrorResponse {
                             error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
                             error.getDefaultMessage()))
                     .collect(Collectors.toList());
+        }
+
+        public static List<FieldError> of(HttpMessageNotReadableException ex) {
+            if (ex.getCause() instanceof JsonMappingException jsonMappingException) {
+                return jsonMappingException.getPath().stream()
+                        .map(reference -> new FieldError(
+                                reference.getFieldName(),
+                                null,
+                                ex.getMessage()
+                        ))
+                        .collect(Collectors.toList());
+            }
+            return null;
         }
 
     }

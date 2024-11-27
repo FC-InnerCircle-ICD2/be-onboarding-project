@@ -31,15 +31,17 @@ public class SurveyService {
                     .name(questionRequest.getName())
                     .description(questionRequest.getDescription())
                     .questionType(QuestionType.fromName(questionRequest.getQuestionType()))
+                    .isRequired(questionRequest.getIsRequired())
                     .build();
-
-            questionRequest.getOptions().forEach(optionRequest -> {
-                Option option = Option.builder()
-                        .question(question)
-                        .name(optionRequest.getName())
-                        .build();
-                optionRepository.save(option);
-            });
+            if (questionRequest.getOptions() != null) {
+                questionRequest.getOptions().forEach(optionRequest -> {
+                    Option option = Option.builder()
+                            .question(question)
+                            .name(optionRequest.getName())
+                            .build();
+                    optionRepository.save(option);
+                });
+            }
 
             questionRepository.save(question);
         });
