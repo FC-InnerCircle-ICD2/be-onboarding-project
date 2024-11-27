@@ -45,7 +45,7 @@ public class SurveyItem extends BaseEntity {
 
     public List<String> getChoiceList() {
 
-        if (choices == null) {
+        if (choices == null || !inputType.isChoiceType()) {
             return List.of();
         }
         return Arrays.stream(choices.split("\\|")).toList();
