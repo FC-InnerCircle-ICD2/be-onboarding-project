@@ -39,12 +39,14 @@ public class SurveyService {
                             .question(question)
                             .name(optionRequest.getName())
                             .build();
-                    optionRepository.save(option);
+//                    optionRepository.save(option);
+                    question.addOption(option);
                 });
             }
-
-            questionRepository.save(question);
+            survey.addQuestion(question);
+//            questionRepository.save(question);
         });
+
         return new RegistSurveyResponse(surveyRepository.save(survey));
     }
 
