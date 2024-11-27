@@ -8,10 +8,8 @@ import survey.common.ApiEndpointVersionPrefix
 @RestController
 @RequestMapping(ApiEndpointVersionPrefix.V1_API_PREFIX)
 class SurveyController {
-
     @GetMapping("/ping")
     fun check(): String {
         return "pong !"
     }
 }
-

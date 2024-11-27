@@ -12,13 +12,20 @@ class KotlinDateTimeCustomConfig {
     class LocalDateTimeSerializer : JsonSerializer<LocalDateTime>() {
         private val formatter = DateTimeFormatter.ofPattern(DATE_TINE_PATTER)
 
-        override fun serialize(value: LocalDateTime, gen: JsonGenerator, serializers: SerializerProvider) {
+        override fun serialize(
+            value: LocalDateTime,
+            gen: JsonGenerator,
+            serializers: SerializerProvider,
+        ) {
             gen.writeString(value.toJavaLocalDateTime().format(formatter))
         }
     }
 
     class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime>() {
-        override fun deserialize(p: com.fasterxml.jackson.core.JsonParser, ctxt: com.fasterxml.jackson.databind.DeserializationContext): LocalDateTime {
+        override fun deserialize(
+            p: com.fasterxml.jackson.core.JsonParser,
+            ctxt: com.fasterxml.jackson.databind.DeserializationContext,
+        ): LocalDateTime {
             return LocalDateTime.parse(p.text)
         }
     }

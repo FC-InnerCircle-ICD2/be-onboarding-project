@@ -9,13 +9,15 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class ObjectMapperConfig {
-
     @Bean
-    fun objectMapper(): ObjectMapper = ObjectMapper()
-        // TODO - KotlinModule() deprecated 되었음, deprecated 해결 필요
-        .registerModule(KotlinModule())
-        .registerModule(SimpleModule().apply {
-            addSerializer(LocalDateTime::class.java, KotlinDateTimeCustomConfig.LocalDateTimeSerializer())
-            addDeserializer(LocalDateTime::class.java, KotlinDateTimeCustomConfig.LocalDateTimeDeserializer())
-        })
+    fun objectMapper(): ObjectMapper =
+        ObjectMapper()
+            // TODO - KotlinModule() deprecated 되었음, deprecated 해결 필요
+            .registerModule(KotlinModule())
+            .registerModule(
+                SimpleModule().apply {
+                    addSerializer(LocalDateTime::class.java, KotlinDateTimeCustomConfig.LocalDateTimeSerializer())
+                    addDeserializer(LocalDateTime::class.java, KotlinDateTimeCustomConfig.LocalDateTimeDeserializer())
+                },
+            )
 }
