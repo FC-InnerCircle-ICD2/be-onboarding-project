@@ -12,4 +12,13 @@ public enum QuestionType {
 	MULTI_LIST("다중 선택 리스트");
 
 	private final String name;
+
+	public static QuestionType contain(String name) {
+		for (QuestionType type : QuestionType.values()) {
+			if (type.name().equals(name)) {
+				return type;
+			}
+		}
+		return null;
+	}
 }
