@@ -136,7 +136,7 @@ class SurveyControllerTest {
 	}
 
 	@Test
-	@DisplayName("설문조사 생성 실패 테스트 (단답형 설문 항목 이름이 없는 경우)")
+	@DisplayName("설문조사 생성 실패 테스트 (설문 항목 이름이 없는 경우)")
 	void surveyCreationFailureTest4() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
@@ -162,7 +162,7 @@ class SurveyControllerTest {
 	}
 
 	@Test
-	@DisplayName("설문조사 생성 실패 테스트 (단답형 설문 항목 이름이 최대 글자를 초과하는 경우)")
+	@DisplayName("설문조사 생성 실패 테스트 (설문 항목 이름이 최대 글자를 초과하는 경우)")
 	void surveyCreationFailureTest5() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
@@ -189,7 +189,7 @@ class SurveyControllerTest {
 	}
 
 	@Test
-	@DisplayName("설문조사 생성 실패 테스트 (단답형 설문 항목 설명이 없는 경우)")
+	@DisplayName("설문조사 생성 실패 테스트 (설문 항목 설명이 없는 경우)")
 	void surveyCreationFailureTest6() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
@@ -215,7 +215,7 @@ class SurveyControllerTest {
 	}
 
 	@Test
-	@DisplayName("설문조사 생성 실패 테스트 (단답형 설문 항목 설명이 최대 글자를 초과하는 경우)")
+	@DisplayName("설문조사 생성 실패 테스트 (설문 항목 설명이 최대 글자를 초과하는 경우)")
 	void surveyCreationFailureTest7() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
@@ -239,5 +239,125 @@ class SurveyControllerTest {
 				)
 				.andExpect(status().is4xxClientError())
 				.andExpect(content().string("Question description must not be empty and must not exceed 30 characters"));
+	}
+
+	@Test
+	@DisplayName("설문조사 생성 실패 테스트 (설문 항목이 최대 허용 갯수를 초과하는 경우)")
+	void surveyCreationFailureTest8() throws Exception {
+		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+
+		mockMvc.perform(post("/c/create-survey")
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON)
+						.content("""
+								{
+								  "name": "설문조사 이름",
+								  "description": "설문조사 설명",
+								  "questionInputs": [
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    },
+								    {
+								      "type": "SINGLE_CHOICE",
+								      "name": "단일 선택 리스트 설문조사 이름",
+								      "description": "단일 선택 리스트 설문조사 설명",
+								      "optionNames": [
+								        "option1"
+								      ],
+								      "required": true
+								    }
+								  ]
+								}
+								""")
+				)
+				.andExpect(status().is4xxClientError())
+				.andExpect(content().string("Survey must have between 1 and 10 questions"));
 	}
 }
