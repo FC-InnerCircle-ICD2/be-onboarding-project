@@ -38,12 +38,12 @@ subprojects {
         apply(plugin = "io.spring.dependency-management")
 
         dependencies {
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
             testImplementation("org.springframework.boot:spring-boot-starter-test")
         }
     }
 
     dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
 
         testImplementation("io.kotest:kotest-runner-junit5:5.5.0")
