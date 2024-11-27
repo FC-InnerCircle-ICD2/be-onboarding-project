@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class Option extends BaseEntity {
 
 	@Column(nullable = false)
-	private String number;
+	private int number;
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +30,7 @@ public class Option extends BaseEntity {
 	private Question question;
 
 	@Builder
-	public Option(String number, Question question) {
+	public Option(int number, Question question) {
 		this.number = number;
 		this.question = question;
 	}
