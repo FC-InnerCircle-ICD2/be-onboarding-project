@@ -1,16 +1,13 @@
 package com.survey.api.service;
 
 import com.survey.api.constant.CommonConstant;
-import com.survey.api.entity.SurveyEntity;
-import com.survey.api.entity.SurveyItemEntity;
-import com.survey.api.entity.SurveyOptionEntity;
-import com.survey.api.exception.SurveyApiException;
-import com.survey.api.form.SurveyItemUpdateForm;
-import com.survey.api.form.SurveyOptionUpdateForm;
-import com.survey.api.form.SurveyUpdateForm;
-import com.survey.api.repository.SurveyItemRepository;
-import com.survey.api.repository.SurveyOptionRepository;
-import com.survey.api.repository.SurveyRepository;
+import com.survey.api.dto.SurveyResponseDto;
+import com.survey.api.dto.SurveyResponseItemDto;
+import com.survey.api.entity.*;
+import com.survey.api.form.*;
+import com.survey.api.repository.*;
+import com.survey.api.util.ConvertUtil;
+import com.survey.api.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +28,17 @@ public class SurveyService {
     @Autowired
     private SurveyOptionRepository surveyOptionRepository;
 
+    @Autowired
+    private SurveyResponseRepository surveyResponseRepository;
+
+    @Autowired
+    private SurveyResponseItemRepository surveyResponseItemRepository;
+
+
+    @Autowired
+    private SurveyResponseOptionRepository surveyResponseOptionRepository;
+
+
     public List<SurveyEntity> findAll() {
         List<SurveyEntity> surveys = new ArrayList<>();
         surveyRepository.findAll().forEach(e -> surveys.add(e));
@@ -42,16 +50,28 @@ public class SurveyService {
         return survey;
     }
 
+    public SurveyItemEntity findItemByIdAndItemTypeAndSurvey(Long id, String itemType, SurveyEntity survey) {
+        return surveyItemRepository.findByIdAndItemTypeAndSurvey(id, itemType, survey);
+    }
+
     public boolean existsSurveyById(Long id) {
-        return surveyRepository.existsById(id);
+        return !surveyRepository.existsById(id);
     }
 
     public boolean existsSurveyItemById(Long id) {
-        return surveyItemRepository.existsById(id);
+        return !surveyItemRepository.existsById(id);
+    }
+
+    public boolean existsByIdAndSurvey(Long id, SurveyEntity survey) {
+        return !surveyItemRepository.existsByIdAndSurvey(id, survey);
     }
 
     public boolean existsSurveyOptionById(Long id) {
-        return surveyOptionRepository.existsById(id);
+        return !surveyOptionRepository.existsById(id);
+    }
+
+    public boolean existsSurveyOptionByIdAndItemId(Long id, SurveyItemEntity surveyItem) {
+        return !surveyOptionRepository.existsByIdAndSurveyItem(id, surveyItem);
     }
 
     public void deleteById(Long mbrNo) {
@@ -70,6 +90,21 @@ public class SurveyService {
 
     public SurveyOptionEntity optionSave(SurveyOptionEntity item) {
         surveyOptionRepository.save(item);
+        return item;
+    }
+
+    public SurveyResponseEntity responseSave(SurveyResponseEntity survey) {
+        surveyResponseRepository.save(survey);
+        return survey;
+    }
+
+    public SurveyResponseItemEntity responseItemSave(SurveyResponseItemEntity item) {
+        surveyResponseItemRepository.save(item);
+        return item;
+    }
+
+    public SurveyResponseOptionEntity responseOptionSave(SurveyResponseOptionEntity item) {
+        surveyResponseOptionRepository.save(item);
         return item;
     }
 
@@ -101,6 +136,44 @@ public class SurveyService {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public List<SurveyResponseDto> findResponsesBySurveyIdWithFilters(long id, String searchParam, int pageNumber) {
+        //return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, searchParam, pageNumber);
+        return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id);
+    }
+
+    public List<SurveyResponseItemDto> findResponseItemByFilters(long id, String searchParam) {
+        //return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, searchParam, pageNumber);
+        return surveyResponseItemRepository.findResponseItemByFilters(id);
+    }
+
+    public String findResponseOptionByFilters(long id, String searchParam) {
+        //return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, searchParam, pageNumber);
+        return surveyResponseOptionRepository.findResponseOptionByFilters(id);
+    }
+
+    @Transactional
+    public void surveyResponseSave(SurveyResponseForm survey) {
+        SurveyResponseEntity surveyResult = responseSave(new SurveyResponseEntity(new SurveyEntity(survey.getId())));
+
+        for (SurveyResponseItemForm itemForm : survey.getItems()) {
+            String answer = "";
+
+            if(CommonConstant.SHORT_ITEM.equals(itemForm.getReponseType()) || CommonConstant.LONG_ITEM.equals(itemForm.getReponseType())) {
+                answer = (itemForm.getAnswer() != null && itemForm.getAnswer().length > 0 ? itemForm.getAnswer()[0] : "");
+            }
+
+            SurveyResponseItemEntity reponseItem = responseItemSave(new SurveyResponseItemEntity(answer, surveyResult, new SurveyItemEntity(itemForm.getId())));
+
+            if(CommonConstant.MULTI_ITEM.equals(itemForm.getReponseType()) || CommonConstant.SINGLE_ITEM.equals(itemForm.getReponseType())) {
+                for(String optionId : itemForm.getAnswer()) {
+                    SurveyResponseOptionEntity reponseOption = responseOptionSave(new SurveyResponseOptionEntity(reponseItem, new SurveyOptionEntity(ConvertUtil.stringToLong(optionId))));
+
+
                 }
             }
         }

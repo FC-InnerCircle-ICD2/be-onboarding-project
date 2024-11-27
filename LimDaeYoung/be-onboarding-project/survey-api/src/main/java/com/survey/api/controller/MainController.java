@@ -1,13 +1,18 @@
 package com.survey.api.controller;
 
 import com.survey.api.constant.CommonConstant;
+import com.survey.api.dto.SurveyResponseDto;
+import com.survey.api.dto.SurveyResponseItemDto;
 import com.survey.api.entity.SurveyEntity;
 import com.survey.api.entity.SurveyItemEntity;
 import com.survey.api.entity.SurveyOptionEntity;
 import com.survey.api.exception.SurveyApiException;
 import com.survey.api.form.*;
 import com.survey.api.response.SurveyBaseResponse;
+import com.survey.api.response.SurveyItemResponse;
+import com.survey.api.response.SurveyResponse;
 import com.survey.api.service.SurveyService;
+import com.survey.api.util.ConvertUtil;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -27,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DataBindingException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -116,7 +123,7 @@ public class MainController {
             throw new SurveyApiException(CommonConstant.ERR_DATA_NOT_FOUND, CommonConstant.ERR_MSG_DATA_NOT_FOUND + "survey description");
         }
 
-        if (!surveyService.existsSurveyById(survey.getId())) {
+        if (surveyService.existsSurveyById(survey.getId())) {
             throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사에 대한 수정 요청을 하였습니다.");
         }
 
@@ -141,20 +148,22 @@ public class MainController {
                     throw new SurveyApiException(CommonConstant.ERR_FAIL, CommonConstant.ERROR_TYPE_REQUEST_INVALID + " item type");
                 }
 
-                if (!CommonConstant.ACTION_TYPE_CREATE.equals(item.getActionType()) && !surveyService.existsSurveyItemById(item.getId())) {
+                //신규 추가가 아니면 기존에 있었던 항목인지 체크
+                if (!CommonConstant.ACTION_TYPE_CREATE.equals(item.getActionType()) && surveyService.existsByIdAndSurvey(item.getId(), new SurveyEntity(survey.getId()))) {
                     throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대한 수정 요청을 하였습니다.");
                 }
 
                 if(item.getOptionList() != null) {
                     for(SurveyOptionUpdateForm option : item.getOptionList()) {
-                        if (!CommonConstant.ACTION_TYPE_CREATE.equals(option.getActionType()) && !surveyService.existsSurveyOptionById(option.getId())) {
+                        //신규 추가가 아니면 기존에 있었던 옵션인지 체크
+                        if (!CommonConstant.ACTION_TYPE_CREATE.equals(option.getActionType()) && surveyService.existsSurveyOptionByIdAndItemId(option.getId(), new SurveyItemEntity(item.getId()))) {
                             throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대한 수정 요청을 하였습니다.");
                         }
 
                         if (StringUtils.isBlank(option.getOptionName())) {
                             throw new SurveyApiException(CommonConstant.ERR_DATA_NOT_FOUND, CommonConstant.ERR_MSG_DATA_NOT_FOUND + "option Name");
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -170,12 +179,108 @@ public class MainController {
         return new ResponseEntity<SurveyBaseResponse>(new SurveyBaseResponse(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS), HttpStatus.OK);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<SurveyEntity> search(@PathVariable Long id) {
-//        SurveyEntity survey = surveyService.getSurveyWithDetails(id);
-//        return new ResponseEntity<SurveyEntity>(survey, HttpStatus.OK);
-//    }
+    @PostMapping("/response/save")
+    public ResponseEntity<SurveyBaseResponse> reponseSave(@RequestBody SurveyResponseForm survey, ServletRequest servletRequest) {
+        //필수값 체크 및 응답 형식에 맞는 대답을 했는지 확인
+        if (surveyService.existsSurveyById(survey.getId())) {
+            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사에 대한 응답 요청을 하였습니다.");
+        }
 
+        if(survey.getItems() != null) {
+            for (SurveyResponseItemForm item : survey.getItems()) {
+                if (StringUtils.isEmpty(item.getReponseType())) {
+                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "응답 타입이 누락되었습니다.");
+                }
+
+                SurveyItemEntity itemEntity = surveyService.findItemByIdAndItemTypeAndSurvey(item.getId(), item.getReponseType(), new SurveyEntity(survey.getId()));
+
+                if (itemEntity == null) {
+                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대해 응답하였습니다.");
+                }
+
+                if (!item.getReponseType().equals(itemEntity.getItemType())) {
+                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "용청하신 응답타입이 실제 응답타입과 일치하지 않습니다.");
+                }
+
+                if(itemEntity.isRequired() && (item.getAnswer() == null || item.getAnswer().length == 0)) {
+                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, itemEntity.getItemName() + " 항목은 필수 입니다.");
+                }
+
+                if (CommonConstant.SINGLE_ITEM.equals(item.getReponseType())
+                        || CommonConstant.MULTI_ITEM.equals(item.getReponseType())) {
+                    String[] optionList = item.getAnswer();
+                    for (String optionId : optionList) {
+                        if (surveyService.existsSurveyOptionByIdAndItemId(ConvertUtil.stringToLong(optionId), itemEntity)) {
+                            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 선택지를 선택하였습니다.");
+                        }
+                    }
+                }
+            }
+        }
+
+        try{
+            surveyService.surveyResponseSave(survey);
+        } catch (SurveyApiException e){
+            throw new SurveyApiException(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ERROR, CommonConstant.ERR_MSG_DB_DATA_ERROR);
+        }
+
+        return new ResponseEntity<SurveyBaseResponse>(new SurveyBaseResponse(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/response/select")
+    public ResponseEntity<SurveyBaseResponse<SurveyResponse>> reponseSelect(@RequestBody ResponseSelectForm selectForm, ServletRequest servletRequest) {
+        List<SurveyResponseDto> responseList = null;
+        List<SurveyResponse> surveyResponsesList = new ArrayList<>();
+
+        try{
+            responseList = surveyService.findResponsesBySurveyIdWithFilters(selectForm.getId(), selectForm.getSearchParam(), selectForm.getPageNumber());
+
+            if(responseList == null || responseList.isEmpty()) {
+                return new ResponseEntity<SurveyBaseResponse<SurveyResponse>>( new SurveyBaseResponse<>(CommonConstant.ERR_DATA_NOT_FOUND, "해당 설문지에 대한 답변이 없습니다."), HttpStatus.OK);
+            }
+
+            for(SurveyResponseDto responseDto : responseList) {
+                SurveyResponse responseSurvey = new SurveyResponse();
+                responseSurvey.setId(responseDto.getId());
+                responseSurvey.setDescription(responseDto.getDescription());
+                responseSurvey.setName(responseDto.getName());
+                responseSurvey.setUseYn(responseDto.getUseYn());
+                responseSurvey.setRegDtm(responseDto.getRegDtm());
+
+                List<SurveyResponseItemDto> responseItemList = surveyService.findResponseItemByFilters(responseDto.getId(), selectForm.getSearchParam());
+                List<SurveyItemResponse> surveyItemResponseList = new ArrayList<>();
+
+                for(SurveyResponseItemDto itemDto : responseItemList) {
+                    if(CommonConstant.MULTI_ITEM.equals(itemDto.getItemType()) || CommonConstant.SINGLE_ITEM.equals(itemDto.getItemType())) {
+                        String str = surveyService.findResponseOptionByFilters(itemDto.getId(), selectForm.getSearchParam());
+                        itemDto.setAnswer(str);
+                    }
+
+                    SurveyItemResponse surveyItemResponse = new SurveyItemResponse();
+                    surveyItemResponse.setId(itemDto.getId());
+                    surveyItemResponse.setDescription(itemDto.getDescription());
+                    surveyItemResponse.setItemType(itemDto.getItemType());
+                    surveyItemResponse.setAnswer(itemDto.getAnswer());
+                    surveyItemResponse.setUseYn(itemDto.getUseYn());
+                    surveyItemResponse.setItemName(itemDto.getItemName());
+                    surveyItemResponse.setRegDtm(itemDto.getRegDtm());
+                    surveyItemResponse.setRequired(itemDto.isRequired());
+                    surveyItemResponseList.add(surveyItemResponse);
+                }
+                responseSurvey.setItemList(surveyItemResponseList);
+                surveyResponsesList.add(responseSurvey);
+            }
+        } catch (SurveyApiException e){
+            throw new SurveyApiException(e.getCode(), e.getMessage());
+        } catch (Exception e){
+            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ERROR, CommonConstant.ERR_MSG_DB_DATA_ERROR);
+        }
+
+        return new ResponseEntity<SurveyBaseResponse<SurveyResponse>>( new SurveyBaseResponse<>(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS, surveyResponsesList), HttpStatus.OK);
+    }
 
     @ExceptionHandler({ HttpMediaTypeNotSupportedException.class })
     @ResponseStatus(HttpStatus.OK)

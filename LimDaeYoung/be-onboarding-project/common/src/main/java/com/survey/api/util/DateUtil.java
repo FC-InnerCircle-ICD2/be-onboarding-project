@@ -14,5 +14,10 @@ public class DateUtil {
 	public static String getCurrentTime() {
 		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
+
+	public static String getDateTimeString(LocalDateTime localDateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		return formatter.format(localDateTime.atZone(ZoneOffset.of("+09:00")));
+	}
 }
 

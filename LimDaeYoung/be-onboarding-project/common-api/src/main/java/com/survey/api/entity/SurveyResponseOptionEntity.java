@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +17,10 @@ public class SurveyResponseOptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String regDtm;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime regDtm;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "optionId")
@@ -25,7 +30,10 @@ public class SurveyResponseOptionEntity {
     @JoinColumn(name = "responseItemId")
     private SurveyResponseItemEntity responseItem; // 설문 항목 참조
 
-    public SurveyResponseOptionEntity(String regDtm, SurveyEntity surveyItem) {
+    public SurveyResponseOptionEntity(SurveyResponseItemEntity responseItem, SurveyOptionEntity surveyOtion) {
         this.regDtm = regDtm;
+        this.responseItem = responseItem;
+        this.surveyOtion = surveyOtion;
+
     }
 }
