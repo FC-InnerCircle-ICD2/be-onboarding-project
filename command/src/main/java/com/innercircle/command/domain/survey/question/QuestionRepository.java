@@ -6,6 +6,8 @@ import java.util.UUID;
 
 public interface QuestionRepository {
 
+	QuestionId generateId();
+
 	List<Question> saveAll(List<Question> questions);
 
 	Optional<Question> findById(UUID id);

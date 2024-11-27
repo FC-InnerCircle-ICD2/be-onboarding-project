@@ -1,13 +1,16 @@
 package com.innercircle.command.application.survey;
 
+import com.innercircle.command.application.survey.question.LongTextQuestionInput;
+import com.innercircle.command.application.survey.question.MultipleChoiceQuestionInput;
 import com.innercircle.command.application.survey.question.QuestionInput;
+import com.innercircle.command.application.survey.question.ShortTextQuestionInput;
+import com.innercircle.command.application.survey.question.SingleChoiceQuestionInput;
 import com.innercircle.command.domain.survey.Survey;
+import com.innercircle.command.domain.survey.SurveyId;
 import com.innercircle.command.domain.survey.SurveyRepository;
 import com.innercircle.command.domain.survey.question.Question;
 import com.innercircle.command.domain.survey.question.QuestionRepository;
-import com.innercircle.command.infra.persistence.generator.IdGenerator;
 import java.util.List;
-import java.util.UUID;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class SurveyService {
 	}
 
 	@Transactional
-	public UUID create(String name, String description, List<QuestionInput> questionInputs) {
+	public SurveyId create(String name, String description, List<QuestionInput> questionInputs) {
 		if (StringUtils.isAnyBlank(name, description)) {
 			throw new IllegalArgumentException("Survey name or description must not be empty");
 		}
@@ -35,14 +38,35 @@ public class SurveyService {
 			throw new IllegalArgumentException("Survey must have between 1 and %d questions".formatted(MAX_QUESTIONS));
 		}
 
-		var survey = new Survey(IdGenerator.generate(), name, description);
-		var questions = questionInputs.stream()
-				.map(input -> input.convert(survey.getId()))
-				.toList();
+		var survey = new Survey(surveyRepository.generateId(), name, description);
+		var questions = getQuestions(survey.getId(), questionInputs);
+
 		questions.forEach(Question::validate);
 
 		questionRepository.saveAll(questions);
 		surveyRepository.save(survey);
 		return survey.getId();
+	}
+
+	private List<Question> getQuestions(SurveyId surveyId, List<QuestionInput> questionInputs) {
+		return questionInputs.stream()
+				.map(input -> {
+					var questionId = questionRepository.generateId();
+					if (input instanceof ShortTextQuestionInput shortTextQuestionInput) {
+						return new Question(questionId, surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
+								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
+					} else if (input instanceof LongTextQuestionInput longTextQuestionInput) {
+						return new Question(questionId, surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
+								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
+					} else if (input instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
+						return new Question(questionId, surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
+								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
+					} else if (input instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
+						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(), multipleChoiceQuestionInput.getDescription(),
+								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
+					}
+					return null;
+				})
+				.toList();
 	}
 }

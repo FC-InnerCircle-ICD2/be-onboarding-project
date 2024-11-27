@@ -1,5 +1,6 @@
 package com.innercircle.command.domain.survey.question;
 
+import com.innercircle.command.domain.survey.SurveyId;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -8,7 +9,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import java.util.List;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +25,8 @@ public class Question {
 	private static final int MAX_OPTION_SIZE = 3;
 
 	@Id
-	private UUID id;
-	private UUID surveyId;
+	private QuestionId id;
+	private SurveyId surveyId;
 	private String name;
 	private String description;
 	private boolean required;
@@ -36,7 +36,7 @@ public class Question {
 	@CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
 	private List<String> options;
 
-	public Question(UUID id, UUID surveyId, String name, String description, boolean required, QuestionType type, List<String> options) {
+	public Question(QuestionId id, SurveyId surveyId, String name, String description, boolean required, QuestionType type, List<String> options) {
 		this.id = id;
 		this.surveyId = surveyId;
 		this.name = name;

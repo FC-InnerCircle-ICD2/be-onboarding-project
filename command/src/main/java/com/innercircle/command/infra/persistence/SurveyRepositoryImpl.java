@@ -1,6 +1,7 @@
 package com.innercircle.command.infra.persistence;
 
 import com.innercircle.command.domain.survey.Survey;
+import com.innercircle.command.domain.survey.SurveyId;
 import com.innercircle.command.domain.survey.SurveyRepository;
 import com.innercircle.command.infra.persistence.jparepository.SurveyJpaRepository;
 import java.util.Optional;
@@ -14,6 +15,11 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 
 	public SurveyRepositoryImpl(SurveyJpaRepository jpaRepository) {
 		this.jpaRepository = jpaRepository;
+	}
+
+	@Override
+	public SurveyId generateId() {
+		return new SurveyId(UUID.randomUUID().toString());
 	}
 
 	@Override

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.innercircle.command.domain.survey.question.Question;
 import com.innercircle.command.domain.survey.question.QuestionType;
 import java.io.Serializable;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +33,4 @@ public abstract class QuestionInput implements Serializable {
 		this.type = type;
 		this.required = required;
 	}
-
-	public abstract Question convert(UUID surveyId);
 }

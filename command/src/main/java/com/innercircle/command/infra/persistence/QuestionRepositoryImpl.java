@@ -1,6 +1,7 @@
 package com.innercircle.command.infra.persistence;
 
 import com.innercircle.command.domain.survey.question.Question;
+import com.innercircle.command.domain.survey.question.QuestionId;
 import com.innercircle.command.domain.survey.question.QuestionRepository;
 import com.innercircle.command.infra.persistence.jparepository.QuestionJpaRepository;
 import java.util.List;
@@ -15,6 +16,11 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
 	public QuestionRepositoryImpl(QuestionJpaRepository jpaRepository) {
 		this.jpaRepository = jpaRepository;
+	}
+
+	@Override
+	public QuestionId generateId() {
+		return new QuestionId(UUID.randomUUID().toString());
 	}
 
 	@Override

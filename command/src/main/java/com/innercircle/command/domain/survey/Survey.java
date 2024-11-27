@@ -2,7 +2,6 @@ package com.innercircle.command.domain.survey;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +12,11 @@ import lombok.NoArgsConstructor;
 public class Survey {
 
 	@Id
-	private UUID id;
+	private SurveyId id;
 	private String name;
 	private String description;
 
-	public Survey(UUID id, String name, String description) {
+	public Survey(SurveyId id, String name, String description) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
