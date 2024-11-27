@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +21,10 @@ public class SurveyOptionEntity {
     private int optionOrder;
     private String useYn;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime regDtm;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private SurveyItemEntity surveyItem; // 설문 항목 참조
@@ -28,5 +34,17 @@ public class SurveyOptionEntity {
         this.optionOrder = optionOrder;
         this.useYn = useYn;
         this.surveyItem = surveyItem;
+    }
+
+    public SurveyOptionEntity(Long id,String optionName, int optionOrder, String useYn, SurveyItemEntity surveyItem) {
+        this.id = id;
+        this.optionName = optionName;
+        this.optionOrder = optionOrder;
+        this.useYn = useYn;
+        this.surveyItem = surveyItem;
+    }
+
+    public SurveyOptionEntity(Long id) {
+        this.id = id;
     }
 }

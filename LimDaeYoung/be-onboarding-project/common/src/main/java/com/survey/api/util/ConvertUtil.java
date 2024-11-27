@@ -19,4 +19,13 @@ public class ConvertUtil {
 		}
 	}
 
+	public static Long stringToLong(String value) {
+		try {
+			return Long.parseLong(value);
+		} catch (Exception e) {
+			return 0L;
+		}
+	}
+
+
 }

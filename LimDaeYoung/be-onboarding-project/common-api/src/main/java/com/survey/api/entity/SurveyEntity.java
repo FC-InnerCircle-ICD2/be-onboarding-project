@@ -1,10 +1,12 @@
 package com.survey.api.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,9 +21,17 @@ public class SurveyEntity {
     private String description;
     private String useYn;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime regDtm;
+
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<SurveyItemEntity> items; // 설문 항목 리스트목 리스트
+
+    public SurveyEntity(Long id) {
+        this.id = id;
+    }
 
     public SurveyEntity(String name, String description, String useYn) {
         this.name = name;
