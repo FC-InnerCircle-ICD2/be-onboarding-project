@@ -1,7 +1,6 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.survey.Survey;
-import com.icd.survey.common.CommonUtils;
+import com.icd.survey.api.entity.dto.SurveyDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,12 +38,13 @@ public class SurveyRequest {
         }
     }
 
-    public Survey toEntity() {
-        return Survey
+    public SurveyDto createSurveyDtoRequest() {
+        return SurveyDto
                 .builder()
-                .surveyName(this.surveyName)
-                .surveyDescription(this.surveyDescription)
-                .ipAddress(this.ipAddress == null ? CommonUtils.getRequestIp() : this.ipAddress)
+                .ipAddress(ipAddress)
+                .surveyName(surveyName)
+                .surveyDescription(surveyDescription)
                 .build();
     }
+
 }

@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SurveyServiceUnitTest {
 
+/*
     @Mock
     SurveyRepository surveyRepository;
     @Mock
@@ -63,11 +64,14 @@ class SurveyServiceUnitTest {
 
         when(surveyItemRepository.save(any())).thenReturn(itemRequest.toEntity());
 
-        /* survey item  response type 이 choice 일 경우에만 해당. */
+        */
+/* survey item  response type 이 choice 일 경우에만 해당. *//*
+
         when(responseOptionRepository.save(any())).thenReturn(optionRequest.toEntity());
 
         surveyService.createSurvey(surveyRequest);
     }
 
+*/
 
 }

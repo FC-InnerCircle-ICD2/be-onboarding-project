@@ -1,25 +1,23 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
 import com.icd.survey.api.entity.dto.SurveyItemDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "survey_item")
-@ToString
 public class SurveyItem extends BaseEntity {
     @Id
     @Column(name = "item_seq", nullable = false)
@@ -39,10 +37,32 @@ public class SurveyItem extends BaseEntity {
     @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "survey_seq", nullable = false)
-    private Survey survey;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_seq")
+    private static List<ItemResponseOption> responseOptionList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_seq")
+    private static List<ItemResponse> responseList;
+
+
+    public static void saveResponseOptionList(List<ItemResponseOption> request) {
+        responseOptionList = request;
+    }
+
+    public static void saveResponseList(List<ItemResponse> request) {
+        responseList = request;
+    }
+
+    public SurveyItem createSurveyItemRequest(SurveyItemDto dto) {
+        SurveyItem surveyItem = new SurveyItem();
+        surveyItem.itemName = dto.getItemName();
+        surveyItem.itemDescription = dto.getItemDescription();
+        surveyItem.itemResponseType = dto.getItemResponseType();
+        surveyItem.isEssential = dto.getIsEssential();
+        return surveyItem;
+    }
+
     public SurveyItemDto of() {
         return SurveyItemDto
                 .builder()

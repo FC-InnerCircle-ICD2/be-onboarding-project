@@ -23,9 +23,4 @@ public class SurveyController {
         surveyService.createSurvey(requestDto);
     }
 
-    @PatchMapping
-    public ResponseEntity<ApiResponse<SurveyDto>> modifySurvey(@Validated @RequestBody SurveyUpdateRequest request) {
-
-        return ResponseEntity.ok().body(new ApiResponse<>(surveyService.modifySurvey(request)));
-    }
 }

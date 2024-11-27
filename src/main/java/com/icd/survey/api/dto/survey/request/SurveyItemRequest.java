@@ -1,7 +1,9 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.survey.SurveyItem;
+import com.icd.survey.api.entity.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
+import com.icd.survey.exception.ApiException;
+import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -46,13 +48,20 @@ public class SurveyItemRequest {
                 || this.itemResponseType.equals(ResponseType.MULTI_CHOICE.getType());
     }
 
-    public SurveyItem toEntity() {
-        return SurveyItem
+    public void choiceTypeValidationCheck() {
+        if(Boolean.TRUE.equals(optionList.isEmpty())){
+            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, itemName +" 은 선택형 항목입니다. 옵션을 입력해주세요.");
+        }
+    }
+
+    public SurveyItemDto createSurveyItemDtoRequest() {
+        return SurveyItemDto
                 .builder()
-                .itemName(this.itemName)
-                .itemDescription(this.itemDescription)
-                .itemResponseType(this.itemResponseType)
-                .isEssential(this.isEssential)
+                .itemName(itemName)
+                .itemDescription(itemDescription)
+                .itemResponseType(itemResponseType)
+                .isEssential(isEssential)
                 .build();
     }
+
 }

@@ -18,10 +18,4 @@ public class ItemOptionRequest {
         }
     }
 
-    public ItemResponseOption toEntity() {
-        return ItemResponseOption
-                .builder()
-                .option(this.option)
-                .build();
-    }
 }

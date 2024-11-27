@@ -16,4 +16,5 @@ public class SurveyItemDto {
     private Integer itemResponseType;
     private Boolean isEssential;
     private List<ItemResponseOptionDto> responseOptionList;
+
 }

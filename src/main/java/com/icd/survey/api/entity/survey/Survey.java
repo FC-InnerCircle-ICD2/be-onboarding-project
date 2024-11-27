@@ -1,11 +1,11 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.dto.survey.request.SurveyRequest;
 import com.icd.survey.api.dto.survey.request.SurveyUpdateRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
 import com.icd.survey.api.entity.dto.SurveyDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
@@ -15,13 +15,10 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "survey")
-@ToString
 public class Survey extends BaseEntity {
     @Id
     @Column(name = "survey_seq")
@@ -36,6 +33,24 @@ public class Survey extends BaseEntity {
 
     @Column(name = "ip_address", length = 255, nullable = false)
     private String ipAddress;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "survey_seq")
+    private static List<SurveyItem> surveyItemList;
+
+
+
+    public static void saveSurveyItemList(List<SurveyItem> request) {
+        surveyItemList = request;
+    }
+
+    public static Survey createSurveyRequest(SurveyDto dto) {
+        Survey survey = new Survey();
+        survey.surveyName = dto.getSurveyName();
+        survey.surveyDescription = dto.getSurveyDescription();
+        survey.ipAddress = dto.getIpAddress();
+        return survey;
+    }
 
     public SurveyDto of() {
         return SurveyDto

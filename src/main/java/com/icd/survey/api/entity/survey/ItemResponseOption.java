@@ -2,17 +2,17 @@ package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Builder
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "item_response_option")
 public class ItemResponseOption {
     @Id
@@ -22,10 +22,11 @@ public class ItemResponseOption {
     @Column(name = "option", nullable = false)
     private String option;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "item_seq")
-    private SurveyItem surveyItem;
+    public static ItemResponseOption createItemResponseOptionRequest(ItemResponseOptionDto dto) {
+        ItemResponseOption itemResponseOption = new ItemResponseOption();
+        itemResponseOption.option = dto.getOption();
+        return itemResponseOption;
+    }
 
     public ItemResponseOptionDto of() {
         return ItemResponseOptionDto

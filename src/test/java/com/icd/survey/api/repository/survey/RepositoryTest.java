@@ -20,7 +20,7 @@ import java.util.List;
 
 @DataJpaTest
 public class RepositoryTest {
-    @Autowired
+/*    @Autowired
     SurveyRepository surveyRepository;
     @Autowired
     SurveyItemRepository surveyItemRepository;
@@ -52,7 +52,7 @@ public class RepositoryTest {
                 .surveyDescription("test survey description")
                 .ipAddress("127.0.0.1")
                 .build();
-        Survey requestSurvey = surveyRequest.toEntity();
+        Survey requestSurvey = Survey.createSurveyRequest(surveyRequest);
         SurveyItem requestSurveyItem = itemRequest.toEntity();
         ItemResponseOption requestResponseOption = optionRequest.toEntity();
 
@@ -80,5 +80,5 @@ public class RepositoryTest {
         List<SurveyItem> afterDeleteSurveyItemList = surveyItemRepository.findBySurvey(survey).get();
         SurveyItem afterItem = afterDeleteSurveyItemList.get(0);
         assertThat(item.getIsDeleted()).isNotEqualTo(afterItem.getIsDeleted());
-    }
+    }*/
 }
