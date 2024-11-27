@@ -13,8 +13,12 @@ public enum ServiceError {
     CREATION_INSUFFICIENT_QUESTIONS("1002", "서베이 생성에 필요한 질문은 최소 1개 이상, 10개 이하까지 생성 가능합니다."),
     CREATION_INSUFFICIENT_OPTIONS("1003", "서베이 생성에 필요한 질문 옵션이 유효하지 않습니다."),
 
-    // 조회 관련 오류
+    // 조회 관련 오류 (200)
     INQUIRY_SURVEY_NOT_FOUND("2001", "요청한 서베이를 찾을 수 없습니다."),
+
+    // 응답 관련 오류 (300)
+    SUBMIT_INVALID_QUESTION_ID("3001", "제출한 응답의 질문이 확인되지 않습니다."),
+    SUBMIT_INVALID_QUESTION_OPTION_ID("3002", "제출한 응답의 질문의 옵션이 확인되지 않습니다."),
 
     // 공통 오류 (900)
     BAD_REQUEST("9400", "요청이 유효하지 않습니다."),
