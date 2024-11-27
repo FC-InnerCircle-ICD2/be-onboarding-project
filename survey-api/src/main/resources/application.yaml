@@ -1,4 +1,17 @@
+# TODO : 우선 제일 상위 모듈에 application 설정을 합니다. 모듈 마다 효율적으로 관리할 수 있는 방안 고민 필요
 spring:
   application:
     name: survey-api
-
+  datasource:
+    hikari:
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create
