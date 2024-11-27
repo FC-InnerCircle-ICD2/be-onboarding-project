@@ -3,6 +3,8 @@ package com.innercircle.command.interfaces;
 import com.innercircle.command.application.survey.SurveyService;
 import com.innercircle.command.domain.Identifier;
 import com.innercircle.command.interfaces.request.CreateSurveyRequest;
+import com.innercircle.command.interfaces.request.CreateSurveyResponseRequest;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,8 +17,13 @@ public class SurveyController {
 		this.surveyService = surveyService;
 	}
 
-	@PostMapping("create-survey")
+	@PostMapping("/create-survey")
 	public Identifier createSurvey(@RequestBody CreateSurveyRequest request) {
 		return surveyService.create(request.name(), request.description(), request.questionInputs());
+	}
+
+	@PostMapping("/surveys/{surveyId}/responses")
+	public Identifier createSurveyResponse(@PathVariable String surveyId, @RequestBody CreateSurveyResponseRequest request) {
+		return surveyService.createResponse(surveyId, request.responseInputs());
 	}
 }

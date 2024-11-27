@@ -1,8 +1,8 @@
 package com.innercircle.command.infra.persistence.jparepository;
 
 import com.innercircle.command.domain.survey.Survey;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SurveyJpaRepository extends CrudRepository<Survey, String> {
+public interface SurveyJpaRepository extends JpaRepository<Survey, String> {
 
 }

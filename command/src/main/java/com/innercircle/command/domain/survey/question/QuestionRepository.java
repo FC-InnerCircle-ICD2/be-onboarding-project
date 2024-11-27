@@ -10,4 +10,6 @@ public interface QuestionRepository {
 	List<Question> saveAll(List<Question> questions);
 
 	Optional<Question> findById(String id);
+
+	List<Question> findBySurveyId(String surveyId);
 }

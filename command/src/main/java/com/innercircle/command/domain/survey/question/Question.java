@@ -5,9 +5,11 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,7 @@ public class Question {
 	private boolean required;
 	@Enumerated(EnumType.STRING)
 	private QuestionType type;
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
 	private List<String> options;
 
@@ -58,5 +60,28 @@ public class Question {
 		if (CollectionUtils.size(this.options) > MAX_OPTION_SIZE) {
 			throw new IllegalArgumentException("Question options must not exceed %d".formatted(MAX_OPTION_SIZE));
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		var question = (Question) o;
+		return Objects.equals(id, question.id) &&
+				Objects.equals(surveyId, question.surveyId) &&
+				Objects.equals(name, question.name) &&
+				Objects.equals(description, question.description) &&
+				Objects.equals(required, question.required) &&
+				Objects.equals(type, question.type) &&
+				CollectionUtils.isEqualCollection(options, question.options);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, type);
 	}
 }

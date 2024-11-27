@@ -23,11 +23,11 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 
 	@Override
 	public Survey save(Survey survey) {
-		return jpaRepository.save(survey);
+		return this.jpaRepository.save(survey);
 	}
 
 	@Override
 	public Optional<Survey> findById(String id) {
-		return jpaRepository.findById(id);
+		return this.jpaRepository.findById(id);
 	}
 }

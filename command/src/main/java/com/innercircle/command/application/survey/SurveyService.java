@@ -5,11 +5,17 @@ import com.innercircle.command.application.survey.question.MultipleChoiceQuestio
 import com.innercircle.command.application.survey.question.QuestionInput;
 import com.innercircle.command.application.survey.question.ShortTextQuestionInput;
 import com.innercircle.command.application.survey.question.SingleChoiceQuestionInput;
+import com.innercircle.command.application.survey.response.QuestionResponseInput;
 import com.innercircle.command.domain.Identifier;
 import com.innercircle.command.domain.survey.Survey;
 import com.innercircle.command.domain.survey.SurveyRepository;
 import com.innercircle.command.domain.survey.question.Question;
 import com.innercircle.command.domain.survey.question.QuestionRepository;
+import com.innercircle.command.domain.survey.question.QuestionType;
+import com.innercircle.command.domain.survey.response.Answer;
+import com.innercircle.command.domain.survey.response.AnswerRepository;
+import com.innercircle.command.domain.survey.response.SurveyResponse;
+import com.innercircle.command.domain.survey.response.SurveyResponseRepository;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,10 +29,15 @@ public class SurveyService {
 
 	private final SurveyRepository surveyRepository;
 	private final QuestionRepository questionRepository;
+	private final SurveyResponseRepository surveyResponseRepository;
+	private final AnswerRepository answerRepository;
 
-	public SurveyService(SurveyRepository surveyRepository, QuestionRepository questionRepository) {
+	public SurveyService(SurveyRepository surveyRepository, QuestionRepository questionRepository, SurveyResponseRepository surveyResponseRepository,
+			AnswerRepository answerRepository) {
 		this.surveyRepository = surveyRepository;
 		this.questionRepository = questionRepository;
+		this.surveyResponseRepository = surveyResponseRepository;
+		this.answerRepository = answerRepository;
 	}
 
 	@Transactional
@@ -48,6 +59,35 @@ public class SurveyService {
 		return new Identifier(survey.getId());
 	}
 
+	@Transactional
+	public Identifier createResponse(String surveyId, List<QuestionResponseInput> responseInputs) {
+		var surveyQuestions = questionRepository.findBySurveyId(surveyId);
+		if (CollectionUtils.isEmpty(surveyQuestions)) {
+			throw new SurveyNotFoundException();
+		}
+		var responseQuestions = getResponseQuestions(surveyId, responseInputs);
+		if (CollectionUtils.isEqualCollection(surveyQuestions, responseQuestions)) {
+			var surveyResponse = new SurveyResponse(surveyResponseRepository.generateId(), surveyId);
+			var answers = responseInputs.stream().map(input -> {
+						var text = input.getQuestion().getType() == QuestionType.SHORT_TEXT || input.getQuestion().getType() == QuestionType.LONG_TEXT
+								? input.getText()
+								: null;
+						var selectedOption =
+								input.getQuestion().getType() == QuestionType.SINGLE_CHOICE || input.getQuestion().getType() == QuestionType.MULTIPLE_CHOICE
+										? input.getSelectedOptions()
+										: null;
+						return new Answer(answerRepository.generateId(), surveyResponse.getId(), input.getQuestionId(), selectedOption, text);
+					})
+					.toList();
+
+			answerRepository.saveAll(answers);
+			surveyResponseRepository.save(surveyResponse);
+
+			return new Identifier(surveyResponse.getId());
+		}
+		throw new IllegalArgumentException("Response questions do not match survey questions");
+	}
+
 	private List<Question> getQuestions(String surveyId, List<QuestionInput> questionInputs) {
 		return questionInputs.stream()
 				.map(input -> {
@@ -63,6 +103,28 @@ public class SurveyService {
 								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
 					} else if (input instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
 						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(), multipleChoiceQuestionInput.getDescription(),
+								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
+					}
+					return null;
+				})
+				.toList();
+	}
+
+	private List<Question> getResponseQuestions(String surveyId, List<QuestionResponseInput> responseInputs) {
+		return responseInputs.stream()
+				.map(input -> {
+					if (input.getQuestion() instanceof ShortTextQuestionInput shortTextQuestionInput) {
+						return new Question(input.getQuestionId(), surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
+								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
+					} else if (input.getQuestion() instanceof LongTextQuestionInput longTextQuestionInput) {
+						return new Question(input.getQuestionId(), surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
+								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
+					} else if (input.getQuestion() instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
+						return new Question(input.getQuestionId(), surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
+								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
+					} else if (input.getQuestion() instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
+						return new Question(input.getQuestionId(), surveyId, multipleChoiceQuestionInput.getName(),
+								multipleChoiceQuestionInput.getDescription(),
 								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
 					}
 					return null;

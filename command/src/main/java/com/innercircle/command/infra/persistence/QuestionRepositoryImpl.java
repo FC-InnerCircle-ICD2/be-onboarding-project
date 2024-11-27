@@ -24,11 +24,16 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
 	@Override
 	public List<Question> saveAll(List<Question> questions) {
-		return jpaRepository.saveAll(questions);
+		return this.jpaRepository.saveAll(questions);
 	}
 
 	@Override
 	public Optional<Question> findById(String id) {
-		return jpaRepository.findById(id);
+		return this.jpaRepository.findById(id);
+	}
+
+	@Override
+	public List<Question> findBySurveyId(String surveyId) {
+		return this.jpaRepository.findBySurveyId(surveyId);
 	}
 }
