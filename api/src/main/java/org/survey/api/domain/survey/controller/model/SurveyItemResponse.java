@@ -17,6 +17,8 @@ import java.util.List;
 @Builder
 public class SurveyItemResponse {
 
+    private Long id;
+
     private Long surveyId;
 
     private String name;

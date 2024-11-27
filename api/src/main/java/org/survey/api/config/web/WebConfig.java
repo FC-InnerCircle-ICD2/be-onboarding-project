@@ -2,13 +2,17 @@ package org.survey.api.config.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.survey.api.interceptor.AuthorizationInterceptor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
+    private final AuthorizationInterceptor authorizationInterceptor;
     private List<String> OPEN_API = List.of(
             "/**"
     );
@@ -24,4 +28,13 @@ public class WebConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**"
     );
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authorizationInterceptor)
+                .excludePathPatterns(OPEN_API)
+                .excludePathPatterns(DEFAULT_EXCLUDE)
+                .excludePathPatterns(SWAGGER)
+        ;
+    }
 }

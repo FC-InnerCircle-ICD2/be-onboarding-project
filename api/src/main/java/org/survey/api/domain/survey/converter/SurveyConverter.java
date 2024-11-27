@@ -1,5 +1,7 @@
 package org.survey.api.domain.survey.converter;
 
+import lombok.RequiredArgsConstructor;
+import org.survey.api.common.annotation.Converter;
 import org.survey.api.common.error.CommonErrorCode;
 import org.survey.api.common.exception.ApiException;
 import org.survey.api.domain.survey.controller.model.SurveyBaseRequest;
@@ -10,9 +12,12 @@ import org.survey.db.selectlist.SelectListEntity;
 import org.survey.db.surveybase.SurveyBaseEntity;
 import org.survey.db.surveyitem.SurveyItemEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
+@Converter
 public class SurveyConverter {
 
     public SurveyBaseEntity toEntity(SurveyBaseRequest request){
@@ -60,31 +65,50 @@ public class SurveyConverter {
     }
 
     public SurveyBaseResponse toResponse(
-            SurveyBaseEntity surveyBaseEntity
+            SurveyBaseEntity surveyBaseEntity,
+            List<SurveyItemResponse> items
     ){
         return SurveyBaseResponse.builder()
                 .id(surveyBaseEntity.getId())
                 .title(surveyBaseEntity.getTitle())
                 .description(surveyBaseEntity.getDescription())
-                //.items(surveyItemEntityList)
+                .items(items)
                 .registeredAt(surveyBaseEntity.getRegisteredAt())
                 .modifiedAt(surveyBaseEntity.getModifiedAt())
                 .unregisteredAt(surveyBaseEntity.getUnregisteredAt())
                 .build();
     }
 
-    /*
     public SurveyItemResponse toResponse(
-            SurveyItemEntity surveyItemEntity
+            SurveyItemEntity surveyItemEntity,
+            List<String> options
     ){
         return Optional.ofNullable(surveyItemEntity)
                 .map(it -> {
                     return SurveyItemResponse.builder()
-                            .
-                            .
+                            .id(surveyItemEntity.getId())
+                            .surveyId(surveyItemEntity.getSurveyId())
+                            .name(surveyItemEntity.getName())
+                            .description(surveyItemEntity.getDescription())
+                            .inputType(surveyItemEntity.getInputType())
+                            .required(surveyItemEntity.getRequired())
+                            .selectOptions(options)
+                            .registeredAt(surveyItemEntity.getRegisteredAt())
+                            .modifiedAt(surveyItemEntity.getModifiedAt())
+                            .unregisteredAt(surveyItemEntity.getUnregisteredAt())
+                            .build();
                 })
                 .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyItemEntity Null"))
                 ;
     }
-     */
+
+    public List<String> toResponse(
+            List<SelectListEntity> list
+    ){
+        List<String> result = new ArrayList<>();
+        for(SelectListEntity selectListEntity : list){
+            result.add(selectListEntity.getContent());
+        }
+        return result;
+    }
 }
