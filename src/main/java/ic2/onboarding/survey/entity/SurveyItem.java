@@ -2,16 +2,14 @@ package ic2.onboarding.survey.entity;
 
 import ic2.onboarding.survey.global.ItemInputType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyItem extends BaseEntity {
 
@@ -43,20 +41,6 @@ public class SurveyItem extends BaseEntity {
 
     @Column(length = 500)
     private String choices;
-
-
-    public SurveyItem(String name,
-                      String description,
-                      ItemInputType inputType,
-                      Boolean required,
-                      String choices) {
-
-        this.name = name;
-        this.description = description;
-        this.inputType = inputType;
-        this.required = required;
-        this.choices = choices;
-    }
 
 
     public List<String> getChoiceList() {

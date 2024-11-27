@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Validated
@@ -34,7 +32,7 @@ public class SurveyService {
         // 항목 정보 -> SurveyItem Entity List
         List<SurveyItem> surveyItems = request.items()
                 .stream()
-                .map(SurveyService::mapSurveyItem)
+                .map(this::mapSurveyItem)
                 .toList();
 
         // 저장
@@ -52,24 +50,13 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(id)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND));
 
-        // 설문 기본정보 변경
-        survey.update(request.newSurveyName(), request.newSurveyDescription());
-
-        // 변경 ITEM ID 목록 추출
-        Set<Long> requestItemIds = request.getItemIds();
-
-        // 목록에서 사라진 ITEM 지운다.
-        survey.removeNotContainedItemsInIdSet(requestItemIds);
-
-        // 신규항목 추가 또는 기존항목 수정
-        request.items().forEach(formItem -> Optional.ofNullable(formItem.id())
-                .ifPresentOrElse(
-                        // 변경할 ID 존재시 UPDATE
-                        targetId -> survey.updateItemInfo(targetId, mapSurveyItem(formItem)),
-
-                        // 없다면 INSERT
-                        () -> survey.addItem(mapSurveyItem(formItem))
-                )
+        // 설문 기본정보 및 항목 정보 변경
+        survey.update(
+                request.newSurveyName(),
+                request.newSurveyDescription(),
+                request.items().stream()
+                        .map(this::mapSurveyItem)
+                        .toList()
         );
 
         surveyRepository.flush();
@@ -77,9 +64,11 @@ public class SurveyService {
     }
 
 
-    private static SurveyItem mapSurveyItem(SurveyFormItem formItem) {
+    private SurveyItem mapSurveyItem(SurveyFormItem formItem) {
 
         return new SurveyItem(
+                formItem.id(),
+                null,
                 formItem.name(),
                 formItem.description(),
                 formItem.inputTypeAsEnum(),
