@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@ToString
 public abstract class BaseEntity {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isDeleted = Boolean.FALSE;

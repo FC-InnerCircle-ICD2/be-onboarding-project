@@ -17,7 +17,6 @@ import java.util.List;
 @ToString
 public class SurveyRequest {
 
-    private Long surveySeq;
     private String ipAddress;
 
     @NotBlank(message = "설문조사 이름을 입력해 주세요.")

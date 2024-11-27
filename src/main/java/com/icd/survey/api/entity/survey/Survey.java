@@ -6,6 +6,7 @@ import com.icd.survey.api.entity.dto.SurveyDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import java.util.List;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "survey")
+@ToString
 public class Survey extends BaseEntity {
     @Id
     @Column(name = "survey_seq")
@@ -32,15 +34,19 @@ public class Survey extends BaseEntity {
     private String surveyDescription;
 
     @Column(name = "ip_address", length = 255, nullable = false)
-    private String ipAddress;
+    private String ipAddress = "127.0.0.1";
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_seq")
-    private static List<SurveyItem> surveyItemList;
+    private List<SurveyItem> surveyItemList;
 
 
+    public List<SurveyItem> createSurveyItemList() {
+        surveyItemList = new ArrayList<>();
+        return surveyItemList;
+    }
 
-    public static void saveSurveyItemList(List<SurveyItem> request) {
+    public void saveSurveyItemList(List<SurveyItem> request) {
         surveyItemList = request;
     }
 

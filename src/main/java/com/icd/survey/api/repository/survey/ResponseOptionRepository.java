@@ -8,7 +8,4 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 public interface ResponseOptionRepository extends JpaRepository<ItemResponseOption, Long> {
-    @Modifying
-    @Query("UPDATE ItemResponseOption o SET o.isDeleted = true WHERE o.surveyItem.itemSeq = :surveyItemSeq")
-    int makeAllAsDeletedBySurveyItemSeq(@Param("surveyItemSeq") Long surveyItemSeq);
 }

@@ -17,7 +17,6 @@ import java.util.List;
 @ToString
 public class SurveyItemRequest {
 
-    private Long itemSeq;
     @NotBlank(message = "항목의 이름을 입력해 주세요.")
     @Size(min = 1, max = 255, message = "설문조사 이름의 길이를 확인하세요.")
     private String itemName;
@@ -46,12 +45,6 @@ public class SurveyItemRequest {
     public Boolean isChoiceType() {
         return this.itemResponseType.equals(ResponseType.SINGLE_CHOICE.getType())
                 || this.itemResponseType.equals(ResponseType.MULTI_CHOICE.getType());
-    }
-
-    public void choiceTypeValidationCheck() {
-        if(Boolean.TRUE.equals(optionList.isEmpty())){
-            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, itemName +" 은 선택형 항목입니다. 옵션을 입력해주세요.");
-        }
     }
 
     public SurveyItemDto createSurveyItemDtoRequest() {

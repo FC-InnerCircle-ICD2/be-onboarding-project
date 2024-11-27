@@ -3,20 +3,20 @@ package com.icd.survey.api.entity.survey;
 import com.icd.survey.api.entity.base.BaseEntity;
 import com.icd.survey.api.entity.dto.SurveyItemDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @DynamicInsert
 @DynamicUpdate
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "survey_item")
 public class SurveyItem extends BaseEntity {
     @Id
@@ -34,27 +34,40 @@ public class SurveyItem extends BaseEntity {
     private Integer itemResponseType;
 
     @Column(name = "is_essential", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_seq")
-    private static List<ItemResponseOption> responseOptionList;
+    @Column(name = "survey_Seq")
+    @Setter
+    private Long surveySeq;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
-    private static List<ItemResponse> responseList;
+    private List<ItemResponseOption> responseOptionList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_seq")
+    private List<ItemResponse> responseList;
+
+    public List<ItemResponseOption> createResponseOptionList() {
+        responseOptionList = new ArrayList<>();
+        return responseOptionList;
+    }
 
 
-    public static void saveResponseOptionList(List<ItemResponseOption> request) {
+    public List<ItemResponse> createResponseList() {
+        responseList = new ArrayList<>();
+        return responseList;
+    }
+
+    public void saveResponseOptionList(List<ItemResponseOption> request) {
         responseOptionList = request;
     }
 
-    public static void saveResponseList(List<ItemResponse> request) {
+    public void saveResponseList(List<ItemResponse> request) {
         responseList = request;
     }
 
-    public SurveyItem createSurveyItemRequest(SurveyItemDto dto) {
+    public static SurveyItem createSurveyItemRequest(SurveyItemDto dto) {
         SurveyItem surveyItem = new SurveyItem();
         surveyItem.itemName = dto.getItemName();
         surveyItem.itemDescription = dto.getItemDescription();
