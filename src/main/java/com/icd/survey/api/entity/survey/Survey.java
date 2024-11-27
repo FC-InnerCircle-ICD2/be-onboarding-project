@@ -1,6 +1,5 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.dto.survey.request.SurveyUpdateRequest;
 import com.icd.survey.api.entity.base.BaseEntity;
 import com.icd.survey.api.entity.dto.SurveyDto;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,12 +56,12 @@ public class Survey extends BaseEntity {
                 .build();
     }
 
-    public void update(SurveyUpdateRequest request) {
-        if (StringUtils.hasText(request.getSurveyName())) {
-            this.surveyName = request.getSurveyName();
+    public void update(SurveyDto dto) {
+        if (StringUtils.hasText(dto.getSurveyName())) {
+            this.surveyName = dto.getSurveyName();
         }
-        if (StringUtils.hasText(request.getSurveyDescription())) {
-            this.surveyDescription = request.getSurveyDescription();
+        if (StringUtils.hasText(dto.getSurveyDescription())) {
+            this.surveyDescription = dto.getSurveyDescription();
         }
     }
 }

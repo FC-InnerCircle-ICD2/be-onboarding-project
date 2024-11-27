@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SurveyRequest {
+public class CreateSurveyRequest {
 
     private String ipAddress;
 
@@ -28,14 +28,10 @@ public class SurveyRequest {
     private String surveyDescription;
 
     @NotNull(message = "항목들을 구성해 주세요.")
+    @Size(min = 1, max = 10, message = "항목은 1개에서 10개 까지 입력 가능합니다.")
     @Valid
     private List<SurveyItemRequest> surveyItemList = new ArrayList<>();
 
-    public void validationCheck() {
-        if (this.surveyItemList.isEmpty()) {
-            throw new IllegalArgumentException("설문 항목들은 필수입니다.");
-        }
-    }
 
     public SurveyDto createSurveyDtoRequest() {
         return SurveyDto

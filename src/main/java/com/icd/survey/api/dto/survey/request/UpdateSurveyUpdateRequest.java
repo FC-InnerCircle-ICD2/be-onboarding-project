@@ -1,6 +1,6 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.survey.Survey;
+import com.icd.survey.api.entity.dto.SurveyDto;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.Valid;
@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SurveyUpdateRequest {
+public class UpdateSurveyUpdateRequest {
 
     @NotNull(message = "설문조사 번호는 필수요소입니다.")
     private Long surveySeq;
@@ -28,10 +28,12 @@ public class SurveyUpdateRequest {
     @Valid
     private List<SurveyItemRequest> surveyItemList = new ArrayList<>();
 
-    public void validationCheck() {
-        if(surveyItemList.isEmpty()){
-            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT);
-        }
+    public SurveyDto createSurveyDtoRequest() {
+        return SurveyDto
+                .builder()
+                .surveyName(surveyName)
+                .surveyDescription(surveyDescription)
+                .build();
     }
 
 }

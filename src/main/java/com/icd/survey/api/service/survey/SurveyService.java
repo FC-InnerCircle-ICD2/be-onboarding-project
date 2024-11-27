@@ -1,8 +1,9 @@
 package com.icd.survey.api.service.survey;
 
+import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
 import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
-import com.icd.survey.api.dto.survey.request.SurveyRequest;
+import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
 import com.icd.survey.api.entity.dto.SurveyItemDto;
 import com.icd.survey.api.entity.survey.ItemResponseOption;
@@ -19,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Transactional
 @Service
@@ -29,9 +33,7 @@ public class SurveyService {
     private final SurveyItemRepository surveyItemRepository;
     private final ResponseOptionRepository responseOptionRepository;
 
-    public void createSurvey(SurveyRequest request) {
-
-        request.validationCheck();
+    public void createSurvey(CreateSurveyRequest request) {
 
         request.setIpAddress(CommonUtils.getRequestIp());
 
@@ -72,6 +74,48 @@ public class SurveyService {
         }
     }
 
+    public void updateSurvey(UpdateSurveyUpdateRequest request) {
 
+        /* 엔티티 확인 */
+        Survey survey = surveyRepository.findById(request.getSurveySeq()).orElse(null);
+
+        if (survey == null
+                || Boolean.TRUE.equals(survey.getIsDeleted())
+                || Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
+            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
+        }
+
+        survey.update(request.createSurveyDtoRequest());
+
+        /* 기존의 설문조사 항목들 모두 disable 처리. */
+        Optional<List<SurveyItem>> optionalSurveyItemList = surveyItemRepository.findAllBySurveySeq(survey.getSurveySeq());
+
+        if (Boolean.TRUE.equals(optionalSurveyItemList.isPresent())) {
+            List<SurveyItem> surveyItemList = optionalSurveyItemList.get();
+            surveyItemList.forEach(SurveyItem::disable);
+        }
+
+        /* 새로운 설문조사 항목들 save */
+        for (SurveyItemRequest itemRequest : request.getSurveyItemList()) {
+            itemRequest.validationCheck();
+
+            SurveyItem newItem = SurveyItem.createSurveyItemRequest(itemRequest.createSurveyItemDtoRequest());
+            newItem.surveyKeySet(survey.getSurveySeq());
+
+            newItem = surveyItemRepository.save(newItem);
+
+            /* 선택형 문항의 경우 option list 처리 */
+            if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
+                for (ItemOptionRequest optionRequest : itemRequest.getOptionList()) {
+                    optionRequest.validationCheck();
+
+                    ItemResponseOption option = ItemResponseOption.createItemResponseOptionRequest(optionRequest.createItemREsponseOptionDto());
+                    option.itemKeySet(newItem.getItemSeq());
+
+                    responseOptionRepository.save(option);
+                }
+            }
+        }
+    }
 
 }

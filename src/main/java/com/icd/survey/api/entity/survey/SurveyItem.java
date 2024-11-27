@@ -5,11 +5,9 @@ import com.icd.survey.api.entity.dto.SurveyItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,6 +34,9 @@ public class SurveyItem extends BaseEntity {
     @Column(name = "is_essential", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isEssential = Boolean.FALSE;
 
+    @Column(name = "is_disabled", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private Boolean isDisabled = Boolean.FALSE;
+
     @Column(name = "survey_Seq")
     private Long surveySeq;
 
@@ -47,6 +48,9 @@ public class SurveyItem extends BaseEntity {
     @JoinColumn(name = "item_seq")
     private List<ItemResponse> responseList;
 
+    public void disable() {
+        this.isDisabled = Boolean.TRUE;
+    }
 
     public void surveyKeySet(Long surveySeq) {
         this.surveySeq = surveySeq;
