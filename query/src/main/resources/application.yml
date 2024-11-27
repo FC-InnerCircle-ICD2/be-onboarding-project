@@ -1,3 +1,19 @@
 spring:
   application:
     name: query
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/survey
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 10002
