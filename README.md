@@ -113,3 +113,12 @@
 빌드 결과물을 Executable jar 형태로 만들어 위 Branch에 함께 업로드 하시고, README에 다운로드 링크 정보를 넣어주시기 바랍니다. GitHub의 용량 문제로 업로드가 안되는 경우 다른 곳(개인 구글 드라이브 등)에 업로드 한 후 해당 다운로드 링크 정보를 README에 넣어주셔도 됩니다.
 
 해당 파일을 다운로드 및 실행(e.g. java -jar project.jar)하여 요구 사항 기능 검증을 진행하게 됩니다. 해당 파일을 다운로드할 수 없거나 실행 시 에러가 발생하는 경우에는 기능 점검을 진행하지 않습니다. 온보딩 프로젝트 제출 전 해당 실행 파일 다운로드 및 정상 동작 여부를 체크해 주시기 바랍니다.
+
+
+###
+
+## 코드 컨벤션
+  - java 변수 명은 'Camel Case'를 사용한다.(private static final 처럼 선언된 상수의 경우 Upper Snake Case 를 사용.)
+  - java 메서드 명은 동사+목적객체 형식의 'Camel Case' 로 작성한다. ex) createSurvey();
+  - 디렉토리 구조는 root 기준으로 api(api web 통신에 관한 파일들을 저장), common(프로젝트 전반에 사용 될 파일들을 저장), config(설정에 관련된 파일들을 저장), exception(예외에 관련된 파일들을 저장) 으로 나누며 필요에 의해 추가될 수 있음
+    api 디렉토리 기준 controller, service, repository, entity, dto, enums 등... layer 별로 1차 분류 후 디렉토리 내에서 도메인 별로 분리됨. (해당 프로젝트의 경우 도메인이 하나 뿐이기 때문에.... 효율 적인 구조인가에 대한 고민은 필요 함.)
