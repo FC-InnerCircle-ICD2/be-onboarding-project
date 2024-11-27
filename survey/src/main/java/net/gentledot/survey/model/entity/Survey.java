@@ -12,6 +12,7 @@ import lombok.ToString;
 import net.gentledot.survey.model.entity.common.BaseEntity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,6 +53,18 @@ public class Survey extends BaseEntity {
 
     private void disconnectRelationFromSurvey() {
         this.questions.forEach(question -> question.setSurvey(null));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Survey survey = (Survey) o;
+        return Objects.equals(id, survey.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
 

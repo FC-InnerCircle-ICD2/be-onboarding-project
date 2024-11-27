@@ -40,9 +40,9 @@ public class SurveyService {
                 questions
         );
 
-        surveyRepository.save(survey);
+        Survey saved = surveyRepository.save(survey);
 
-        return new SurveyCreateResponse(survey.getId(), survey.getCreatedAt());
+        return new SurveyCreateResponse(saved.getId(), saved.getCreatedAt());
     }
 
     @Transactional
@@ -56,9 +56,9 @@ public class SurveyService {
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
         survey.updateSurvey(surveyRequest.getName(), surveyRequest.getDescription(), questions);
 
-        Survey savedSurvey = surveyRepository.save(survey);
+        Survey saved = surveyRepository.save(survey);
 
-        return new SurveyUpdateResponse(savedSurvey.getId(), savedSurvey.getUpdatedAt());
+        return new SurveyUpdateResponse(saved.getId(), saved.getUpdatedAt());
     }
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
