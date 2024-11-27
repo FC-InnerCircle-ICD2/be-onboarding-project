@@ -5,6 +5,7 @@ import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
+import com.icd.survey.api.entity.dto.SurveyDto;
 import com.icd.survey.api.entity.dto.SurveyItemDto;
 import com.icd.survey.api.entity.survey.ItemResponseOption;
 import com.icd.survey.api.entity.survey.Survey;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,11 +81,7 @@ public class SurveyService {
         /* 엔티티 확인 */
         Survey survey = surveyRepository.findById(request.getSurveySeq()).orElse(null);
 
-        if (survey == null
-                || Boolean.TRUE.equals(survey.getIsDeleted())
-                || Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
-            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
-        }
+        surveyValidCheck(survey);
 
         survey.update(request.createSurveyDtoRequest());
 
@@ -118,4 +116,45 @@ public class SurveyService {
         }
     }
 
+    // todo : 응답항목의 이름이나 응답 값을 기반으로 검색하는 부분 추가 필요
+    public SurveyDto getSurvey(Long surveySeq) {
+
+        Survey survey = surveyRepository.findById(surveySeq)
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        surveyValidCheck(survey);
+
+        SurveyDto surveyDto = survey.of();
+
+        List<SurveyItemDto> surveyItemDtoList = new ArrayList<>();
+
+        List<SurveyItem> surveyItemList = surveyItemRepository.findAllBySurveySeq(surveySeq)
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        for (SurveyItem surveyItem : surveyItemList) {
+            List<ItemResponseOptionDto> optionList = new ArrayList<>();
+            SurveyItemDto itemDto = surveyItem.of();
+
+            List<ItemResponseOption> responseList = responseOptionRepository.findByItemSeq(surveyItem.getItemSeq())
+                    .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+            for (ItemResponseOption option : responseList) {
+                ItemResponseOptionDto optionDto = option.of();
+                optionList.add(optionDto);
+            }
+            itemDto.setResponseOptionList(optionList);
+            surveyItemDtoList.add(itemDto);
+
+        }
+        surveyDto.setSurveyItemList(surveyItemDtoList);
+        return surveyDto;
+    }
+
+    public void surveyValidCheck(Survey survey) {
+        if (survey == null
+                || Boolean.TRUE.equals(survey.getIsDeleted())
+                || Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
+            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
+        }
+    }
 }
