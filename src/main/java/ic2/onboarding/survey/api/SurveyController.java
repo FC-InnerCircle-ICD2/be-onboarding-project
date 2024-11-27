@@ -29,7 +29,7 @@ public class SurveyController implements SurveyControllerDoc {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(@PathVariable Long id,
+    public ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(@PathVariable(name = "id") Long id,
                                                                         @RequestBody SurveyUpdateRequest request) {
 
         SurveyUpdateResponse response = surveyService.updateSurvey(id, request);
