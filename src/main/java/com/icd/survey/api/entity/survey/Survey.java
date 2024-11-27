@@ -37,10 +37,6 @@ public class Survey extends BaseEntity {
     @Column(name = "ip_address", length = 255, nullable = false)
     private String ipAddress;
 
-
-    @OneToMany(mappedBy = "survey")
-    private List<SurveyItem> surbeyItemList = new ArrayList<>();
-
     public SurveyDto of() {
         return SurveyDto
                 .builder()

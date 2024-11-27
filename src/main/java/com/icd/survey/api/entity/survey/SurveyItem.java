@@ -39,17 +39,10 @@ public class SurveyItem extends BaseEntity {
     @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
 
-
     @Setter
     @ManyToOne
     @JoinColumn(name = "survey_seq", nullable = false)
     private Survey survey;
-
-    @OneToMany(mappedBy = "surveyItem", fetch = FetchType.LAZY)
-    private List<ItemResponseOption> responseOptionList = new ArrayList<>();
-    @OneToMany(mappedBy = "surveyItem", fetch = FetchType.LAZY)
-    private List<ItemResponse> responseList = new ArrayList<>();
-
     public SurveyItemDto of() {
         return SurveyItemDto
                 .builder()
