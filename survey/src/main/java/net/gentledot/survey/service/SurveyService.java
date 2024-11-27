@@ -6,6 +6,7 @@ import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyRequest;
 import net.gentledot.survey.dto.request.SurveyUpdateRequest;
 import net.gentledot.survey.dto.response.SurveyCreateResponse;
+import net.gentledot.survey.dto.response.SurveyUpdateResponse;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyCreationException;
 import net.gentledot.survey.exception.SurveyNotFoundException;
@@ -45,7 +46,7 @@ public class SurveyService {
     }
 
     @Transactional
-    public void updateSurvey(SurveyUpdateRequest surveyRequest) {
+    public SurveyUpdateResponse updateSurvey(SurveyUpdateRequest surveyRequest) {
         validateRequest(surveyRequest);
 
         String surveyId = surveyRequest.getId();
@@ -55,7 +56,9 @@ public class SurveyService {
         List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
         survey.updateSurvey(surveyRequest.getName(), surveyRequest.getDescription(), questions);
 
-        surveyRepository.save(survey);
+        Survey savedSurvey = surveyRepository.save(survey);
+
+        return new SurveyUpdateResponse(savedSurvey.getId(), savedSurvey.getUpdatedAt());
     }
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
