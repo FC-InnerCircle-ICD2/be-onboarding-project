@@ -1,6 +1,6 @@
 package net.gentledot.survey.service;
 
-import jakarta.transaction.Transactional;
+
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyRequest;
@@ -15,6 +15,7 @@ import net.gentledot.survey.model.entity.SurveyQuestion;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import net.gentledot.survey.repository.SurveyRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
