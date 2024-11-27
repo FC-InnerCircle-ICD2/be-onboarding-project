@@ -5,8 +5,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public record SurveyUpdateRequest(@Valid SurveyForm basic,
 
@@ -29,11 +27,4 @@ public record SurveyUpdateRequest(@Valid SurveyForm basic,
         return this.basic().description();
     }
 
-
-    public Set<Long> getItemIds() {
-
-        return this.items.stream()
-                .map(SurveyFormItem::id)
-                .collect(Collectors.toSet());
-    }
 }
