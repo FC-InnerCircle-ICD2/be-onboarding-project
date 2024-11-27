@@ -41,14 +41,6 @@ public class Question extends BaseEntity {
     @Column(name = "required_yn", nullable = false)
     private boolean isRequired;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<Option> options = new ArrayList<>();
-
-    public void addOption(Option option) {
-        option.setQuestion(this);
-        this.options.add(option);
-    }
-
     @Builder
     public Question(
             Survey survey,

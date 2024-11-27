@@ -15,7 +15,7 @@ public class Option {
     @JsonIgnore
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "question_idx", referencedColumnName = "idx")
+    @JoinColumn(name = "question_idx", referencedColumnName = "idx", nullable = true)
     private Question question;
 
     @Column(nullable = false)
