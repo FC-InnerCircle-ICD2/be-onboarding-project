@@ -20,9 +20,9 @@ public class SurveyController implements SurveyControllerDoc {
 
     @Override
     @PostMapping
-    public ResponseEntity<ApiResult<SurveyCreationResponse>> createSurvey(@RequestBody SurveyCreationRequest surveyCreationRequest) {
+    public ResponseEntity<ApiResult<SurveyCreationResponse>> createSurvey(@RequestBody SurveyCreationRequest request) {
 
-        SurveyCreationResponse response = surveyService.createSurvey(surveyCreationRequest);
+        SurveyCreationResponse response = surveyService.createSurvey(request);
         return ResponseEntity.ok(new ApiResult<>(response));
     }
 
@@ -30,9 +30,9 @@ public class SurveyController implements SurveyControllerDoc {
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(@PathVariable Long id,
-                                                                        @RequestBody SurveyUpdateRequest surveyUpdateRequest) {
+                                                                        @RequestBody SurveyUpdateRequest request) {
 
-        SurveyUpdateResponse response = surveyService.updateSurvey(id, surveyUpdateRequest);
+        SurveyUpdateResponse response = surveyService.updateSurvey(id, request);
         return ResponseEntity.ok(new ApiResult<>(response));
     }
 

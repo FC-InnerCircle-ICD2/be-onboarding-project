@@ -143,7 +143,7 @@ public interface SurveyControllerDoc {
                     )
             )
     )
-    ResponseEntity<ApiResult<SurveyCreationResponse>> createSurvey(SurveyCreationRequest surveyCreationRequest);
+    ResponseEntity<ApiResult<SurveyCreationResponse>> createSurvey(SurveyCreationRequest request);
 
 
     @Operation(summary = "설문조사 수정",
@@ -267,6 +267,6 @@ public interface SurveyControllerDoc {
                     )
             )
     )
-    ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(Long id, SurveyUpdateRequest surveyUpdateRequest);
+    ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(Long id, SurveyUpdateRequest request);
 
 }
