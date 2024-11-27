@@ -4,14 +4,21 @@ import lombok.extern.slf4j.Slf4j;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyNotFoundException;
+import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.Survey;
 import net.gentledot.survey.model.entity.SurveyAnswer;
+import net.gentledot.survey.model.entity.SurveyQuestion;
+import net.gentledot.survey.model.enums.ItemRequired;
+import net.gentledot.survey.model.enums.SurveyItemType;
 import net.gentledot.survey.repository.SurveyAnswerRepository;
 import net.gentledot.survey.repository.SurveyRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,5 +44,42 @@ public class SurveyAnswerService {
     }
 
     private void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
+        Map<Long, SurveyQuestion> questionMap = survey.getQuestions().stream()
+                .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));
+
+        for (SubmitSurveyAnswer answer : answers) {
+            // 1. questionId가 유효한지 확인
+            if (!questionMap.containsKey(answer.getQuestionId())) {
+                throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_ID);
+            }
+
+            SurveyQuestion question = questionMap.get(answer.getQuestionId());
+
+            // 2. questionOptionId가 유효한지 확인
+            if (question.getItemType() == SurveyItemType.SINGLE_SELECT || question.getItemType() == SurveyItemType.MULTI_SELECT) {
+                boolean optionExists = question.getOptions().stream()
+                        .anyMatch(option -> option.getId().equals(answer.getQuestionOptionId()));
+                if (!optionExists) {
+                    throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
+                }
+            }
+
+            // 3. answer가 비어 있는지 확인 (필수 항목)
+            if (question.getRequired() == ItemRequired.REQUIRED) {
+                if (StringUtils.isEmpty(answer.getAnswer())) {
+                    throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                }
+            }
+
+            // 4. SINGLE_SELECT 타입 - option이 없거나 2개 이상인 경우 확인
+            if (question.getItemType() == SurveyItemType.SINGLE_SELECT) {
+                long optionCount = answers.stream()
+                        .filter(a -> a.getQuestionId().equals(answer.getQuestionId()))
+                        .count();
+                if (optionCount != 1) {
+                    throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                }
+            }
+        }
     }
 }
