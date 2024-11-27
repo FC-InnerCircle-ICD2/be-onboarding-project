@@ -1,5 +1,8 @@
 package org.brinst.surveyapi.controller;
 
+import java.util.List;
+
+import org.brinst.surveycommon.dto.AnswerDTO;
 import org.brinst.surveycommon.dto.SurveyDTO;
 import org.brinst.surveycore.entity.Survey;
 import org.brinst.surveycore.service.SurveyService;
@@ -37,6 +40,15 @@ public class SurveyController {
 	public ResponseEntity<HttpStatus> registerSurvey(@RequestBody SurveyDTO.ReqDTO surveyDTO) {
 		surveyService.registerSurvey(surveyDTO);
 		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@PostMapping("/api/v1/survey/{surveyId}")
+	public ResponseEntity<HttpStatus> answerSurvey(
+		@PathVariable("surveyId") Long surveyId,
+		@RequestBody List<AnswerDTO.ReqDTO> answerDTO
+	) {
+		surveyService.answerSurvey(surveyId, answerDTO);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

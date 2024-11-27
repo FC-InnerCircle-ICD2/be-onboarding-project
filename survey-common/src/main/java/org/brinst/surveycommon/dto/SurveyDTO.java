@@ -37,6 +37,19 @@ public class SurveyDTO {
 		private String name;
 		private String description;
 		private int version;
-		private List<ItemDTO> itemList;
+		private List<ItemResDTO> itemList;
 	}
+
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ItemResDTO {
+		private Long id;
+		private String name;
+		private String description;
+		private boolean required;
+		private OptionType type;
+		private List<String> options;
+	}
+
 }

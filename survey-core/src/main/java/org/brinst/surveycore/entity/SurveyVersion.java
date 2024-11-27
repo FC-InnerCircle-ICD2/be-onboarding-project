@@ -2,11 +2,14 @@ package org.brinst.surveycore.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.brinst.surveycommon.config.GlobalException;
 import org.brinst.surveycommon.dto.AnswerDTO;
 import org.brinst.surveycommon.dto.SurveyDTO;
+import org.brinst.surveycommon.enums.ErrorCode;
 import org.springframework.util.CollectionUtils;
 
 import jakarta.persistence.CascadeType;
@@ -45,15 +48,20 @@ public class SurveyVersion {
 		}
 	}
 
-	public boolean validateAnswer(List<AnswerDTO.ReqDTO> answers) {
-		Set<Long> surveyQuestionIds = surveyQuestions.stream()
-			.map(SurveyQuestion::getId)
-			.collect(Collectors.toSet());
+	public void validateAnswer(List<AnswerDTO.ReqDTO> answers) {
+		Map<Long, SurveyQuestion> surveyQuestionMap = surveyQuestions.stream()
+			.collect(Collectors.toMap(SurveyQuestion::getId, surveyQuestion -> surveyQuestion));
+		Map<Long, AnswerDTO.ReqDTO> answerItemIds = answers.stream()
+			.collect(Collectors.toMap(AnswerDTO.ReqDTO::getItemId, answer -> answer));
 
-		Set<Long> answerItemIds = answers.stream()
-			.map(AnswerDTO.ReqDTO::getItemId)
-			.collect(Collectors.toSet());
-
-		return surveyQuestionIds.equals(answerItemIds);
+		surveyQuestionMap.forEach((id, question) -> {
+			if (!answerItemIds.containsKey(id)) {
+				throw new GlobalException(ErrorCode.BAD_REQUEST);
+			}
+			AnswerDTO.ReqDTO reqDTO = answerItemIds.get(id);
+			question.validateRequiredAnswer(reqDTO.getAnswers());
+			question.validateAnswerByOptionType(reqDTO.getAnswers());
+			question.validateAnswerByChoice(reqDTO.getAnswers());
+		});
 	}
 }

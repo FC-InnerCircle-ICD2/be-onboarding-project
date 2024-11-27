@@ -6,9 +6,11 @@ import org.brinst.surveycommon.config.GlobalException;
 import org.brinst.surveycommon.dto.AnswerDTO;
 import org.brinst.surveycommon.dto.SurveyDTO;
 import org.brinst.surveycommon.enums.ErrorCode;
+import org.brinst.surveycore.entity.Answer;
 import org.brinst.surveycore.entity.Survey;
 import org.brinst.surveycore.entity.SurveyOption;
 import org.brinst.surveycore.entity.SurveyVersion;
+import org.brinst.surveycore.repository.AnswerRepository;
 import org.brinst.surveycore.repository.SurveyRepository;
 import org.brinst.surveycore.repository.SurveyVersionRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SurveyService {
 	private final SurveyRepository surveyRepository;
 	private final SurveyVersionRepository surveyVersionRepository;
+	private final AnswerRepository answerRepository;
 
 	@Transactional
 	public void registerSurvey(SurveyDTO.ReqDTO surveyReqDTO) {
@@ -50,7 +53,8 @@ public class SurveyService {
 			survey.getName(),
 			survey.getDescription(),
 			surveyVersion.getVersion(),
-			surveyVersion.getSurveyQuestions().stream().map(question -> new SurveyDTO.ItemDTO(
+			surveyVersion.getSurveyQuestions().stream().map(question -> new SurveyDTO.ItemResDTO(
+				question.getId(),
 				question.getName(),
 				question.getDescription(),
 				question.isRequired(),
@@ -60,11 +64,12 @@ public class SurveyService {
 		);
 	}
 
-	public void surveyAnswer(Long surveyId, List<AnswerDTO.ReqDTO> answers) {
+	@Transactional
+	public void answerSurvey(Long surveyId, List<AnswerDTO.ReqDTO> answers) {
 		SurveyVersion latestSurveyVersion = getLatestSurveyVersion(surveyId);
-		if (!latestSurveyVersion.validateAnswer(answers)) {
-			throw new GlobalException(ErrorCode.BAD_REQUEST);
-		}
+		latestSurveyVersion.validateAnswer(answers);
+		Answer answer = Answer.registerAnswer(answers, latestSurveyVersion);
+		answerRepository.save(answer);
 	}
 
 	private SurveyVersion getLatestSurveyVersion(Long surveyId) {
