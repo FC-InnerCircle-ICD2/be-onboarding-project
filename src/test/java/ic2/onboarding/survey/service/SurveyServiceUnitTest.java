@@ -46,30 +46,32 @@ class SurveyServiceUnitTest {
         List<SurveyItem> surveyItems = FixtureUtil.surveyItemArbitraryBuilder()
                 .set("choices", String.join("|", choiceList))
                 .sampleList(size);
-        survey.addAllItems(surveyItems);
 
         when(surveyRepository.save(any(Survey.class)))
-                .thenReturn(survey);
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        SurveyForm basic = new SurveyForm(1L, survey.getName(), survey.getDescription());
+        SurveyForm basic = new SurveyForm(null, survey.getName(), survey.getDescription());
         List<SurveyFormItem> formItems = surveyItems.stream()
                 .map(SurveyFormItem::fromEntity)
                 .toList();
 
-        // when
-        SurveyCreationResponse response = surveyService.createSurvey(new SurveyCreationRequest(basic, formItems));
+        SurveyCreationRequest request = new SurveyCreationRequest(basic, formItems);
 
-        // then
+        // when
+        SurveyCreationResponse response = surveyService.createSurvey(request);
+
         SurveyForm surveyForm = response.basic();
         List<SurveyFormItem> surveyFormItems = response.items();
 
+        // then
         assertEquals(survey.getName(), surveyForm.name());
         assertEquals(survey.getDescription(), surveyForm.description());
         assertEquals(surveyItems.size(), surveyFormItems.size());
-        for (int i = 0; i < surveyItems.size(); i++) {
+        for (int i = 0; i < surveyFormItems.size(); i++) {
             SurveyItem surveyItem = surveyItems.get(i);
             SurveyFormItem surveyFormItem = surveyFormItems.get(i);
 
+            assertEquals(surveyItem.getId(), surveyFormItem.id());
             assertEquals(surveyItem.getName(), surveyFormItem.name());
             assertEquals(surveyItem.getDescription(), surveyFormItem.description());
             assertEquals(surveyItem.getInputType().name(), surveyFormItem.inputType());
