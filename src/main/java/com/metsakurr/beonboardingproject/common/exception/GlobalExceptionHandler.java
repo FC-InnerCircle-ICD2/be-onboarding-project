@@ -1,5 +1,6 @@
 package com.metsakurr.beonboardingproject.common.exception;
 
+import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
 import com.metsakurr.beonboardingproject.common.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +16,15 @@ import java.util.List;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ApiResponse<?>> handleServiceException(
+            ServiceException ex
+    ) {
+        ApiResponse response = new ApiResponse<>(ex.getResponseCode(), null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex
