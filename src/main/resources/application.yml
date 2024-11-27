@@ -6,19 +6,22 @@ spring:
     name: be-onboarding-project
 
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb # 메모리 기반 데이터베이스
     username: sa
-    password: ""
+    password: 
     driver-class-name: org.h2.Driver
 
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: true	# H2 콘솔 활성화
+      path: /h2-console # 기본 URL: http://localhost:8080/h2-console
 
   jpa:
     hibernate:
-      ddl-auto: create  # 초기 설정에서는 create 사용 >> 애플리케이션이 시작될 때마다 데이터베이스 스키마를 완전히 새로 생성
+      ddl-auto: create-drop # 시작 시 테이블 생성, 종료 시 테이블 삭제
+    show-sql: true # 실행된 SQL 쿼리를 콘솔에 출력
 #      ddl-auto: update  # 개발 중에는 update 사용 >> 애플리케이션이 시작될 때 기존 스키마를 업데이트하여, 새로운 엔티티나 컬럼을 추가
     properties:
-       hibernate.dialect: org.hibernate.dialect.H2Dialect  # H2 방언 설정
+       hibernate:
+         format_sql: true # SQL 쿼리를 읽기 쉽게 출력
+         dialect: org.hibernate.dialect.H2Dialect # H2 데이터베이스 전용 방언
