@@ -5,7 +5,8 @@ import ic2.onboarding.survey.entity.Survey;
 import java.util.List;
 
 public record SurveyCreationResponse(SurveyForm basic,
-                                     List<SurveyFormItem> items) {
+                                     List<SurveyFormItem> items)
+{
 
     public static SurveyCreationResponse fromEntity(Survey survey) {
 

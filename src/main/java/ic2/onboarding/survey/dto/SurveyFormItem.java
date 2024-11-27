@@ -11,14 +11,14 @@ import java.util.List;
 
 public record SurveyFormItem(Long id,
 
-                             @Size(min = BizConstants.MIN_NAME_LENGTH,
-                                     max = BizConstants.MAX_NAME_LENGTH,
-                                     message = "{name.length}")
+                             @Size(message = "{name.length}",
+                                     min = BizConstants.MIN_NAME_LENGTH,
+                                     max = BizConstants.MAX_NAME_LENGTH)
                              String name,
 
-                             @Size(min = BizConstants.MIN_DESCRIPTION_LENGTH,
-                                     max = BizConstants.MAX_DESCRIPTION_LENGTH,
-                                     message = "{description.length}")
+                             @Size(message = "{description.length}",
+                                     min = BizConstants.MIN_DESCRIPTION_LENGTH,
+                                     max = BizConstants.MAX_DESCRIPTION_LENGTH)
                              String description,
 
                              @NotBlank(message = "{inputType.notBlank}")
@@ -27,10 +27,11 @@ public record SurveyFormItem(Long id,
                              @NotNull(message = "{required.notNull}")
                              Boolean required,
 
-                             @Size(min = BizConstants.MIN_CHOICES_SIZE,
-                                     max = BizConstants.MAX_CHOICES_SIZE,
-                                     message = "{choices.size}")
-                             List<String> choices) {
+                             @Size(message = "{choices.size}",
+                                     min = BizConstants.MIN_CHOICES_SIZE,
+                                     max = BizConstants.MAX_CHOICES_SIZE)
+                             List<String> choices)
+{
 
     public static SurveyFormItem fromEntity(SurveyItem item) {
 
@@ -58,4 +59,5 @@ public record SurveyFormItem(Long id,
 
         return ItemInputType.fromString(inputType);
     }
+
 }

@@ -8,10 +8,11 @@ import java.util.List;
 
 public record SurveyCreationRequest(@Valid SurveyForm basic,
 
-                                    @Valid @Size(
+                                    @Valid
+                                    @Size(message = "{items.size}",
                                             min = BizConstants.MIN_ITEMS_SIZE,
-                                            max = BizConstants.MAX_ITEMS_SIZE,
-                                            message = "{items.size}"
-                                    )
-                                    List<SurveyFormItem> items) {
+                                            max = BizConstants.MAX_ITEMS_SIZE)
+                                    List<SurveyFormItem> items)
+{
+
 }
