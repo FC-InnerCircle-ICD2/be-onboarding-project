@@ -1,6 +1,6 @@
 package com.practice.survey.domain.entity;
 
-import com.practice.survey.domain.enums.inputType;
+import com.practice.survey.domain.enums.InputType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,13 +40,12 @@ public class SurveyItem extends BaseTime{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "input_type",nullable = false)
-    private inputType inputType;
+    private InputType inputType;
 
     @Column(nullable = false)
     private boolean isRequired=true;
 
     @ManyToOne
     @JoinColumn(name = "version_id")
-    @Column(nullable = false)
     private SurveyVersion version;
 }

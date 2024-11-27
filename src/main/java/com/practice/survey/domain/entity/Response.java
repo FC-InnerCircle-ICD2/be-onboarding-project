@@ -39,7 +39,6 @@ public class Response extends BaseTime {
 
     @ManyToOne
     @JoinColumn(name = "version_id")
-    @Column(nullable = false)
     private SurveyVersion version;
 
 }
