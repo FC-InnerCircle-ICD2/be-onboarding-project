@@ -31,8 +31,11 @@ public class AnswerService {
     @Transactional
     public void create(CreateAnswerRequest request) {
         long surveyIdx = request.getIdx();
-        Survey survey = surveyRepository.findById(surveyIdx)
-                .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_SURVEY));
+        Survey survey = surveyRepository.findById(surveyIdx);
+
+        if (survey == null) {
+            throw new ServiceException(ResponseCode.NOT_FOUND_SURVEY);
+        }
 
         List<Question> questions = questionRepository.findAllBySurveyId(surveyIdx);
 

@@ -45,7 +45,10 @@ public class SurveyService {
 
             questionRepository.save(question);
         });
-        return new RegistSurveyResponse(surveyRepository.save(survey));
+
+        surveyRepository.save(survey);
+
+        return null;
     }
 
 }
