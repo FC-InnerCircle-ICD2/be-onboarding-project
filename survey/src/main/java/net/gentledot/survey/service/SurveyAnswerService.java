@@ -64,8 +64,6 @@ public class SurveyAnswerService {
         return new SearchSurveyAnswerResponse(surveyId, surveyAnswers);
     }
 
-
-
     public void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
         Map<Long, SurveyQuestion> questionMap = survey.getQuestions().stream()
                 .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));

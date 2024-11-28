@@ -1,6 +1,9 @@
 package net.gentledot.survey.service;
 
+import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
+import net.gentledot.survey.dto.response.SearchSurveyAnswerResponse;
+import net.gentledot.survey.dto.response.SurveyAnswerValue;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.Survey;
@@ -34,8 +37,6 @@ class SurveyAnswerServiceProcessTest {
     SurveyAnswerRepository surveyAnswerRepository;
 
     private Survey survey;
-    private List<SurveyQuestion> surveyQuestions;
-    private List<SurveyQuestionOption> surveyQuestionOptions;
 
     @BeforeEach
     void setUp() {
@@ -46,12 +47,10 @@ class SurveyAnswerServiceProcessTest {
         List<SurveyQuestionOption> options = new ArrayList<>();
         options.add(SurveyQuestionOption.of("Option 1"));
         options.add(SurveyQuestionOption.of("Option 2"));
-        surveyQuestionOptions = options;
         List<SurveyQuestion> questions = new ArrayList<>();
-        questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, surveyQuestionOptions));
+        questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, options));
         questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, new ArrayList<>()));
-        surveyQuestions = questions;
-        return Survey.of("Survey 1", "Description 1", surveyQuestions);
+        return Survey.of("Survey 1", "Description 1", questions);
     }
 
     @Test
@@ -131,6 +130,58 @@ class SurveyAnswerServiceProcessTest {
         assertThrows(SurveySubmitValidationException.class, () -> {
             surveyAnswerService.validateSurveyAnswers(survey, answers);
         });
+    }
+
+    @Test
+    void getSurveyAnswersWithValidRequest() {
+        List<SubmitSurveyAnswer> answers = new ArrayList<>();
+        answers.add(new SubmitSurveyAnswer(
+                survey.getQuestions().get(0).getId(),
+                survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
+
+        surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
+
+        SearchSurveyAnswerRequest request = SearchSurveyAnswerRequest.builder()
+                .surveyId(survey.getId())
+                .build();
+
+        SearchSurveyAnswerResponse response = surveyAnswerService.getSurveyAnswers(request);
+
+
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.surveyId()).isEqualTo(survey.getId());
+        Assertions.assertThat(response.answers()).hasSize(2);
+        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::questionName)
+                .containsExactlyInAnyOrder("Question 1", "Question 2");
+        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::answerValue)
+                .containsExactlyInAnyOrder("Answer 1", "Answer 2");
+    }
+
+    @Test
+    void getSurveyAnswersWithFilter() {
+        List<SubmitSurveyAnswer> answers = new ArrayList<>();
+        answers.add(new SubmitSurveyAnswer(
+                survey.getQuestions().get(0).getId(),
+                survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
+
+        surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
+
+        SearchSurveyAnswerRequest request = SearchSurveyAnswerRequest.builder()
+                .surveyId(survey.getId())
+                .questionName("Question 1")
+                .build();
+
+        SearchSurveyAnswerResponse response = surveyAnswerService.getSurveyAnswers(request);
+
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.surveyId()).isEqualTo(survey.getId());
+        Assertions.assertThat(response.answers()).hasSize(1);
+        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::questionName)
+                .containsExactly("Question 1");
+        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::answerValue)
+                .containsExactly("Answer 1");
     }
 
 }
