@@ -41,6 +41,9 @@ public class Question extends BaseEntity {
     @Column(name = "required_yn", nullable = false)
     private boolean isRequired;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Option> options = new ArrayList<>();
+
     @Builder
     public Question(
             Survey survey,
