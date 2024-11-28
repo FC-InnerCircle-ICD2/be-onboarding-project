@@ -18,4 +18,14 @@ public final class BizConstants {
     public static final int MIN_CHOICES_SIZE = 0;
     public static final int MAX_CHOICES_SIZE = 5;
 
+
+    public static final int MIN_SHORT_ANSWER_LENGTH = 1;
+    public static final int MAX_SHORT_ANSWER_LENGTH = 50;
+
+    public static final int MIN_LONG_ANSWER_LENGTH = 1;
+    public static final int MAX_LONG_ANSWER_LENGTH = 1_000;
+
+    public static final int MIN_CHOICE_ITEM_ANSWER_LENGTH = 1;
+    public static final int MAX_CHOICE_ITEM_ANSWER_LENGTH = 100;
+
 }

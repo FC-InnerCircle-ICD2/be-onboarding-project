@@ -1,5 +1,7 @@
 package ic2.onboarding.survey.entity;
 
+import ic2.onboarding.survey.global.BizException;
+import ic2.onboarding.survey.global.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,6 +27,9 @@ public class Survey extends BaseEntity {
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyItem> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.PERSIST)
+    private List<SurveySubmissionItem> submittedItems = new ArrayList<>();
 
 
     public Survey(String name, String description) {
@@ -68,6 +73,72 @@ public class Survey extends BaseEntity {
 
         if (this.items.addAll(newItems)) {
             newItems.forEach(item -> item.setSurvey(this));
+        }
+    }
+
+
+    public void submitForm(List<SurveySubmissionItem> submissionItems) {
+
+        // 제출한 단일선택 항목들
+        List<Long> choices = submissionItems.stream()
+                .filter(submissionItem -> submissionItem.getSurveyItem().isSingleChoice())
+                .map(submissionItem -> submissionItem.getSurveyItem().getId())
+                .toList();
+
+        submissionItems.forEach(submissionItem -> {
+            SurveyItem surveyItem = submissionItem.getSurveyItem();
+
+            // 항목 답변 길이 체크
+            String answer = submissionItem.getAnswer();
+            if (!surveyItem.validAnswerLength(answer)) {
+                throw new BizException(ErrorCode.NOT_VALIDATED);
+            }
+
+            /* 선택형 항목 추가 검사 */
+            if (!surveyItem.isChoiceType()) {
+                return;
+            }
+
+            // 선택 가능한 옵션 중 하나에 포함되는 답변인가?
+            if (!surveyItem.containsChoice(answer)) {
+                throw new BizException(ErrorCode.NOT_VALIDATED);
+            }
+
+            if (surveyItem.isMultipleChoice()) {
+                return;
+            }
+
+            // 단일선택 타입이 1개 초과인지 검사
+            long count = choices.stream()
+                    .filter(itemId -> surveyItem.getId().equals(itemId))
+                    .count();
+
+            if (count > 1) {
+                throw new BizException(ErrorCode.NOT_VALIDATED);
+            }
+        });
+
+        /* 필수값 중 제출되지 않은 것이 있는지 확인 */
+        // (1). 필수 ITEM ID Set
+        Set<Long> requiredItemIds = this.items.stream()
+                .filter(SurveyItem::getRequired)
+                .map(SurveyItem::getId)
+                .collect(Collectors.toSet());
+
+        // (2). 제출한 ITEM ID Set
+        Set<Long> submissionIds = submissionItems.stream()
+                .map(submitted -> submitted.getSurveyItem().getId())
+                .collect(Collectors.toSet());
+
+        requiredItemIds.removeAll(submissionIds);
+        // (1) - (2) 이후 (1)이 비어있지 않다면 필수값 미제출 항목 존재
+        if (!requiredItemIds.isEmpty()) {
+            throw new BizException(ErrorCode.NOT_VALIDATED);
+        }
+
+        // 저장
+        if (this.submittedItems.addAll(submissionItems)) {
+            submissionItems.forEach(item -> item.setSurvey(this));
         }
     }
 
