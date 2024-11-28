@@ -1,12 +1,16 @@
 package net.gentledot.survey.service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
+import net.gentledot.survey.dto.response.SearchSurveyAnswerResponse;
+import net.gentledot.survey.dto.response.SurveyAnswerValue;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.Survey;
 import net.gentledot.survey.model.entity.SurveyAnswer;
+import net.gentledot.survey.model.entity.SurveyAnswerSubmission;
 import net.gentledot.survey.model.entity.SurveyQuestion;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
@@ -42,6 +46,25 @@ public class SurveyAnswerService {
         SurveyAnswer surveyAnswer = SurveyAnswer.of(survey, answers);
         surveyAnswerRepository.save(surveyAnswer);
     }
+
+    @Transactional(readOnly = true)
+    public SearchSurveyAnswerResponse getSurveyAnswers(SearchSurveyAnswerRequest request) {
+        Survey survey = surveyRepository.findById(request.getSurveyId())
+                .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND));
+
+        String surveyId = survey.getId();
+        List<SurveyAnswer> allSurveyAnswers = surveyAnswerRepository.findAllBySurveyId(surveyId);
+
+        List<SurveyAnswerValue> surveyAnswers = allSurveyAnswers.stream()
+                .flatMap(surveyAnswer -> surveyAnswer.getAnswers().stream())
+                .filter(answer -> filterAnswer(answer, request))
+                .map(SurveyAnswerValue::from)
+                .collect(Collectors.toList());
+
+        return new SearchSurveyAnswerResponse(surveyId, surveyAnswers);
+    }
+
+
 
     public void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
         Map<Long, SurveyQuestion> questionMap = survey.getQuestions().stream()
@@ -81,5 +104,19 @@ public class SurveyAnswerService {
                 }
             }
         }
+    }
+
+    private boolean filterAnswer(SurveyAnswerSubmission answer, SearchSurveyAnswerRequest request) {
+        // request에서 questionName과 answerValue가 없으면 통과
+        if (StringUtils.isEmpty(request.getQuestionName()) && StringUtils.isEmpty(request.getAnswerValue())) {
+            return true;
+        }
+
+        boolean matchesQuestionName = StringUtils.isEmpty(request.getQuestionName()) ||
+                                      answer.getSurveyQuestion().getItemName().equalsIgnoreCase(request.getQuestionName());
+        boolean matchesAnswerValue = StringUtils.isEmpty(request.getAnswerValue()) ||
+                                     answer.getAnswer().equalsIgnoreCase(request.getAnswerValue());
+
+        return matchesQuestionName && matchesAnswerValue;
     }
 }
