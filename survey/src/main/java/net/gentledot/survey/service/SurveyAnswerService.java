@@ -43,7 +43,7 @@ public class SurveyAnswerService {
         surveyAnswerRepository.save(surveyAnswer);
     }
 
-    private void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
+    public void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
         Map<Long, SurveyQuestion> questionMap = survey.getQuestions().stream()
                 .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));
 

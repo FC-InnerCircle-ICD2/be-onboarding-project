@@ -16,8 +16,10 @@ import lombok.ToString;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
+import net.gentledot.survey.model.enums.SurveyItemType;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -48,12 +50,17 @@ public class SurveyAnswer {
                             .findFirst()
                             .orElseThrow(() -> new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_ID));
 
-                    SurveyQuestionOption questionOption = question.getOptions().stream()
+                    Optional<SurveyQuestionOption> questionOptionOptional = question.getOptions().stream()
                             .filter(option -> option.getId().equals(answer.getQuestionOptionId()))
-                            .findFirst()
-                            .orElseThrow(() -> new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID));
+                            .findFirst();
 
-                    return SurveyAnswerSubmission.of(question, questionOption, answer.getAnswer());
+                    if ((question.getItemType().equals(SurveyItemType.SINGLE_SELECT) ||
+                         question.getItemType().equals(SurveyItemType.MULTI_SELECT))
+                        && questionOptionOptional.isEmpty()) {
+                        throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
+                    }
+
+                    return SurveyAnswerSubmission.of(question, questionOptionOptional.orElse(null), answer.getAnswer());
                 })
                 .collect(Collectors.toList());
 
