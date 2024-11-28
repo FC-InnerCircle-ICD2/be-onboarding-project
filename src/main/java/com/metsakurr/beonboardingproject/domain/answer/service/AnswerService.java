@@ -3,6 +3,7 @@ package com.metsakurr.beonboardingproject.domain.answer.service;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
 import com.metsakurr.beonboardingproject.domain.answer.dto.CreateAnswerRequest;
+import com.metsakurr.beonboardingproject.domain.answer.dto.CreateAnswerResponse;
 import com.metsakurr.beonboardingproject.domain.answer.entity.Answer;
 import com.metsakurr.beonboardingproject.domain.answer.entity.Response;
 import com.metsakurr.beonboardingproject.domain.answer.repository.AnswerRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,7 +31,7 @@ public class AnswerService {
     private final ResponseRepository responseRepository;
 
     @Transactional
-    public void create(CreateAnswerRequest request) {
+    public CreateAnswerResponse create(CreateAnswerRequest request) {
         long surveyIdx = request.getIdx();
         Survey survey = surveyRepository.findById(surveyIdx);
 
@@ -44,23 +46,31 @@ public class AnswerService {
                 .build();
         responseRepository.save(response);
 
+        List<CreateAnswerResponse.AnswerResponse> answerResponses = new ArrayList<>();
+        CreateAnswerResponse createAnswerResponse = CreateAnswerResponse.builder()
+                .idx(response.getIdx())
+                .name(survey.getName())
+                .description(survey.getDescription())
+                .answers(answerResponses)
+                .build();
+
         questions.forEach(question -> {
             CreateAnswerRequest.AnswerRequest answerRequest = request.getAnswers()
                     .stream().filter(answer -> answer.getIdx() == question.getIdx())
                     .findFirst()
                     .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_ANSWER));
 
-            String answer = answerRequest.getAnswer();
-            if (answer == null) { answer = ""; }
+            String answerString = answerRequest.getAnswer();
+            if (answerString == null) { answerString = ""; }
             boolean isRequired = question.isRequired();
 
-            if (isRequired && answer.isEmpty()) {
+            if (isRequired && answerString.isEmpty()) {
                 throw new ServiceException(ResponseCode.NOT_FOUND_REQUIRED_ANSWER);
             }
 
             switch (question.getQuestionType()) {
                 case SHORT_SENTENCE:
-                    if (answer.length() > 255) {
+                    if (answerString.length() > 255) {
                         throw new ServiceException(ResponseCode.INVALID_SHORT_SENTENCE_ANSWER);
                     }
                     break;
@@ -68,7 +78,7 @@ public class AnswerService {
                 case MULTI_CHOICE:
                     List<String> options = optionRepository.findAllByQuestionId(question.getIdx()).stream()
                             .map(Option::getName).toList();
-                    List<String> optionAnswers = List.of(answer.split(","));
+                    List<String> optionAnswers = List.of(answerString.split(","));
                     optionAnswers.forEach(optionAnswer -> {
                         boolean isValid = options.contains(optionAnswer.trim());
                         if (!isValid) {
@@ -81,11 +91,19 @@ public class AnswerService {
             Answer answerEntity = Answer.builder()
                     .question(question)
                     .response(response)
-                    .answerText(answer)
+                    .answerText(answerString)
                     .build();
             answerRepository.save(answerEntity);
+            CreateAnswerResponse.AnswerResponse answerResponse = CreateAnswerResponse.AnswerResponse.builder()
+                    .idx(answerEntity.getIdx())
+                    .name(question.getName())
+                    .description(question.getDescription())
+                    .answer(answerEntity.getAnswerText())
+                    .build();
+            answerResponses.add(answerResponse);
         });
 
         responseRepository.save(response);
+        return createAnswerResponse;
     }
 }
