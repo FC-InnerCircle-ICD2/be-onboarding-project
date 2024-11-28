@@ -58,7 +58,7 @@ public class Question {
     @JsonIgnore // 순환 참조 문제를 방지하기 위해 관계의 JSON 변환 시 이 필드는 제외
     private Survey survey;
     
- // Getter와 Setter 메서드
+    // Getter와 Setter 메서드
     public Long getId() {
         return id;
     }

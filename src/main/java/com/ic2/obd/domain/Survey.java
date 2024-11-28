@@ -54,6 +54,11 @@ public class Survey {
         question.setSurvey(this); // Question 엔티티에도 Survey 설정
     }
     
+    public void removeQuestion(Question question) {
+        questions.remove(question);
+        question.setSurvey(null);
+    }
+    
     // Getter와 Setter 메서드
     public Long getId() {
         return id;

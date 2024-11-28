@@ -2,7 +2,9 @@ package com.ic2.obd.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +42,17 @@ public class SurveyController {
         Survey createdSurvey = surveyService.createSurvey(survey);
         // HTTP 상태 코드 201(Created)와 함께 생성된 설문조사 반환
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSurvey);
+    }
+    
+    /**
+     * 설문조사 수정 API
+     * @param id 수정할 설문조사의 ID
+     * @param updatedSurvey 수정할 설문조사 데이터
+     * @return 수정된 설문조사 데이터
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Survey> updateSurvey(@PathVariable("id") Long id, @RequestBody Survey updatedSurvey) {
+        Survey survey = surveyService.updateSurvey(id, updatedSurvey);
+        return ResponseEntity.ok(survey);
     }
 }
