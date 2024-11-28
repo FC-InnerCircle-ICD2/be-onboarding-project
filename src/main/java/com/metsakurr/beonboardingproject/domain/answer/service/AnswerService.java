@@ -42,6 +42,7 @@ public class AnswerService {
         Response response = Response.builder()
                 .survey(survey)
                 .build();
+        responseRepository.save(response);
 
         questions.forEach(question -> {
             CreateAnswerRequest.AnswerRequest answerRequest = request.getAnswers()
