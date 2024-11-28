@@ -1,7 +1,7 @@
 package com.onboarding.api.web.survey.dto.update;
 
-import com.onboarding.survey.survey.enums.Operation;
-import com.onboarding.survey.survey.enums.QuestionType;
+import com.onboarding.survey.enums.Operation;
+import com.onboarding.survey.enums.QuestionType;
 import java.util.List;
 
 public record QuestionUpdateReqDto(
