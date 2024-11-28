@@ -33,6 +33,8 @@ public class SurveyService {
                     .questionType(QuestionType.fromName(questionRequest.getQuestionType()))
                     .isRequired(questionRequest.getIsRequired())
                     .build();
+            survey.getQuestions().add(question);
+
             if (questionRequest.getOptions() != null) {
                 questionRequest.getOptions().forEach(optionRequest -> {
                     Option option = Option.builder()
@@ -40,6 +42,7 @@ public class SurveyService {
                             .name(optionRequest.getName())
                             .build();
                     optionRepository.save(option);
+                    question.getOptions().add(option);
                 });
             }
 
@@ -48,7 +51,7 @@ public class SurveyService {
 
         surveyRepository.save(survey);
 
-        return null;
+        return new RegistSurveyResponse(survey);
     }
 
 }
