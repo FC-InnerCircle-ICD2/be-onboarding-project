@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.onboarding.common.domain.BaseEntity;
+import com.onboarding.servey.dto.request.OptionRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,5 +38,20 @@ public class Option extends BaseEntity {
 
 	public void setQuestion(Question question) {
 		this.question = question;
+	}
+
+	public static Option of(OptionRequest optionRequest) {
+		return Option.builder()
+			.number(optionRequest.getNumber())
+			.build();
+	}
+
+	public OptionEditor.OptionEditorBuilder toEditor() {
+		return OptionEditor.builder()
+			.number(number);
+	}
+
+	public void edit(OptionEditor optionEditor) {
+		number = optionEditor.getNumber();
 	}
 }

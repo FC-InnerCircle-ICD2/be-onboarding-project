@@ -9,6 +9,6 @@ public class TypeValidator implements ConstraintValidator<Type, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		return QuestionType.contain(value) != null;
+		return QuestionType.of(value) != null;
 	}
 }

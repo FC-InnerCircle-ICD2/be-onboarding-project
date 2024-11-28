@@ -4,7 +4,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.onboarding.common.exception.BaseException;
+import com.onboarding.servey.domain.Option;
+import com.onboarding.servey.domain.OptionEditor;
+import com.onboarding.servey.domain.Question;
+import com.onboarding.servey.domain.QuestionEditor;
+import com.onboarding.servey.domain.QuestionType;
 import com.onboarding.servey.domain.Servey;
+import com.onboarding.servey.domain.ServeyEditor;
+import com.onboarding.servey.dto.request.OptionRequest;
+import com.onboarding.servey.dto.request.QuestionRequest;
+import com.onboarding.servey.dto.request.ServeyRequest;
 import com.onboarding.servey.dto.response.ServeyResponse;
 import com.onboarding.servey.repository.ServeyRepository;
 
@@ -23,5 +32,73 @@ public class ServeyServiceImpl implements ServeyService {
 	public ServeyResponse getServey(Long id) {
 		Servey servey = serveyRepository.findById(id).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
 		return ServeyResponse.from(servey);
+	}
+
+	@Transactional
+	@Override
+	public void create(ServeyRequest serveyRequest) {
+		Servey servey = Servey.of(serveyRequest);
+
+		serveyRequest.getQuestions().forEach(questionRequest -> {
+			Question question = Question.of(questionRequest);
+			servey.addQuestion(question);
+			questionRequest.getOptions().forEach(optionRequest -> {
+				Option option = Option.of(optionRequest);
+				question.addOption(option);
+			});
+		});
+
+		serveyRepository.save(servey);
+	}
+
+	@Transactional
+	@Override
+	public void update(Long serveyId, ServeyRequest serveyRequest) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+
+		ServeyEditor.ServeyEditorBuilder serveyEditorBuilder = servey.toEditor();
+		ServeyEditor serveyEditor = serveyEditorBuilder
+			.name(serveyRequest.getName())
+			.description(serveyRequest.getDescription())
+			.build();
+
+		servey.edit(serveyEditor);
+	}
+
+	@Transactional
+	@Override
+	public void update(Long serveyId, Long questionId, QuestionRequest questionRequest) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+		Question question = servey.getQuestions().stream()
+			.filter(x -> x.getId().equals(questionId))
+			.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+
+		QuestionEditor.QuestionEditorBuilder questionEditorBuilder = question.toEditor();
+		QuestionEditor questionEditor = questionEditorBuilder
+			.name(questionRequest.getName())
+			.description(questionRequest.getDescription())
+			.type(QuestionType.of(questionRequest.getType()))
+			.build();
+
+		question.edit(questionEditor);
+	}
+
+	@Transactional
+	@Override
+	public void update(Long serveyId, Long questionId, Long optionId, OptionRequest optionRequest) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+		Question question = servey.getQuestions().stream()
+			.filter(x -> x.getId().equals(questionId))
+			.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+		Option option = question.getOptions().stream()
+			.filter(x -> x.getId().equals(optionId))
+			.findAny().orElseThrow(() -> new BaseException("선택 할 후보가 없습니다."));
+
+		OptionEditor.OptionEditorBuilder optionEditorBuilder = option.toEditor();
+		OptionEditor optionEditor = optionEditorBuilder
+			.number(optionRequest.getNumber())
+			.build();
+
+		option.edit(optionEditor);
 	}
 }

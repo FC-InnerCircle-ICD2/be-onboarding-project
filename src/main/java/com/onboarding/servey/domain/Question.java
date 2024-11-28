@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.onboarding.common.domain.BaseEntity;
+import com.onboarding.servey.dto.request.QuestionRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -56,11 +57,6 @@ public class Question extends BaseEntity {
 		this.description = description;
 		this.type = type;
 		this.required = required;
-
-		if ((type == QuestionType.SINGLE_LIST || type == QuestionType.MULTI_LIST) &&
-			(options == null || options.isEmpty())) {
-			throw new IllegalArgumentException("단일 선택 리스트 또는 다중 선택 리스트는 선택할 수 있는 후보가 포함되어야 합니다.");
-		}
 	}
 
 	public void setServey(Servey servey) {
@@ -70,5 +66,29 @@ public class Question extends BaseEntity {
 	public void addOption(Option option) {
 		this.options.add(option);
 		option.setQuestion(this);
+	}
+
+	public static Question of(QuestionRequest questionRequest) {
+		return Question.builder()
+			.name(questionRequest.getName())
+			.description(questionRequest.getDescription())
+			.type(QuestionType.of(questionRequest.getType()))
+			.required(questionRequest.isRequired())
+			.build();
+	}
+
+	public QuestionEditor.QuestionEditorBuilder toEditor() {
+		return QuestionEditor.builder()
+			.name(name)
+			.description(description)
+			.type(type)
+			.required(required);
+	}
+
+	public void edit(QuestionEditor questionEditor) {
+		name = questionEditor.getName();
+		description = questionEditor.getDescription();
+		type = questionEditor.getType();
+		required = questionEditor.isRequired();
 	}
 }

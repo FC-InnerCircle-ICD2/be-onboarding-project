@@ -13,7 +13,7 @@ public enum QuestionType {
 
 	private final String name;
 
-	public static QuestionType contain(String name) {
+	public static QuestionType of(String name) {
 		for (QuestionType type : QuestionType.values()) {
 			if (type.name().equals(name)) {
 				return type;

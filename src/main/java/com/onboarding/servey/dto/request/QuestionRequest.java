@@ -24,7 +24,7 @@ public class QuestionRequest {
 	@ApiModelProperty(notes = "항목 설명", example = "ex) 010-0000-0000", dataType = "string")
 	private String description;
 
-	@ApiModelProperty(notes = "항목 입력 형태", example = "SHORT_TYPE", required = true,
+	@ApiModelProperty(notes = "항목 입력 형태", example = "SINGLE_LIST", required = true,
 		allowableValues = "SHORT_TYPE, LONG_TYPE, SINGLE_LIST, MULTI_LIST", dataType = "string")
 	@Type
 	private String type;

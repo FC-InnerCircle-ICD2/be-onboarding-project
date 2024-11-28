@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.onboarding.common.domain.BaseEntity;
+import com.onboarding.servey.dto.request.ServeyRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,5 +43,23 @@ public class Servey extends BaseEntity {
 	public void addQuestion(Question question) {
 		this.questions.add(question);
 		question.setServey(this);
+	}
+
+	public static Servey of(ServeyRequest serveyRequest) {
+		return Servey.builder()
+			.name(serveyRequest.getName())
+			.description(serveyRequest.getDescription())
+			.build();
+	}
+
+	public ServeyEditor.ServeyEditorBuilder toEditor() {
+		return ServeyEditor.builder()
+			.name(name)
+			.description(description);
+	}
+
+	public void edit(ServeyEditor serveyEditor) {
+		name = serveyEditor.getName();
+		description = serveyEditor.getDescription();
 	}
 }
