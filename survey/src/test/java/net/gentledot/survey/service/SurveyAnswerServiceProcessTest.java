@@ -62,7 +62,7 @@ class SurveyAnswerServiceProcessTest {
                 survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
         answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
 
-        surveyAnswerService.submitSurveyResponse(survey.getId(), answers);
+        surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
 
         Assertions.assertThat(surveyAnswerRepository.findAll()).isNotEmpty();
     }
@@ -74,7 +74,7 @@ class SurveyAnswerServiceProcessTest {
 
 
         Assertions.assertThatThrownBy(() ->
-                        surveyAnswerService.submitSurveyResponse("invalid-id", answers))
+                        surveyAnswerService.submitSurveyAnswer("invalid-id", answers))
                 .isInstanceOf(SurveyNotFoundException.class)
                 .hasMessageContaining("요청한 서베이를 찾을 수 없습니다.")
                 .satisfies(exception -> {

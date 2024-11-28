@@ -32,7 +32,7 @@ public class SurveyAnswerService {
     }
 
     @Transactional
-    public void submitSurveyResponse(String surveyId, List<SubmitSurveyAnswer> answers) {
+    public void submitSurveyAnswer(String surveyId, List<SubmitSurveyAnswer> answers) {
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND));
 
