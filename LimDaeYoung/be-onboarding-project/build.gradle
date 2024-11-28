@@ -86,3 +86,6 @@ project(':survey-api') {
         api project(":common-api")
     }
 }
+
+bootJar.enabled = false 
+jar.enabled = true
