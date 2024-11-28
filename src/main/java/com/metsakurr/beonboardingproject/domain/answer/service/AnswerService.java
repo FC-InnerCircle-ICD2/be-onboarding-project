@@ -4,6 +4,7 @@ import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
 import com.metsakurr.beonboardingproject.domain.answer.dto.CreateAnswerRequest;
 import com.metsakurr.beonboardingproject.domain.answer.dto.CreateAnswerResponse;
+import com.metsakurr.beonboardingproject.domain.answer.dto.DetailAnswerResponse;
 import com.metsakurr.beonboardingproject.domain.answer.entity.Answer;
 import com.metsakurr.beonboardingproject.domain.answer.entity.Response;
 import com.metsakurr.beonboardingproject.domain.answer.repository.AnswerRepository;
@@ -105,5 +106,11 @@ public class AnswerService {
 
         responseRepository.save(response);
         return createAnswerResponse;
+    }
+
+    public DetailAnswerResponse detail(long idx) {
+        Response response = responseRepository.findById(idx);
+        DetailAnswerResponse detailAnswerResponse = new DetailAnswerResponse(response);
+        return detailAnswerResponse;
     }
 }
