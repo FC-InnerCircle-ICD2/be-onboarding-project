@@ -33,5 +33,4 @@ public class UpdateSurveyUpdateRequest {
                 .surveyDescription(surveyDescription)
                 .build();
     }
-
 }

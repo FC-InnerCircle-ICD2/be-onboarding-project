@@ -2,8 +2,8 @@ package com.icd.survey.api.service.survey.business;
 
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
-import com.icd.survey.api.repository.survey.ItemResponseRepository;
-import com.icd.survey.api.repository.survey.ResponseOptionRepository;
+import com.icd.survey.api.repository.survey.AnswerOptionRepository;
+import com.icd.survey.api.repository.survey.ItemAnswerRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
 import com.icd.survey.api.repository.survey.SurveyRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ import java.util.Optional;
 public class SurveyQueryBusiness {
     private final SurveyRepository surveyRepository;
     private final SurveyItemRepository surveyItemRepository;
-    private final ItemResponseRepository itemResponseRepository;
-    private final ResponseOptionRepository responseOptionRepository;
+    private final ItemAnswerRepository itemAnswerRepository;
+    private final AnswerOptionRepository answerOptionRepository;
 
     public Optional<Survey> findById(Long surveySeq) {
         return surveyRepository.findById(surveySeq);
@@ -34,7 +34,7 @@ public class SurveyQueryBusiness {
         return surveyItemRepository.findAllBySurveySeq(surveySeq);
     }
 
-    public Boolean isExsitedUserSurvey(String surveyName, String ipAddress) {
+    public Boolean isExistedUserSurvey(String surveyName, String ipAddress) {
         return surveyRepository.existsBySurveyNameAndIpAddress(surveyName, ipAddress);
     }
 

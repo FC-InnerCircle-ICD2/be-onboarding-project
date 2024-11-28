@@ -2,15 +2,8 @@ package com.icd.survey.api.service.survey;
 
 import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
-import com.icd.survey.api.entity.survey.ItemResponseOption;
 import com.icd.survey.api.entity.survey.Survey;
-import com.icd.survey.api.entity.survey.SurveyItem;
-import com.icd.survey.api.entity.survey.dto.ItemResponseOptionDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
-import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
-import com.icd.survey.api.repository.survey.ResponseOptionRepository;
-import com.icd.survey.api.repository.survey.SurveyItemRepository;
-import com.icd.survey.api.repository.survey.SurveyRepository;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import com.icd.survey.common.CommonUtils;
@@ -20,9 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Transactional
@@ -38,7 +28,7 @@ public class SurveyService {
         request.setIpAddress(CommonUtils.getRequestIp());
 
         /* ip 당 설문조사 이름 체크 */
-        if (Boolean.TRUE.equals(surveyQueryBusiness.isExsitedUserSurvey(request.getSurveyName(), request.getIpAddress()))) {
+        if (Boolean.TRUE.equals(surveyQueryBusiness.isExistedUserSurvey(request.getSurveyName(), request.getIpAddress()))) {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND, "ip 당 설문조사 이름은 중복될 수 없습니다.");
         }
 
@@ -66,12 +56,6 @@ public class SurveyService {
 
         /* 설문 조사 항목 save */
         surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
-    }
-
-    // todo : 응답항목의 이름이나 응답 값을 기반으로 검색하는 부분 추가 필요
-    public SurveyDto saerchSurvey(Long surveySeq) {
-
-        return null;
     }
 
     public void surveyValidCheck(Survey survey) {

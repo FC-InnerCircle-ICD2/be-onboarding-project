@@ -1,6 +1,6 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.entity.survey.dto.ItemResponseOptionDto;
+import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "item_response_option")
-public class ItemResponseOption {
+public class ItemAnswerOption {
     @Id
     @Column(name = "option_seq", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +29,14 @@ public class ItemResponseOption {
     public void itemKeySet(Long itemSeq){
         this.itemSeq = itemSeq;
     }
-    public static ItemResponseOption createItemResponseOptionRequest(ItemResponseOptionDto dto) {
-        ItemResponseOption itemResponseOption = new ItemResponseOption();
+    public static ItemAnswerOption createItemResponseOptionRequest(ItemAnswerOptionDto dto) {
+        ItemAnswerOption itemResponseOption = new ItemAnswerOption();
         itemResponseOption.option = dto.getOption();
         return itemResponseOption;
     }
 
-    public ItemResponseOptionDto of() {
-        return ItemResponseOptionDto
+    public ItemAnswerOptionDto of() {
+        return ItemAnswerOptionDto
                 .builder()
                 .optionSeq(this.optionSeq)
                 .option(this.option)

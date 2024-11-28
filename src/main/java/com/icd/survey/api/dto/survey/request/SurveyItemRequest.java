@@ -2,10 +2,11 @@ package com.icd.survey.api.dto.survey.request;
 
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
+import com.icd.survey.exception.ApiException;
+import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,8 +29,13 @@ public class SurveyItemRequest {
     @Max(value = 4, message = "응답 방식을 확인해주세요.")
     private Integer itemResponseType;
 
+    /* create, update survey 를 위한 항목 리스트 */
+    private List<ItemOptionRequest> optionList;
 
-    private List<ItemOptionRequest> optionList = new ArrayList<>();
+    /* submit survey 에서 다중 선택형 응답을 위한 리스트 */
+    private List<SurveyAnswer> optionalAnswerList;
+    /* 단답형, 서술형, 단일 선택형 응답을 위한 객체 */
+    private SurveyAnswer surveyAnswer;
 
     @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
@@ -37,6 +43,12 @@ public class SurveyItemRequest {
     public void validationCheck() throws IllegalArgumentException {
         if (Boolean.TRUE.equals(isChoiceType()) && optionList.isEmpty()) {
             throw new IllegalArgumentException("선택 항목의 경우 옵션을 입력해야만 합니다.");
+        }
+    }
+
+    public void responseValidationCheck() {
+        if (optionalAnswerList.isEmpty() || surveyAnswer == null) {
+            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "항목의 응답 값을 입력해 주세요.");
         }
     }
 

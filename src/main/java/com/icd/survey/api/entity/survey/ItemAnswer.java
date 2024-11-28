@@ -1,0 +1,54 @@
+package com.icd.survey.api.entity.survey;
+
+import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+@Entity
+@Getter
+@DynamicInsert
+@DynamicUpdate
+@NoArgsConstructor
+@Table(name = "item_answer")
+public class ItemAnswer {
+    @Id
+    @Column(name = "answer_seq", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long answerSeq;
+    @Column(name = "answer", nullable = false)
+    private String answer;
+    @Column(name = "is_optional_answer", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private Boolean isOptionAnswer;
+    @Column(name = "option_seq", nullable = true)
+    private Long optionSeq;
+    @Column(name = "option_answer", nullable = true)
+    private String optionAnswer;
+
+    public static ItemAnswer createItemResponseRequest(ItemAnswerDto dto) {
+        ItemAnswer itemResponse = new ItemAnswer();
+        if (Boolean.TRUE.equals(dto.getIsOptionalAnswer())) {
+            itemResponse.optionSeq = dto.getOptionSeq();
+            itemResponse.optionAnswer = dto.getOptionAnswer();
+        } else {
+            itemResponse.answer = dto.getAnswer();
+        }
+        return itemResponse;
+    }
+
+    public ItemAnswerDto of() {
+        ItemAnswerDto result =
+                ItemAnswerDto.builder()
+                        .answerSeq(this.answerSeq)
+                        .build();
+        if (Boolean.TRUE.equals(isOptionAnswer)) {
+            result.setOptionSeq(this.optionSeq);
+            result.setOptionAnswer(this.optionAnswer);
+        } else {
+            result.setAnswer(this.answer);
+        }
+        return result;
+    }
+}

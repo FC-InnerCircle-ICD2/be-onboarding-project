@@ -15,7 +15,7 @@ public class SurveyItemDto {
     private String itemDescription;
     private Integer itemResponseType;
     private Boolean isEssential;
-    private List<ItemResponseOptionDto> responseOptionList;
+    private List<ItemAnswerOptionDto> responseOptionList;
 
     private Long surveySeq;
 }

@@ -1,6 +1,6 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.survey.dto.ItemResponseOptionDto;
+import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
 import lombok.*;
 
 @Data
@@ -17,8 +17,8 @@ public class ItemOptionRequest {
         }
     }
 
-    public ItemResponseOptionDto createItemREsponseOptionDto() {
-        return ItemResponseOptionDto
+    public ItemAnswerOptionDto createItemREsponseOptionDto() {
+        return ItemAnswerOptionDto
                 .builder()
                 .option(option)
                 .build();

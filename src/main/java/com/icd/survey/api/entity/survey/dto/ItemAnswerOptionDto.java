@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ItemResponseOptionDto {
+public class ItemAnswerOptionDto {
     private Long optionSeq;
     private String option;
 

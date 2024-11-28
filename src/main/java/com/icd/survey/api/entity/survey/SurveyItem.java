@@ -42,11 +42,11 @@ public class SurveyItem extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
-    private List<ItemResponseOption> responseOptionList;
+    private List<ItemAnswerOption> answerOptionList;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
-    private List<ItemResponse> responseList;
+    private List<ItemAnswer> responseList;
 
     public void disable() {
         if(Boolean.FALSE.equals(getIsDeleted())){
