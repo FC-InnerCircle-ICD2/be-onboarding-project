@@ -69,16 +69,17 @@ public class SurveyService {
 		if (CollectionUtils.isEqualCollection(surveyQuestions, responseQuestions)) {
 			var surveyResponse = new SurveyResponse(surveyResponseRepository.generateId(), surveyId);
 			var answers = responseInputs.stream().map(input -> {
-						var text = input.getQuestion().getType() == QuestionType.SHORT_TEXT || input.getQuestion().getType() == QuestionType.LONG_TEXT
-								? input.getText()
-								: null;
-						var selectedOption =
-								input.getQuestion().getType() == QuestionType.SINGLE_CHOICE || input.getQuestion().getType() == QuestionType.MULTIPLE_CHOICE
-										? input.getSelectedOptions()
-										: null;
-						return new Answer(answerRepository.generateId(), surveyResponse.getId(), input.getQuestionId(), selectedOption, text);
+						var inputQuestion = input.getQuestion();
+						var inputQuestionType = inputQuestion.getType();
+						var text = isTextQuestionAnswer(inputQuestionType) ? input.getText() : null;
+						var selectedOption = isChoiceQuestionAnswer(inputQuestionType) ? input.getSelectedOptions() : List.<String>of();
+
+						return new Answer(answerRepository.generateId(), surveyResponse.getId(), input.getQuestionId(), inputQuestionType,
+								inputQuestion.isRequired(), selectedOption, text);
 					})
 					.toList();
+
+			answers.forEach(Answer::validate);
 
 			answerRepository.saveAll(answers);
 			surveyResponseRepository.save(surveyResponse);
@@ -130,5 +131,13 @@ public class SurveyService {
 					return null;
 				})
 				.toList();
+	}
+
+	private boolean isTextQuestionAnswer(QuestionType type) {
+		return type == QuestionType.SHORT_TEXT || type == QuestionType.LONG_TEXT;
+	}
+
+	private boolean isChoiceQuestionAnswer(QuestionType type) {
+		return type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE;
 	}
 }
