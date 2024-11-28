@@ -5,7 +5,6 @@ import com.innercircle.command.domain.survey.question.QuestionRepository;
 import com.innercircle.command.infra.persistence.generator.IdGenerator;
 import com.innercircle.command.infra.persistence.jparepository.QuestionJpaRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,12 +27,12 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 	}
 
 	@Override
-	public Optional<Question> findById(String id) {
-		return this.jpaRepository.findById(id);
+	public List<Question> findBySurveyId(String surveyId) {
+		return this.jpaRepository.findBySurveyId(surveyId);
 	}
 
 	@Override
-	public List<Question> findBySurveyId(String surveyId) {
-		return this.jpaRepository.findBySurveyId(surveyId);
+	public void deleteAll(List<Question> questions) {
+		this.jpaRepository.deleteAll(questions);
 	}
 }

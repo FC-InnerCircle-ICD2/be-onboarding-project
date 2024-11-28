@@ -4,7 +4,6 @@ import com.innercircle.command.domain.survey.Survey;
 import com.innercircle.command.domain.survey.SurveyRepository;
 import com.innercircle.command.infra.persistence.generator.IdGenerator;
 import com.innercircle.command.infra.persistence.jparepository.SurveyJpaRepository;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,10 +23,5 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 	@Override
 	public Survey save(Survey survey) {
 		return this.jpaRepository.save(survey);
-	}
-
-	@Override
-	public Optional<Survey> findById(String id) {
-		return this.jpaRepository.findById(id);
 	}
 }

@@ -41,6 +41,53 @@ Content-Type: application/json
   ]
 }
 
+### 설문조사 수정 API
+POST http://localhost:10001/c/update-survey/0d5c5689-2b8c-4b24-8899-bcdaade9d714
+Content-Type: application/json
+
+{
+  "updateInputs": [
+    {
+      "questionId": "bbd8ba05-9751-45db-b55f-d63e68eade59",
+      "question": {
+        "type": "SINGLE_CHOICE",
+        "name": "단일 선택 리스트 설문조사 이름",
+        "description": "단일 선택 리스트 설문조사 설명",
+        "optionNames": ["option1"],
+        "required": false
+      }
+    },
+    {
+      "questionId": "e11865dd-0328-4a82-962f-0e6a37c40541",
+      "question": {
+        "type": "MULTIPLE_CHOICE",
+        "name": "다중 선택 리스트 설문조사 이름",
+        "description": "다중 선택 리스트 설문조사 설명",
+        "optionNames": ["option1", "option2", "option3"],
+        "required": false
+      }
+    },
+    {
+      "questionId": "6aef2492-5a24-4ef3-85c7-a7c4cf1856c6",
+      "question": {
+        "type": "SHORT_TEXT",
+        "name": "단답형 설문조사 이름",
+        "description": "단답형 설문조사 설명",
+        "required": true
+      }
+    },
+    {
+      "questionId": "f1c0aa34-7d8c-4fb9-b32a-ce02104112a7",
+      "question": {
+        "type": "LONG_TEXT",
+        "name": "장문형 설문조사 이름",
+        "description": "장문형 설문조사 설명",
+        "required": true
+      }
+    }
+  ]
+}
+
 ### 설문조사 응답 생성 API
 POST http://localhost:10001/c/surveys/0d5c5689-2b8c-4b24-8899-bcdaade9d714/responses
 Content-Type: application/json

@@ -3,6 +3,7 @@ package com.innercircle.command.application.survey;
 import com.innercircle.command.application.survey.question.LongTextQuestionInput;
 import com.innercircle.command.application.survey.question.MultipleChoiceQuestionInput;
 import com.innercircle.command.application.survey.question.QuestionInput;
+import com.innercircle.command.application.survey.question.QuestionUpdateInput;
 import com.innercircle.command.application.survey.question.ShortTextQuestionInput;
 import com.innercircle.command.application.survey.question.SingleChoiceQuestionInput;
 import com.innercircle.command.application.survey.response.QuestionResponseInput;
@@ -60,6 +61,39 @@ public class SurveyService {
 	}
 
 	@Transactional
+	public Identifier updateResponse(String surveyId, List<QuestionUpdateInput> questionUpdateInputs) {
+		if (CollectionUtils.isEmpty(questionUpdateInputs) || CollectionUtils.size(questionUpdateInputs) > MAX_QUESTIONS) {
+			throw new IllegalArgumentException("Survey must have between 1 and %d questions".formatted(MAX_QUESTIONS));
+		}
+
+		var surveyQuestions = questionRepository.findBySurveyId(surveyId);
+		if (CollectionUtils.isEmpty(surveyQuestions)) {
+			throw new SurveyNotFoundException();
+		}
+
+		var updateQuestions = getUpdateQuestions(surveyId, questionUpdateInputs);
+		if (CollectionUtils.isEqualCollection(surveyQuestions, updateQuestions)) {
+			return new Identifier(surveyId);
+		}
+
+		updateQuestions.forEach(Question::validate);
+
+		var surveyQuestionIds = surveyQuestions.stream()
+				.map(Question::getId)
+				.toList();
+		var updateQuestionIds = updateQuestions.stream()
+				.map(Question::getId)
+				.toList();
+
+		if (CollectionUtils.containsAll(surveyQuestionIds, updateQuestionIds)) {
+			questionRepository.deleteAll(surveyQuestions);
+			questionRepository.saveAll(updateQuestions);
+			return new Identifier(surveyId);
+		}
+		throw new IllegalArgumentException("Update questions do not match survey questions");
+	}
+
+	@Transactional
 	public Identifier createResponse(String surveyId, List<QuestionResponseInput> responseInputs) {
 		var surveyQuestions = questionRepository.findBySurveyId(surveyId);
 		if (CollectionUtils.isEmpty(surveyQuestions)) {
@@ -104,6 +138,29 @@ public class SurveyService {
 								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
 					} else if (input instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
 						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(), multipleChoiceQuestionInput.getDescription(),
+								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
+					}
+					return null;
+				})
+				.toList();
+	}
+
+	private List<Question> getUpdateQuestions(String surveyId, List<QuestionUpdateInput> updateInputs) {
+		return updateInputs.stream()
+				.map(input -> {
+					var questionId = StringUtils.defaultIfBlank(input.getQuestionId(), questionRepository.generateId());
+					if (input.getQuestion() instanceof ShortTextQuestionInput shortTextQuestionInput) {
+						return new Question(questionId, surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
+								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
+					} else if (input.getQuestion() instanceof LongTextQuestionInput longTextQuestionInput) {
+						return new Question(questionId, surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
+								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
+					} else if (input.getQuestion() instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
+						return new Question(questionId, surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
+								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
+					} else if (input.getQuestion() instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
+						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(),
+								multipleChoiceQuestionInput.getDescription(),
 								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
 					}
 					return null;

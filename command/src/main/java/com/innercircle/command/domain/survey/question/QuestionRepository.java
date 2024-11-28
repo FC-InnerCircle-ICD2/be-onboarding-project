@@ -1,7 +1,6 @@
 package com.innercircle.command.domain.survey.question;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface QuestionRepository {
 
@@ -9,7 +8,7 @@ public interface QuestionRepository {
 
 	List<Question> saveAll(List<Question> questions);
 
-	Optional<Question> findById(String id);
-
 	List<Question> findBySurveyId(String surveyId);
+
+	void deleteAll(List<Question> questions);
 }
