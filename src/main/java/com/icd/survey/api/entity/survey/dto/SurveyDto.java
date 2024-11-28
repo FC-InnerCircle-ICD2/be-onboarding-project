@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity.dto;
+package com.icd.survey.api.entity.survey.dto;
 
 import lombok.*;
 

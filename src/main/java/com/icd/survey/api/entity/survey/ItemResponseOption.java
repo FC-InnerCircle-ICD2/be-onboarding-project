@@ -1,10 +1,9 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
+import com.icd.survey.api.entity.survey.dto.ItemResponseOptionDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 

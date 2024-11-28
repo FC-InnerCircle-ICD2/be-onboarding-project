@@ -1,6 +1,6 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.dto.SurveyDto;
+import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

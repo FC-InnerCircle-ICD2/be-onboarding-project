@@ -1,7 +1,7 @@
 package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.base.BaseEntity;
-import com.icd.survey.api.entity.dto.SurveyItemDto;
+import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,7 +49,9 @@ public class SurveyItem extends BaseEntity {
     private List<ItemResponse> responseList;
 
     public void disable() {
-        this.isDisabled = Boolean.TRUE;
+        if(Boolean.FALSE.equals(getIsDeleted())){
+            this.isDisabled = Boolean.TRUE;
+        }
     }
 
     public void surveyKeySet(Long surveySeq) {
@@ -73,6 +75,7 @@ public class SurveyItem extends BaseEntity {
                 .itemDescription(this.itemDescription)
                 .isEssential(this.isEssential)
                 .itemResponseType(this.itemResponseType)
+                .surveySeq(this.surveySeq)
                 .build();
     }
 

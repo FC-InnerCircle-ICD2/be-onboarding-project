@@ -1,7 +1,7 @@
 package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.base.BaseEntity;
-import com.icd.survey.api.entity.dto.SurveyDto;
+import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,6 @@ import java.util.List;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "survey")
-@ToString
 public class Survey extends BaseEntity {
     @Id
     @Column(name = "survey_seq")

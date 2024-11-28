@@ -1,7 +1,6 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.dto.ItemResponseOptionDto;
-import com.icd.survey.api.entity.survey.ItemResponseOption;
+import com.icd.survey.api.entity.survey.dto.ItemResponseOptionDto;
 import lombok.*;
 
 @Data

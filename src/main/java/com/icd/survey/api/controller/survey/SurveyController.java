@@ -2,7 +2,7 @@ package com.icd.survey.api.controller.survey;
 
 import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
-import com.icd.survey.api.entity.dto.SurveyDto;
+import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.service.survey.SurveyService;
 import com.icd.survey.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class SurveyController {
 
     @GetMapping("/{surveySeq}")
     public ResponseEntity<ApiResponse<SurveyDto>> searchSurvey(@PathVariable Long surveySeq) {
-        return ResponseEntity.ok(new ApiResponse<>(surveyService.getSurvey(surveySeq)));
+        return ResponseEntity.ok(new ApiResponse<>(surveyService.saerchSurvey(surveySeq)));
     }
 
     @PostMapping

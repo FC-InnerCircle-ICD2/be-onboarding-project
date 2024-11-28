@@ -1,9 +1,7 @@
 package com.icd.survey.api.dto.survey.request;
 
-import com.icd.survey.api.entity.dto.SurveyItemDto;
+import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
-import com.icd.survey.exception.ApiException;
-import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 

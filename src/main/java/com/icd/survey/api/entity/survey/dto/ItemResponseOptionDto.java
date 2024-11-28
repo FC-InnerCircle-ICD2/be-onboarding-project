@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity.dto;
+package com.icd.survey.api.entity.survey.dto;
 
 import lombok.*;
 
@@ -10,4 +10,6 @@ import lombok.*;
 public class ItemResponseOptionDto {
     private Long optionSeq;
     private String option;
+
+    private Long itemSeq;
 }
