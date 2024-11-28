@@ -33,7 +33,10 @@ public class Survey {
      * nullable=false: NULL 값을 허용하지 않음
      */
     @Column(nullable = false)
-    private String title;
+    private String surveyName;
+    
+    // 설문조사 설명 (선택 사항)
+    private String surveyDescription; 
     
     /**
      * 설문조사에 포함된 질문 목록
@@ -51,12 +54,7 @@ public class Survey {
         question.setSurvey(this); // Question 엔티티에도 Survey 설정
     }
     
-    public void removeQuestion(Question question) {
-        questions.remove(question);
-        question.setSurvey(null); // 부모와의 관계를 끊음
-    }
-    
-    // Getter 및 Setter
+    // Getter와 Setter 메서드
     public Long getId() {
         return id;
     }
@@ -65,12 +63,20 @@ public class Survey {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSurveyName() {
+        return surveyName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSurveyName(String surveyName) {
+        this.surveyName = surveyName;
+    }
+
+    public String getSurveyDescription() {
+        return surveyDescription;
+    }
+
+    public void setSurveyDescription(String surveyDescription) {
+        this.surveyDescription = surveyDescription;
     }
 
     public List<Question> getQuestions() {
