@@ -1,7 +1,10 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+
 plugins {
     java
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
+    id("io.freefair.lombok").version("8.6").apply(false)
 }
 
 allprojects {
@@ -17,21 +20,20 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "java")
+    apply(plugin = "io.freefair.lombok")
 
-    dependencies {
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.4.0")
-        implementation("org.springframework.boot:spring-boot-starter-web:3.4.0")
-        implementation("org.projectlombok:lombok:1.18.36")
+    configure<DependencyManagementExtension> {
+        dependencies {
+            dependency("org.springframework.boot:spring-boot-starter-data-jpa:3.4.0")
+            dependency("org.springframework.boot:spring-boot-starter-web:3.4.0")
 
-        implementation("org.apache.commons:commons-lang3:3.17.0")
-        implementation("org.apache.commons:commons-collections4:4.4")
+            dependency("org.projectlombok:lombok:1.18.36")
 
-        annotationProcessor("org.projectlombok:lombok:1.18.36")
+            dependency("org.apache.commons:commons-lang3:3.17.0")
+            dependency("org.apache.commons:commons-collections4:4.4")
 
-        runtimeOnly("com.h2database:h2:2.3.232")
-
-        testImplementation("org.springframework.boot:spring-boot-starter-test:3.4.0")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+            dependency("com.h2database:h2:2.3.232")
+        }
     }
 
     java {

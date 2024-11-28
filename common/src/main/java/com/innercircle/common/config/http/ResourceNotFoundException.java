@@ -1,4 +1,4 @@
-package com.innercircle.command.config.http;
+package com.innercircle.common.config.http;
 
 public class ResourceNotFoundException extends RuntimeException {
 

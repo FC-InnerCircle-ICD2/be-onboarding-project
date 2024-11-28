@@ -1,6 +1,6 @@
 package com.innercircle.command.application.survey;
 
-import com.innercircle.command.config.http.ResourceNotFoundException;
+import com.innercircle.common.config.http.ResourceNotFoundException;
 
 public class SurveyNotFoundException extends ResourceNotFoundException {
 
