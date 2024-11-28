@@ -1,0 +1,5 @@
+{
+  "name": "설문조사 저장 테스트",
+  "description": "항목이 없는 설문조사",
+  "surveyItemList": []
+}
