@@ -35,6 +35,6 @@ public class SurveyQuestionOption {
     }
 
     public static SurveyQuestionOption from(SurveyQuestionOptionRequest surveyQuestionOptionRequest) {
-        return SurveyQuestionOption.of(surveyQuestionOptionRequest.getOptionText());
+        return SurveyQuestionOption.of(surveyQuestionOptionRequest.getOption());
     }
 }

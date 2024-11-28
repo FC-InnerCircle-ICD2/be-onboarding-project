@@ -34,7 +34,10 @@ public class Survey extends BaseEntity {
         Survey survey = new Survey(surveyId, name, description, surveyQuestions);
         surveyQuestions.forEach(surveyQuestion -> {
             surveyQuestion.setSurvey(survey);
-            surveyQuestion.getOptions().forEach(option -> option.setSurveyQuestion(surveyQuestion));
+            List<SurveyQuestionOption> options = surveyQuestion.getOptions();
+            if (options != null) {
+                options.forEach(option -> option.setSurveyQuestion(surveyQuestion));
+            }
         });
         return survey;
     }

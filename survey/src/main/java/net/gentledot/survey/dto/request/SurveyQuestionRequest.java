@@ -3,6 +3,7 @@ package net.gentledot.survey.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
@@ -13,10 +14,11 @@ import java.util.List;
 @ToString
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class SurveyQuestionRequest {
-    private String itemName;
-    private String itemDescription;
-    private SurveyItemType itemType;
+    private String question;
+    private String description;
+    private SurveyItemType type;
     private ItemRequired required;
     private List<SurveyQuestionOptionRequest> options;
 }

@@ -78,7 +78,7 @@ public class SurveyService {
         }
 
         for (SurveyQuestionRequest question : questions) {
-            if ((question.getItemType() == SurveyItemType.SINGLE_SELECT || question.getItemType() == SurveyItemType.MULTI_SELECT)
+            if ((question.getType() == SurveyItemType.SINGLE_SELECT || question.getType() == SurveyItemType.MULTI_SELECT)
                 && (question.getOptions() == null || question.getOptions().isEmpty())) {
                 throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_OPTIONS);
             }

@@ -49,9 +49,9 @@ class SurveyServiceProcessTest {
                 .description("survey description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
-                                .itemName("question1")
-                                .itemDescription("question1 description")
-                                .itemType(SurveyItemType.MULTI_SELECT)
+                                .question("question1")
+                                .description("question1 description")
+                                .type(SurveyItemType.MULTI_SELECT)
                                 .required(ItemRequired.REQUIRED)
                                 .options(List.of(
                                         new SurveyQuestionOptionRequest("option1"),
@@ -85,9 +85,9 @@ class SurveyServiceProcessTest {
                 .description("changed description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
-                                .itemName("changed1")
-                                .itemDescription("changed1 description")
-                                .itemType(SurveyItemType.MULTI_SELECT)
+                                .question("changed1")
+                                .description("changed1 description")
+                                .type(SurveyItemType.MULTI_SELECT)
                                 .required(ItemRequired.REQUIRED)
                                 .options(List.of(
                                         new SurveyQuestionOptionRequest("changed option1"),

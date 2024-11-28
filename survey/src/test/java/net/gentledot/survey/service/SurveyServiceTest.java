@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SurveyServiceTest {
     SurveyCreateRequest surveyRequest;
-    ;
 
     @BeforeEach
     void setUp() {
@@ -32,9 +31,9 @@ class SurveyServiceTest {
                 .description("survey description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
-                                .itemName("question1")
-                                .itemDescription("question1 description")
-                                .itemType(SurveyItemType.MULTI_SELECT)
+                                .question("question1")
+                                .description("question1 description")
+                                .type(SurveyItemType.MULTI_SELECT)
                                 .required(ItemRequired.REQUIRED)
                                 .options(List.of(
                                         new SurveyQuestionOptionRequest("option1"),
@@ -98,9 +97,9 @@ class SurveyServiceTest {
                 .description("description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
-                                .itemName("question1")
-                                .itemDescription("question1 description")
-                                .itemType(SurveyItemType.MULTI_SELECT)
+                                .question("question1")
+                                .description("question1 description")
+                                .type(SurveyItemType.MULTI_SELECT)
                                 .required(ItemRequired.REQUIRED)
                                 .options(Collections.emptyList())
                                 .build()
@@ -134,7 +133,7 @@ class SurveyServiceTest {
         }
 
         for (SurveyQuestionRequest question : questions) {
-            if ((question.getItemType() == SurveyItemType.SINGLE_SELECT || question.getItemType() == SurveyItemType.MULTI_SELECT)
+            if ((question.getType() == SurveyItemType.SINGLE_SELECT || question.getType() == SurveyItemType.MULTI_SELECT)
                 && (question.getOptions() == null || question.getOptions().isEmpty())) {
                 throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_OPTIONS);
             }
@@ -154,15 +153,15 @@ class SurveyServiceTest {
                 .collect(Collectors.toList());
 
         return SurveyQuestion.of(
-                questionRequest.getItemName(),
-                questionRequest.getItemDescription(),
-                questionRequest.getItemType(),
+                questionRequest.getQuestion(),
+                questionRequest.getDescription(),
+                questionRequest.getType(),
                 questionRequest.getRequired(),
                 options
         );
     }
 
     private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest) {
-        return SurveyQuestionOption.of(optionRequest.getOptionText());
+        return SurveyQuestionOption.of(optionRequest.getOption());
     }
 }

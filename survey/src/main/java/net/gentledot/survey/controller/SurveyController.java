@@ -30,8 +30,10 @@ public class SurveyController {
     }
 
     @PostMapping
-    public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(SurveyCreateRequest surveyRequest) {
-        return ResponseEntity.ok(ServiceResponse.success(surveyService.createSurvey(surveyRequest)));
+    public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(
+            @RequestBody SurveyCreateRequest surveyRequest) {
+        ServiceResponse<SurveyCreateResponse> createdResult = ServiceResponse.success(surveyService.createSurvey(surveyRequest));
+        return ResponseEntity.ok(createdResult);
     }
 
     @PutMapping

@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
@@ -49,19 +50,25 @@ public class SurveyQuestion {
 
     public static SurveyQuestion of(String itemName, String itemDescription, SurveyItemType itemType, ItemRequired required, List<SurveyQuestionOption> options) {
         SurveyQuestion surveyQuestion = new SurveyQuestion(null, itemName, itemDescription, itemType, required, null, options);
-        options.forEach(option -> option.setSurveyQuestion(surveyQuestion));
+        if (options != null) {
+            options.forEach(option -> option.setSurveyQuestion(surveyQuestion));
+        }
         return surveyQuestion;
     }
 
     public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {
-        List<SurveyQuestionOption> options = questionRequest.getOptions().stream()
-                .map(SurveyQuestionOption::from)
-                .collect(Collectors.toList());
+        List<SurveyQuestionOptionRequest> questionRequestOptions = questionRequest.getOptions();
+        List<SurveyQuestionOption> options = null;
+        if (questionRequestOptions != null) {
+            options = questionRequestOptions.stream()
+                    .map(SurveyQuestionOption::from)
+                    .collect(Collectors.toList());
+        }
 
         return SurveyQuestion.of(
-                questionRequest.getItemName(),
-                questionRequest.getItemDescription(),
-                questionRequest.getItemType(),
+                questionRequest.getQuestion(),
+                questionRequest.getDescription(),
+                questionRequest.getType(),
                 questionRequest.getRequired(),
                 options
         );
