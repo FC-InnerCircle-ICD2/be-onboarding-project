@@ -5,7 +5,6 @@ import com.survey.api.dto.SurveyResponseDto;
 import com.survey.api.dto.SurveyResponseItemDto;
 import com.survey.api.entity.SurveyEntity;
 import com.survey.api.entity.SurveyItemEntity;
-import com.survey.api.entity.SurveyOptionEntity;
 import com.survey.api.exception.SurveyApiException;
 import com.survey.api.form.*;
 import com.survey.api.response.SurveyBaseResponse;
@@ -92,19 +91,7 @@ public class MainController {
 
         try {
             //DB insert
-            SurveyEntity surveyResult = surveyService.sureveySave(new SurveyEntity(survey.getName(), survey.getDescription(), CommonConstant.Y));
-
-            for(SurveyItemForm itemForm : survey.getItems()){
-                SurveyItemEntity itemEntity = surveyService.itemSave(new SurveyItemEntity( itemForm.getItemName(), itemForm.getDescription(), itemForm.getItemType(), itemForm.isRequired(), CommonConstant.Y, surveyResult));
-
-                if(CommonConstant.SINGLE_ITEM.equals(itemForm.getItemType()) || CommonConstant.MULTI_ITEM.equals(itemForm.getItemType())) {
-                    if(itemForm.getOptionList() != null) {
-                        for (SurveyOptionForm optionForm : itemForm.getOptionList()) {
-                            surveyService.optionSave(new SurveyOptionEntity(optionForm.getOptionName(), optionForm.getOptionOrder(), CommonConstant.Y, itemEntity));
-                        }
-                    }
-                }
-            }
+            surveyService.save(survey);
         } catch (Exception e){
             throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ERROR, CommonConstant.ERR_MSG_DB_DATA_ERROR);
         }
@@ -187,6 +174,10 @@ public class MainController {
         }
 
         if(survey.getItems() != null) {
+            if(surveyService.countItemBySurvey(new SurveyEntity(survey.getId())) != survey.getItems().size()) {
+                throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "설문지와 응답 항목이 일치하지 않습니다.");
+            }
+
             for (SurveyResponseItemForm item : survey.getItems()) {
                 if (StringUtils.isEmpty(item.getReponseType())) {
                     throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "응답 타입이 누락되었습니다.");
@@ -254,11 +245,6 @@ public class MainController {
                 List<SurveyItemResponse> surveyItemResponseList = new ArrayList<>();
 
                 for(SurveyResponseItemDto itemDto : responseItemList) {
-                    if(CommonConstant.MULTI_ITEM.equals(itemDto.getItemType()) || CommonConstant.SINGLE_ITEM.equals(itemDto.getItemType())) {
-                        String str = surveyService.findResponseOptionByFilters(itemDto.getId(), selectForm.getSearchParam());
-                        itemDto.setAnswer(str);
-                    }
-
                     SurveyItemResponse surveyItemResponse = new SurveyItemResponse();
                     surveyItemResponse.setId(itemDto.getId());
                     surveyItemResponse.setDescription(itemDto.getDescription());
@@ -274,8 +260,10 @@ public class MainController {
                 surveyResponsesList.add(responseSurvey);
             }
         } catch (SurveyApiException e){
+            e.printStackTrace();
             throw new SurveyApiException(e.getCode(), e.getMessage());
         } catch (Exception e){
+            e.printStackTrace();
             throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ERROR, CommonConstant.ERR_MSG_DB_DATA_ERROR);
         }
 

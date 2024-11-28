@@ -9,9 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface SurveyItemRepository extends JpaRepository<SurveyItemEntity, Long> {
-    public long countById(long id);
-
+    public long countBySurvey(SurveyEntity survey);
     public SurveyItemEntity findByIdAndItemTypeAndSurvey(long id, String itemType, SurveyEntity survey);
     public boolean existsByIdAndSurvey(long id, SurveyEntity survey);
-
 }
