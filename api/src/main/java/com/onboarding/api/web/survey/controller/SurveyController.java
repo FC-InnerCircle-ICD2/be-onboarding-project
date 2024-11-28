@@ -2,8 +2,8 @@ package com.onboarding.api.web.survey.controller;
 
 import com.onboarding.api.web.survey.dto.create.SurveyCreateReqDto;
 import com.onboarding.api.web.survey.dto.update.SurveyUpdateReqDto;
-import com.onboarding.survey.survey.entity.Survey;
-import com.onboarding.survey.survey.facade.SurveyFacade;
+import com.onboarding.survey.entity.Survey;
+import com.onboarding.survey.facade.SurveyFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;

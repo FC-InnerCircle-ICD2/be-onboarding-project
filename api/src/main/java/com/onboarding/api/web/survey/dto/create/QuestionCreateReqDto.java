@@ -1,6 +1,6 @@
 package com.onboarding.api.web.survey.dto.create;
 
-import com.onboarding.survey.survey.enums.QuestionType;
+import com.onboarding.survey.enums.QuestionType;
 import java.util.List;
 
 public record QuestionCreateReqDto(
