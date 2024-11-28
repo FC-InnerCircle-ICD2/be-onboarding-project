@@ -3,6 +3,8 @@ package com.onboarding.common.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -33,5 +35,12 @@ public class ApiController {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(false, "잘못된 요청 본문입니다. JSON 형식이 올바르지 않거나 값이 잘못 전달되었습니다."));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorResponse> constraintViolationException(ConstraintViolationException e) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(false, e.getMessage()));
     }
 }

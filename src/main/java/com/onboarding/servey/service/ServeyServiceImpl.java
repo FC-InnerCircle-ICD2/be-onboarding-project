@@ -1,5 +1,7 @@
 package com.onboarding.servey.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ServeyServiceImpl implements ServeyService {
 
 	private final ServeyRepository serveyRepository;
+	private final ServeyValidator serveyValidator;
 
 	@Transactional(readOnly = true)
 	@Override
@@ -40,6 +43,7 @@ public class ServeyServiceImpl implements ServeyService {
 		Servey servey = Servey.of(serveyRequest);
 
 		serveyRequest.getQuestions().forEach(questionRequest -> {
+			serveyValidator.checkTypeAndOptions(questionRequest.getType(), questionRequest.getOptions());
 			Question question = Question.of(questionRequest);
 			servey.addQuestion(question);
 			questionRequest.getOptions().forEach(optionRequest -> {
@@ -49,6 +53,40 @@ public class ServeyServiceImpl implements ServeyService {
 		});
 
 		serveyRepository.save(servey);
+	}
+
+	@Transactional
+	@Override
+	public void create(Long serveyId, List<QuestionRequest> questionRequests) {
+		questionRequests.forEach(questionRequest -> {
+			serveyValidator.checkTypeAndOptions(questionRequest.getType(), questionRequest.getOptions());
+			Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+			Question question = Question.of(questionRequest);
+			servey.addQuestion(question);
+			questionRequest.getOptions().forEach(optionRequest -> {
+				Option option = Option.of(optionRequest);
+				question.addOption(option);
+			});
+			serveyRepository.save(servey);
+		});
+	}
+
+	@Transactional
+	@Override
+	public void create(Long serveyId, Long questionId, List<OptionRequest> optionRequests) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+		Question question = servey.getQuestions().stream()
+			.filter(x -> x.getId().equals(questionId))
+			.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+
+		serveyValidator.checkTypeAndOptions(question.getType().name());
+
+		optionRequests.forEach(optionRequest -> {
+			Option option = Option.of(optionRequest);
+			question.addOption(option);
+
+			serveyRepository.save(servey);
+		});
 	}
 
 	@Transactional
@@ -100,5 +138,42 @@ public class ServeyServiceImpl implements ServeyService {
 			.build();
 
 		option.edit(optionEditor);
+	}
+
+	@Transactional
+	@Override
+	public void delete(Long serveyId) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+
+		serveyRepository.delete(servey);
+	}
+
+	@Transactional
+	@Override
+	public void delete(Long serveyId, Long questionId) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+		Question question = servey.getQuestions().stream()
+			.filter(x -> x.getId().equals(questionId))
+			.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+
+		servey.getQuestions().remove(question);
+
+		serveyValidator.checkQuestionSize(servey.getQuestions().size());
+	}
+
+	@Transactional
+	@Override
+	public void delete(Long serveyId, Long questionId, Long optionId) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+		Question question = servey.getQuestions().stream()
+			.filter(x -> x.getId().equals(questionId))
+			.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+		Option option = question.getOptions().stream()
+			.filter(x -> x.getId().equals(optionId))
+			.findAny().orElseThrow(() -> new BaseException("선택 할 후보가 없습니다."));
+
+		question.getOptions().remove(option);
+
+		serveyValidator.checkOptionSize(question.getOptions().size());
 	}
 }

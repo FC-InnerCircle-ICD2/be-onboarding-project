@@ -1,11 +1,16 @@
 package com.onboarding.servey.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Validated
 public class ServeyController extends ApiController {
 
 	private final ServeyService serveyService;
@@ -50,6 +56,25 @@ public class ServeyController extends ApiController {
 	@PostMapping(value = "/servey", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> create(@Valid @RequestBody ServeyRequest serveyRequest) {
 		serveyService.create(serveyRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@ApiOperation(value = "설문받을 항목 추가", notes = "설문받을 항목을 추가합니다.")
+	@PostMapping(value = "/servey/{serveyId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> create(
+		@PathVariable @NotNull Long serveyId,
+		@Valid @Size(min = 1, max = 10, message = "설문 받을 항목은 1개 ~ 10개까지 포함 할 수 있습니다.") @RequestBody List<QuestionRequest> questionRequests) {
+		serveyService.create(serveyId, questionRequests);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@ApiOperation(value = "선택할 수 있는 후보 추가", notes = "선택할 수 있는 후보를 추가합니다.")
+	@PostMapping(value = "/servey/{serveyId}/{questionId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> create(
+		@PathVariable @NotNull Long serveyId,
+		@PathVariable @NotNull Long questionId,
+		@Valid @RequestBody List<OptionRequest> optionRequests) {
+		serveyService.create(serveyId, questionId, optionRequests);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
@@ -80,6 +105,33 @@ public class ServeyController extends ApiController {
 		@PathVariable @NotNull Long optionId,
 		@Valid @RequestBody OptionRequest optionRequest) {
 		serveyService.update(serveyId, questionId, optionId, optionRequest);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@ApiOperation(value = "설문조사 삭제", notes = "설문조사를 삭제합니다.")
+	@DeleteMapping(value = "/servey/{serveyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> delete(
+		@PathVariable @NotNull Long serveyId) {
+		serveyService.delete(serveyId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@ApiOperation(value = "설문받을 항목 삭제", notes = "설문받을 항목을 삭제합니다.")
+	@DeleteMapping(value = "/servey/{serveyId}/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> delete(
+		@PathVariable @NotNull Long serveyId,
+		@PathVariable @NotNull Long questionId) {
+		serveyService.delete(serveyId, questionId);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@ApiOperation(value = "선택 할 수 있는 후보 삭제", notes = "선택 할 수 있는 후보를 삭제합니다.")
+	@DeleteMapping(value = "/servey/{serveyId}/{questionId}/{optionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> delete(
+		@PathVariable @NotNull Long serveyId,
+		@PathVariable @NotNull Long questionId,
+		@PathVariable @NotNull Long optionId) {
+		serveyService.delete(serveyId, questionId, optionId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
