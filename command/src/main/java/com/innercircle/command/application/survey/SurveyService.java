@@ -42,7 +42,7 @@ public class SurveyService {
 	}
 
 	@Transactional
-	public Identifier create(String name, String description, List<QuestionInput> questionInputs) {
+	public Identifier createSurvey(String name, String description, List<QuestionInput> questionInputs) {
 		if (StringUtils.isAnyBlank(name, description)) {
 			throw new IllegalArgumentException("Survey name or description must not be empty");
 		}
@@ -61,7 +61,7 @@ public class SurveyService {
 	}
 
 	@Transactional
-	public Identifier updateResponse(String surveyId, List<QuestionUpdateInput> questionUpdateInputs) {
+	public Identifier updateSurvey(String surveyId, List<QuestionUpdateInput> questionUpdateInputs) {
 		if (CollectionUtils.isEmpty(questionUpdateInputs) || CollectionUtils.size(questionUpdateInputs) > MAX_QUESTIONS) {
 			throw new IllegalArgumentException("Survey must have between 1 and %d questions".formatted(MAX_QUESTIONS));
 		}

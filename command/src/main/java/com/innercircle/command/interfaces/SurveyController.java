@@ -20,12 +20,12 @@ public class SurveyController {
 
 	@PostMapping("/create-survey")
 	public Identifier createSurvey(@RequestBody CreateSurveyRequest request) {
-		return surveyService.create(request.name(), request.description(), request.questionInputs());
+		return surveyService.createSurvey(request.name(), request.description(), request.questionInputs());
 	}
 
 	@PostMapping("/update-survey/{id}")
 	public Identifier updateSurvey(@PathVariable String id, @RequestBody UpdateSurveyRequest request) {
-		return surveyService.updateResponse(id, request.updateInputs());
+		return surveyService.updateSurvey(id, request.updateInputs());
 	}
 
 	@PostMapping("/surveys/{id}/responses")
