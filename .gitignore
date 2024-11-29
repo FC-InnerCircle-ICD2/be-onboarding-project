@@ -69,3 +69,8 @@ coverage/
 *.iml
 *.ipr
 *.iws
+
+#Gradle
+.gradle
+/build/
+.gradletasknamecache
