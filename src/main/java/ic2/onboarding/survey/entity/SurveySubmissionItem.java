@@ -1,5 +1,6 @@
 package ic2.onboarding.survey.entity;
 
+import ic2.onboarding.survey.global.ItemInputType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,10 @@ public class SurveySubmissionItem extends BaseEntity {
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private SurveyItem surveyItem;
+
+    @Column(nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    private ItemInputType inputType;
 
     @Column(nullable = false)
     private String name;

@@ -21,7 +21,7 @@ public record SurveyFormSubmissionItem(Long id,
                 item.getId(),
                 item.getSurveyItem().getId(),
                 item.getName(),
-                item.getSurveyItem().getInputType().name(),
+                item.getInputType().name(),
                 item.getAnswer());
     }
 
