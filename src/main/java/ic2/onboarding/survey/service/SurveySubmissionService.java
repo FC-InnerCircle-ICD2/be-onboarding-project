@@ -61,6 +61,7 @@ public class SurveySubmissionService {
                 null,
                 null,
                 surveyItem,
+                surveyItem.getInputType(),
                 surveyItem.getName(),
                 submissionItem.answer());
     }
