@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "설문조사 응답 제출 API")
+@Tag(name = "설문조사 응답 API")
 public interface SurveySubmissionControllerDoc {
 
     @Operation(summary = "설문조사 응답 제출",
