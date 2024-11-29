@@ -14,19 +14,19 @@ class KotlinDateTimeCustomConfig {
 
         override fun serialize(
             value: LocalDateTime,
-            gen: JsonGenerator,
+            generator: JsonGenerator,
             serializers: SerializerProvider,
         ) {
-            gen.writeString(value.toJavaLocalDateTime().format(formatter))
+            generator.writeString(value.toJavaLocalDateTime().format(formatter))
         }
     }
 
     class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime>() {
         override fun deserialize(
-            p: com.fasterxml.jackson.core.JsonParser,
-            ctxt: com.fasterxml.jackson.databind.DeserializationContext,
+            parser: com.fasterxml.jackson.core.JsonParser,
+            context: com.fasterxml.jackson.databind.DeserializationContext,
         ): LocalDateTime {
-            return LocalDateTime.parse(p.text)
+            return LocalDateTime.parse(parser.text)
         }
     }
 
