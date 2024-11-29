@@ -2,8 +2,10 @@ package org.icd.surveyapi.surveyproducer.application
 
 import org.assertj.core.api.Assertions.assertThat
 import org.icd.surveyapi.exception.DuplicateSurveyItemSequenceException
+import org.icd.surveyapi.exception.InvalidSurveyItemCountException
 import org.icd.surveyapi.support.BaseUnitTest
 import org.icd.surveyapi.surveyproducer.fixture.createDuplicateSurveyItemSequencePostSurveyRequest
+import org.icd.surveyapi.surveyproducer.fixture.createInvalidSurveyItemCountExceptionPostSurveyRequest
 import org.icd.surveyapi.surveyproducer.fixture.createPostSurveyRequest
 import org.icd.surveycore.domain.survey.SurveyRepository
 import org.junit.jupiter.api.Test
@@ -18,6 +20,12 @@ class SurveyProducerServiceTest : BaseUnitTest() {
     private lateinit var surveyRepository: SurveyRepository
     private val surveyProducerService: SurveyProducerService by lazy { createSurveyProducerService() }
     private fun createSurveyProducerService() = SurveyProducerService(surveyRepository)
+
+    @Test
+    fun `설문조사 항목이 1~10개 사이가 아닌 경우 InvalidSurveyItemCountException 발생`() {
+        val request = createInvalidSurveyItemCountExceptionPostSurveyRequest()
+        assertThrows<InvalidSurveyItemCountException> { surveyProducerService.postSurvey(request) }
+    }
 
     @Test
     fun `설문조사 항목 sequence가 중복된 경우 DuplicateSurveyItemSequenceException 발생`() {

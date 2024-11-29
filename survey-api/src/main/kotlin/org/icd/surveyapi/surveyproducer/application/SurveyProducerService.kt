@@ -2,6 +2,7 @@ package org.icd.surveyapi.surveyproducer.application
 
 import jakarta.transaction.Transactional
 import org.icd.surveyapi.exception.DuplicateSurveyItemSequenceException
+import org.icd.surveyapi.exception.InvalidSurveyItemCountException
 import org.icd.surveyapi.support.utils.extract
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyItemRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
@@ -31,10 +32,14 @@ class SurveyProducerService(
     }
 
     private fun validateSequence(items: List<PostSurveyItemRequest>) {
+        if (items.size !in 1..10) {
+            throw InvalidSurveyItemCountException()
+        }
         val sequences = items.map { it.sequence }.toSet()
         if (sequences.size != items.size) {
             throw DuplicateSurveyItemSequenceException()
         }
     }
+
 
 }

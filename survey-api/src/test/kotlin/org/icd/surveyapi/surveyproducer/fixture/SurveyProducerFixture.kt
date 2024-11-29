@@ -4,6 +4,14 @@ import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyItemRe
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
 import org.icd.surveycore.domain.surveyItem.ItemType
 
+fun createInvalidSurveyItemCountExceptionPostSurveyRequest(): PostSurveyRequest {
+    return PostSurveyRequest(
+        name = "테스트 설문조사",
+        description = "설문조사 작성 테스트",
+        items = (1..11).map { PostSurveyItemRequest(sequence = it, name = "$it", itemType = ItemType.SHORT_ANSWER) }
+    )
+}
+
 fun createDuplicateSurveyItemSequencePostSurveyRequest(): PostSurveyRequest {
     return PostSurveyRequest(
         name = "테스트 설문조사",
