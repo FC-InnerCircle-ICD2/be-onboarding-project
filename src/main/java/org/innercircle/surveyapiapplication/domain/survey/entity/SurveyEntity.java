@@ -41,12 +41,7 @@ public class SurveyEntity extends BaseEntity {
     }
 
     public Survey toDomain(List<Question> questions) {
-        return Survey.builder()
-            .id(this.id)
-            .name(this.name)
-            .description(this.description)
-            .questions(questions)
-            .build();
+        return new Survey(this.id, this.name, this.description, questions);
     }
 
 }

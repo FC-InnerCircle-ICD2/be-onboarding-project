@@ -1,6 +1,5 @@
 package org.innercircle.surveyapiapplication.domain.survey.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
@@ -10,23 +9,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Builder
 @Getter
 public class Survey {
 
     private Long id;
     private String name;
     private String description;
-
-    @Builder.Default
     private List<Question> questions = new ArrayList<>();
+
+    public Survey(Long id, String name, String description, List<Question> questions) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.questions = questions;
+    }
+
+    public Survey(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Survey addQuestions(List<Question> questions) {
+        if (this.questions.size() + questions.size() > 10) {
+            throw new CustomException(CustomExceptionStatus.QUESTION_SIZE_FULL);
+        }
+        questions.forEach(this::addQuestion);
+        return this;
+    }
 
     public Survey addQuestion(Question question) {
         if (this.questions.size() >= 10) {
             throw new CustomException(CustomExceptionStatus.QUESTION_SIZE_FULL);
         }
-        question.setSurveyId(this.id);
         questions.add(question);
+        question.setSurveyId(this.getId());
         return this;
     }
 
