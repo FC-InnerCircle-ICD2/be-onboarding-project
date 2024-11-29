@@ -80,14 +80,37 @@ public class SurveyActionBusiness {
     }
 
     public void answerSurveyItem(SurveyItemRequest itemRequest) {
-        SurveyItem surveyItem = surveyQueryBusiness.findSurveyItemById(itemRequest.getSurveySeq())
+
+        surveyQueryBusiness.findSurveyItemById(itemRequest.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
         if (itemRequest.isChoiceType() && itemRequest.getOptionalAnswerList().isEmpty()) {
             throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "선택형 설문 옵션을 확인하세요.");
         }
 
-        // todo : 응답 타입 별 분기 처리하여 데이터 저장
+        if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
+            if (itemRequest.getItemResponseType().equals(ResponseType.SINGLE_CHOICE.getType())) {
+                ItemAnswerOption option = answerOptionRepository.findById(itemRequest.getSurveyAnswerRequest().getOptionalAnswer())
+                        .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+                saveAnswer(ItemAnswerDto
+                        .builder()
+                        .itemSeq(itemRequest.getItemSeq())
+                        .isOptionalAnswer(Boolean.TRUE)
+                        .optionSeq(itemRequest.getSurveyAnswerRequest().getOptionalAnswer())
+                        .optionAnswer(option.getOption())
+                        .build());
+            } else if (itemRequest.getItemResponseType().equals(ResponseType.MULTI_CHOICE.getType())) {
+                // todo : optionList 가져 와서 save.
+            }
+        } else {
+            saveAnswer(ItemAnswerDto
+                    .builder()
+                    .itemSeq(itemRequest.getItemSeq())
+                    .isOptionalAnswer(Boolean.FALSE)
+                    .answer(itemRequest.getSurveyAnswerRequest().getAnswer())
+                    .build());
+        }
 
     }
 

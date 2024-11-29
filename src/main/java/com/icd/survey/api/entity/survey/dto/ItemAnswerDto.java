@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ItemAnswerDto {
+    private Long itemSeq;
     private Long answerSeq;
     private String answer;
     private Long optionSeq;
