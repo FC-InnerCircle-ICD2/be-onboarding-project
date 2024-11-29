@@ -1,15 +1,17 @@
 package ziwookim.be_onboarding_project.research.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ziwookim.be_onboarding_project.dto.request.ResearchAnswerRequestVo;
-import ziwookim.be_onboarding_project.dto.request.ResearchRequestVo;
-import ziwookim.be_onboarding_project.dto.response.ResearchAnswerResponse;
-import ziwookim.be_onboarding_project.dto.response.ResearchAnswerSubmitResponse;
-import ziwookim.be_onboarding_project.dto.response.ResearchResponse;
+import ziwookim.be_onboarding_project.research.dto.request.*;
+import ziwookim.be_onboarding_project.research.dto.response.ResearchAnswerResponse;
+import ziwookim.be_onboarding_project.research.dto.response.ResearchAnswerSubmitResponse;
+import ziwookim.be_onboarding_project.research.dto.response.ResearchResponse;
+import ziwookim.be_onboarding_project.research.model.ResearchAnswerResearchVo;
+import ziwookim.be_onboarding_project.research.model.ResearchVo;
 import ziwookim.be_onboarding_project.research.service.ResearchService;
 
 import java.util.List;
@@ -25,38 +27,40 @@ public class ResearchController {
     // TODO: 11/27/24 설문조사 생성 API
     @PostMapping("/add")
     public ResponseEntity<ResearchResponse> addResearch(
-            @RequestParam String title,
-            @RequestParam String description,
-            @RequestParam List<ResearchRequestVo> editableResearchRequestVoList) {
+            @RequestBody AddResearchRequestVo requestVo) {
 
-        return null;
+        ResearchVo researchVo = researchService.addResearch(requestVo);
+        return ResponseEntity.ok(ResearchResponse.of(researchVo));
     }
 
     // TODO: 11/27/24 설문조사 수정 API
-    @PatchMapping("/edit")
+    @PostMapping("/edit")
     public ResponseEntity<ResearchResponse> editResearch(
-            @RequestParam Long researchId,
-            @RequestParam String title,
-            @RequestParam String description,
-            @RequestParam List<ResearchRequestVo> editableResearchRequestVoList) {
+            @RequestBody EditResearchRequestVo requestVo) {
 
-        return null;
+        ResearchVo researchVo = researchService.editResearch(requestVo);
+        return ResponseEntity.ok(ResearchResponse.of(researchVo));
     }
 
     // TODO: 11/27/24 설문조사 응답 제출 API
-    @PostMapping("/submit-answer")
-    public ResponseEntity<ResearchAnswerSubmitResponse> submitResearchAnswer(
-            @RequestParam Long researchId,
-            @RequestParam List<ResearchAnswerRequestVo> submitResearchRequestVoList) {
+    @PostMapping("/submit")
+    public ResponseEntity<ResearchAnswerSubmitResponse> submitResearch(
+            @RequestBody SubmitResearchRequestVo requestVo) throws JsonProcessingException {
 
+        ResearchAnswerResearchVo researchAnswerResearchVo = researchService.submitResearchAnswer(requestVo);
         return null;
     }
 
     // TODO: 11/27/24 설문조사 응답 조회 API
-    @GetMapping("/get/submit-answer")
+    @GetMapping("/get/research-answer")
     public ResponseEntity<ResearchAnswerResponse> getResearchAnswer(
             @RequestParam Long researchAnswerId) {
         return null;
     }
 
+    @GetMapping("/search/research-answer")
+    public ResponseEntity<List<ResearchAnswerResponse>> getSearchResearchAnswer(
+            @RequestParam String keyword) {
+        return null;
+    }
 }

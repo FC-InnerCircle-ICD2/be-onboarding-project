@@ -1,4 +1,4 @@
-package ziwookim.be_onboarding_project.dto.response;
+package ziwookim.be_onboarding_project.research.dto.request;
 
 import lombok.*;
 
@@ -7,6 +7,6 @@ import lombok.*;
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResearchAnswerSubmitResponse {
-    
+public class ResearchItemChoiceRequestVo {
+    private String content;
 }

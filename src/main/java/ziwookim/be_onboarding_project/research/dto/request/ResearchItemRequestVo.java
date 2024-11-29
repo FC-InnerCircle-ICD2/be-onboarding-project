@@ -1,7 +1,6 @@
-package ziwookim.be_onboarding_project.dto.request;
+package ziwookim.be_onboarding_project.research.dto.request;
 
 import lombok.*;
-import ziwookim.be_onboarding_project.research.enums.ResearchItemType;
 
 import java.util.List;
 
@@ -10,11 +9,10 @@ import java.util.List;
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResearchRequestVo {
-
+public class ResearchItemRequestVo {
     private String name;
     private String description;
-    private ResearchItemType itemType;
-    private List<ResearchRequestItemChoiceVo> itemChoiceList;
+    private Integer itemType;
+    private List<ResearchItemChoiceRequestVo> itemChoiceList;
     private Boolean isRequired;
 }
