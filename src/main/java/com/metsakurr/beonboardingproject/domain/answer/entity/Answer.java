@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Column;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +28,20 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "response_idx", referencedColumnName = "idx", nullable = false)
-    private SurveyResponse response;
+    private Response response;
 
     @Column(name = "answer_text", columnDefinition = "TEXT")
     private String answerText;
+
+    @Builder
+    public Answer(
+            Question question,
+            Response response,
+            String answerText
+    ) {
+        this.question = question;
+        this.response = response;
+        this.answerText = answerText;
+    }
+
 }

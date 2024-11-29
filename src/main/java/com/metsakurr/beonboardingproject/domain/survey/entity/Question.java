@@ -20,7 +20,7 @@ public class Question extends BaseEntity {
 
     @JsonIgnore
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "survey_idx", referencedColumnName = "idx", nullable = false)
     private Survey survey;
 
@@ -41,25 +41,22 @@ public class Question extends BaseEntity {
     @Column(name = "required_yn", nullable = false)
     private boolean isRequired;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Option> options = new ArrayList<>();
-
-    public void addOption(Option option) {
-        option.setQuestion(this);
-        this.options.add(option);
-    }
 
     @Builder
     public Question(
             Survey survey,
             String name,
             String description,
-            QuestionType questionType
+            QuestionType questionType,
+            boolean isRequired
     ) {
         this.survey = survey;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
+        this.isRequired = isRequired;
     }
 }
 

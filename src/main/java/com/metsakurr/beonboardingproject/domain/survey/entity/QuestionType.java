@@ -24,4 +24,13 @@ public enum QuestionType {
         }
         throw new IllegalArgumentException("Invalid display name"); // TODO: custom exception and handling
     }
+
+    public static boolean isValidName(String name) {
+        for (QuestionType type : values()) {
+            if (type.name.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -14,15 +14,19 @@ public class Option {
 
     @JsonIgnore
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_idx", referencedColumnName = "idx")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "question_idx", referencedColumnName = "idx", nullable = true)
     private Question question;
 
     @Column(nullable = false)
     private String name;
 
     @Builder
-    public Option(String name) {
+    public Option(
+            Question question,
+            String name
+    ) {
+        this.question = question;
         this.name = name;
     }
 }

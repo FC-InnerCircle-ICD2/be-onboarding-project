@@ -27,13 +27,8 @@ public class Survey extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
-
-    public void addQuestion(Question question) {
-        question.setSurvey(this);
-        this.questions.add(question);
-    }
 
     @Builder
     public Survey(
