@@ -71,6 +71,7 @@ coverage/
 *.iws
 
 #Gradle
-.gradle
+.gradle/
+!.gradle/somefile.gradle
 /build/
 .gradletasknamecache
