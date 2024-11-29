@@ -21,7 +21,7 @@ public class Question extends BaseEntity {
     @JsonIgnore
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "survey_idx", referencedColumnName = "idx", nullable = false)
+    @JoinColumn(name = "survey_idx", referencedColumnName = "idx")
     private Survey survey;
 
     @Comment("항목 이름")
@@ -44,19 +44,27 @@ public class Question extends BaseEntity {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Option> options = new ArrayList<>();
 
+    public void deleteFromSurvey() {
+        this.survey = null;
+    }
+
     @Builder
     public Question(
             Survey survey,
             String name,
             String description,
             QuestionType questionType,
-            boolean isRequired
+            boolean isRequired,
+            List<Option> options
     ) {
         this.survey = survey;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
         this.isRequired = isRequired;
+        if (options == null) {
+            this.options = new ArrayList<>();
+        }
     }
 }
 
