@@ -34,7 +34,9 @@ public class RegistSurveyResponse {
             this.idx = question.getIdx();
             this.name = question.getName();
             this.description = question.getDescription();
-            this.options = question.getOptions().stream().map(OptionResponse::new).toList();
+            if (this.options != null) {
+                this.options = question.getOptions().stream().map(OptionResponse::new).toList();
+            }
         }
     }
 
