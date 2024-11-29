@@ -109,4 +109,66 @@ public interface SurveySubmissionControllerDoc {
     )
     ResponseEntity<ApiResult<SurveySubmissionResponse>> submitSurvey(Long id, SurveySubmissionRequest request);
 
+
+    // TODO 구현
+    @Operation(summary = "설문조사 응답 조회",
+            description = "설문조사 응답을 조회합니다.",
+            responses = @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    name = "응답 예시",
+                                    value = """
+                                            {
+                                              "code": "SUCCESS",
+                                              "message": null,
+                                              "validations": null,
+                                              "result": {
+                                                "items": [
+                                                  {
+                                                    "id": 1,
+                                                    "itemId": 1,
+                                                    "name": "이름",
+                                                    "inputType": "SHORT_ANSWER",
+                                                    "answer": "1 답변"
+                                                  },
+                                                  {
+                                                    "id": 2,
+                                                    "itemId": 2,
+                                                    "name": "나이",
+                                                    "inputType": "SHORT_ANSWER",
+                                                    "answer": "2 답변"
+                                                  },
+                                                  {
+                                                    "id": 3,
+                                                    "itemId": 3,
+                                                    "name": "음식선택",
+                                                    "inputType": "SINGLE_CHOICE",
+                                                    "answer": "피자"
+                                                  },
+                                                  {
+                                                    "id": 4,
+                                                    "itemId": 4,
+                                                    "name": "음식제외",
+                                                    "inputType": "MULTIPLE_CHOICE",
+                                                    "answer": "고등어순살조림"
+                                                  },
+                                                  {
+                                                    "id": 5,
+                                                    "itemId": 4,
+                                                    "name": "음식제외",
+                                                    "inputType": "MULTIPLE_CHOICE",
+                                                    "answer": "명태순살조림"
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                            """
+                            )
+                    )
+            )
+    )
+    ResponseEntity<ApiResult<SurveySubmissionResponse>> retrieveSurveySubmissions(Long id);
+
 }

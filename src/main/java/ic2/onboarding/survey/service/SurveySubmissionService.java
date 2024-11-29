@@ -7,6 +7,7 @@ import ic2.onboarding.survey.entity.SurveySubmissionItem;
 import ic2.onboarding.survey.global.BizException;
 import ic2.onboarding.survey.global.ErrorCode;
 import ic2.onboarding.survey.repository.SurveyRepository;
+import ic2.onboarding.survey.repository.SurveySubmissionItemRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.Objects;
 public class SurveySubmissionService {
 
     private final SurveyRepository surveyRepository;
+
+    private final SurveySubmissionItemRepository surveySubmissionItemRepository;
 
 
     @Transactional
@@ -51,6 +54,14 @@ public class SurveySubmissionService {
         survey.submitForm(submissionItems);
         surveyRepository.flush();
         return SurveySubmissionResponse.fromEntity(submissionItems);
+    }
+
+
+    public SurveySubmissionResponse findSubmissionItems(Long id) {
+
+        return SurveySubmissionResponse.fromEntity(
+                surveySubmissionItemRepository.findAllBySurveyIdOrderByIdAsc(id)
+        );
     }
 
 

@@ -25,4 +25,12 @@ public class SurveySubmissionController implements SurveySubmissionControllerDoc
         return ResponseEntity.ok(new ApiResult<>(response));
     }
 
+    @Override
+    @GetMapping("/submissions")
+    public ResponseEntity<ApiResult<SurveySubmissionResponse>> retrieveSurveySubmissions(@PathVariable(name = "id") Long id) {
+
+        SurveySubmissionResponse response = surveySubmissionService.findSubmissionItems(id);
+        return ResponseEntity.ok(new ApiResult<>(response));
+    }
+
 }
