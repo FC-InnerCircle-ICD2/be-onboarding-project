@@ -3,21 +3,22 @@ package com.metsakurr.beonboardingproject.domain.survey.dto;
 import com.metsakurr.beonboardingproject.common.validation.ValidQuestionType;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QuestionType;
+import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 public class QuestionRequest {
+    private Long idx;
+
     @NotBlank(message = "name[항목 이름]은 필수 값입니다.")
     private String name;
 
@@ -50,26 +51,19 @@ public class QuestionRequest {
         return this.isRequired;
     }
 
-    public Question toEntity() {
-        return Question.builder()
+    public Question toEntity(Survey survey) {
+        Question question = Question.builder()
+                .survey(survey)
                 .name(name)
                 .description(description)
                 .questionType(QuestionType.fromName(questionType))
+                .isRequired(isRequired)
                 .build();
-    }
-
-    @Builder
-    public QuestionRequest(
-            String name,
-            String description,
-            String questionType,
-            boolean isRequired,
-            List<OptionRequest> options
-    ) {
-        this.name = name;
-        this.description = description;
-        this.questionType = questionType;
-        this.isRequired = isRequired;
-        this.options = options;
+        if (options != null && !options.isEmpty()) {
+            question.getOptions().addAll(
+                    options.stream().map(optionRequest -> optionRequest.toEntity(question)).toList()
+            );
+        }
+        return question;
     }
 }

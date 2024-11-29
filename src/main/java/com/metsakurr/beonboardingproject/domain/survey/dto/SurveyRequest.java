@@ -14,6 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class SurveyRequest {
+    private Long idx;
+
     @NotBlank(message = "name[설문조사 이름]은 필수 값입니다.")
     private String name;
 
@@ -38,20 +40,13 @@ public class SurveyRequest {
 
 
     public Survey toEntity() {
-        return Survey.builder()
+        Survey survey = Survey.builder()
                 .name(name)
                 .description(description)
                 .build();
-    }
-
-    @Builder
-    public SurveyRequest(
-            String name,
-            String description,
-            List<QuestionRequest> questions
-    ) {
-        this.name = name;
-        this.description = description;
-        this.questions = questions;
+        survey.getQuestions().addAll(
+                questions.stream().map(questionRequest -> questionRequest.toEntity(survey)).toList()
+        );
+        return survey;
     }
 }
