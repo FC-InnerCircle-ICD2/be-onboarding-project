@@ -32,11 +32,14 @@ public class SurveyConverter {
                 ;
     }
 
-    public SurveyItemEntity toEntity(SurveyItemRequest request){
+    public SurveyItemEntity toEntity(
+            SurveyItemRequest request,
+            Long surveyId
+            ){
         return Optional.ofNullable(request)
                 .map(it -> {
                     return SurveyItemEntity.builder()
-                            .surveyId(request.getSurveyId())
+                            .surveyId(surveyId)
                             .name(request.getName())
                             .description(request.getDescription())
                             .inputType(request.getInputType())

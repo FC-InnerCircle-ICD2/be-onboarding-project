@@ -14,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SurveyItemRequest {
 
-    @NotNull
-    private Long surveyId;
-
     @NotBlank
     private String name;
 

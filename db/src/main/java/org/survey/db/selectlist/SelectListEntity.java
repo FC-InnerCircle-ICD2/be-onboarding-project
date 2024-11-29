@@ -11,7 +11,7 @@ import org.survey.db.BaseEntity;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "survey_item")
+@Table(name = "select_list")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

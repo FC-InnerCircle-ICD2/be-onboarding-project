@@ -24,7 +24,7 @@ public class SurveyBusiness {
         var newBaseEntity = surveyService.baseRegister(baseEntity);
         List<SurveyItemResponse> items = new ArrayList<>();
         for(SurveyItemRequest item : request.getItems()){
-            var itemEntity = surveyConverter.toEntity(item);
+            var itemEntity = surveyConverter.toEntity(item, newBaseEntity.getId());
             var newItemEntity = surveyService.itemRegister(itemEntity);
             for(String options : item.getSelectOptions()){
                 var selectListEntity = surveyConverter.toEntity(
