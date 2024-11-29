@@ -1,10 +1,12 @@
 package com.onboarding.servey.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.onboarding.common.domain.BaseEntity;
 import com.onboarding.common.exception.BaseException;
 import com.onboarding.servey.domain.Option;
 import com.onboarding.servey.domain.OptionEditor;
@@ -13,6 +15,7 @@ import com.onboarding.servey.domain.QuestionEditor;
 import com.onboarding.servey.domain.QuestionType;
 import com.onboarding.servey.domain.Servey;
 import com.onboarding.servey.domain.ServeyEditor;
+import com.onboarding.servey.dto.request.AnswerRequest;
 import com.onboarding.servey.dto.request.OptionRequest;
 import com.onboarding.servey.dto.request.QuestionRequest;
 import com.onboarding.servey.dto.request.ServeyRequest;
@@ -32,9 +35,31 @@ public class ServeyServiceImpl implements ServeyService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public ServeyResponse getServey(Long id) {
+	public ServeyResponse servey(Long id) {
 		Servey servey = serveyRepository.findById(id).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
 		return ServeyResponse.from(servey);
+	}
+
+	@Transactional
+	@Override
+	public void submit(Long serveyId, List<AnswerRequest> answerRequests) {
+		Servey servey = serveyRepository.findById(serveyId).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
+
+		answerRequests.forEach(answerRequest -> {
+			Question question = servey.getQuestions().stream()
+				.filter(x -> x.getId().equals(answerRequest.getId()))
+				.findAny().orElseThrow(() -> new BaseException("설문받을 항목이 없습니다."));
+			List<Long> optionIds = question.getOptions().stream().map(BaseEntity::getId).collect(Collectors.toList());
+			serveyValidator.checkIsRequired(question.getId(), question.isRequired(), answerRequest.getAnswer());
+			serveyValidator.checkTypeIsNumeric(question.getId(), question.getType().name(), optionIds, answerRequest.getAnswer());
+
+			QuestionEditor.QuestionEditorBuilder questionEditorBuilder = question.toEditor();
+			QuestionEditor questionEditor = questionEditorBuilder
+				.answer(answerRequest.getAnswer())
+				.build();
+
+			question.edit(questionEditor);
+		});
 	}
 
 	@Transactional

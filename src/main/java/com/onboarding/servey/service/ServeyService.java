@@ -2,6 +2,7 @@ package com.onboarding.servey.service;
 
 import java.util.List;
 
+import com.onboarding.servey.dto.request.AnswerRequest;
 import com.onboarding.servey.dto.request.OptionRequest;
 import com.onboarding.servey.dto.request.QuestionRequest;
 import com.onboarding.servey.dto.request.ServeyRequest;
@@ -9,7 +10,8 @@ import com.onboarding.servey.dto.response.ServeyResponse;
 
 public interface ServeyService {
 
-	ServeyResponse getServey(Long id);
+	ServeyResponse servey(Long id);
+	void submit(Long serveyId, List<AnswerRequest> answerRequests);
 	void create(ServeyRequest serveyRequest);
 	void create(Long serveyId, List<QuestionRequest> questionRequests);
 	void create(Long serveyId, Long questionId, List<OptionRequest> optionRequests);

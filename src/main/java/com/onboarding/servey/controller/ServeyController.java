@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onboarding.common.controller.ApiController;
+import com.onboarding.servey.dto.request.AnswerRequest;
 import com.onboarding.servey.dto.request.OptionRequest;
 import com.onboarding.servey.dto.request.QuestionRequest;
 import com.onboarding.servey.dto.request.ServeyRequest;
@@ -43,13 +44,22 @@ public class ServeyController extends ApiController {
 
 	private final ServeyService serveyService;
 
-	@ApiOperation(value = "단일 설문조사 조회", notes = "설문조사 ID로 설문조사를 조회합니다.")
+	@ApiOperation(value = "설문조사 응답 조회", notes = "설문조사 응답을 조회합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "serveyId", value = "설문조사 ID", required = true, dataType = "long", paramType = "path")
 	})
 	@GetMapping(value = "/servey/{serveyId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ServeyResponse> survey(@PathVariable @NotNull Long serveyId) {
-		return ResponseEntity.ok(serveyService.getServey(serveyId));
+		return ResponseEntity.ok(serveyService.servey(serveyId));
+	}
+
+	@ApiOperation(value = "설문조사 응답 제출", notes = "설문조사 응답을 제출합니다.")
+	@PatchMapping(value = "/servey/{serveyId}/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> submit(
+		@PathVariable @NotNull Long serveyId,
+		@Valid @RequestBody List<AnswerRequest> answerRequest) {
+		serveyService.submit(serveyId, answerRequest);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@ApiOperation(value = "설문조사 생성", notes = "설문조사를 생성합니다.")

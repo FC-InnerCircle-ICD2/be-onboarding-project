@@ -42,6 +42,8 @@ public class Question extends BaseEntity {
 	@Column(nullable = false)
 	private boolean required;
 
+	private String answer;
+
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "servey_id")
@@ -52,11 +54,12 @@ public class Question extends BaseEntity {
 	private List<Option> options = new ArrayList<>();
 
 	@Builder
-	public Question(String name, String description, QuestionType type, boolean required) {
+	public Question(String name, String description, QuestionType type, boolean required, String answer) {
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.required = required;
+		this.answer = answer;
 	}
 
 	public void setServey(Servey servey) {
@@ -82,7 +85,8 @@ public class Question extends BaseEntity {
 			.name(name)
 			.description(description)
 			.type(type)
-			.required(required);
+			.required(required)
+			.answer(answer);
 	}
 
 	public void edit(QuestionEditor questionEditor) {
@@ -90,5 +94,6 @@ public class Question extends BaseEntity {
 		description = questionEditor.getDescription();
 		type = questionEditor.getType();
 		required = questionEditor.isRequired();
+		answer = questionEditor.getAnswer();
 	}
 }
