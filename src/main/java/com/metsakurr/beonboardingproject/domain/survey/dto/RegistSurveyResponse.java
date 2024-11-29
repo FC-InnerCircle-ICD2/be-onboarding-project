@@ -5,6 +5,7 @@ import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class RegistSurveyResponse {
         private long idx;
         private String name;
         private String description;
-        private List<OptionResponse> options;
+        private List<OptionResponse> options = new ArrayList<>();
 
         @Getter
         public static class OptionResponse {
@@ -34,9 +35,8 @@ public class RegistSurveyResponse {
             this.idx = question.getIdx();
             this.name = question.getName();
             this.description = question.getDescription();
-            if (this.options != null) {
-                this.options = question.getOptions().stream().map(OptionResponse::new).toList();
-            }
+            this.options = question.getOptions().stream().map(OptionResponse::new).toList();
+
         }
     }
 

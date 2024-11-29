@@ -49,13 +49,8 @@ public class SurveyService {
                     originalQuestion.deleteFromSurvey();
                     questionRepository.save(originalQuestion);
 
-                    Question question = newQuestion.toEntity(survey);
-                    questionRepository.save(question);
-                }
-
-                // 생성
-                if (newQuestion.getIdx() == null) {
-                    Question question = newQuestion.toEntity(survey);
+                    Question question = newQuestion.toEntity();
+                    survey.addQuestion(question);
                     questionRepository.save(question);
                 }
             }
@@ -65,11 +60,18 @@ public class SurveyService {
                 originalQuestion.deleteFromSurvey();
                 questionRepository.save(originalQuestion);
             }
-
         }
 
-        Survey newSurvey = surveyRepository.findById(request.getIdx());
-        return new RegistSurveyResponse(newSurvey);
+        for (QuestionRequest newQuestion: newQuestions) {
+            // 생성
+            if (newQuestion.getIdx() == null) {
+                Question question = newQuestion.toEntity();
+                survey.addQuestion(question);
+                questionRepository.save(question);
+            }
+        }
+
+        return new RegistSurveyResponse(request.toEntity());
     }
 
 }

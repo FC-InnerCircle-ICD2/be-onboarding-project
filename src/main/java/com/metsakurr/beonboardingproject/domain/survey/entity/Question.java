@@ -48,6 +48,11 @@ public class Question extends BaseEntity {
         this.survey = null;
     }
 
+    public void addOptions(Option option) {
+        this.options.add(option);
+        option.setQuestion(this);
+    }
+
     @Builder
     public Question(
             Survey survey,

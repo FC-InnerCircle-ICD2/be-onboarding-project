@@ -44,9 +44,10 @@ public class SurveyRequest {
                 .name(name)
                 .description(description)
                 .build();
-        survey.getQuestions().addAll(
-                questions.stream().map(questionRequest -> questionRequest.toEntity(survey)).toList()
-        );
+
+        questions.stream().map(QuestionRequest::toEntity).toList()
+                .forEach(survey::addQuestion);
+
         return survey;
     }
 }

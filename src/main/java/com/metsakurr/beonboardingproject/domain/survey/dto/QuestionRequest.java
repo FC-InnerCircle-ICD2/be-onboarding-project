@@ -3,7 +3,6 @@ package com.metsakurr.beonboardingproject.domain.survey.dto;
 import com.metsakurr.beonboardingproject.common.validation.ValidQuestionType;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QuestionType;
-import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -51,18 +50,16 @@ public class QuestionRequest {
         return this.isRequired;
     }
 
-    public Question toEntity(Survey survey) {
+    public Question toEntity() {
         Question question = Question.builder()
-                .survey(survey)
                 .name(name)
                 .description(description)
                 .questionType(QuestionType.fromName(questionType))
                 .isRequired(isRequired)
                 .build();
         if (options != null && !options.isEmpty()) {
-            question.getOptions().addAll(
-                    options.stream().map(optionRequest -> optionRequest.toEntity(question)).toList()
-            );
+            options.stream().map(OptionRequest::toEntity).toList()
+                    .forEach(question::addOptions);
         }
         return question;
     }

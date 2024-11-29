@@ -30,6 +30,11 @@ public class Survey extends BaseEntity {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+        question.setSurvey(this);
+    }
+
     @Builder
     public Survey(
             String name,
