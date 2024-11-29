@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/survey/submit")
 @RequiredArgsConstructor
-public class SurveyResponseController {
+public class SubmitController {
     private final SurveyService surveyService;
 
     @PostMapping

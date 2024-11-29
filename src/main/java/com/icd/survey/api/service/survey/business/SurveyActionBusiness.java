@@ -2,16 +2,21 @@ package com.icd.survey.api.service.survey.business;
 
 import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
+import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
+import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
-import com.icd.survey.api.repository.survey.ItemAnswerRepository;
+import com.icd.survey.api.enums.survey.ResponseType;
 import com.icd.survey.api.repository.survey.AnswerOptionRepository;
+import com.icd.survey.api.repository.survey.ItemAnswerRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
 import com.icd.survey.api.repository.survey.SurveyRepository;
+import com.icd.survey.exception.ApiException;
+import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -73,4 +78,21 @@ public class SurveyActionBusiness {
             answerOptionRepository.save(ItemAnswerOption.createItemResponseOptionRequest(dto));
         });
     }
+
+    public void answerSurveyItem(SurveyItemRequest itemRequest) {
+        SurveyItem surveyItem = surveyQueryBusiness.findSurveyItemById(itemRequest.getSurveySeq())
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        if (itemRequest.isChoiceType() && itemRequest.getOptionalAnswerList().isEmpty()) {
+            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "선택형 설문 옵션을 확인하세요.");
+        }
+
+        // todo : 응답 타입 별 분기 처리하여 데이터 저장
+
+    }
+
+    public void saveAnswer(ItemAnswerDto answerDto) {
+        itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
+    }
+
 }

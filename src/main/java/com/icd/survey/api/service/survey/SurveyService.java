@@ -1,6 +1,7 @@
 package com.icd.survey.api.service.survey;
 
 import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
+import com.icd.survey.api.dto.survey.request.SubmitSurveyRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
@@ -42,7 +43,7 @@ public class SurveyService {
     public void updateSurvey(UpdateSurveyUpdateRequest request) {
 
         /* 엔티티 확인 */
-        Survey survey = surveyQueryBusiness.findById(request.getSurveySeq())
+        Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
         Long surveySeq = survey.getSurveySeq();
@@ -62,5 +63,21 @@ public class SurveyService {
         if (survey.getIsDeleted() != null && Boolean.TRUE.equals(survey.getIsDeleted())) {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
         }
+    }
+
+    public void submitSurvey(SubmitSurveyRequest request) {
+        Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        if (Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
+            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
+        }
+
+        surveyValidCheck(survey);
+
+
+
+
+
     }
 }

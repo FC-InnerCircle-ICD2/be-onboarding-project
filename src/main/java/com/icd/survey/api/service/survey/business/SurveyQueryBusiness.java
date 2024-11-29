@@ -22,7 +22,7 @@ public class SurveyQueryBusiness {
     private final ItemAnswerRepository itemAnswerRepository;
     private final AnswerOptionRepository answerOptionRepository;
 
-    public Optional<Survey> findById(Long surveySeq) {
+    public Optional<Survey> findSurveyById(Long surveySeq) {
         return surveyRepository.findById(surveySeq);
     }
 
@@ -36,6 +36,10 @@ public class SurveyQueryBusiness {
 
     public Boolean isExistedUserSurvey(String surveyName, String ipAddress) {
         return surveyRepository.existsBySurveyNameAndIpAddress(surveyName, ipAddress);
+    }
+
+    public Optional<SurveyItem> findSurveyItemById(Long itemSeq) {
+        return surveyItemRepository.findById(itemSeq);
     }
 
 }

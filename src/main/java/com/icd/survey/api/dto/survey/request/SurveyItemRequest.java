@@ -16,6 +16,8 @@ import java.util.List;
 @ToString
 public class SurveyItemRequest {
 
+    private Long surveySeq;
+
     @NotBlank(message = "항목의 이름을 입력해 주세요.")
     @Size(min = 1, max = 255, message = "설문조사 이름의 길이를 확인하세요.")
     private String itemName;
@@ -33,9 +35,9 @@ public class SurveyItemRequest {
     private List<ItemOptionRequest> optionList;
 
     /* submit survey 에서 다중 선택형 응답을 위한 리스트 */
-    private List<SurveyAnswer> optionalAnswerList;
+    private List<SurveyAnswerRequest> optionalAnswerList;
     /* 단답형, 서술형, 단일 선택형 응답을 위한 객체 */
-    private SurveyAnswer surveyAnswer;
+    private SurveyAnswerRequest surveyAnswerRequest;
 
     @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
@@ -47,7 +49,7 @@ public class SurveyItemRequest {
     }
 
     public void responseValidationCheck() {
-        if (optionalAnswerList.isEmpty() || surveyAnswer == null) {
+        if (optionalAnswerList.isEmpty() || surveyAnswerRequest == null) {
             throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "항목의 응답 값을 입력해 주세요.");
         }
     }

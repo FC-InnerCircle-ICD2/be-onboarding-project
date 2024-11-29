@@ -28,14 +28,15 @@ public class ItemAnswer {
     private String optionAnswer;
 
     public static ItemAnswer createItemResponseRequest(ItemAnswerDto dto) {
-        ItemAnswer itemResponse = new ItemAnswer();
+        ItemAnswer itemAnswer = new ItemAnswer();
         if (Boolean.TRUE.equals(dto.getIsOptionalAnswer())) {
-            itemResponse.optionSeq = dto.getOptionSeq();
-            itemResponse.optionAnswer = dto.getOptionAnswer();
+            itemAnswer.isOptionAnswer = dto.getIsOptionalAnswer();
+            itemAnswer.optionSeq = dto.getOptionSeq();
+            itemAnswer.optionAnswer = dto.getOptionAnswer();
         } else {
-            itemResponse.answer = dto.getAnswer();
+            itemAnswer.answer = dto.getAnswer();
         }
-        return itemResponse;
+        return itemAnswer;
     }
 
     public ItemAnswerDto of() {
