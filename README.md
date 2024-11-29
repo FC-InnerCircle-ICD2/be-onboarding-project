@@ -1,3 +1,13 @@
+# 테이블 설계
+<img width="1157" alt="image" src="https://github.com/user-attachments/assets/777dcc16-da18-4541-9917-d60379a92781">
+- H2 Console - http://localhost:8080/h2-console
+
+# API 문서
+- http://localhost:8080/swagger-ui/index.html - 로컬 실행
+- [웹으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17959114/survey_ksb.json)
+
+---
+
 # 이너써클 BE 온보딩 프로젝트
 
 ## 온보딩 프로젝트의 목적
