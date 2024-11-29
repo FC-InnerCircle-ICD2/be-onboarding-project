@@ -15,6 +15,7 @@ public enum ResponseCode {
 
     NOT_FOUND_SURVEY("40010", "유효하지 않은 설문조사입니다. [설문조사 이름], [설문조사 설명]을 확인해 주세요"),
     NOT_FOUND_ANSWER("40011", "응답해야 하는 문항에 대한 항목이 없습니다."),
+    NOT_FOUND_SURVEY_IDX("40012", "idx[설문조사 식별자]가 필요합니다.")
 
 
     ;
