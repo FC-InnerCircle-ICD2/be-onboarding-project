@@ -21,7 +21,7 @@ class SurveyResponseItem(
     val surveyItemOptionId: Long? = null,
     @Comment("다건 선택인 경우 응답값")
     @ElementCollection(fetch = FetchType.EAGER)
-    val surveyItemOptions: List<Long> = mutableListOf(),
+    val options: List<Long> = mutableListOf(),
     @CreatedDate
     var createdAt: OffsetDateTime? = null,
 )

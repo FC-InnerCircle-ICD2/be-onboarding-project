@@ -1,0 +1,18 @@
+= RESTDOCS ENUM Document
+:doctype: book
+:icon: font
+:source-highlighter: highlighjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:docinfo: shared
+:http-get: pass:quotes[[.http.get]#GET#]
+:http-patch: pass:quotes[[.http.patch]#PATCH#]
+:http-post: pass:quotes[[.http.post]#POST#]
+:http-put: pass:quotes[[.http.put]#PUT#]
+:http-delete: pass:quotes[[.http.delete]#DELETE#]
+
+== {http-POST} 설문조사 등록 API
+
+operation::postSurvey[snippets='exception,http-request,request-fields,response-body,response-fields']
+
