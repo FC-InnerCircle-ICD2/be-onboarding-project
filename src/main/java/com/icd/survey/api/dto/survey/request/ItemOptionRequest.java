@@ -17,7 +17,7 @@ public class ItemOptionRequest {
         }
     }
 
-    public ItemAnswerOptionDto createItemREsponseOptionDto() {
+    public ItemAnswerOptionDto createItemResponseOptionDto() {
         return ItemAnswerOptionDto
                 .builder()
                 .option(option)

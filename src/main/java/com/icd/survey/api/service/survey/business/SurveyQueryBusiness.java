@@ -1,5 +1,6 @@
 package com.icd.survey.api.service.survey.business;
 
+import com.icd.survey.api.entity.survey.ItemAnswerOption;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.repository.survey.AnswerOptionRepository;
@@ -30,7 +31,7 @@ public class SurveyQueryBusiness {
         return surveyRepository.findBySurveyNameAndIpAddress(surveyName, userSeq);
     }
 
-    public Optional<List<SurveyItem>> findAllSurveyItem(Long surveySeq) {
+    public Optional<List<SurveyItem>> findAllBySurveySeq(Long surveySeq) {
         return surveyItemRepository.findAllBySurveySeq(surveySeq);
     }
 
@@ -40,6 +41,10 @@ public class SurveyQueryBusiness {
 
     public Optional<SurveyItem> findSurveyItemById(Long itemSeq) {
         return surveyItemRepository.findById(itemSeq);
+    }
+
+    public Optional<ItemAnswerOption> findAnswerOptionById(Long answerSeq) {
+        return answerOptionRepository.findById(answerSeq);
     }
 
 }

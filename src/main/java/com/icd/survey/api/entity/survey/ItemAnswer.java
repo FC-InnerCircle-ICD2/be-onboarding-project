@@ -18,7 +18,7 @@ public class ItemAnswer {
     @Column(name = "answer_seq", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerSeq;
-    @Column(name = "answer", nullable = false)
+    @Column(name = "answer", nullable = true)
     private String answer;
     @Column(name = "is_optional_answer", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isOptionAnswer;
@@ -27,8 +27,12 @@ public class ItemAnswer {
     @Column(name = "option_answer", nullable = true)
     private String optionAnswer;
 
+    @Column(name = "item_seq", nullable = false)
+    private Long itemSeq;
+
     public static ItemAnswer createItemResponseRequest(ItemAnswerDto dto) {
         ItemAnswer itemAnswer = new ItemAnswer();
+        itemAnswer.itemSeq = dto.getItemSeq();
         if (Boolean.TRUE.equals(dto.getIsOptionalAnswer())) {
             itemAnswer.isOptionAnswer = dto.getIsOptionalAnswer();
             itemAnswer.optionSeq = dto.getOptionSeq();

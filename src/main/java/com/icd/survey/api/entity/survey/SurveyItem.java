@@ -37,7 +37,7 @@ public class SurveyItem extends BaseEntity {
     @Column(name = "is_disabled", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isDisabled = Boolean.FALSE;
 
-    @Column(name = "survey_Seq")
+    @Column(name = "survey_Seq", nullable = false)
     private Long surveySeq;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -60,6 +60,7 @@ public class SurveyItem extends BaseEntity {
 
     public static SurveyItem createSurveyItemRequest(SurveyItemDto dto) {
         SurveyItem surveyItem = new SurveyItem();
+        surveyItem.surveyKeySet(dto.getSurveySeq());
         surveyItem.itemName = dto.getItemName();
         surveyItem.itemDescription = dto.getItemDescription();
         surveyItem.itemResponseType = dto.getItemResponseType();

@@ -1,6 +1,7 @@
 package com.icd.survey.api.service.survey.business;
 
 import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
+import com.icd.survey.api.dto.survey.request.SurveyAnswerRequest;
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
@@ -48,7 +49,7 @@ public class SurveyActionBusiness {
     }
 
     public void disableItemList(Long surveySeq) {
-        Optional<List<SurveyItem>> optionalSurveyItemList = surveyQueryBusiness.findAllSurveyItem(surveySeq);
+        Optional<List<SurveyItem>> optionalSurveyItemList = surveyQueryBusiness.findAllBySurveySeq(surveySeq);
 
         if (Boolean.TRUE.equals(optionalSurveyItemList.isPresent())) {
             List<SurveyItem> surveyItemList = optionalSurveyItemList.get();
@@ -73,7 +74,7 @@ public class SurveyActionBusiness {
     public void saveItemOptionList(List<ItemOptionRequest> optionDtoList, Long itemSeq) {
         optionDtoList.forEach(x -> {
 
-            ItemAnswerOptionDto dto = x.createItemREsponseOptionDto();
+            ItemAnswerOptionDto dto = x.createItemResponseOptionDto();
             dto.setItemSeq(itemSeq);
             answerOptionRepository.save(ItemAnswerOption.createItemResponseOptionRequest(dto));
         });
@@ -81,12 +82,12 @@ public class SurveyActionBusiness {
 
     public void answerSurveyItem(SurveyItemRequest itemRequest) {
 
-        surveyQueryBusiness.findSurveyItemById(itemRequest.getSurveySeq())
+        SurveyItem item = surveyQueryBusiness.findSurveyItemById(itemRequest.getItemSeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
-        if (itemRequest.isChoiceType() && itemRequest.getOptionalAnswerList().isEmpty()) {
-            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "선택형 설문 옵션을 확인하세요.");
-        }
+        itemRequest.setItemResponseType(item.getItemResponseType());
+
+        itemRequest.answerValidationCheck();
 
         if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
             if (itemRequest.getItemResponseType().equals(ResponseType.SINGLE_CHOICE.getType())) {
@@ -95,27 +96,41 @@ public class SurveyActionBusiness {
 
                 saveAnswer(ItemAnswerDto
                         .builder()
-                        .itemSeq(itemRequest.getItemSeq())
+                        .itemSeq(item.getItemSeq())
                         .isOptionalAnswer(Boolean.TRUE)
                         .optionSeq(itemRequest.getSurveyAnswerRequest().getOptionalAnswer())
                         .optionAnswer(option.getOption())
                         .build());
             } else if (itemRequest.getItemResponseType().equals(ResponseType.MULTI_CHOICE.getType())) {
-                // todo : optionList 가져 와서 save.
+                itemRequest.getOptionalAnswerList()
+                        .forEach(x -> {
+                            ItemAnswerOption option = surveyQueryBusiness.findAnswerOptionById(x.getOptionalAnswer())
+                                    .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+                            ItemAnswerDto answerDto =
+                                    ItemAnswerDto
+                                            .builder()
+                                            .itemSeq(item.getItemSeq())
+                                            .isOptionalAnswer(Boolean.TRUE)
+                                            .optionSeq(x.getOptionalAnswer())
+                                            .optionAnswer(option.getOption())
+                                            .build();
+                            saveAnswer(answerDto);
+                        });
             }
         } else {
+            SurveyAnswerRequest answerRequest = itemRequest.getSurveyAnswerRequest();
             saveAnswer(ItemAnswerDto
                     .builder()
-                    .itemSeq(itemRequest.getItemSeq())
+                    .itemSeq(item.getItemSeq())
                     .isOptionalAnswer(Boolean.FALSE)
-                    .answer(itemRequest.getSurveyAnswerRequest().getAnswer())
+                    .answer(answerRequest.getAnswer())
                     .build());
         }
-
     }
 
     public void saveAnswer(ItemAnswerDto answerDto) {
         itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
     }
+
 
 }

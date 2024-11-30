@@ -3,6 +3,7 @@ package com.icd.survey.api.dto.survey.request;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
 import com.icd.survey.exception.ApiException;
+import com.icd.survey.exception.response.ExceptionResponse;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -44,16 +45,23 @@ public class SurveyItemRequest {
     @Builder.Default
     private Boolean isEssential = Boolean.FALSE;
 
-    public void validationCheck() throws IllegalArgumentException {
-        if (Boolean.TRUE.equals(isChoiceType()) && optionList.isEmpty()) {
-            throw new IllegalArgumentException("선택 항목의 경우 옵션을 입력해야만 합니다.");
+    public void validationCheck() {
+        if (Boolean.TRUE.equals(isChoiceType()) && (optionList == null || optionList.isEmpty())) {
+            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "선택 항목의 경우 옵션을 입력해야만 합니다.");
         }
     }
 
-    public void responseValidationCheck() {
-        if (optionalAnswerList.isEmpty() || surveyAnswerRequest == null) {
-            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "항목의 응답 값을 입력해 주세요.");
+    public void answerValidationCheck() {
+        if (Boolean.TRUE.equals(itemResponseType.equals(ResponseType.MULTI_CHOICE.getType()))) {
+            if (optionalAnswerList == null || optionalAnswerList.isEmpty()) {
+                throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "다중 선택 항목의 응답값을 확인해 주세요.");
+            }
+        } else {
+            if (surveyAnswerRequest == null) {
+                throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "항목의 응답값을 확인해 주세요.");
+            }
         }
+
     }
 
     public Boolean isChoiceType() {

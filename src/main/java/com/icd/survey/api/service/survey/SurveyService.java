@@ -2,9 +2,10 @@ package com.icd.survey.api.service.survey;
 
 import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
 import com.icd.survey.api.dto.survey.request.SubmitSurveyRequest;
+import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.survey.Survey;
-import com.icd.survey.api.entity.survey.dto.SurveyDto;
+import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import com.icd.survey.common.CommonUtils;
@@ -14,6 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -59,12 +64,6 @@ public class SurveyService {
         surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
     }
 
-    public void surveyValidCheck(Survey survey) {
-        if (survey.getIsDeleted() != null && Boolean.TRUE.equals(survey.getIsDeleted())) {
-            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
-        }
-    }
-
     public void submitSurvey(SubmitSurveyRequest request) {
         Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
@@ -75,9 +74,37 @@ public class SurveyService {
 
         surveyValidCheck(survey);
 
+        /* todo : 필수 항목값에 대한 응답 체크 */
+        List<SurveyItem> itemList = surveyQueryBusiness.findAllBySurveySeq(survey.getSurveySeq())
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
+        // 필수 항목 값 queue
+        Set<Long> essentialItemSeqSet = itemList
+                .stream()
+                .filter(SurveyItem::getIsEssential)
+                .map(SurveyItem::getItemSeq)
+                .collect(Collectors.toSet());
 
+        List<SurveyItemRequest> itemRequestList = request.getSurveyItemList();
 
+        itemRequestList.forEach(x -> {
+            if (essentialItemSeqSet.contains(x.getItemSeq())) {
+                essentialItemSeqSet.remove(x.getItemSeq());
+            }
+        });
 
+        if (Boolean.FALSE.equals(essentialItemSeqSet.isEmpty())) {
+            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "필수 항목 값을 입력 해 주세요");
+        }
+
+        request.getSurveyItemList()
+                .forEach(x -> surveyActionBusiness.answerSurveyItem(x));
+
+    }
+
+    public void surveyValidCheck(Survey survey) {
+        if (survey.getIsDeleted() != null && Boolean.TRUE.equals(survey.getIsDeleted())) {
+            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
+        }
     }
 }

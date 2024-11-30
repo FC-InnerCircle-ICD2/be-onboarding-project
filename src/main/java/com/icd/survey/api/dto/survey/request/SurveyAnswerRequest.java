@@ -15,5 +15,4 @@ public class SurveyAnswerRequest {
     private Long itemSeq;
     private String answer;
     private Long optionalAnswer;
-    private List<Long> optionalAnswerList;
 }

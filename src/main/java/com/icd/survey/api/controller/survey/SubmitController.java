@@ -18,6 +18,6 @@ public class SubmitController {
 
     @PostMapping
     public void submitSurvey(@RequestBody SubmitSurveyRequest request) {
-
+        surveyService.submitSurvey(request);
     }
 }
