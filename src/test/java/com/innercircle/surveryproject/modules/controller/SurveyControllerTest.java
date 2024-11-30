@@ -44,7 +44,7 @@ class SurveyControllerTest {
 
         mockMvc.perform(post("/api/survey").contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(
                 status().isCreated())
-            .andExpect(jsonPath("$.message").value("성공하였습니다."));
+            .andExpect(jsonPath("$.message").value("설문조사 등록에 성공하였습니다."));
 
     }
 
