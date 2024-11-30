@@ -1,9 +1,10 @@
 package com.metsakurr.beonboardingproject.domain.survey.service;
 
+import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
 import com.metsakurr.beonboardingproject.domain.survey.dto.QuestionRequest;
-import com.metsakurr.beonboardingproject.domain.survey.dto.RegistSurveyResponse;
+import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyCreationResponse;
 import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyRequest;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
@@ -20,22 +21,19 @@ public class SurveyService {
     private final SurveyRepository surveyRepository;
     private final QuestionRepository questionRepository;
 
-    public RegistSurveyResponse regist(SurveyRequest request) {
+    public ApiResponse<SurveyCreationResponse> create(SurveyRequest request) {
         Survey survey = request.toEntity();
         surveyRepository.save(survey);
 
-        return new RegistSurveyResponse(survey);
+        SurveyCreationResponse response = new SurveyCreationResponse(survey);
+        return new ApiResponse<>(ResponseCode.SUCCESS, response);
     }
 
-    public RegistSurveyResponse update(SurveyRequest request) {
-        if (request.getIdx() == null) {
-            throw new ServiceException(ResponseCode.NOT_FOUND_SURVEY_IDX);
-        }
+    public ApiResponse<SurveyCreationResponse> update(SurveyRequest request) {
+        final long surveyIdx = request.getIdx();
 
-        Survey survey = surveyRepository.findById(request.getIdx());
-        if (survey == null) {
-            throw new ServiceException(ResponseCode.NOT_FOUND_SURVEY);
-        }
+        Survey survey = surveyRepository.findById(surveyIdx)
+                .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_SURVEY));
 
         List<Question> originalQuestions = survey.getQuestions();
         List<QuestionRequest> newQuestions = request.getQuestions();
@@ -71,7 +69,8 @@ public class SurveyService {
             }
         }
 
-        return new RegistSurveyResponse(request.toEntity());
+        SurveyCreationResponse response = new SurveyCreationResponse(request.toEntity());
+        return new ApiResponse<>(ResponseCode.SUCCESS, response);
     }
 
 }

@@ -7,11 +7,9 @@ import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,16 +22,18 @@ public class SurveyRepository {
         entityManager.persist(survey);
     }
 
-    public Survey findById(long idx) {
+    public Optional<Survey> findById(long idx) {
         QSurvey survey = QSurvey.survey;
         QQuestion question = QQuestion.question;
         QOption option = QOption.option;
 
-        return queryFactory.select(survey)
-                .from(survey)
-                .leftJoin(question).on(question.survey.eq(survey))
-                .leftJoin(option).on(option.question.eq(question))
-                .where(survey.idx.eq(idx))
-                .fetchOne();
+        return Optional.ofNullable(
+                queryFactory.select(survey)
+                        .from(survey)
+                        .leftJoin(question).on(question.survey.eq(survey))
+                        .leftJoin(option).on(option.question.eq(question))
+                        .where(survey.idx.eq(idx))
+                        .fetchOne()
+        );
     }
 }

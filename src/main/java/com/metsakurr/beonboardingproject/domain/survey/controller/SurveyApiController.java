@@ -1,8 +1,7 @@
 package com.metsakurr.beonboardingproject.domain.survey.controller;
 
 import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
-import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
-import com.metsakurr.beonboardingproject.domain.survey.dto.RegistSurveyResponse;
+import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyCreationResponse;
 import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyRequest;
 import com.metsakurr.beonboardingproject.domain.survey.service.SurveyService;
 import jakarta.validation.Valid;
@@ -18,20 +17,20 @@ public class SurveyApiController {
     private final SurveyService surveyService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RegistSurveyResponse>> regist(
+    public ResponseEntity<ApiResponse<SurveyCreationResponse>> create(
             @Valid @RequestBody SurveyRequest surveyRequest
     ) {
-        RegistSurveyResponse response = surveyService.regist(surveyRequest);
-        ApiResponse apiResponse = new ApiResponse(ResponseCode.SUCCESS, response);
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(surveyService.create(surveyRequest));
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse<RegistSurveyResponse>> update(
+    public ResponseEntity<ApiResponse<SurveyCreationResponse>> update(
             @Valid @RequestBody SurveyRequest surveyRequest
     ) {
-        RegistSurveyResponse response = surveyService.update(surveyRequest);
-        ApiResponse apiResponse = new ApiResponse(ResponseCode.SUCCESS, response);
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(surveyService.update(surveyRequest));
     }
 }

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidQuestionType {
-    String message() default "[항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트] 중 하나여야 합니다.";
+    String message() default "[항목 입력 형태]는 [SHORT_SENTENCE], [LONG_SENTENCE], [SINGLE_CHOICE], [MULTI_CHOICE] 중 하나여야 합니다.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

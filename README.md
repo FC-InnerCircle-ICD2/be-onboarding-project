@@ -83,99 +83,86 @@
 #### request example
 ```JSON
 {
-    "name": "겨울 방학 설문 조사",
-    "description": "겨울 방학 계획에 대해 조사하고 있습니다.",
-    "questions": [
-        {
-            "name": "성함이 무엇인가요?",
-            "description": "이름 작성",
-            "questionType": "단답형",
-            "isRequired": true
-        },
-        {
-            "name": "이번 겨울 방학이 처음인가요?",
-            "description": "하나 선택",
-            "questionType": "단일 선택 리스트",
-            "isRequired": false,
-            "options": [
-                {"name": "예"},
-                {"name": "아니오"}
-            ]
-        },
-                {
-            "name": "이번 겨울 방학에는 무엇을 할 건가요?",
-            "description": "중복 선택 가능",
-            "questionType": "다중 선택 리스트",
-            "isRequired": false,
-            "options": [
-                {"name": "휴식"},
-                {"name": "공부"},
-                {"name": "취미활동"}
-            ]
-        },
-        {
-            "name": "이전 겨울 방학이 만족스럽지 못한 이유를 알려주세요.",
-            "description": "의견을 작성해 주시면 됩니다.",
-            "questionType": "장문형",
-            "isRequired": true
-        }
-    ] 
+  "name":"테스트 설문 이름",
+  "description":"테스트 설문 설명",
+  "questions":[
+    {
+      "name":"질문 1 : 단답형",
+      "description":"질문 1 설명",
+      "questionType":"SHORT_SENTENCE",
+      "isRequired": false,
+      "options":null
+    },
+    {
+      "name":"질문 2 : 장문형",
+      "description":"질문 2 설명",
+      "questionType":"LONG_SENTENCE",
+      "isRequired": false,
+      "options":null
+    },
+    {
+      "name":"질문 3 : 단일 선택 리스트",
+      "description":"질문 3 설명",
+      "questionType":"SINGLE_CHOICE",
+      "isRequired": false,
+      "options":["예", "아니오"]
+    },
+    {
+      "name":"질문 4 : 다중 선택 리스트",
+      "description":"질문 4 설명",
+      "questionType":"MULTI_CHOICE",
+      "isRequired": false,
+      "options":["예?", "예!", "아니요", "네니요!"]
+    }
+  ]
 }
 ```
 
 #### response example
+`201 created`
 ```JSON
 {
-    "code": "00000",
-    "message": "성공했습니다.",
-    "data": {
+  "code": "00000",
+  "message": "성공했습니다.",
+  "data": {
+    "idx": 1,
+    "name": "테스트 설문 이름",
+    "description": "테스트 설문 설명",
+    "questions": [
+      {
         "idx": 1,
-        "name": "겨울 방학 설문 조사",
-        "description": "겨울 방학 계획에 대해 조사하고 있습니다.",
-        "questions": [
-            {
-                "idx": 1,
-                "name": "성함이 무엇인가요?",
-                "description": "이름 작성",
-                "options": []
-            },
-            {
-                "idx": 2,
-                "name": "이번 겨울 방학이 처음인가요?",
-                "description": "하나 선택",
-                "options": [
-                    {
-                        "name": "예"
-                    },
-                    {
-                        "name": "아니오"
-                    }
-                ]
-            },
-            {
-                "idx": 3,
-                "name": "이번 겨울 방학에는 무엇을 할 건가요?",
-                "description": "중복 선택 가능",
-                "options": [
-                    {
-                        "name": "휴식"
-                    },
-                    {
-                        "name": "공부"
-                    },
-                    {
-                        "name": "취미활동"
-                    }
-                ]
-            },
-            {
-                "idx": 4,
-                "name": "이전 겨울 방학이 만족스럽지 못한 이유를 알려주세요.",
-                "description": "의견을 작성해 주시면 됩니다.",
-                "options": []
-            }
+        "name": "질문 1 : 단답형",
+        "description": "질문 1 설명",
+        "options": []
+      },
+      {
+        "idx": 2,
+        "name": "질문 2 : 장문형",
+        "description": "질문 2 설명",
+        "options": []
+      },
+      {
+        "idx": 3,
+        "name": "질문 3 : 단일 선택 리스트",
+        "description": "질문 3 설명",
+        "options": [
+          "예",
+          "아니오"
         ]
-    }
+      },
+      {
+        "idx": 4,
+        "name": "질문 4 : 다중 선택 리스트",
+        "description": "질문 4 설명",
+        "options": [
+          "예?",
+          "예!",
+          "아니요",
+          "네니요!"
+        ]
+      }
+    ]
+  }
 }
 ```
 

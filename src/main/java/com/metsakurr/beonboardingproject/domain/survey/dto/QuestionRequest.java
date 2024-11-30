@@ -1,6 +1,7 @@
 package com.metsakurr.beonboardingproject.domain.survey.dto;
 
 import com.metsakurr.beonboardingproject.common.validation.ValidQuestionType;
+import com.metsakurr.beonboardingproject.domain.survey.entity.Option;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QuestionType;
 import jakarta.validation.Valid;
@@ -10,8 +11,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -31,12 +33,12 @@ public class QuestionRequest {
     private Boolean isRequired;
 
     @Valid
-    private List<OptionRequest> options = new ArrayList<>();
+    private List<String> options;
 
     @AssertTrue(message = "[단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보 값이 필요합니다.")
     public boolean isValidOptions() {
-        if (QuestionType.SINGLE_CHOICE.getName().equals(questionType)
-                || QuestionType.MULTI_CHOICE.getName().equals(questionType)) {
+        QuestionType type = QuestionType.valueOf(questionType);
+        if (QuestionType.SINGLE_CHOICE.equals(type) || QuestionType.MULTI_CHOICE.equals(type)) {
             if (options == null) {
                 return false;
             }
@@ -54,13 +56,14 @@ public class QuestionRequest {
         Question question = Question.builder()
                 .name(name)
                 .description(description)
-                .questionType(QuestionType.fromName(questionType))
+                .questionType(QuestionType.valueOf(questionType))
                 .isRequired(isRequired)
                 .build();
-        if (options != null && !options.isEmpty()) {
-            options.stream().map(OptionRequest::toEntity).toList()
-                    .forEach(question::addOptions);
-        }
+        Optional.ofNullable(options)
+                .orElseGet(Collections::emptyList).stream()
+                .map(Option::of).toList()
+                .forEach(question::addOptions);
+
         return question;
     }
 }

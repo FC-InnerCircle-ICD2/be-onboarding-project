@@ -21,12 +21,16 @@ public class Option {
     @Column(nullable = false)
     private String name;
 
+    public static Option of(String name) {
+        return new Option(name);
+    }
+
     @Builder
     public Option(
-            Question question,
+//            Question question,
             String name
     ) {
-        this.question = question;
+//        this.question = question;
         this.name = name;
     }
 }

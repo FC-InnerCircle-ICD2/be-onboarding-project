@@ -3,9 +3,7 @@ package com.metsakurr.beonboardingproject.domain.survey.dto;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Option;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor

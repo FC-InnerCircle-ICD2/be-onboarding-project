@@ -8,9 +8,11 @@ public class QuestionTypeValidator implements ConstraintValidator<ValidQuestionT
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isEmpty()) {
+        try {
+            QuestionType.valueOf(value);
+            return true;
+        } catch (IllegalArgumentException ex) {
             return false;
         }
-        return QuestionType.isValidName(value);
     }
 }
