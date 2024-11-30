@@ -8,7 +8,7 @@
 
 # API 문서
 - http://localhost:8080/swagger-ui/index.html - 로컬 실행
-- [웹으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17959114/survey_ksb.json)
+- [웹으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17963716/survey_ksb.json)
 
 # jar 다운로드
 - https://drive.google.com/file/d/1x9nDZWO0-Y9sz7rOxAwe-Ec2lDbwwGkN/view?usp=sharing
