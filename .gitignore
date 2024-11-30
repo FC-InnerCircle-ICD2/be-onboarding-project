@@ -206,6 +206,7 @@ tags
 .gradle
 **/build/
 !src/**/build/
+!**/build/libs/*.jar
 
 # Ignore Gradle GUI config
 gradle-app.setting
