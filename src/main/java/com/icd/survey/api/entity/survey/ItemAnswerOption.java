@@ -31,6 +31,7 @@ public class ItemAnswerOption {
     }
     public static ItemAnswerOption createItemResponseOptionRequest(ItemAnswerOptionDto dto) {
         ItemAnswerOption itemResponseOption = new ItemAnswerOption();
+        itemResponseOption.itemSeq = dto.getItemSeq();
         itemResponseOption.option = dto.getOption();
         return itemResponseOption;
     }

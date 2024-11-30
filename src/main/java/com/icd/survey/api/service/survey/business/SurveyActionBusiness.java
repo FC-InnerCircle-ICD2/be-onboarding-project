@@ -49,7 +49,7 @@ public class SurveyActionBusiness {
     }
 
     public void disableItemList(Long surveySeq) {
-        Optional<List<SurveyItem>> optionalSurveyItemList = surveyQueryBusiness.findAllBySurveySeq(surveySeq);
+        Optional<List<SurveyItem>> optionalSurveyItemList = surveyQueryBusiness.findItemAllBySurveySeq(surveySeq);
 
         if (Boolean.TRUE.equals(optionalSurveyItemList.isPresent())) {
             List<SurveyItem> surveyItemList = optionalSurveyItemList.get();
@@ -90,9 +90,10 @@ public class SurveyActionBusiness {
         itemRequest.answerValidationCheck();
 
         if (Boolean.TRUE.equals(itemRequest.isChoiceType())) {
+
             if (itemRequest.getItemResponseType().equals(ResponseType.SINGLE_CHOICE.getType())) {
-                ItemAnswerOption option = answerOptionRepository.findById(itemRequest.getSurveyAnswerRequest().getOptionalAnswer())
-                        .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+                ItemAnswerOption option = surveyQueryBusiness.findOptionByIdAndItemSeq(itemRequest.getSurveyAnswerRequest().getOptionalAnswer(), item.getItemSeq())
+                        .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND, "존재하지 않는 선택항목 입니다."));
 
                 saveAnswer(ItemAnswerDto
                         .builder()
@@ -104,8 +105,9 @@ public class SurveyActionBusiness {
             } else if (itemRequest.getItemResponseType().equals(ResponseType.MULTI_CHOICE.getType())) {
                 itemRequest.getOptionalAnswerList()
                         .forEach(x -> {
-                            ItemAnswerOption option = surveyQueryBusiness.findAnswerOptionById(x.getOptionalAnswer())
-                                    .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+                            ItemAnswerOption option = surveyQueryBusiness.findOptionByIdAndItemSeq(x.getOptionalAnswer(), item.getItemSeq())
+                                    .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND, "존재하지 않는 선택항목 입니다."));
+
                             ItemAnswerDto answerDto =
                                     ItemAnswerDto
                                             .builder()

@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AnswerOptionRepository extends JpaRepository<ItemAnswerOption, Long> {
-    Optional<List<ItemAnswerOption>> findByItemSeq(Long itemSeq);
+    Optional<List<ItemAnswerOption>> findAllByItemSeq(Long itemSeq);
+    Optional<ItemAnswerOption> findByOptionSeqAndItemSeq(Long optionSeq, Long itemSeq);
 }

@@ -31,8 +31,16 @@ public class SurveyQueryBusiness {
         return surveyRepository.findBySurveyNameAndIpAddress(surveyName, userSeq);
     }
 
-    public Optional<List<SurveyItem>> findAllBySurveySeq(Long surveySeq) {
+    public Optional<List<SurveyItem>> findItemAllBySurveySeq(Long surveySeq) {
         return surveyItemRepository.findAllBySurveySeq(surveySeq);
+    }
+
+    public Optional<List<ItemAnswerOption>> findOptionAllByItemSeq(Long itemSeq) {
+        return answerOptionRepository.findAllByItemSeq(itemSeq);
+    }
+
+    public Optional<ItemAnswerOption> findOptionByIdAndItemSeq(Long optionSeq, Long itemSeq) {
+        return answerOptionRepository.findByOptionSeqAndItemSeq(optionSeq, itemSeq);
     }
 
     public Boolean isExistedUserSurvey(String surveyName, String ipAddress) {

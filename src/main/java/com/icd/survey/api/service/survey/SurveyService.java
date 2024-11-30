@@ -74,8 +74,7 @@ public class SurveyService {
 
         surveyValidCheck(survey);
 
-        /* todo : 필수 항목값에 대한 응답 체크 */
-        List<SurveyItem> itemList = surveyQueryBusiness.findAllBySurveySeq(survey.getSurveySeq())
+        List<SurveyItem> itemList = surveyQueryBusiness.findItemAllBySurveySeq(survey.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
         // 필수 항목 값 queue
@@ -98,7 +97,7 @@ public class SurveyService {
         }
 
         request.getSurveyItemList()
-                .forEach(x -> surveyActionBusiness.answerSurveyItem(x));
+                .forEach(surveyActionBusiness::answerSurveyItem);
 
     }
 
