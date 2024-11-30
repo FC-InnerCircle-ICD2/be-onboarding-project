@@ -10,6 +10,7 @@ import org.icd.surveycore.domain.survey.Survey
 import org.icd.surveycore.domain.survey.SurveyRepository
 import org.icd.surveycore.domain.surveyItem.ItemType
 import org.icd.surveycore.domain.surveyItem.SurveyItem
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +26,7 @@ class SurveyConsumerServiceTest : BaseUnitTest() {
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
     private val surveyConsumerService: SurveyConsumerService by lazy { createSurveyConsumerService() }
     private fun createSurveyConsumerService() = SurveyConsumerService(surveyRepository, applicationEventPublisher)
-    private fun insertSurvey(): Long {
+    private fun insertSurvey(): Survey {
         val survey = Survey.of(name = "테스트", description = "설명")
         val surveyItem = SurveyItem.of(
             survey = survey,
@@ -36,7 +37,12 @@ class SurveyConsumerServiceTest : BaseUnitTest() {
             isRequired = false
         )
         survey.addItem(surveyItem)
-        return surveyRepository.save(survey).id
+        return surveyRepository.save(survey)
+    }
+
+    @AfterEach
+    fun deleteAll() {
+        surveyRepository.deleteAll()
     }
 
     @Test
@@ -49,31 +55,35 @@ class SurveyConsumerServiceTest : BaseUnitTest() {
 
     @Test
     fun `설문조사 응답 시 uuid가 중복인 경우 DuplicateSurveyResponseException 발생`() {
-        val surveyId = insertSurvey()
+        val survey = insertSurvey()
         val firstRequest = PostSurveyResponseRequest(
             uuid = "duplicate-uuid",
             items = listOf(PostSurveyResponseItemRequest(itemId = 1, answer = "응답1"))
         )
-        surveyConsumerService.postSurveyResponse(surveyId, firstRequest)
+        surveyConsumerService.postSurveyResponse(survey.id, firstRequest)
         val secondRequest = PostSurveyResponseRequest(
             uuid = "duplicate-uuid",
             items = listOf(PostSurveyResponseItemRequest(itemId = 1, answer = "응답2"))
         )
 
         assertThrows<DuplicateSurveyResponseException> {
-            surveyConsumerService.postSurveyResponse(surveyId, secondRequest)
+            surveyConsumerService.postSurveyResponse(survey.id, secondRequest)
         }
     }
 
     @Test
     fun `설문조사 응답이 정상적으로 등록된다`() {
-        val surveyId = insertSurvey()
+        val survey = insertSurvey()
         val request = PostSurveyResponseRequest(
             uuid = "uuid",
-            items = listOf(PostSurveyResponseItemRequest(itemId = 1, answer = "응답1"))
+            items = listOf(
+                PostSurveyResponseItemRequest(
+                    itemId = survey.items.first().id, answer = "응답1"
+                )
+            )
         )
-        surveyConsumerService.postSurveyResponse(surveyId, request)
-        val result = surveyRepository.findByIdOrNull(surveyId)
+        surveyConsumerService.postSurveyResponse(survey.id, request)
+        val result = surveyRepository.findByIdOrNull(survey.id)
         assertThat(result?.responses?.count()).isGreaterThan(0)
     }
 
