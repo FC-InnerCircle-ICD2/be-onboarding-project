@@ -19,7 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Entity
 public class ResponseItem extends BaseTime{
@@ -37,7 +37,7 @@ public class ResponseItem extends BaseTime{
 
     @ManyToOne
     @JoinColumn(name = "response_id")
-    private Response response;
+    private Response<S> response;
 
     @ManyToOne
     @JoinColumn(name = "item_id")

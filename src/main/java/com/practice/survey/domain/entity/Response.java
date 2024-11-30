@@ -19,10 +19,10 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Entity
-public class Response extends BaseTime {
+public class Response<S> extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

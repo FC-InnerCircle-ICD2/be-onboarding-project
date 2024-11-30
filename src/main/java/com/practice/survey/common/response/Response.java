@@ -2,16 +2,13 @@ package com.practice.survey.common.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 @Data
 @Builder
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Accessors(chain = true)
 public class Response<T> {
     @JsonProperty("common")
@@ -27,12 +24,11 @@ public class Response<T> {
                 .build();
     }
 
-
     @JsonIgnore
     public Response<T> responseOk(T value) {
         return Response.<T>builder()
-                .common(Common.builder().build().responseOk())
                 .data(Value.<T>builder().build().responseOk(value))
+                .common(Common.builder().build().responseOk())
                 .build();
     }
 }
