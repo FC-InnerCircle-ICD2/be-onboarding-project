@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.survey.db.BaseEntity;
+import org.survey.db.BaseStatus;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,10 @@ public class SelectListEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BaseStatus status;
 
     private LocalDateTime registeredAt;
 

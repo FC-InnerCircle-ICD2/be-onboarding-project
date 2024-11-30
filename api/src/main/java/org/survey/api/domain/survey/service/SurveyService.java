@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.survey.api.common.error.CommonErrorCode;
 import org.survey.api.common.exception.ApiException;
+import org.survey.db.BaseStatus;
 import org.survey.db.selectlist.SelectListEntity;
 import org.survey.db.selectlist.SelectListRepository;
 import org.survey.db.surveybase.SurveyBaseEntity;
@@ -12,6 +13,7 @@ import org.survey.db.surveyitem.SurveyItemEntity;
 import org.survey.db.surveyitem.SurveyItemRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class SurveyService {
     ){
         return Optional.ofNullable(surveyBaseEntity)
                 .map(it ->{
+                    surveyBaseEntity.setStatus(BaseStatus.REGISTERED);
                     surveyBaseEntity.setRegisteredAt(LocalDateTime.now());
                     return surveyBaseRepository.save(surveyBaseEntity);
                 })
@@ -39,6 +42,7 @@ public class SurveyService {
     ){
         return Optional.ofNullable(surveyItemEntity)
                 .map(it ->{
+                    surveyItemEntity.setStatus(BaseStatus.REGISTERED);
                     surveyItemEntity.setRegisteredAt(LocalDateTime.now());
                     return surveyItemRepository.save(surveyItemEntity);
                 })
@@ -51,10 +55,47 @@ public class SurveyService {
     ){
         return Optional.ofNullable(selectListEntity)
                 .map(it ->{
+                    selectListEntity.setStatus(BaseStatus.REGISTERED);
                     selectListEntity.setRegisteredAt(LocalDateTime.now());
                     return selectListRepository.save(selectListEntity);
                 })
                 .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "selectListEntity Null"))
                 ;
+    }
+
+    public SurveyBaseEntity baseFind(
+            Long id
+    ){
+        return surveyBaseRepository.findFirstByIdAndStatusOrderByIdDesc(id, BaseStatus.REGISTERED)
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyBaseEntity Null"));
+    }
+
+    public List<SurveyItemEntity> itemFind(
+            Long surveyId
+    ){
+        return surveyItemRepository.findAllBySurveyIdAndStatusOrderByIdAsc(surveyId, BaseStatus.REGISTERED);
+    }
+
+    public List<SelectListEntity> selectListFind(
+            Long surveyId,
+            Long itemId
+    ){
+        return selectListRepository.findAllBySurveyIdAndItemIdAndStatusOrderByIdAsc(
+                surveyId,
+                itemId,
+                BaseStatus.REGISTERED);
+    }
+
+    public List<SurveyBaseEntity> baseAllFind(){
+        return surveyBaseRepository.findAllByStatusOrderByIdDesc(BaseStatus.REGISTERED);
+    }
+
+    public SurveyBaseEntity deleteSurvey(Long id){
+        SurveyBaseEntity surveyBaseEntity = surveyBaseRepository.findById(id)
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyBaseEntity Null"));
+        surveyBaseRepository.deleteById(id);
+        surveyBaseEntity.setStatus(BaseStatus.UNREGISTERED);
+        surveyBaseEntity.setRegisteredAt(LocalDateTime.now());
+        return surveyBaseRepository.save(surveyBaseEntity);
     }
 }

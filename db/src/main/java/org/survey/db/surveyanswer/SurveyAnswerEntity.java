@@ -1,14 +1,13 @@
 package org.survey.db.surveyanswer;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.survey.db.BaseEntity;
+import org.survey.db.BaseStatus;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +28,10 @@ public class SurveyAnswerEntity extends BaseEntity{
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BaseStatus status;
 
     private LocalDateTime registeredAt;
 

@@ -1,11 +1,10 @@
 package org.survey.api.domain.survey.controller.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.survey.db.BaseStatus;
 import org.survey.db.surveyitem.ItemInputType;
 
 import java.time.LocalDateTime;
@@ -30,6 +29,8 @@ public class SurveyItemResponse {
     private Boolean required;
 
     private List<String> selectOptions;
+
+    private BaseStatus status;
 
     private LocalDateTime registeredAt;
 

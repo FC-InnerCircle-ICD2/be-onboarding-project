@@ -4,17 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.survey.api.common.annotation.Converter;
 import org.survey.api.common.error.CommonErrorCode;
 import org.survey.api.common.exception.ApiException;
-import org.survey.api.domain.survey.controller.model.SurveyBaseRequest;
-import org.survey.api.domain.survey.controller.model.SurveyBaseResponse;
-import org.survey.api.domain.survey.controller.model.SurveyItemRequest;
-import org.survey.api.domain.survey.controller.model.SurveyItemResponse;
+import org.survey.api.domain.survey.controller.model.*;
 import org.survey.db.selectlist.SelectListEntity;
 import org.survey.db.surveybase.SurveyBaseEntity;
 import org.survey.db.surveyitem.SurveyItemEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Converter
@@ -76,6 +73,7 @@ public class SurveyConverter {
                 .title(surveyBaseEntity.getTitle())
                 .description(surveyBaseEntity.getDescription())
                 .items(items)
+                .status(surveyBaseEntity.getStatus())
                 .registeredAt(surveyBaseEntity.getRegisteredAt())
                 .modifiedAt(surveyBaseEntity.getModifiedAt())
                 .unregisteredAt(surveyBaseEntity.getUnregisteredAt())
@@ -96,6 +94,7 @@ public class SurveyConverter {
                             .inputType(surveyItemEntity.getInputType())
                             .required(surveyItemEntity.getRequired())
                             .selectOptions(options)
+                            .status(surveyItemEntity.getStatus())
                             .registeredAt(surveyItemEntity.getRegisteredAt())
                             .modifiedAt(surveyItemEntity.getModifiedAt())
                             .unregisteredAt(surveyItemEntity.getUnregisteredAt())
@@ -105,13 +104,30 @@ public class SurveyConverter {
                 ;
     }
 
-    public List<String> toResponse(
-            List<SelectListEntity> list
+    public SurveyListResponse toResponse(
+            SurveyBaseEntity surveyBaseEntity
     ){
-        List<String> result = new ArrayList<>();
-        for(SelectListEntity selectListEntity : list){
-            result.add(selectListEntity.getContent());
-        }
-        return result;
+        return Optional.ofNullable(surveyBaseEntity)
+                .map(it -> {
+                    return SurveyListResponse.builder()
+                            .id(surveyBaseEntity.getId())
+                            .title(surveyBaseEntity.getTitle())
+                            .description(surveyBaseEntity.getTitle())
+                            .status(surveyBaseEntity.getStatus())
+                            .registeredAt(surveyBaseEntity.getRegisteredAt())
+                            .modifiedAt(surveyBaseEntity.getModifiedAt())
+                            .unregisteredAt(surveyBaseEntity.getUnregisteredAt())
+                            .build();
+                })
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyBaseEntity Null"))
+                ;
+    }
+
+    public List<SurveyListResponse> toResponse(
+            List<SurveyBaseEntity> surveyBaseEntityList
+    ){
+        return surveyBaseEntityList.stream()
+                .map(it -> toResponse(it))
+                .collect(Collectors.toList());
     }
 }
