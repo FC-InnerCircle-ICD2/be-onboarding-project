@@ -21,6 +21,7 @@ spring:
   sql:
     init:
       mode: always
+      encoding: utf-8
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
