@@ -1,11 +1,10 @@
-package com.metsakurr.beonboardingproject.domain.answer.controller;
+package com.metsakurr.beonboardingproject.domain.submission.controller;
 
 import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
-import com.metsakurr.beonboardingproject.domain.answer.dto.CreateAnswerRequest;
-import com.metsakurr.beonboardingproject.domain.answer.dto.DetailAnswerResponse;
-import com.metsakurr.beonboardingproject.domain.answer.entity.Response;
-import com.metsakurr.beonboardingproject.domain.answer.service.AnswerService;
+import com.metsakurr.beonboardingproject.domain.submission.dto.SubmissionCreationRequest;
+import com.metsakurr.beonboardingproject.domain.submission.dto.DetailAnswerResponse;
+import com.metsakurr.beonboardingproject.domain.submission.service.SubmissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,15 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v0/answer")
+@RequestMapping("/api/v0/submission")
 public class AnswerApiController {
-    private final AnswerService answerService;
+    private final SubmissionService submissionService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> create(
-            @Valid @RequestBody CreateAnswerRequest createAnswerRequest
+            @Valid @RequestBody SubmissionCreationRequest submissionCreationRequest
     ) {
-        ApiResponse response = new ApiResponse<>(ResponseCode.SUCCESS, answerService.create(createAnswerRequest));
+        ApiResponse response = new ApiResponse<>(ResponseCode.SUCCESS, submissionService.create(submissionCreationRequest));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -30,7 +29,7 @@ public class AnswerApiController {
     public ResponseEntity<ApiResponse<DetailAnswerResponse>> detail(
         @Valid @PathVariable("id") long idx
     ) {
-        DetailAnswerResponse detailAnswerResponse = answerService.detail(idx);
+        DetailAnswerResponse detailAnswerResponse = submissionService.detail(idx);
         ApiResponse response = new ApiResponse<>(ResponseCode.SUCCESS, detailAnswerResponse);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -1,7 +1,7 @@
-package com.metsakurr.beonboardingproject.domain.answer.dto;
+package com.metsakurr.beonboardingproject.domain.submission.dto;
 
-import com.metsakurr.beonboardingproject.domain.answer.entity.Answer;
-import com.metsakurr.beonboardingproject.domain.answer.entity.Response;
+import com.metsakurr.beonboardingproject.domain.submission.entity.Answer;
+import com.metsakurr.beonboardingproject.domain.submission.entity.Submission;
 import lombok.Getter;
 
 import java.util.List;
@@ -28,11 +28,11 @@ public class DetailAnswerResponse {
         }
     }
 
-    public DetailAnswerResponse(Response response) {
-        this.idx = response.getIdx();
-        this.name = response.getSurvey().getName();
-        this.description = response.getSurvey().getDescription();
-        this.answers = response.getAnswers().stream()
+    public DetailAnswerResponse(Submission submission) {
+        this.idx = submission.getIdx();
+        this.name = submission.getSurvey().getName();
+        this.description = submission.getSurvey().getDescription();
+        this.answers = submission.getAnswers().stream()
                 .map(AnswerQuestionResponse::new)
                 .toList();
     }

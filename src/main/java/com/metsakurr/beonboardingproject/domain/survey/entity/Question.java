@@ -2,12 +2,15 @@ package com.metsakurr.beonboardingproject.domain.survey.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
+import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
+import com.metsakurr.beonboardingproject.common.exception.ServiceException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity(name = "question")
@@ -59,16 +62,46 @@ public class Question extends BaseEntity {
             String name,
             String description,
             QuestionType questionType,
-            boolean isRequired,
-            List<Option> options
+            boolean isRequired
     ) {
         this.survey = survey;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
         this.isRequired = isRequired;
-        if (options == null) {
-            this.options = new ArrayList<>();
+    }
+
+    public void validAnswer(String answer) {
+        // code review: ? Question 객체가 질문에 대한 정보를 가지고 있어 Answer 검증 코드를 Question에 작성했지만
+        //  Question이 가지고 있어도 되는게 맞을지 모르겠음
+        if (!isRequired && (answer == null || answer.isBlank())) {
+            throw new ServiceException(ResponseCode.NOT_FOUND_REQUIRED_ANSWER);
+        }
+
+        switch (questionType) {
+            case SHORT_SENTENCE:
+                if (answer.length() > 255) {
+                    throw new ServiceException(ResponseCode.INVALID_SHORT_SENTENCE_ANSWER);
+                }
+                break;
+            case SINGLE_CHOICE:
+            case MULTI_CHOICE:
+                try {
+                    List<Long> selectedOption = Arrays.stream(answer.split(","))
+                            .map(String::trim)
+                            .map(Long::parseLong)
+                            .toList();
+                    List<Long> optionIdxs = options.stream().map(Option::getIdx).toList();
+
+                    boolean isContains = optionIdxs.stream()
+                            .anyMatch(selectedOption::contains);
+                    if (!isContains) {
+                        throw new ServiceException(ResponseCode.INVALID_OPTION_IDX);
+                    }
+                } catch (NumberFormatException ex) {
+                    throw new ServiceException(ResponseCode.INVALID_OPTION_IDX);
+                }
+                break;
         }
     }
 }

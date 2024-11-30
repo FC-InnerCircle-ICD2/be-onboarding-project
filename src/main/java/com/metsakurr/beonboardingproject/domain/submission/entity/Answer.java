@@ -1,4 +1,4 @@
-package com.metsakurr.beonboardingproject.domain.answer.entity;
+package com.metsakurr.beonboardingproject.domain.submission.entity;
 
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import jakarta.persistence.Entity;
@@ -9,10 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Column;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "answer")
 @Getter
@@ -26,9 +23,10 @@ public class Answer {
     @JoinColumn(name = "question_idx", referencedColumnName = "idx", nullable = false)
     private Question question;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "response_idx", referencedColumnName = "idx", nullable = false)
-    private Response response;
+    private Submission submission;
 
     @Column(name = "answer_text", columnDefinition = "TEXT")
     private String answerText;
@@ -36,11 +34,9 @@ public class Answer {
     @Builder
     public Answer(
             Question question,
-            Response response,
             String answerText
     ) {
         this.question = question;
-        this.response = response;
         this.answerText = answerText;
     }
 

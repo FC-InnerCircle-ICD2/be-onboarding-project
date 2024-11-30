@@ -30,7 +30,7 @@
 | `data`        | String | api 결과를 담은 객체                         |
 | `fieldErrors` | String | request 데이터의 유효성 검증 실패시 🚩FieldError 반환 |
 
-- data는 request에 따른 response 결과를 담고 있습니다. 서비스 에러가 발생한 경우 `null` 입니다.
+- data는 request에 따른 submission 결과를 담고 있습니다. 서비스 에러가 발생한 경우 `null` 입니다.
 - request 데이터 검증에 성공한 경우 fieldErrors는 `null` 입니다.
 
 #### ⏺ ResponseCode
@@ -255,10 +255,88 @@
 
 
 ### 3. 설문조사 응답 제출 API
+> 설문조사 응답을 제출합니다.
 
-- 요청 값에는 [설문 받을 항목]에 대응되는 응답 값이 포함됩니다.
-- 응답 값은 설문조사의 [설문 받을 항목]과 일치해야만 응답 할 수 있습니다.
+`POST` /api/v0/survey
 
+
+#### Response Body > SubmissionCreationRequest
+| field name | type            | description |
+|------------|-----------------|-------------|
+| `idx`      | int             | 설문조사 고유값    |
+| `answers`  | AnswerRequest   | 설문조사 응답값    |
+
+#### Response Body > SubmissionCreationRequest > AnswerRequest
+| field name    | type   | description |
+|---------------|--------|---------|
+| `idx`         | int    | 설문조사 고유값 |
+| `answer`      | String | 설문조사 답변 |
+- 단답형(`SHORT_SENTENCE`), 장문형(`LONG_SENTENCE`)의 경우 답변 그대로 answer로 요청
+- 단일 선택 리스트(`SINGLE_CHOICE`), 다중 선택 리스트(`MULTI_CHOICE`)의 경우 옵션 인덱스 값을 `,` 로 구분하여요청
+
+#### request example
+```JSON
+{
+  "idx": 1,
+  "answers":[
+    {
+      "idx": 1,
+      "answer":"단답형"
+    },
+    {
+      "idx": 2,
+      "answer":"장문형"
+    },
+    {
+      "idx": 3,
+      "answer": "1"
+    },
+    {
+      "idx": 4,
+      "answer": "3, 4"
+    }
+  ]
+}
+```
+
+#### response example
+```JSON
+{
+  "code": "00000",
+  "message": "성공했습니다.",
+  "data": {
+    "idx": 1,
+    "name": "테스트 설문 이름",
+    "description": "테스트 설문 설명",
+    "answers": [
+      {
+        "idx": 1,
+        "name": "질문 1 : 단답형",
+        "description": "질문 1 설명",
+        "answer": "단답형"
+      },
+      {
+        "idx": 2,
+        "name": "질문 2 : 장문형",
+        "description": "질문 2 설명",
+        "answer": "장문형"
+      },
+      {
+        "idx": 3,
+        "name": "질문 3 : 단일 선택 리스트",
+        "description": "질문 3 설명",
+        "answer": "1"
+      },
+      {
+        "idx": 4,
+        "name": "질문 4 : 다중 선택 리스트",
+        "description": "질문 4 설명",
+        "answer": "3, 4"
+      }
+    ]
+  }
+}
+```
 
 ### 4. 설문조사 응답 조회 API
 

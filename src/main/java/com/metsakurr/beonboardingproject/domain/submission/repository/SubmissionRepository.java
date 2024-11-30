@@ -1,8 +1,8 @@
-package com.metsakurr.beonboardingproject.domain.answer.repository;
+package com.metsakurr.beonboardingproject.domain.submission.repository;
 
-import com.metsakurr.beonboardingproject.domain.answer.entity.QAnswer;
-import com.metsakurr.beonboardingproject.domain.answer.entity.QResponse;
-import com.metsakurr.beonboardingproject.domain.answer.entity.Response;
+import com.metsakurr.beonboardingproject.domain.submission.entity.QAnswer;
+import com.metsakurr.beonboardingproject.domain.submission.entity.QSubmission;
+import com.metsakurr.beonboardingproject.domain.submission.entity.Submission;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QQuestion;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QSurvey;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,28 +13,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
-public class ResponseRepository {
+public class SubmissionRepository {
     private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
 
     @Transactional
-    public void save(Response response) {
-        entityManager.persist(response);
+    public void save(Submission submission) {
+        entityManager.persist(submission);
     }
 
-    public Response findById(long idx) {
-        QResponse response = QResponse.response;
+    public Submission findById(long idx) {
+        QSubmission submission = QSubmission.submission;
         QSurvey survey = QSurvey.survey;
         QAnswer answer = QAnswer.answer;
         QQuestion question = QQuestion.question;
 
         return queryFactory
-                .select(response)
-                .from(response)
-                .leftJoin(response.survey, survey).fetchJoin()
-                .leftJoin(response.answers, answer).fetchJoin()
+                .select(submission)
+                .from(submission)
+                .leftJoin(submission.survey, survey).fetchJoin()
+                .leftJoin(submission.answers, answer).fetchJoin()
                 .leftJoin(answer.question, question).fetchJoin()
-                .where(response.idx.eq(idx))
+                .where(submission.idx.eq(idx))
                 .fetchOne();
     }
 }

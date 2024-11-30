@@ -1,7 +1,6 @@
-package com.metsakurr.beonboardingproject.domain.answer.entity;
+package com.metsakurr.beonboardingproject.domain.submission.entity;
 
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
-import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,7 +14,7 @@ import java.util.List;
 @Entity(name = "response")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Response extends BaseEntity {
+public class Submission extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
@@ -24,11 +23,16 @@ public class Response extends BaseEntity {
     @JoinColumn(name = "survey_idx", referencedColumnName = "idx", nullable = false)
     private Survey survey;
 
-    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Answer> answers = new ArrayList<>();
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+        answer.setSubmission(this);
+    }
+
     @Builder
-    public Response(Survey survey) {
+    public Submission(Survey survey) {
         this.survey = survey;
     }
 }
