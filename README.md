@@ -17,7 +17,7 @@
 - 온보딩 프로젝트 기능 요구 사항 및 기술 요구사항이 충족되지 않은 결과물은 코드레벨 평가를 진행하지 않습니다.
 - 아래의 “코드레벨 평가항목"으로 코드를 평가합니다.
 - “설문조사 서비스"의 API 명세를 함께 제출해주세요.
-  - [project.jar](https://github.com/haeyonghahn/be-onboarding-project/raw/refs/heads/main/executable/project.jar) 파일 실행 후 http://localhost:8080/swagger-ui.html 에 접속해주세요.
+  - [Executable jar 형태의 파일](https://github.com/haeyonghahn/be-onboarding-project/raw/refs/heads/main/executable/project.jar) 실행 후 http://localhost:8080/swagger-ui.html 에 접속해주세요.
 - 우대사항은 직접 구현하지 않더라도 README에 적용 방법 등을 구체적으로 명시해주시는 것으로 대체 할 수 있습니다.
 
 ## 온보딩 프로젝트 기능 요구사항
