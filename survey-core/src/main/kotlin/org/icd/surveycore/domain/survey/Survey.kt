@@ -3,6 +3,7 @@ package org.icd.surveycore.domain.survey
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.icd.surveycore.domain.surveyItem.SurveyItem
+import org.icd.surveycore.domain.surveyresponse.SurveyResponse
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.domain.AbstractAggregateRoot
@@ -22,6 +23,8 @@ class Survey(
     val description: String? = null,
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: MutableList<SurveyItem> = mutableListOf(),
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val responses: MutableList<SurveyResponse> = mutableListOf(),
     @CreatedDate
     var createdAt: OffsetDateTime? = null,
     @LastModifiedDate
@@ -41,5 +44,9 @@ class Survey(
 
     fun addItem(item: SurveyItem) {
         this.items.add(item)
+    }
+
+    fun getActiveItems(): List<SurveyItem> {
+        return items.filter { it.isActive }
     }
 }
