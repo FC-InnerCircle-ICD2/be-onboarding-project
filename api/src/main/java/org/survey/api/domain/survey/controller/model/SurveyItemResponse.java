@@ -28,7 +28,7 @@ public class SurveyItemResponse {
 
     private Boolean required;
 
-    private List<String> selectOptions;
+    private List<SelectOptionResponse> selectOptions;
 
     private BaseStatus status;
 

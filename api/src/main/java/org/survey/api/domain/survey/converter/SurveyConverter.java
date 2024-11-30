@@ -36,6 +36,7 @@ public class SurveyConverter {
         return Optional.ofNullable(request)
                 .map(it -> {
                     return SurveyItemEntity.builder()
+                            .id(request.getId())
                             .surveyId(surveyId)
                             .name(request.getName())
                             .description(request.getDescription())
@@ -48,19 +49,20 @@ public class SurveyConverter {
     }
 
     public SelectListEntity toEntity(
+            SelectOptionRequest request,
             Long surveyId,
-            Long itemId,
-            String content
+            Long itemId
     ){
-        return Optional.ofNullable(content)
+        return Optional.ofNullable(request)
                 .map(it -> {
                     return SelectListEntity.builder()
+                            .id(request.getId())
                             .surveyId(surveyId)
                             .itemId(itemId)
-                            .content(content)
+                            .content(request.getContent())
                             .build();
                 })
-                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "content Null"))
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SelectOptionRequest Null"))
                 ;
     }
 
@@ -82,7 +84,7 @@ public class SurveyConverter {
 
     public SurveyItemResponse toResponse(
             SurveyItemEntity surveyItemEntity,
-            List<String> options
+            List<SelectOptionResponse> options
     ){
         return Optional.ofNullable(surveyItemEntity)
                 .map(it -> {
@@ -101,6 +103,26 @@ public class SurveyConverter {
                             .build();
                 })
                 .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyItemEntity Null"))
+                ;
+    }
+
+    public SelectOptionResponse toResponse(
+            SelectListEntity selectListEntity
+    ){
+        return Optional.ofNullable(selectListEntity)
+                .map(it -> {
+                    return SelectOptionResponse.builder()
+                            .id(selectListEntity.getItemId())
+                            .surveyId(selectListEntity.getSurveyId())
+                            .itemId(selectListEntity.getItemId())
+                            .content(selectListEntity.getContent())
+                            .status(selectListEntity.getStatus())
+                            .registeredAt(selectListEntity.getRegisteredAt())
+                            .modifiedAt(selectListEntity.getModifiedAt())
+                            .unregisteredAt(selectListEntity.getUnregisteredAt())
+                            .build();
+                })
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SelectListEntity Null"))
                 ;
     }
 

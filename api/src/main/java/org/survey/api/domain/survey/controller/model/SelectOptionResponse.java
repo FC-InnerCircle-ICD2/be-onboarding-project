@@ -1,35 +1,27 @@
-package org.survey.db.selectlist;
+package org.survey.api.domain.survey.controller.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.survey.db.BaseStatus;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "select_list")
 @Data
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(SelectListPK.class)
-public class SelectListEntity{
+public class SelectOptionResponse {
 
-    @Id
     private Long id;
 
-    @Id
     private Long surveyId;
 
-    @Id
     private Long itemId;
 
-    @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private BaseStatus status;
 
     private LocalDateTime registeredAt;

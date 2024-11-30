@@ -14,9 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class SurveyItemRequest {
 
+    @NotNull
+    private Long id;
+
     @NotBlank
     private String name;
-
 
     private String description;
 
@@ -26,5 +28,5 @@ public class SurveyItemRequest {
     @NotNull
     private Boolean required;
 
-    private List<String> selectOptions;
+    private List<SelectOptionRequest> selectOptions;
 }

@@ -10,6 +10,7 @@ import org.survey.db.surveyitem.ItemInputType;
 import org.survey.db.surveyitem.SurveyItemEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,14 +27,19 @@ public class SurveyBusiness {
         for(SurveyItemRequest item : request.getItems()){
             var itemEntity = surveyConverter.toEntity(item, newBaseEntity.getId());
             var newItemEntity = surveyService.itemRegister(itemEntity);
-            for(String options : item.getSelectOptions()){
-                var selectListEntity = surveyConverter.toEntity(
-                        newBaseEntity.getId(),
-                        newItemEntity.getId(),
-                        options);
-                var newSelectListEntity = surveyService.selectListRegister(selectListEntity);
+            List<SelectOptionResponse> selectOptionResponseList = new ArrayList<>();
+            if(newItemEntity.getInputType() == ItemInputType.SINGLE_SELECT_LIST
+                    || newItemEntity.getInputType() == ItemInputType.MULTI_SELECT_LIST){
+                for(SelectOptionRequest option : item.getSelectOptions()){
+                    var selectListEntity = surveyConverter.toEntity(
+                            option,
+                            newBaseEntity.getId(),
+                            newItemEntity.getId());
+                    var newSelectListEntity = surveyService.selectListRegister(selectListEntity);
+                    selectOptionResponseList.add(surveyConverter.toResponse(newSelectListEntity));
+                }
             }
-            var itemResponse = surveyConverter.toResponse(newItemEntity, item.getSelectOptions());
+            var itemResponse = surveyConverter.toResponse(newItemEntity, selectOptionResponseList);
             items.add(itemResponse);
         }
         var response = surveyConverter.toResponse(newBaseEntity, items);
@@ -41,25 +47,81 @@ public class SurveyBusiness {
     }
 
     public SurveyBaseResponse find(Long id){
-        var baseEntity = surveyService.baseFind(id);
-        var itemEntityList = surveyService.itemFind(baseEntity.getId());
+        var baseEntity = surveyService.baseFindById(id);
+        var itemEntityList = surveyService.itemAllFind(baseEntity.getId());
         List<SurveyItemResponse> itemResponseList = new ArrayList<>();
         for(SurveyItemEntity itemEntity : itemEntityList){
-            List<String> selectList = new ArrayList<>();
+            List<SelectOptionResponse> selectOptionList = new ArrayList<>();
             if(itemEntity.getInputType() == ItemInputType.SINGLE_SELECT_LIST
                     || itemEntity.getInputType() == ItemInputType.MULTI_SELECT_LIST){
-                var selectListEntityList = surveyService.selectListFind(
+                var selectListEntityList = surveyService.selectListAllFind(
                         baseEntity.getId(),
                         itemEntity.getId()
                 );
                 for(SelectListEntity selectListEntity : selectListEntityList){
-                    selectList.add(selectListEntity.getContent());
+                    selectOptionList.add(surveyConverter.toResponse(selectListEntity));
                 }
             }
-            var itemResponse = surveyConverter.toResponse(itemEntity, selectList);
+            var itemResponse = surveyConverter.toResponse(itemEntity, selectOptionList);
             itemResponseList.add(itemResponse);
         }
         var response = surveyConverter.toResponse(baseEntity, itemResponseList);
+        return response;
+    }
+
+    public SurveyBaseResponse updateAll(
+            Long id,
+            SurveyBaseRequest request
+    ){
+        var baseEntity = surveyConverter.toEntity(request);
+        var newBaseEntity = surveyService.baseUpdate(id, baseEntity);
+        List<SurveyItemResponse> items = new ArrayList<>();
+        HashSet<Long> itemIdList = new HashSet<>();
+        for(SurveyItemRequest item : request.getItems()){
+            var itemEntity = surveyConverter.toEntity(item, newBaseEntity.getId());
+            var newItemEntity = surveyService.itemUpdate(itemEntity, newBaseEntity.getId());
+            List<SelectOptionResponse> selectOptionResponseList = new ArrayList<>();
+            if(newItemEntity.getInputType() == ItemInputType.SINGLE_SELECT_LIST
+                    || newItemEntity.getInputType() == ItemInputType.MULTI_SELECT_LIST){
+                HashSet<Long> optionIdList = new HashSet<>();
+                for(SelectOptionRequest option : item.getSelectOptions()){
+                    var selectListEntity = surveyConverter.toEntity(
+                            option,
+                            newBaseEntity.getId(),
+                            newItemEntity.getId());
+                    var newSelectListEntity = surveyService.selectListUpdate(
+                            selectListEntity,
+                            newBaseEntity.getId(),
+                            newItemEntity.getId());
+                    var optionResponse = surveyConverter.toResponse(newSelectListEntity);
+                    selectOptionResponseList.add(optionResponse);
+                    optionIdList.add(optionResponse.getId());
+                }
+                List<SelectListEntity> currentSelectList = surveyService.selectListAllFind(
+                        newBaseEntity.getId(),
+                        newItemEntity.getId());
+                for(SelectListEntity currentOption : currentSelectList){
+                    if(!optionIdList.contains(currentOption.getId())){
+                        surveyService.selectListDelete(
+                                currentOption.getId(),
+                                currentOption.getSurveyId(),
+                                currentOption.getItemId());
+                    }
+                }
+            }
+            var itemResponse = surveyConverter.toResponse(newItemEntity, selectOptionResponseList);
+            items.add(itemResponse);
+            itemIdList.add(itemResponse.getId());
+        }
+        List<SurveyItemEntity> currentItemList = surveyService.itemAllFind(newBaseEntity.getId());
+        for(SurveyItemEntity currentItem : currentItemList){
+            if(!itemIdList.contains(currentItem.getId())){
+                surveyService.itemDelete(
+                        currentItem.getId(),
+                        currentItem.getSurveyId());
+            }
+        }
+        var response = surveyConverter.toResponse(newBaseEntity, items);
         return response;
     }
 
@@ -69,7 +131,7 @@ public class SurveyBusiness {
     }
 
     public SurveyListResponse deleteSurvey(Long id){
-        var baseEntity = surveyService.deleteSurvey(id);
+        var baseEntity = surveyService.baseDelete(id);
         return surveyConverter.toResponse(baseEntity);
     }
 }

@@ -1,12 +1,7 @@
 package org.survey.db.surveyitem;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.survey.db.BaseEntity;
+import lombok.*;
 import org.survey.db.BaseStatus;
 
 import java.time.LocalDateTime;
@@ -14,13 +9,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "survey_item")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class SurveyItemEntity extends BaseEntity{
+@IdClass(SurveyItemPK.class)
+@Builder
+public class SurveyItemEntity{
 
-    @Column(nullable = false)
+    @Id
+    private Long id;
+
+    @Id
     private Long surveyId;
 
     @Column(nullable = false)

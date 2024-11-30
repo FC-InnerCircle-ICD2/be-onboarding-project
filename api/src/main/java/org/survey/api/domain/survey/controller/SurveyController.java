@@ -27,6 +27,16 @@ public class SurveyController {
         return Api.OK(response);
     }
 
+    @PostMapping("/update")
+    public Api<SurveyBaseResponse> update(
+            Long id,
+            @Valid
+            @RequestBody Api<SurveyBaseRequest> request
+    ){
+        var response = surveyBusiness.updateAll(id, request.getBody());
+        return Api.OK(response);
+    }
+
     @PostMapping("/delete")
     public Api<SurveyListResponse> delete(
             @Valid
@@ -36,9 +46,12 @@ public class SurveyController {
         return Api.OK(response);
     }
 
-    @GetMapping("/find/survey")
-    public Api<SurveyBaseResponse> find(Long id){
-        var response = surveyBusiness.find(id);
+    @PostMapping("/find/survey")
+    public Api<SurveyBaseResponse> find(
+            @Valid
+            @RequestBody Api<Long> id
+    ){
+        var response = surveyBusiness.find(id.getBody());
         return Api.OK(response);
     }
 
