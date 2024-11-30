@@ -1,14 +1,21 @@
 package com.innercircle.query.facade;
 
+import com.innercircle.common.domain.survey.question.QuestionSnapshot;
+import com.innercircle.common.domain.survey.response.LongTextAnswerContent;
+import com.innercircle.common.domain.survey.response.MultipleChoiceAnswerContent;
+import com.innercircle.common.domain.survey.response.ShortTextAnswerContent;
+import com.innercircle.common.domain.survey.response.SingleChoiceAnswerContent;
+import com.innercircle.query.controller.dto.AnswerContentDto;
+import com.innercircle.query.controller.dto.LongTextAnswerContentDto;
+import com.innercircle.query.controller.dto.MultipleChoiceAnswerContentDto;
+import com.innercircle.query.controller.dto.ShortTextAnswerContentDto;
+import com.innercircle.query.controller.dto.SingleChoiceAnswerContentDto;
 import com.innercircle.query.controller.dto.SurveyDto;
-import com.innercircle.query.controller.dto.SurveyDto.QuestionDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto.AnswerDto;
 import com.innercircle.query.infra.persistence.jparepository.AnswerJpaRepository;
-import com.innercircle.query.infra.persistence.jparepository.QuestionJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyResponseJpaRepository;
-import com.innercircle.query.infra.persistence.model.survey.question.Question;
 import com.innercircle.query.infra.persistence.model.survey.response.Answer;
 import com.innercircle.query.infra.persistence.model.survey.response.SurveyResponse;
 import java.util.List;
@@ -21,14 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SurveyFacade {
 
 	private final AnswerJpaRepository answerJpaRepository;
-	private final QuestionJpaRepository questionJpaRepository;
 	private final SurveyJpaRepository surveyJpaRepository;
 	private final SurveyResponseJpaRepository surveyResponseJpaRepository;
 
-	public SurveyFacade(AnswerJpaRepository answerJpaRepository, QuestionJpaRepository questionJpaRepository, SurveyJpaRepository surveyJpaRepository,
+	public SurveyFacade(AnswerJpaRepository answerJpaRepository, SurveyJpaRepository surveyJpaRepository,
 			SurveyResponseJpaRepository surveyResponseJpaRepository) {
 		this.answerJpaRepository = answerJpaRepository;
-		this.questionJpaRepository = questionJpaRepository;
 		this.surveyJpaRepository = surveyJpaRepository;
 		this.surveyResponseJpaRepository = surveyResponseJpaRepository;
 	}
@@ -36,22 +41,13 @@ public class SurveyFacade {
 	@Transactional(readOnly = true)
 	public SurveyDto getSurvey(String surveyId) {
 		var survey = surveyJpaRepository.findById(surveyId).orElseThrow(SurveyNotFoundException::new);
-		var questions = questionJpaRepository.findBySurveyId(surveyId);
 		var surveyResponseIds = surveyResponseJpaRepository.findAllBySurveyId(surveyId).stream().map(SurveyResponse::getId).toList();
 		var answers = answerJpaRepository.findBySurveyResponseIdIn(surveyResponseIds);
 
-		var questionDtos = getQuestionDtos(questions);
 		var answerDtoMap = getAnswerDtoMap(answers);
 		var surveyResponseDtos = getSurveyResponseDtos(answerDtoMap);
 
-		return new SurveyDto(survey.getId(), survey.getName(), survey.getDescription(), questionDtos, surveyResponseDtos);
-	}
-
-	private List<QuestionDto> getQuestionDtos(List<Question> questions) {
-		return questions.stream()
-				.map(question -> new SurveyDto.QuestionDto(question.getId(), question.getName(), question.getDescription(), question.isRequired(),
-						question.getType(), question.getOptions()))
-				.toList();
+		return new SurveyDto(survey.getId(), survey.getName(), survey.getDescription(), surveyResponseDtos);
 	}
 
 	private Map<String, List<AnswerDto>> getAnswerDtoMap(List<Answer> answers) {
@@ -59,11 +55,30 @@ public class SurveyFacade {
 				.collect(Collectors.groupingBy(
 						Answer::getSurveyResponseId,
 						Collectors.mapping(
-								answer -> new AnswerDto(answer.getId(), answer.getQuestionId(), answer.getQuestionType(), answer.isRequired(),
-										answer.getSelectedOptions(), answer.getText()),
+								answer -> {
+									var questionDto = getQuestionDto(answer.getQuestionSnapshot());
+									var answerContentDto = getAnswerContentDto(answer);
+									return new AnswerDto(answer.getId(), questionDto, answerContentDto);
+								},
 								Collectors.toList()
 						))
 				);
+	}
+
+	private AnswerDto.QuestionDto getQuestionDto(QuestionSnapshot questionSnapshot) {
+		return new AnswerDto.QuestionDto(questionSnapshot.getId(), questionSnapshot.getName(),
+				questionSnapshot.getDescription(), questionSnapshot.isRequired(), questionSnapshot.getType(),
+				questionSnapshot.getOptions());
+	}
+
+	private AnswerContentDto getAnswerContentDto(Answer answer) {
+		return switch (answer.getContent()) {
+			case ShortTextAnswerContent content -> new ShortTextAnswerContentDto(content.getType(), content.getText());
+			case LongTextAnswerContent content -> new LongTextAnswerContentDto(content.getType(), content.getText());
+			case SingleChoiceAnswerContent content -> new SingleChoiceAnswerContentDto(content.getType(), content.getSelectedOption());
+			case MultipleChoiceAnswerContent content -> new MultipleChoiceAnswerContentDto(content.getType(), content.getSelectedOptions());
+			default -> throw new IllegalArgumentException("Unexpected value: " + answer.getContent());
+		};
 	}
 
 	private List<SurveyResponseDto> getSurveyResponseDtos(Map<String, List<AnswerDto>> answerDtoMap) {

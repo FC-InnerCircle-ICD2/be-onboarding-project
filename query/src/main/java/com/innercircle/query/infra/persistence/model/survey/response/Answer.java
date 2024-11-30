@@ -1,15 +1,13 @@
 package com.innercircle.query.infra.persistence.model.survey.response;
 
-import com.innercircle.common.domain.survey.question.QuestionType;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
+import com.innercircle.common.domain.survey.question.QuestionSnapshot;
+import com.innercircle.common.domain.survey.response.AnswerContent;
+import com.innercircle.common.infra.persistence.converter.AnswerContentConverter;
+import com.innercircle.common.infra.persistence.converter.QuestionSnapshotConverter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,23 +20,17 @@ public class Answer {
 	@Id
 	private String id;
 	private String surveyResponseId;
-	private String questionId;
-	@Enumerated(EnumType.STRING)
-	private QuestionType questionType;
-	private boolean required;
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "answer_options", joinColumns = @JoinColumn(name = "answer_id"))
-	private List<String> selectedOptions;
-	private String text;
+	@Convert(converter = QuestionSnapshotConverter.class)
+	@Column(columnDefinition = "TEXT")
+	private QuestionSnapshot questionSnapshot;
+	@Convert(converter = AnswerContentConverter.class)
+	@Column(columnDefinition = "TEXT")
+	private AnswerContent content;
 
-	public Answer(String id, String surveyResponseId, String questionId, QuestionType questionType, boolean required, List<String> selectedOptions,
-			String text) {
+	public Answer(String id, String surveyResponseId, QuestionSnapshot questionSnapshot, AnswerContent content) {
 		this.id = id;
 		this.surveyResponseId = surveyResponseId;
-		this.questionId = questionId;
-		this.questionType = questionType;
-		this.required = required;
-		this.selectedOptions = selectedOptions;
-		this.text = text;
+		this.questionSnapshot = questionSnapshot;
+		this.content = content;
 	}
 }

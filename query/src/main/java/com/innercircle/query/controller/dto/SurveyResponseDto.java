@@ -5,7 +5,11 @@ import java.util.List;
 
 public record SurveyResponseDto(String id, List<AnswerDto> answers) {
 
-	public record AnswerDto(String id, String questionId, QuestionType questionType, boolean required, List<String> selectedOptions, String text) {
 
+	public record AnswerDto(String id, QuestionDto question, AnswerContentDto content) {
+
+		public record QuestionDto(String id, String name, String description, boolean required, QuestionType type, List<String> options) {
+
+		}
 	}
 }

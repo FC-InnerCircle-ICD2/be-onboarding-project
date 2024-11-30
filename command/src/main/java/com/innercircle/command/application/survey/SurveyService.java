@@ -12,7 +12,6 @@ import com.innercircle.command.domain.survey.response.Answer;
 import com.innercircle.command.domain.survey.response.AnswerRepository;
 import com.innercircle.command.domain.survey.response.SurveyResponse;
 import com.innercircle.command.domain.survey.response.SurveyResponseRepository;
-import com.innercircle.common.domain.survey.question.QuestionType;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -99,13 +98,9 @@ public class SurveyService {
 		if (CollectionUtils.isEqualCollection(surveyQuestions, responseQuestions)) {
 			var surveyResponse = new SurveyResponse(surveyResponseRepository.generateId(), surveyId);
 			var answers = responseInputs.stream().map(input -> {
-						var inputQuestion = input.getQuestion();
-						var inputQuestionType = inputQuestion.getType();
-						var text = isTextQuestionAnswer(inputQuestionType) ? input.getText() : null;
-						var selectedOption = isChoiceQuestionAnswer(inputQuestionType) ? input.getSelectedOptions() : List.<String>of();
-
-						return new Answer(answerRepository.generateId(), surveyResponse.getId(), input.getQuestionId(), inputQuestionType,
-								inputQuestion.isRequired(), selectedOption, text);
+						var question = input.getQuestion().convertToQuestion(input.getQuestionId(), surveyResponse.getSurveyId());
+						var content = input.getAnswerContent().convertToAnswerContent();
+						return new Answer(answerRepository.generateId(), surveyResponse.getId(), question.getSnapshot(), content);
 					})
 					.toList();
 
@@ -135,13 +130,5 @@ public class SurveyService {
 		return responseInputs.stream()
 				.map(input -> input.convertToQuestion(surveyId))
 				.toList();
-	}
-
-	private boolean isTextQuestionAnswer(QuestionType type) {
-		return type == QuestionType.SHORT_TEXT || type == QuestionType.LONG_TEXT;
-	}
-
-	private boolean isChoiceQuestionAnswer(QuestionType type) {
-		return type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE;
 	}
 }

@@ -1,5 +1,6 @@
 package com.innercircle.command.domain.survey.question;
 
+import com.innercircle.common.domain.survey.question.QuestionSnapshot;
 import com.innercircle.common.domain.survey.question.QuestionType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
@@ -84,5 +85,9 @@ public class Question {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, type);
+	}
+
+	public QuestionSnapshot getSnapshot() {
+		return new QuestionSnapshot(id, surveyId, name, description, required, type, options);
 	}
 }
