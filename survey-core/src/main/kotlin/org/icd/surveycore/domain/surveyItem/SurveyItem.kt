@@ -45,7 +45,7 @@ class SurveyItem(
             survey: Survey,
             sequence: Int,
             name: String,
-            description: String?,
+            description: String? = null,
             itemType: ItemType,
             isRequired: Boolean,
         ): SurveyItem {
@@ -62,5 +62,9 @@ class SurveyItem(
 
     fun addOptions(surveyItemOptions: List<SurveyItemOption>?) {
         surveyItemOptions?.let { this.options.addAll(it) }
+    }
+
+    fun getActiveOptions(): List<SurveyItemOption> {
+        return options.filter { it.isActive }
     }
 }

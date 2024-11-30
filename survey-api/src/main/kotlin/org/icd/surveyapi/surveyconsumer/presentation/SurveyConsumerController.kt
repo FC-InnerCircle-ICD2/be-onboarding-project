@@ -10,7 +10,7 @@ class SurveyConsumerController(
     private val surveyConsumerService: SurveyConsumerService
 ) {
     @PostMapping("/{surveyId}")
-    fun postSurveyResponse(@PathVariable surveyId: Long, @RequestBody request: PostSurveyResponseRequest) {
+    fun postSurveyResponse(@PathVariable surveyId: Long, @RequestBody request: PostSurveyResponseRequest): String {
         return surveyConsumerService.postSurveyResponse(surveyId, request)
     }
 }
