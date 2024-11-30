@@ -20,4 +20,17 @@ public class SurveyIntegrations {
                 .then()
                 .log().all();
     }
+
+    public static ValidatableResponse surveyUpdate(String requestBody) {
+        return RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .put("/v1/survey")
+                .then()
+                .log().all();
+    }
+
+
+
 }
