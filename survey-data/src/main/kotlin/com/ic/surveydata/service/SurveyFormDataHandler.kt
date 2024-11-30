@@ -1,6 +1,6 @@
 package com.ic.surveydata.service
 
-import com.ic.surveydata.entity.SurveyFormEntity
+import com.ic.surveydata.entity.form.SurveyFormEntity
 import com.ic.surveydata.repository.SurveyFormRepository
 import com.ic.surveydata.service.dto.SurveyCreateRequestDto
 import com.ic.surveydata.service.dto.toEntity

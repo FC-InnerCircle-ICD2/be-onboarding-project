@@ -1,8 +1,8 @@
 package com.ic.surveydata.service.dto
 
-import com.ic.surveydata.entity.SurveyFormEntity
-import com.ic.surveydata.entity.SurveyItemEntity
-import com.ic.surveydata.entity.SurveyOptionEntity
+import com.ic.surveydata.entity.form.SurveyFormEntity
+import com.ic.surveydata.entity.form.SurveyItemEntity
+import com.ic.surveydata.entity.form.SurveyOptionEntity
 import survey.type.ItemType
 import survey.util.UuidGeneratorUtil
 

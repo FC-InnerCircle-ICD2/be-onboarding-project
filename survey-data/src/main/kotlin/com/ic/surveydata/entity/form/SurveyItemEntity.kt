@@ -1,4 +1,4 @@
-package com.ic.surveydata.entity
+package com.ic.surveydata.entity.form
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -36,8 +36,4 @@ data class SurveyItemEntity(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
     val options: List<SurveyOptionEntity> = mutableListOf(),
-) {
-    override fun toString(): String {
-        return "SurveyItemEntity(id='$id', name='$name', isRequired=$isRequired, description='$description', type=$type, createdAt=$createdAt)"
-    }
-}
+)

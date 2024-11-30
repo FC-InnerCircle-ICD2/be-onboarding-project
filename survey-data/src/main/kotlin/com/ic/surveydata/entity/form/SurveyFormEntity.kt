@@ -1,4 +1,4 @@
-package com.ic.surveydata.entity
+package com.ic.surveydata.entity.form
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column

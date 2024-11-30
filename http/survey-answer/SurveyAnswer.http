@@ -1,3 +1,38 @@
 ### 설문 조사 응답 제출 API
-POST localhost:8080/api/v1/surveys HTTP/1.1
+POST localhost:8080/api/v1/surveys/test1/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
 
+{
+  "surveyItems": [
+    {
+      "name": "좋아하는 음식",
+      "answer": "아무거나 다 좋아해 !",
+      "selectedOptions": [
+        {
+          "name": "떡볶이"
+        },
+        {
+          "name": "피자"
+        },
+        {
+          "name": "치킨"
+        }
+      ]
+    }
+  ]
+}
+
+
+
+
+
+#data class SurveyAnswerRequest(
+#    val surveyItems: List<SurveyItem>,
+#) {
+#    data class SurveyItem(
+#        val name: String,
+#        val answer: String,
+#        val selectOptions: List<String> = emptyList(),
+#    )
+#}

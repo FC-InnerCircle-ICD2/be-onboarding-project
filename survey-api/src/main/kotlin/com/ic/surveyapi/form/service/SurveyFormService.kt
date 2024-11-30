@@ -2,7 +2,7 @@ package com.ic.surveyapi.form.service
 
 import com.ic.surveyapi.form.service.dto.SurveyFormCreateRequestDto
 import com.ic.surveyapi.util.ObjectMapperUtil
-import com.ic.surveydata.entity.SurveyFormEntity
+import com.ic.surveydata.entity.form.SurveyFormEntity
 import com.ic.surveydata.service.SurveyFormDataHandler
 import org.springframework.stereotype.Service
 
