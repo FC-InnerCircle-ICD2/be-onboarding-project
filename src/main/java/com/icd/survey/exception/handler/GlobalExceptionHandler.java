@@ -18,6 +18,20 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /* Validation Handler*/
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        logError(e);
+        return ResponseEntity
+                .badRequest()
+                .body(ExceptionResponse
+                        .builder()
+                        .message(createValidationMessage(e.getBindingResult()))
+                        .code(ExceptionResponseType.VALIDATION_EXCEPTION.getCode())
+                        .build()
+                );
+    }
+
     @ExceptionHandler(ApiException.class)
     protected ResponseEntity<ExceptionResponse> handleCustomApiException(ApiException e) {
         logError(e);
@@ -31,42 +45,28 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<ExceptionResponse> handleEntityNotFoundException(EntityNotFoundException e) {
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<ExceptionResponse> handleRuntimeException(RuntimeException e) {
         logError(e);
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(ExceptionResponse
                         .builder()
                         .message(e.getMessage())
-                        .code(ExceptionResponseType.ENTITY_NOT_FNOUND.getCode())
+                        .code(ExceptionResponseType.INTERVAL_SERVER_EXCEPTION.getCode())
                         .build());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ExceptionResponse> handleException(Exception e) {
         logError(e);
         return ResponseEntity
-                .badRequest()
+                .internalServerError()
                 .body(ExceptionResponse
                         .builder()
                         .message(e.getMessage())
-                        .code(ExceptionResponseType.ILLEGAL_ARGUMENT.getCode())
+                        .code(ExceptionResponseType.INTERVAL_SERVER_EXCEPTION.getCode())
                         .build());
-    }
-
-    /* Validation Handler*/
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        logError(e);
-        return ResponseEntity
-                .badRequest()
-                .body(ExceptionResponse
-                        .builder()
-                        .message(createValidationMessage(e.getBindingResult()))
-                        .code(ExceptionResponseType.VALIDATION_EXCEPTION.getCode())
-                        .build()
-                );
     }
 
     private void logError(Exception e) {
