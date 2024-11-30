@@ -22,7 +22,7 @@ public class SurveyCreationResponse {
         private long idx;
         private String name;
         private String description;
-        private List<String> options;
+        private List<OptionResponse> options;
 
         public QuestionResponse(Question question) {
             this.idx = question.getIdx();
@@ -30,7 +30,18 @@ public class SurveyCreationResponse {
             this.description = question.getDescription();
             this.options = Optional.ofNullable(question.getOptions())
                             .orElseGet(Collections::emptyList).stream()
-                            .map(Option::getName).toList();
+                            .map(OptionResponse::new).toList();
+        }
+
+        @Getter
+        public static class OptionResponse {
+            private long idx;
+            private String name;
+
+            public OptionResponse(Option option) {
+                this.idx = option.getIdx();
+                this.name = option.getName();
+            }
         }
     }
 
