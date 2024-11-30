@@ -34,29 +34,30 @@ fun SurveyCreateRequestDto.toEntity(version: Int): SurveyFormEntity {
             version = version,
         )
 
-    val surveyItemEntities = this.surveyItems.map { surveyItem ->
-        val surveyItemEntity =
-            SurveyItemEntity(
-                id = UuidGeneratorUtil.generateUuid(),
-                surveyFormEntity = surveyFormEntity,
-                name = surveyItem.name,
-                description = surveyItem.description,
-                isRequired = surveyItem.isRequired,
-                type = surveyItem.type,
-            )
-
-        val surveyOptionEntities =
-            surveyItem.options.map { surveyOption ->
-                SurveyOptionEntity(
+    val surveyItemEntities =
+        this.surveyItems.map { surveyItem ->
+            val surveyItemEntity =
+                SurveyItemEntity(
                     id = UuidGeneratorUtil.generateUuid(),
-                    name = surveyOption.name,
-                    surveyItemEntity = surveyItemEntity,
+                    surveyFormEntity = surveyFormEntity,
+                    name = surveyItem.name,
+                    description = surveyItem.description,
+                    isRequired = surveyItem.isRequired,
+                    type = surveyItem.type,
                 )
-            }
 
-        surveyItemEntity.surveyOptions.addAll(surveyOptionEntities)
-        surveyItemEntity
-    }
+            val surveyOptionEntities =
+                surveyItem.options.map { surveyOption ->
+                    SurveyOptionEntity(
+                        id = UuidGeneratorUtil.generateUuid(),
+                        name = surveyOption.name,
+                        surveyItemEntity = surveyItemEntity,
+                    )
+                }
+
+            surveyItemEntity.surveyOptions.addAll(surveyOptionEntities)
+            surveyItemEntity
+        }
 
     surveyFormEntity.surveyItems.addAll(surveyItemEntities)
     return surveyFormEntity

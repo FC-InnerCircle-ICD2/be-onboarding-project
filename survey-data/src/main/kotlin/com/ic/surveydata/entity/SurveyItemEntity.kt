@@ -1,6 +1,5 @@
 package com.ic.surveydata.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
