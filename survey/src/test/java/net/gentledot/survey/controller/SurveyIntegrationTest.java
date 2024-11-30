@@ -5,17 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import lombok.extern.slf4j.Slf4j;
+import net.gentledot.survey.config.IntegrationTestDatabaseClearing;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyUpdateRequest;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -30,6 +33,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(IntegrationTestDatabaseClearing.class)
 class SurveyIntegrationTest {
 
     @LocalServerPort
@@ -38,9 +42,17 @@ class SurveyIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    IntegrationTestDatabaseClearing integrationTestDatabaseClearing;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void tearDown() {
+        integrationTestDatabaseClearing.clearAllH2Database();
     }
 
     @Test
@@ -266,5 +278,6 @@ class SurveyIntegrationTest {
                 ))
                 .build();
     }
+
 
 }
