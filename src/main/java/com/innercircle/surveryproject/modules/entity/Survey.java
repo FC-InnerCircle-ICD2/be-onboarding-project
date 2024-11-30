@@ -1,6 +1,7 @@
 package com.innercircle.surveryproject.modules.entity;
 
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
+import com.innercircle.surveryproject.modules.dto.SurveyUpdateDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,6 +36,12 @@ public class Survey {
 
     public static Survey from(SurveyCreateDto surveyCreateDto) {
         return new Survey(surveyCreateDto);
+    }
+
+    public void update(SurveyUpdateDto surveyUpdateDto) {
+        this.name = surveyUpdateDto.getName();
+        this.description = surveyUpdateDto.getDescription();
+        this.surveyItemList = SurveyItem.convertToEntity(surveyUpdateDto.getSurveyItemDtoList());
     }
 
 }

@@ -25,4 +25,16 @@ public class GlobalExceptionHandler {
         return ResponseUtils.error(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * exception 발생 시 에러처리
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity exception(Exception ex) {
+        return ResponseUtils.error(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
