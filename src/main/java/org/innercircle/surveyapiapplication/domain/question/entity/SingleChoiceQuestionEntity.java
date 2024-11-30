@@ -9,7 +9,7 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
+import org.innercircle.surveyapiapplication.domain.answer.entity.AnswerEntity;
 import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
 
 import java.util.List;
@@ -25,12 +25,12 @@ public class SingleChoiceQuestionEntity extends QuestionEntity {
     private List<String> options;
 
     @Transient
-    private Answer answer;
+    private AnswerEntity answerEntity;
 
-    public SingleChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, Answer answer) {
+    public SingleChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, AnswerEntity answerEntity) {
         super(name, description, required, surveyId);
         this.options = options;
-        this.answer = answer;
+        this.answerEntity = answerEntity;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SingleChoiceQuestionEntity extends QuestionEntity {
             this.isRequired(),
             this.getSurveyId(),
             this.getOptions(),
-            this.getAnswer()
+            this.getAnswerEntity().toDomain()
         );
     }
 

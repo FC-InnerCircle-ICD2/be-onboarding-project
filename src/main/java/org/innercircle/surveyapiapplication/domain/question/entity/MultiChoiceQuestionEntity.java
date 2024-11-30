@@ -9,7 +9,7 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
+import org.innercircle.surveyapiapplication.domain.answer.entity.AnswerEntity;
 import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQuestion;
 
 import java.util.List;
@@ -25,12 +25,12 @@ public class MultiChoiceQuestionEntity extends QuestionEntity {
     private List<String> options;
 
     @Transient
-    private List<Answer> answer;
+    private List<AnswerEntity> answerEntities;
 
-    public MultiChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, List<Answer> answer) {
+    public MultiChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, List<AnswerEntity> answerEntities) {
         super(name, description, required, surveyId);
         this.options = options;
-        this.answer = answer;
+        this.answerEntities = answerEntities;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MultiChoiceQuestionEntity extends QuestionEntity {
             this.isRequired(),
             this.getSurveyId(),
             this.getOptions(),
-            this.getAnswer()
+            this.getAnswerEntities().stream().map(AnswerEntity::toDomain).toList()
         );
     }
 

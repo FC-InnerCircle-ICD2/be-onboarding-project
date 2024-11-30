@@ -6,7 +6,7 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
+import org.innercircle.surveyapiapplication.domain.answer.entity.AnswerEntity;
 import org.innercircle.surveyapiapplication.domain.question.domain.LongAnswerQuestion;
 
 @Entity
@@ -16,11 +16,11 @@ import org.innercircle.surveyapiapplication.domain.question.domain.LongAnswerQue
 public class LongAnswerQuestionEntity extends QuestionEntity {
 
     @Transient
-    private Answer answer;
+    private AnswerEntity answerEntity;
 
-    public LongAnswerQuestionEntity(String name, String description, boolean required, Long surveyId, Answer answer) {
+    public LongAnswerQuestionEntity(String name, String description, boolean required, Long surveyId, AnswerEntity answerEntity) {
         super(name, description, required, surveyId);
-        this.answer = answer;
+        this.answerEntity = answerEntity;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class LongAnswerQuestionEntity extends QuestionEntity {
             this.getDescription(),
             this.isRequired(),
             this.getSurveyId(),
-            this.getAnswer()
+            this.getAnswerEntity().toDomain()
         );
     }
 
