@@ -1,6 +1,5 @@
 package org.icd.surveyapi.surveyproducer.presentation
 
-import org.assertj.core.api.Assertions.assertThat
 import org.icd.surveyapi.exception.DuplicateSurveyItemSequenceException
 import org.icd.surveyapi.exception.MissingRequiredFieldException
 import org.icd.surveyapi.exception.NotFoundSurveyException
@@ -68,15 +67,6 @@ class SurveyProducerControllerTest : BaseControllerTest() {
     }
 
     @Test
-    fun `mocking이 정상적으로 동작한다`() {
-        val response = createGetSurveyResponse()
-        given { surveyProducerService.getSurvey(any()) }.willReturn(response)
-
-        val result = surveyProducerService.getSurvey(1L)
-        assertThat(result).isEqualTo(response)
-    }
-
-    @Test
     fun getSurvey() {
         val response = createGetSurveyResponse()
         given { surveyProducerService.getSurvey(any()) }.willReturn(response)
@@ -103,6 +93,8 @@ class SurveyProducerControllerTest : BaseControllerTest() {
                     fieldWithPath("items[].description").description("항목의 설명").optional(),
                     fieldWithPath("items[].itemType").description("항목 유형"),
                     fieldWithPath("items[].options[]").description("선택지 옵션").optional(),
+                    fieldWithPath("items[].options[].id").description("선택지 옵션 ID").optional(),
+                    fieldWithPath("items[].options[].name").description("선택지 옵션 이름").optional(),
                     fieldWithPath("items[].isRequired").description("항목 필수 응답 여부"),
                 ),
                 ExceptionSnippet(

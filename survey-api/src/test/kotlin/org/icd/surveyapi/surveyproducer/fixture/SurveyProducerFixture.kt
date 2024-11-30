@@ -2,6 +2,7 @@ package org.icd.surveyapi.surveyproducer.fixture
 
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyItemRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
+import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyItemOptionResponse
 import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyItemResponse
 import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponse
 import org.icd.surveycore.domain.surveyItem.ItemType
@@ -74,7 +75,11 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             name = "항목",
             description = "설명",
             itemType = ItemType.MULTIPLE_CHOICE,
-            options = listOf("가", "나", "다"),
+            options = listOf(
+                GetSurveyItemOptionResponse(1, "가"),
+                GetSurveyItemOptionResponse(2, "나"),
+                GetSurveyItemOptionResponse(3, "다")
+            ),
             isRequired = true
         )
     )
