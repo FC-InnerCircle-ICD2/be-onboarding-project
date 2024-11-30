@@ -1,5 +1,9 @@
 # 이너써클 BE 온보딩 프로젝트
 
+## jar 파일 경로
+- [command](https://github.com/Raemerrr/be-onboarding-project/blob/main/command/build/libs/command-0.0.1-SNAPSHOT.jar)
+- [query](https://github.com/Raemerrr/be-onboarding-project/blob/main/query/build/libs/query-0.0.1-SNAPSHOT.jar)
+
 ## 온보딩 프로젝트의 목적
 
 - 공통된 내용과 기술스택을 이용한 기술 경험 수준 평가
