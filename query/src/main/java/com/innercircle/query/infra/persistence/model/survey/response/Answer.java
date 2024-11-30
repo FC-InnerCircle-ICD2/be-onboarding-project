@@ -1,6 +1,6 @@
 package com.innercircle.query.infra.persistence.model.survey.response;
 
-import com.innercircle.query.infra.persistence.model.survey.question.QuestionType;
+import com.innercircle.common.domain.survey.question.QuestionType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;

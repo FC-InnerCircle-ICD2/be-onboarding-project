@@ -1,7 +1,7 @@
 package com.innercircle.command.application.survey.question;
 
 import com.innercircle.command.domain.survey.question.Question;
-import com.innercircle.command.domain.survey.question.QuestionType;
+import com.innercircle.common.domain.survey.question.QuestionType;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;

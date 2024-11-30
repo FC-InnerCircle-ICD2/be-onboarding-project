@@ -1,6 +1,6 @@
 package com.innercircle.query.controller.dto;
 
-import com.innercircle.query.infra.persistence.model.survey.question.QuestionType;
+import com.innercircle.common.domain.survey.question.QuestionType;
 import java.util.List;
 
 public record SurveyDto(String id, String title, String description, List<QuestionDto> questions, List<SurveyResponseDto> responses) {

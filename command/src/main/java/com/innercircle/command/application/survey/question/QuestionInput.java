@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.innercircle.command.domain.survey.question.Question;
-import com.innercircle.command.domain.survey.question.QuestionType;
+import com.innercircle.common.domain.survey.question.QuestionType;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Getter;
