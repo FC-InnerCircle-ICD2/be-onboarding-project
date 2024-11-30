@@ -1,11 +1,7 @@
 package com.innercircle.command.application.survey;
 
-import com.innercircle.command.application.survey.question.LongTextQuestionInput;
-import com.innercircle.command.application.survey.question.MultipleChoiceQuestionInput;
 import com.innercircle.command.application.survey.question.QuestionInput;
 import com.innercircle.command.application.survey.question.QuestionUpdateInput;
-import com.innercircle.command.application.survey.question.ShortTextQuestionInput;
-import com.innercircle.command.application.survey.question.SingleChoiceQuestionInput;
 import com.innercircle.command.application.survey.response.QuestionResponseInput;
 import com.innercircle.command.domain.Identifier;
 import com.innercircle.command.domain.survey.Survey;
@@ -125,68 +121,19 @@ public class SurveyService {
 
 	private List<Question> getQuestions(String surveyId, List<QuestionInput> questionInputs) {
 		return questionInputs.stream()
-				.map(input -> {
-					var questionId = questionRepository.generateId();
-					if (input instanceof ShortTextQuestionInput shortTextQuestionInput) {
-						return new Question(questionId, surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
-								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
-					} else if (input instanceof LongTextQuestionInput longTextQuestionInput) {
-						return new Question(questionId, surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
-								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
-					} else if (input instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
-						return new Question(questionId, surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
-								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
-					} else if (input instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
-						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(), multipleChoiceQuestionInput.getDescription(),
-								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
-					}
-					return null;
-				})
+				.map(input -> input.convertToQuestion(questionRepository.generateId(), surveyId))
 				.toList();
 	}
 
 	private List<Question> getUpdateQuestions(String surveyId, List<QuestionUpdateInput> updateInputs) {
 		return updateInputs.stream()
-				.map(input -> {
-					var questionId = StringUtils.defaultIfBlank(input.getQuestionId(), questionRepository.generateId());
-					if (input.getQuestion() instanceof ShortTextQuestionInput shortTextQuestionInput) {
-						return new Question(questionId, surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
-								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
-					} else if (input.getQuestion() instanceof LongTextQuestionInput longTextQuestionInput) {
-						return new Question(questionId, surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
-								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
-					} else if (input.getQuestion() instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
-						return new Question(questionId, surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
-								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
-					} else if (input.getQuestion() instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
-						return new Question(questionId, surveyId, multipleChoiceQuestionInput.getName(),
-								multipleChoiceQuestionInput.getDescription(),
-								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
-					}
-					return null;
-				})
+				.map(input -> input.convertToQuestion(StringUtils.defaultIfBlank(input.getQuestionId(), questionRepository.generateId()), surveyId))
 				.toList();
 	}
 
 	private List<Question> getResponseQuestions(String surveyId, List<QuestionResponseInput> responseInputs) {
 		return responseInputs.stream()
-				.map(input -> {
-					if (input.getQuestion() instanceof ShortTextQuestionInput shortTextQuestionInput) {
-						return new Question(input.getQuestionId(), surveyId, shortTextQuestionInput.getName(), shortTextQuestionInput.getDescription(),
-								shortTextQuestionInput.isRequired(), shortTextQuestionInput.getType(), List.of());
-					} else if (input.getQuestion() instanceof LongTextQuestionInput longTextQuestionInput) {
-						return new Question(input.getQuestionId(), surveyId, longTextQuestionInput.getName(), longTextQuestionInput.getDescription(),
-								longTextQuestionInput.isRequired(), longTextQuestionInput.getType(), List.of());
-					} else if (input.getQuestion() instanceof SingleChoiceQuestionInput singleChoiceQuestionInput) {
-						return new Question(input.getQuestionId(), surveyId, singleChoiceQuestionInput.getName(), singleChoiceQuestionInput.getDescription(),
-								singleChoiceQuestionInput.isRequired(), singleChoiceQuestionInput.getType(), singleChoiceQuestionInput.getOptionNames());
-					} else if (input.getQuestion() instanceof MultipleChoiceQuestionInput multipleChoiceQuestionInput) {
-						return new Question(input.getQuestionId(), surveyId, multipleChoiceQuestionInput.getName(),
-								multipleChoiceQuestionInput.getDescription(),
-								multipleChoiceQuestionInput.isRequired(), multipleChoiceQuestionInput.getType(), multipleChoiceQuestionInput.getOptionNames());
-					}
-					return null;
-				})
+				.map(input -> input.convertToQuestion(surveyId))
 				.toList();
 	}
 

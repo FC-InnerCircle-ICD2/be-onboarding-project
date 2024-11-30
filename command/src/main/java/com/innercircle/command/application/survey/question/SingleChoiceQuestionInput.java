@@ -1,5 +1,6 @@
 package com.innercircle.command.application.survey.question;
 
+import com.innercircle.command.domain.survey.question.Question;
 import com.innercircle.command.domain.survey.question.QuestionType;
 import java.util.List;
 import lombok.AccessLevel;
@@ -19,5 +20,10 @@ public class SingleChoiceQuestionInput extends QuestionInput {
 		this.name = name;
 		this.description = description;
 		this.optionNames = optionNames;
+	}
+
+	@Override
+	public Question convertToQuestion(String questionId, String surveyId) {
+		return new Question(questionId, surveyId, this.name, this.description, this.required, this.type, this.optionNames);
 	}
 }
