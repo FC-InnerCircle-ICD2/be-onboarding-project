@@ -92,3 +92,11 @@
   - 설문조사 응답 제출
   - 요청 본문: `List<SubmitSurveyAnswer>`
   - 응답 본문: `ServiceResponse<Void>`
+
+- **GET /v1/survey/{surveyId}/answer/all**
+  - 설문조사 응답 전체 조회
+  - 요청 본문:
+    - Parameter
+      - questionName (optional) : 질문 이름으로 응답 필터링
+      - answerValue (optional) : 답변으로 응답 필터링
+  - 응답 본문: `SearchSurveyAnswerResponse`
