@@ -4,6 +4,7 @@ import com.survey.api.base.SurveyBaseVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,6 +14,8 @@ public class SurveyUpdateForm extends SurveyBaseVo {
     private long id;
     private String name;
     private String description;
+    private LocalDateTime startAt; // nullable
+    private LocalDateTime endAt; // nullable
     List<SurveyItemUpdateForm> items;
 }
 

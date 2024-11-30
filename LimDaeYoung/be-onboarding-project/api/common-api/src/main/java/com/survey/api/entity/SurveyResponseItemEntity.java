@@ -33,6 +33,11 @@ public class SurveyResponseItemEntity {
     @JoinColumn(name = "itemId")
     private SurveyItemEntity surveyItem; //
 
+    private SurveyIteSnapshot snapshot; // JSON 형태로 넣기.
+
+    @OneToMany
+    private List<SurveyItemSnapshot> itemSnapshots;
+
     @OneToOne(mappedBy = "responseItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SurveyResponseOptionEntity reponseOption; //
 
@@ -41,4 +46,12 @@ public class SurveyResponseItemEntity {
         this.response = response;
         this.surveyItem = surveyItem;
     }
+}
+
+public class AccountJpaEntity {
+
+}
+
+public class AccountAdditionalFieldJpaEntity {
+
 }
