@@ -16,12 +16,20 @@ import org.springframework.http.ResponseEntity;
 public interface SurveySubmissionControllerDoc {
 
     @Operation(summary = "설문조사 응답 제출",
-            description = "설문조사 응답을 제출합니다.",
+            description = """
+                    설문조사 응답을 제출합니다.
+                    - path parameter
+                      - id: 제출할 설문조사 식별자
+                    - items[].itemId: 설문조사 항목 식별자 (생성 요청 응답의 items[].id 값)
+                      - 1개 항목의 타입이 '다중 선택' 이라면 중복될 수 있습니다. ('요청 예시 1' 의 4번 id)
+                    - items[].answer: 해당 항목의 답변
+                      - 등록되어 있는 항목의 정보에 따라서 답변 값을 검증합니다.
+                    """,
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "요청 예시",
+                                    name = "요청 예시 1",
                                     value = """
                                             {
                                               "items": [
@@ -56,7 +64,7 @@ public interface SurveySubmissionControllerDoc {
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "응답 예시",
+                                    name = "응답 예시 1",
                                     value = """
                                             {
                                               "code": "SUCCESS",
@@ -110,15 +118,19 @@ public interface SurveySubmissionControllerDoc {
     ResponseEntity<ApiResult<SurveySubmissionResponse>> submitSurvey(Long id, SurveySubmissionRequest request);
 
 
-    // TODO 구현
     @Operation(summary = "설문조사 응답 조회",
-            description = "설문조사 응답을 조회합니다.",
+            description = """
+                    설문조사 응답 목록을 조회합니다.
+                    설문조사 항목이 중간에 변경되었더라도 제출했던 시점의 이력을 반환합니다.
+                    - path parameter
+                      - id: 설문조사 식별자
+                    """,
             responses = @ApiResponse(
                     responseCode = "200",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "응답 예시",
+                                    name = "응답 예시 1",
                                     value = """
                                             {
                                               "code": "SUCCESS",

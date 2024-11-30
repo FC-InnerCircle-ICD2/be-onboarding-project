@@ -18,12 +18,21 @@ import org.springframework.http.ResponseEntity;
 public interface SurveyControllerDoc {
 
     @Operation(summary = "설문조사 생성",
-            description = "설문조사를 생성합니다.",
+            description = """
+                    설문조사를 생성합니다.
+                    - basic.name: 설문조사 이름
+                    - basic.description: 설문조사 설명
+                    - items[].name: 항목 이름
+                    - items[].description: 항목 설명
+                    - items[].inputType: 항목 타입 (SHORT_ANSWER | LONG_ANSWER | SINGLE_CHOICE | MULTIPLE_CHOICE 중 하나)
+                    - items[].required: 필수여부
+                    - items[].choices[]: 선택형 항목 목록 배열 (타입이 SINGLE_CHOICE 또는 MULTIPLE_CHOICE 일 때)
+                    """,
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "요청 예시",
+                                    name = "요청 예시 1",
                                     value = """
                                             {
                                               "basic": {
@@ -80,7 +89,7 @@ public interface SurveyControllerDoc {
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "응답 예시",
+                                    name = "응답 예시 1",
                                     value = """
                                             {
                                               "code": "SUCCESS",
@@ -147,12 +156,26 @@ public interface SurveyControllerDoc {
 
 
     @Operation(summary = "설문조사 수정",
-            description = "설문조사를 수정합니다.",
+            description = """
+                    설문조사를 수정합니다.
+                    - path parameter
+                      - id: 수정할 설문조사 식별자
+                    - basic.name: 설문조사 이름
+                    - basic.description: 설문조사 설명
+                    - items[]
+                      - <b>기존 항목이 요청 목록에 없다면 삭제됩니다.</b>
+                    - items[].id: 항목 식별자 (존재시 기존 항목 변경, 미존재시 신규 항목 등록)
+                    - items[].name: 항목 이름
+                    - items[].description: 항목 설명
+                    - items[].inputType: 항목 타입 (SHORT_ANSWER | LONG_ANSWER | SINGLE_CHOICE | MULTIPLE_CHOICE 중 하나)
+                    - items[].required: 필수여부
+                    - items[].choices[]: 선택형 항목 목록 배열 (타입이 SINGLE_CHOICE 또는 MULTIPLE_CHOICE 일 때)
+                    """,
             requestBody = @RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "요청 예시",
+                                    name = "요청 예시 1",
                                     value = """
                                             {
                                               "basic": {
@@ -208,7 +231,7 @@ public interface SurveyControllerDoc {
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             examples = @ExampleObject(
-                                    name = "응답 예시",
+                                    name = "응답 예시 1",
                                     value = """
                                             {
                                               "code": "SUCCESS",
