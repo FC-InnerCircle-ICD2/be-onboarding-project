@@ -1,5 +1,6 @@
 package com.innercircle.surveryproject.modules.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyUpdateDto;
 import jakarta.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 public class Survey {
 
+    @JsonIgnore
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(nullable = false)
     private Long id;

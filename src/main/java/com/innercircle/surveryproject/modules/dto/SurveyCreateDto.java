@@ -1,5 +1,6 @@
 package com.innercircle.surveryproject.modules.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class SurveyCreateDto {
      * 설문 조사 유형
      */
     @NotNull
+    @JsonProperty("surveyItemList")
     private List<SurveyItemDto> surveyItemDtoList = new ArrayList<>();
 
 }
