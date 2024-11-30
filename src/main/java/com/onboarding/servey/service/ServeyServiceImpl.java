@@ -3,6 +3,8 @@ package com.onboarding.servey.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,13 @@ public class ServeyServiceImpl implements ServeyService {
 	public ServeyResponse servey(Long id) {
 		Servey servey = serveyRepository.findById(id).orElseThrow(() -> new BaseException("등록된 설문조사가 없습니다."));
 		return ServeyResponse.from(servey);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Page<ServeyResponse> servey(Pageable pageable, String name, String answer) {
+		Page<Servey> serveys = serveyRepository.findServeysByNameAndAnswer(pageable, name, answer);
+		return serveys.map(ServeyResponse::from);
 	}
 
 	@Transactional

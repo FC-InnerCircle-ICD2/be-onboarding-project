@@ -1,16 +1,17 @@
 package com.onboarding.common.config;
 
-import com.fasterxml.classmate.TypeResolver;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.fasterxml.classmate.TypeResolver;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -63,10 +64,10 @@ public class SwaggerConfig  implements WebMvcConfigurer {
     @ApiModel
     static class Page {
 
-        @ApiModelProperty(value = "페이지 번호 (0-N 페이지)")
+        @ApiModelProperty(value = "페이지 번호 (0-N 페이지)", example = "0", dataType = "int")
         private Integer page;
 
-        @ApiModelProperty(value = "페이지 데이터 개수")
+        @ApiModelProperty(value = "페이지 데이터 개수", example = "10", dataType = "int")
         private Integer size;
     }
 }
