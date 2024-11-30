@@ -73,7 +73,7 @@ project(":common") {
     jar.enabled = true
 }
 
-project(':api:common-api') {
+project(':common-api') {
     dependencies {
         api project(":common")
     }
@@ -81,9 +81,9 @@ project(':api:common-api') {
     jar.enabled = true
 }
 
-project(':api:survey-api') {
+project(':survey-api') {
     dependencies {
-        api project(":api:common-api")
+        api project(":common-api")
     }
 }
 

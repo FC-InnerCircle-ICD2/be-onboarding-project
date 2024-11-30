@@ -1,6 +1,5 @@
 rootProject.name = 'be-onboarding-project'
-include 'api:survey-api'
-include 'api:common-api'
+include 'survey-api'
+include 'common-api'
 include 'common'
-include 'api'
 

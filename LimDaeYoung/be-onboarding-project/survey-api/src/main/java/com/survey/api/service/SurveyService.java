@@ -4,11 +4,9 @@ import com.survey.api.constant.CommonConstant;
 import com.survey.api.dto.SurveyResponseDto;
 import com.survey.api.dto.SurveyResponseItemDto;
 import com.survey.api.entity.*;
-import com.survey.api.exception.SurveyApiException;
 import com.survey.api.form.*;
 import com.survey.api.repository.*;
 import com.survey.api.util.ConvertUtil;
-import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -113,27 +111,6 @@ public class SurveyService {
 
     @Transactional
     public void surveyUpdate(SurveyUpdateForm survey) {
-        // 비즈니스 로직 관련 validate
-
-        //신규 추가가 아니면 기존에 있었던 항목인지 체크
-        if (!CommonConstant.ACTION_TYPE_CREATE.equals(item.getActionType()) && surveyService.existsByIdAndSurvey(item.getId(), new SurveyEntity(survey.getId()))) {
-            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대한 수정 요청을 하였습니다.");
-        }
-
-        if (item.getOptionList() != null) {
-            for (SurveyOptionUpdateForm option : item.getOptionList()) {
-                //신규 추가가 아니면 기존에 있었던 옵션인지 체크
-                if (!CommonConstant.ACTION_TYPE_CREATE.equals(option.getActionType()) && surveyService.existsSurveyOptionByIdAndItemId(option.getId(), new SurveyItemEntity(item.getId()))) {
-                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대한 수정 요청을 하였습니다.");
-                }
-
-                if (StringUtils.isBlank(option.getOptionName())) {
-                    throw new SurveyApiException(CommonConstant.ERR_DATA_NOT_FOUND, CommonConstant.ERR_MSG_DATA_NOT_FOUND + "option Name");
-                }
-            }
-        }
-
-
         SurveyEntity surveyResult = sureveySave(new SurveyEntity(survey.getId(), survey.getName(), survey.getDescription(), CommonConstant.Y));
 
         if(survey.getItems() != null) {
