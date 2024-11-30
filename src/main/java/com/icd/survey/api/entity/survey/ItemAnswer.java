@@ -4,6 +4,7 @@ import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -13,6 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "item_answer")
+@ToString
 public class ItemAnswer {
     @Id
     @Column(name = "answer_seq", nullable = false)

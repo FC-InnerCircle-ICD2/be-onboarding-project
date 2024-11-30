@@ -1,4 +1,4 @@
-package com.icd.survey.api.controller.repository;
+package com.icd.survey.api.repository.survey;
 
 import com.icd.survey.api.repository.survey.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;

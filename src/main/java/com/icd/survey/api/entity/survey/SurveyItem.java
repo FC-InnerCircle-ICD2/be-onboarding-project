@@ -5,6 +5,7 @@ import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "survey_item")
+@ToString
 public class SurveyItem extends BaseEntity {
     @Id
     @Column(name = "item_seq", nullable = false)
@@ -46,7 +48,7 @@ public class SurveyItem extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_seq")
-    private List<ItemAnswer> responseList;
+    private List<ItemAnswer> answerList;
 
     public void disable() {
         if(Boolean.FALSE.equals(getIsDeleted())){

@@ -48,6 +48,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<ExceptionResponse> handleRuntimeException(RuntimeException e) {
         logError(e);
+        e.printStackTrace();
         return ResponseEntity
                 .internalServerError()
                 .body(ExceptionResponse

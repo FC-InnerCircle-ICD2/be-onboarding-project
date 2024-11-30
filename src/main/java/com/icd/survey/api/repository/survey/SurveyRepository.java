@@ -2,6 +2,7 @@ package com.icd.survey.api.repository.survey;
 
 import com.icd.survey.api.entity.survey.Survey;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
