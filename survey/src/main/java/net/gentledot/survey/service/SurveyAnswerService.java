@@ -87,8 +87,15 @@ public class SurveyAnswerService {
 
             // 3. answer가 비어 있는지 확인 (필수 항목)
             if (question.getRequired() == ItemRequired.REQUIRED) {
-                if (StringUtils.isEmpty(answer.getAnswer())) {
-                    throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                if (SurveyItemType.SINGLE_SELECT.equals(question.getItemType()) ||
+                    SurveyItemType.MULTI_SELECT.equals(question.getItemType())) {
+                    if (answer.getQuestionOptionId() == null) {
+                        throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                    }
+                } else {
+                    if (StringUtils.isEmpty(answer.getAnswer())) {
+                        throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                    }
                 }
             }
 

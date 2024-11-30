@@ -31,6 +31,15 @@ public class SurveyIntegrations {
                 .log().all();
     }
 
+    public static ValidatableResponse submitSurveyAnswer(String surveyId, String requestBody) {
+        return RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/v1/survey/{surveyId}/answer", surveyId)
+                .then()
+                .log().all();
+    }
 
 
 }

@@ -139,6 +139,46 @@ class SurveyIntegrationTest {
 
     }
 
+    @Test
+    void submitSurvey() {
+        SurveyCreateRequest createRequest = testCreateRequest();
+        String createRequestBody = toJson(createRequest);
+        String surveyId = SurveyIntegrations.surveyCreate(createRequestBody)
+                .extract()
+                .path("data.surveyId");
+
+        String submitRequestBody = """
+                    [
+                         {
+                             "questionId": "1",
+                             "answer": "홍길동"
+                         },
+                         {
+                             "questionId": "2",
+                             "questionOptionId": "1"
+                         },
+                         {
+                             "questionId": "3",
+                             "questionOptionId": "3"
+                         },
+                         {
+                             "questionId": "3",
+                             "questionOptionId": "4"
+                         },
+                         {
+                             "questionId": "4",
+                             "answer": "아주 좋았습니다."
+                         }
+                     ]
+                """;
+
+        SurveyIntegrations.submitSurveyAnswer(surveyId, submitRequestBody)
+                .statusCode(HttpStatus.OK.value())
+                .body("success", equalTo(true))
+                .body("data", nullValue())
+                .body("error", nullValue());
+    }
+
     private String toJson(Object object) {
         try {
             return objectMapper.writeValueAsString(object);
