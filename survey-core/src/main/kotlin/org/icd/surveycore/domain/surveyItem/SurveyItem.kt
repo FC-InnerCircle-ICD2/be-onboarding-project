@@ -29,7 +29,7 @@ class SurveyItem(
     @Enumerated(EnumType.STRING)
     val itemType: ItemType = ItemType.SHORT_ANSWER,
     @Comment("선택 항목 리스트")
-    @OneToMany(mappedBy = "surveyItem", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "surveyItem", cascade = [CascadeType.ALL], orphanRemoval = true)
     val options: MutableList<SurveyItemOption> = mutableListOf(),
     @Comment("현재 사용 여부")
     val isActive: Boolean = true,

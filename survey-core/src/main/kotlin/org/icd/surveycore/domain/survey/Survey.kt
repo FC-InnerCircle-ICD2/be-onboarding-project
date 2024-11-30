@@ -20,7 +20,7 @@ class Survey(
     val name: String,
     @Comment("설문조사 설명")
     val description: String? = null,
-    @OneToMany(mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: MutableList<SurveyItem> = mutableListOf(),
     @CreatedDate
     var createdAt: OffsetDateTime? = null,

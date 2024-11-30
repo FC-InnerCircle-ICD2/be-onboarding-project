@@ -2,6 +2,8 @@ package org.icd.surveyapi.surveyproducer.fixture
 
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyItemRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
+import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyItemResponse
+import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponse
 import org.icd.surveycore.domain.surveyItem.ItemType
 
 fun createInvalidSurveyItemCountExceptionPostSurveyRequest(): PostSurveyRequest {
@@ -51,3 +53,17 @@ fun createPostSurveyRequest(): PostSurveyRequest {
         )
     )
 }
+
+fun createGetSurveyResponse() = GetSurveyResponse(
+    id = 1, name = "테스트", description = "설명", items = listOf(
+        GetSurveyItemResponse(
+            id = 1,
+            isActive = true,
+            sequence = 1,
+            name = "항목",
+            description = "설명",
+            itemType = ItemType.MULTIPLE_CHOICE,
+            options = listOf("가", "나", "다")
+        )
+    )
+)
