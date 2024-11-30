@@ -23,6 +23,7 @@ repositories {
 subprojects {
     group = "com.ic"
     version = "0.0.1-SNAPSHOT"
+    val kotlinJacksonDateTimeVersion by properties
 
     repositories {
         mavenCentral()
@@ -44,6 +45,8 @@ subprojects {
 
     dependencies {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+        // 꼭 전체 모듈에 전체 적용이 필요할까 .. ?!
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonDateTimeVersion")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
 
         testImplementation("io.kotest:kotest-runner-junit5:5.5.0")

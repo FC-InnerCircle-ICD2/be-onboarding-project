@@ -1,14 +1,26 @@
 package com.ic.surveydata.service
 
-import com.ic.surveydata.entity.SurveyForm
-import com.ic.surveydata.repository.SurveyRepository
+import com.ic.surveydata.entity.SurveyFormEntity
+import com.ic.surveydata.repository.SurveyFormRepository
+import com.ic.surveydata.service.dto.SurveyCreateRequestDto
+import com.ic.surveydata.service.dto.toEntity
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class SurveyFormDataHandler(
-    private val surveyRepository: SurveyRepository,
+    private val surveyFormRepository: SurveyFormRepository,
 ) {
-    fun createForm(surveyForm: SurveyForm): SurveyForm {
-        return surveyRepository.save(surveyForm)
+    // TODO - 로직 정리 및 트랜잭션 처리가 필요하다
+    fun createNewSurveyForm(surveyForm: SurveyCreateRequestDto): SurveyFormEntity {
+        val newestVersionFormOrDefault =
+            surveyFormRepository.findLatestVersionFormBy(title = surveyForm.title)?.plus(1) ?: ZERO_SURVEY_FORM_VERSION
+
+        return surveyFormRepository.save(surveyForm.toEntity(version = newestVersionFormOrDefault))
+    }
+
+    companion object {
+        val logger = LoggerFactory.getLogger(SurveyFormDataHandler::class.java)
+        const val ZERO_SURVEY_FORM_VERSION: Int = 0
     }
 }

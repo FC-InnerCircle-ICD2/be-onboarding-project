@@ -1,21 +1,19 @@
-package com.ic.surveyapi.controller.dto
+package com.ic.surveyapi.form.service.dto
 
-import survey.type.ItemType
-
-data class SurveyCreateRequest(
+data class SurveyCreateRequestDto(
     val title: String,
     val description: String,
     val surveyItems: List<SurveyItem>,
 ) {
     data class SurveyItem(
         val name: String,
-        val type: ItemType,
+        val type: String,
         val description: String,
         val isRequired: Boolean,
         val options: List<ItemOption>,
     )
 
     data class ItemOption(
-        val option: String,
+        val name: String,
     )
 }
