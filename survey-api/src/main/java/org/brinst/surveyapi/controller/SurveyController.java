@@ -51,4 +51,8 @@ public class SurveyController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@GetMapping("/api/v1/survey/{surveyId}/answers")
+	public ResponseEntity<List<AnswerDTO.ResDTO>> getSurveyAnswersBySurveyId(@PathVariable("surveyId") Long surveyId) {
+		return new ResponseEntity<>(surveyService.getAnswerBySurveyId(surveyId), HttpStatus.OK);
+	}
 }

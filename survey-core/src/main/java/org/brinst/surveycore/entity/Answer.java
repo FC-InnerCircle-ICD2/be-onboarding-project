@@ -45,12 +45,8 @@ public class Answer {
 		surveyQuestionMap.forEach((id, question) -> {
 			AnswerDTO.ReqDTO reqDTO = answerItemIds.get(id);
 			List<String> answer = reqDTO.getAnswers();
-
-			List<AnswerItem> answerItems = answer.stream()
-				.map(as -> new AnswerItem(as, answerEntity, question))
-				.toList();
-
-			answerEntity.getAnswers().addAll(answerItems);
+			AnswerItem answerItem = new AnswerItem(answer, answerEntity, question);
+			answerEntity.getAnswers().add(answerItem);
 		});
 		return answerEntity;
 	}

@@ -72,11 +72,32 @@ public class SurveyService {
 		answerRepository.save(answer);
 	}
 
+	@Transactional(readOnly = true)
+	public List<AnswerDTO.ResDTO> getAnswerBySurveyId(Long surveyId) {
+		List<Answer> answerList = answerRepository.findBySurvey_Id(surveyId);
+		return answerList.stream().map(answer -> new AnswerDTO.ResDTO(
+			answer.getId(),
+			answer.getSurveyVersion().getVersion(),
+			answer.getAnswers().stream().map(
+				answerItem -> new AnswerDTO.AnswerItemResDTO(
+					new SurveyDTO.ItemResDTO(
+						answerItem.getSurveyQuestion().getId(),
+						answerItem.getSurveyQuestion().getName(),
+						answerItem.getSurveyQuestion().getDescription(),
+						answerItem.getSurveyQuestion().isRequired(),
+						answerItem.getSurveyQuestion().getOptionType(),
+						answerItem.getSurveyQuestion().getSurveyOptions().stream().map(SurveyOption::getOption).toList()
+					),
+					answerItem.getAnswerValue()
+				)
+			).toList())
+		).toList();
+	}
+
 	private SurveyVersion getLatestSurveyVersion(Long surveyId) {
 		Survey survey = surveyRepository.findById(surveyId).orElseThrow();
 		//survey 최신 버전 조회
 		int version = survey.getVersion();
 		return surveyVersionRepository.findByVersionAndSurvey(version, survey);
 	}
-
 }
