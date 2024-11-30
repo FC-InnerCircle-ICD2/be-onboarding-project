@@ -28,6 +28,14 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         return createServiceResponse(fail, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(SurveyServiceException.class)
+    public ResponseEntity<Object> handleSurveyServiceException(SurveyServiceException e) {
+        log.warn("=== 서베이 서비스 오류 ===", e);
+        log.warn("이 예외는 가급적 SurveyServiceException의 구체적인 예외로 다뤄지도록 수정이 필요함.", e);
+        ServiceResponse<?> fail = createFail(e.getServiceError());
+        return createServiceResponse(fail, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         log.warn(MVC_ERROR_FLAG, e);
