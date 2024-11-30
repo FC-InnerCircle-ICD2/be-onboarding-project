@@ -29,11 +29,10 @@ public class SurveyController {
 
     @PostMapping("/update")
     public Api<SurveyBaseResponse> update(
-            Long id,
             @Valid
             @RequestBody Api<SurveyBaseRequest> request
     ){
-        var response = surveyBusiness.updateAll(id, request.getBody());
+        var response = surveyBusiness.updateAll(request.getBody());
         return Api.OK(response);
     }
 

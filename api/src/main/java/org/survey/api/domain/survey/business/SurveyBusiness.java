@@ -70,11 +70,10 @@ public class SurveyBusiness {
     }
 
     public SurveyBaseResponse updateAll(
-            Long id,
             SurveyBaseRequest request
     ){
         var baseEntity = surveyConverter.toEntity(request);
-        var newBaseEntity = surveyService.baseUpdate(id, baseEntity);
+        var newBaseEntity = surveyService.baseUpdate(request.getId(), baseEntity);
         List<SurveyItemResponse> items = new ArrayList<>();
         HashSet<Long> itemIdList = new HashSet<>();
         for(SurveyItemRequest item : request.getItems()){

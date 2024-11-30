@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SurveyBaseRequest {
 
+    private Long id;
+
     @NotBlank
     private String title;
 
