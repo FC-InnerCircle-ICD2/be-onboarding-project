@@ -8,6 +8,7 @@ data class SurveyCreateRequest(
     val surveyItems: List<SurveyItem>,
 ) {
     // TODO - Mapping 은 Object Mapper 같은 유틸성 클래스를 만들어서 사용이 필요 !
+    // TODO - Validation 처리도 필요하다
     data class SurveyItem(
         val name: String,
         val type: ItemType,
