@@ -3,6 +3,7 @@ package net.gentledot.survey.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
@@ -21,6 +22,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -147,7 +150,18 @@ class SurveyIntegrationTest {
                 .extract()
                 .path("data.surveyId");
 
-        String submitRequestBody = """
+        String submitRequestBody = testSurveyAnswerRequestBody();
+
+        ValidatableResponse validatableResponse = SurveyIntegrations.submitSurveyAnswer(surveyId, submitRequestBody);
+        validatableResponse
+                .statusCode(HttpStatus.OK.value())
+                .body("success", equalTo(true))
+                .body("data", nullValue())
+                .body("error", nullValue());
+    }
+
+    private static String testSurveyAnswerRequestBody() {
+        return """
                     [
                          {
                              "questionId": "1",
@@ -171,11 +185,34 @@ class SurveyIntegrationTest {
                          }
                      ]
                 """;
+    }
 
-        SurveyIntegrations.submitSurveyAnswer(surveyId, submitRequestBody)
+    @Test
+    void getAllSurveyAnswer() {
+        SurveyCreateRequest createRequest = testCreateRequest();
+        String createRequestBody = toJson(createRequest);
+        String surveyId = SurveyIntegrations.surveyCreate(createRequestBody)
+                .extract()
+                .path("data.surveyId");
+
+        String submitRequestBody = testSurveyAnswerRequestBody();
+        SurveyIntegrations.submitSurveyAnswer(surveyId, submitRequestBody);
+
+        SurveyIntegrations.getAllSurveyAnswers(surveyId, null, null)
                 .statusCode(HttpStatus.OK.value())
                 .body("success", equalTo(true))
-                .body("data", nullValue())
+                .body("data.surveyId", equalTo(surveyId))
+                .body("data.answerList", hasSize(1))
+                .body("data.answerList[0].answerId", notNullValue())
+                .body("data.answerList[0].answers", hasSize(4))
+                .body("data.answerList[0].answers[0]", hasKey("questionName"))
+                .body("data.answerList[0].answers[0]", hasKey("answerValue"))
+                .body("data.answerList[0].answers[1]", hasKey("questionName"))
+                .body("data.answerList[0].answers[1]", hasKey("answerValue"))
+                .body("data.answerList[0].answers[2]", hasKey("questionName"))
+                .body("data.answerList[0].answers[2]", hasKey("answerValue"))
+                .body("data.answerList[0].answers[3]", hasKey("questionName"))
+                .body("data.answerList[0].answers[3]", hasKey("answerValue"))
                 .body("error", nullValue());
     }
 

@@ -1,16 +1,19 @@
 package net.gentledot.survey.dto.request;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchSurveyAnswerRequest {
     private String surveyId;
     private String questionName;
     private String answerValue;
+
+    public static SearchSurveyAnswerRequest fromRequest(String surveyId, String questionName, String answerValue) {
+        return new SearchSurveyAnswerRequest(surveyId, questionName, answerValue);
+    }
 }

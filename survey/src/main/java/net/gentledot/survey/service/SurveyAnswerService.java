@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,19 +50,22 @@ public class SurveyAnswerService {
 
     @Transactional(readOnly = true)
     public SearchSurveyAnswerResponse getSurveyAnswers(SearchSurveyAnswerRequest request) {
-        Survey survey = surveyRepository.findById(request.getSurveyId())
-                .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND));
+        String surveyId = request.getSurveyId();
+        Optional<Survey> targetSurvey = surveyRepository.findById(surveyId);
+        if (targetSurvey.isEmpty()) {
+            throw new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND);
+        }
 
-        String surveyId = survey.getId();
         List<SurveyAnswer> allSurveyAnswers = surveyAnswerRepository.findAllBySurveyId(surveyId);
 
-        List<SurveyAnswerValue> surveyAnswers = allSurveyAnswers.stream()
-                .flatMap(surveyAnswer -> surveyAnswer.getAnswers().stream())
-                .filter(answer -> filterAnswer(answer, request))
-                .map(SurveyAnswerValue::from)
+        List<SurveyAnswerValue> answerValues = allSurveyAnswers.stream()
+                .map(surveyAnswer -> {
+                    List<SurveyAnswerSubmission> answers = surveyAnswer.getAnswers();
+                    return SurveyAnswerValue.of(surveyAnswer.getId(), answers);
+                })
                 .collect(Collectors.toList());
 
-        return new SearchSurveyAnswerResponse(surveyId, surveyAnswers);
+        return new SearchSurveyAnswerResponse(surveyId, answerValues);
     }
 
     public void validateSurveyAnswers(Survey survey, List<SubmitSurveyAnswer> answers) {
@@ -109,19 +113,5 @@ public class SurveyAnswerService {
                 }
             }
         }
-    }
-
-    private boolean filterAnswer(SurveyAnswerSubmission answer, SearchSurveyAnswerRequest request) {
-        // request에서 questionName과 answerValue가 없으면 통과
-        if (StringUtils.isEmpty(request.getQuestionName()) && StringUtils.isEmpty(request.getAnswerValue())) {
-            return true;
-        }
-
-        boolean matchesQuestionName = StringUtils.isEmpty(request.getQuestionName()) ||
-                                      answer.getSurveyQuestion().getItemName().equalsIgnoreCase(request.getQuestionName());
-        boolean matchesAnswerValue = StringUtils.isEmpty(request.getAnswerValue()) ||
-                                     answer.getAnswer().equalsIgnoreCase(request.getAnswerValue());
-
-        return matchesQuestionName && matchesAnswerValue;
     }
 }

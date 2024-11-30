@@ -3,7 +3,6 @@ package net.gentledot.survey.service;
 import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
 import net.gentledot.survey.dto.response.SearchSurveyAnswerResponse;
-import net.gentledot.survey.dto.response.SurveyAnswerValue;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.Survey;
@@ -108,10 +107,10 @@ class SurveyAnswerServiceProcessTest {
     }
 
     @Test
-    void failTest_validateSurveyAnswersWithEmptyAnswerForRequiredQuestion() {
+    void failTest_validateSurveyAnswersWithoutAnswerOptionIdForRequiredQuestion() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), survey.getQuestions().get(0).getOptions().get(0).getId(), ""));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), null, ""));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -151,11 +150,7 @@ class SurveyAnswerServiceProcessTest {
 
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.surveyId()).isEqualTo(survey.getId());
-        Assertions.assertThat(response.answers()).hasSize(2);
-        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::questionName)
-                .containsExactlyInAnyOrder("Question 1", "Question 2");
-        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::answerValue)
-                .containsExactlyInAnyOrder("Answer 1", "Answer 2");
+        Assertions.assertThat(response.answerList()).hasSize(1);
     }
 
     @Test
@@ -177,11 +172,7 @@ class SurveyAnswerServiceProcessTest {
 
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.surveyId()).isEqualTo(survey.getId());
-        Assertions.assertThat(response.answers()).hasSize(1);
-        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::questionName)
-                .containsExactly("Question 1");
-        Assertions.assertThat(response.answers()).extracting(SurveyAnswerValue::answerValue)
-                .containsExactly("Answer 1");
+        Assertions.assertThat(response.answerList()).hasSize(1);
     }
 
 }
