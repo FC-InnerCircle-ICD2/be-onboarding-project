@@ -13,6 +13,10 @@ import java.util.List;
 public class SurveyDto {
 
     /**
+     * 설문조사 아이디
+     */
+    private Long id;
+    /**
      * 설문조사 이름
      */
     private String name;
@@ -25,16 +29,17 @@ public class SurveyDto {
     /**
      * 설문조사 항목
      */
-    private List<SurveyItemDto> type;
+    private List<SurveyItemDto> surveyItemDtoList;
 
     public static SurveyDto from(Survey survey) {
         return new SurveyDto(survey);
     }
 
     private SurveyDto(Survey survey) {
+        this.id = survey.getId();
         this.name = survey.getName();
         this.description = survey.getDescription();
-        this.type = SurveyItem.convertToDto(survey.getSurveyItemList());
+        this.surveyItemDtoList = SurveyItem.convertToDto(survey.getSurveyItemList());
     }
 
 }

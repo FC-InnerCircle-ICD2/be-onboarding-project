@@ -3,6 +3,7 @@ package com.innercircle.surveryproject.modules.entity;
 import com.innercircle.surveryproject.modules.dto.SurveyItemDto;
 import com.innercircle.surveryproject.modules.enums.ItemType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,7 @@ public class SurveyItem {
     /**
      * 설문조사 유형
      */
+    @Enumerated(EnumType.STRING)
     private ItemType itemType;
 
     /**
@@ -60,6 +62,18 @@ public class SurveyItem {
 
     public static List<SurveyItemDto> convertToDto(List<SurveyItem> surveyItemList) {
         return surveyItemList.stream().map(SurveyItemDto::toDto).toList();
+    }
+
+    public static List<SurveyItem> convertToEntity(@NotNull List<SurveyItemDto> surveyItemDtoList) {
+        return surveyItemDtoList.stream().map(SurveyItem::toEntity).toList();
+    }
+
+    private static SurveyItem toEntity(SurveyItemDto surveyItemDto) {
+        return new SurveyItem(surveyItemDto);
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 
 }
