@@ -2,7 +2,7 @@ package com.ic.surveyapi.form.controller.dto
 
 import survey.type.ItemType
 
-data class SurveyCreateRequest(
+data class SurveyFormCreateRequest(
     val title: String,
     val description: String,
     val surveyItems: List<SurveyItem>,

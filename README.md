@@ -1,10 +1,10 @@
 # API Endpoints
 
-| Method | Endpoint                     | Description        |
-|--------|------------------------------|--------------------|
-| GET    | `/api/v1/surveys/{surveyId}` | 특정 설문 조사를 조회       |
-| POST   | `/api/v1/surveys`            | 설문 조사를 생성          |
-| PATCH  | `/api/v1/surveys/{surveyId}` | 특정 설문 조사의 정보를 업데이트 |
+| Method | Endpoint                               | Description |
+|--------|----------------------------------------|-----------|
+| GET    | `/api/v1/surveys/{surveyId}`           | 특정 설문 조사를 조회 |
+| POST   | `/api/v1/surveys`                      | 설문 조사를 생성 및 버저닝 |
+| POST   | `/api/v1/surveys/{surveyId}/responses` | 설문 조사 응답  |
 
 # 이너써클 BE 온보딩 프로젝트
 

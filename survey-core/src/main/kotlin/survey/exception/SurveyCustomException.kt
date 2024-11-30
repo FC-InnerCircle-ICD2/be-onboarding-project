@@ -1,11 +1,11 @@
 package survey.exception
 
-sealed class CustomException private constructor(
+sealed class SurveyCustomException private constructor(
     override val message: String,
     override val cause: Throwable?,
 ) : RuntimeException(message, cause) {
-    class SurveyException(
+    class SurveyExceptionSurvey private constructor(
         message: String = "Runtime Exception occurred.",
         cause: Throwable? = null,
-    ) : CustomException(message = message, cause = cause)
+    ) : SurveyCustomException(message = message, cause = cause)
 }

@@ -1,6 +1,6 @@
 package com.ic.surveyapi.form.service.dto
 
-data class SurveyCreateRequestDto(
+data class SurveyFormCreateRequestDto(
     val title: String,
     val description: String,
     val surveyItems: List<SurveyItem>,
