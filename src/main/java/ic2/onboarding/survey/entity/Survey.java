@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -79,12 +83,21 @@ public class Survey extends BaseEntity {
 
     public void submitForm(List<SurveySubmissionItem> submissionItems) {
 
-        // 제출한 단일선택 항목들
-        List<Long> choices = submissionItems.stream()
-                .filter(submissionItem -> submissionItem.getSurveyItem().isSingleChoice())
-                .map(submissionItem -> submissionItem.getSurveyItem().getId())
-                .toList();
+        // 다중선택 항목을 제외한 항목을 2개 이상 제출했는지 검사
+        submissionItems.stream()
+                .filter(not(submissionItem -> submissionItem.getSurveyItem().isMultipleChoice())) // 다중선택 항목 제외
+                .collect(groupingBy(
+                        // 제출 항목에 해당하는 항목 ID
+                        submissionItem -> submissionItem.getSurveyItem().getId(),
+                        // 항목 ID 카운팅
+                        counting()))
+                .forEach((itemId, count) -> {
+                    if (count >= 2) {
+                        throw new BizException(ErrorCode.NOT_VALIDATED);
+                    }
+                });
 
+        // 항목별 검사
         submissionItems.forEach(submissionItem -> {
             SurveyItem surveyItem = submissionItem.getSurveyItem();
 
@@ -101,19 +114,6 @@ public class Survey extends BaseEntity {
 
             // 선택 가능한 옵션 중 하나에 포함되는 답변인가?
             if (!surveyItem.containsChoice(answer)) {
-                throw new BizException(ErrorCode.NOT_VALIDATED);
-            }
-
-            if (surveyItem.isMultipleChoice()) {
-                return;
-            }
-
-            // 단일선택 타입이 1개 초과인지 검사
-            long count = choices.stream()
-                    .filter(itemId -> surveyItem.getId().equals(itemId))
-                    .count();
-
-            if (count > 1) {
                 throw new BizException(ErrorCode.NOT_VALIDATED);
             }
         });
