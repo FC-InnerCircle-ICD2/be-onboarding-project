@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.brinst.surveycommon.config.GlobalException;
 import org.brinst.surveycommon.dto.AnswerDTO;
 import org.brinst.surveycommon.dto.SurveyDTO;
+import org.brinst.surveycommon.dto.SurveyItemDTO;
 import org.brinst.surveycommon.enums.ErrorCode;
 import org.springframework.util.CollectionUtils;
 
@@ -39,7 +40,7 @@ public class SurveyVersion {
 	@OneToMany(mappedBy = "surveyVersion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SurveyQuestion> surveyQuestions = new ArrayList<>();
 
-	public SurveyVersion(int version, List<SurveyDTO.ItemDTO> items, Survey survey) {
+	public SurveyVersion(int version, List<SurveyItemDTO> items, Survey survey) {
 		this.version = version;
 		this.survey = survey;
 		if (!CollectionUtils.isEmpty(items)) {

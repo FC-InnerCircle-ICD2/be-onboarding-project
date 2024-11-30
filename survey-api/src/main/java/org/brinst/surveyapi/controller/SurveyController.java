@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.brinst.surveycommon.dto.AnswerDTO;
 import org.brinst.surveycommon.dto.SurveyDTO;
-import org.brinst.surveycore.entity.Survey;
 import org.brinst.surveycore.service.SurveyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -16,7 +16,7 @@ public class SurveyDTO {
 	public static class ReqDTO {
 		private String name;
 		private String description;
-		private List<ItemDTO> itemList;
+		private List<SurveyItemDTO> itemList;
 	}
 
 	@Getter

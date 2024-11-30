@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.brinst.surveycommon.config.GlobalException;
 import org.brinst.surveycommon.dto.SurveyDTO;
+import org.brinst.surveycommon.dto.SurveyItemDTO;
 import org.brinst.surveycommon.enums.ErrorCode;
 import org.brinst.surveycommon.enums.OptionType;
 import org.springframework.util.CollectionUtils;
@@ -45,15 +46,15 @@ public class SurveyQuestion {
 	@OneToMany(mappedBy = "surveyQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AnswerItem> answerItems = new ArrayList<>();
 
-	public SurveyQuestion(SurveyDTO.ItemDTO itemDTO, SurveyVersion surveyVersion) {
+	public SurveyQuestion(SurveyItemDTO itemDTO, SurveyVersion surveyVersion) {
 		this.name = itemDTO.getName();
 		this.description = itemDTO.getDescription();
-		this.optionType = itemDTO.getType();
+		this.optionType = itemDTO.getOptionType();
 		this.required = itemDTO.isRequired();
 		this.surveyVersion = surveyVersion;
-		if (!CollectionUtils.isEmpty(itemDTO.getOptions())) {
-			this.surveyOptions.addAll(itemDTO.getOptions().stream().map(option
-				-> new SurveyOption(option, this)).toList());
+
+		if (createYNByType(itemDTO.getType())) {
+			addSurveyOptions(itemDTO.getOptions());
 		}
 	}
 
@@ -96,6 +97,20 @@ public class SurveyQuestion {
 			if ((answers.isEmpty() || !validOptions.containsAll(answers))) {
 				throw new IllegalArgumentException("Invalid multiple choice answers.");
 			}
+		}
+	}
+
+	private boolean createYNByType(OptionType optionType) {
+		return optionType == OptionType.SINGLE_CHOICE || optionType == OptionType.MULTIPLE_CHOICE;
+	}
+
+	private void addSurveyOptions(List<String> options) {
+		if (!CollectionUtils.isEmpty(options)) {
+			this.surveyOptions.addAll(
+				options.stream()
+					.map(option -> new SurveyOption(option, this))
+					.toList()
+			);
 		}
 	}
 }
