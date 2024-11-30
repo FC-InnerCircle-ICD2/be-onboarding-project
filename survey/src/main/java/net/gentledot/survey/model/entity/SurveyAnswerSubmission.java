@@ -1,10 +1,12 @@
 package net.gentledot.survey.model.entity;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.gentledot.survey.model.entity.common.AnswerConverter;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +39,8 @@ public class SurveyAnswerSubmission {
     @JoinColumn(name = "survey_question_option_id")
     private SurveyQuestionOption surveyQuestionOption;
 
+    @Lob
+    @Convert(converter = AnswerConverter.class)
     private String answer;
 
     public static SurveyAnswerSubmission of(SurveyQuestion surveyQuestion, SurveyQuestionOption surveyQuestionOption, String answer) {
