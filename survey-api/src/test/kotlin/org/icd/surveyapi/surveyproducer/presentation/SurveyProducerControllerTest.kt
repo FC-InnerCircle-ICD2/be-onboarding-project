@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class SurveyProducerControllerTest : BaseControllerTest() {
     @MockitoBean
     private lateinit var surveyProducerService: SurveyProducerService
+
     @Test
     fun postSurvey() {
         val request = createPostSurveyRequest()
@@ -51,6 +52,7 @@ class SurveyProducerControllerTest : BaseControllerTest() {
                     fieldWithPath("items[].description").description("항목의 설명").optional(),
                     fieldWithPath("items[].itemType").description("항목 유형"),
                     fieldWithPath("items[].options").description("선택지 옵션").optional(),
+                    fieldWithPath("items[].isRequired").description("항목 필수 응답 여부"),
                 ),
                 responseFields(
                     fieldWithPath("id").description("설문조사의 ID")
@@ -64,6 +66,7 @@ class SurveyProducerControllerTest : BaseControllerTest() {
             ),
         ).andExpect(status().isOk)
     }
+
     @Test
     fun `mocking이 정상적으로 동작한다`() {
         val response = createGetSurveyResponse()
@@ -72,6 +75,7 @@ class SurveyProducerControllerTest : BaseControllerTest() {
         val result = surveyProducerService.getSurvey(1L)
         assertThat(result).isEqualTo(response)
     }
+
     @Test
     fun getSurvey() {
         val response = createGetSurveyResponse()
@@ -98,7 +102,8 @@ class SurveyProducerControllerTest : BaseControllerTest() {
                     fieldWithPath("items[].name").description("항목의 이름"),
                     fieldWithPath("items[].description").description("항목의 설명").optional(),
                     fieldWithPath("items[].itemType").description("항목 유형"),
-                    fieldWithPath("items[].options[]").description("선택지 옵션").optional()
+                    fieldWithPath("items[].options[]").description("선택지 옵션").optional(),
+                    fieldWithPath("items[].isRequired").description("항목 필수 응답 여부"),
                 ),
                 ExceptionSnippet(
                     listOf(

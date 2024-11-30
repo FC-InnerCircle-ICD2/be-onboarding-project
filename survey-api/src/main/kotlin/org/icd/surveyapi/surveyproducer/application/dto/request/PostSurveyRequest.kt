@@ -25,6 +25,7 @@ data class PostSurveyItemRequest(
     val description: String? = null,
     val itemType: ItemType?,
     val options: List<String>? = null,
+    val isRequired: Boolean?
 ) {
     fun toSurveyItem(survey: Survey): SurveyItem {
         return SurveyItem.of(
@@ -33,6 +34,7 @@ data class PostSurveyItemRequest(
             name = name.extract("name"),
             description = description,
             itemType = itemType.extract("itemType"),
+            isRequired = isRequired.extract("isRequired")
         )
     }
 

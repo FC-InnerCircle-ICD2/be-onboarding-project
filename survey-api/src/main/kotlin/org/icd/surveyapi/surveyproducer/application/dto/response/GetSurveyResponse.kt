@@ -27,6 +27,7 @@ data class GetSurveyItemResponse(
     val description: String?,
     val itemType: ItemType,
     val options: List<String> = listOf(),
+    val isRequired: Boolean,
 ) {
     constructor(surveyItem: SurveyItem) : this(
         id = surveyItem.id,
@@ -36,5 +37,6 @@ data class GetSurveyItemResponse(
         description = surveyItem.description,
         itemType = surveyItem.itemType,
         options = surveyItem.options.map { it.name },
+        isRequired = surveyItem.isRequired
     )
 }

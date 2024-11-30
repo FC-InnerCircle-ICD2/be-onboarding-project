@@ -33,6 +33,8 @@ class SurveyItem(
     val options: MutableList<SurveyItemOption> = mutableListOf(),
     @Comment("현재 사용 여부")
     val isActive: Boolean = true,
+    @Comment("필수 응답값 여부")
+    val isRequired: Boolean = true,
     @CreatedDate
     var createdAt: OffsetDateTime? = null,
     @LastModifiedDate
@@ -45,6 +47,7 @@ class SurveyItem(
             name: String,
             description: String?,
             itemType: ItemType,
+            isRequired: Boolean,
         ): SurveyItem {
             return SurveyItem(
                 survey = survey,
@@ -52,6 +55,7 @@ class SurveyItem(
                 name = name,
                 description = description,
                 itemType = itemType,
+                isRequired = isRequired,
             )
         }
     }

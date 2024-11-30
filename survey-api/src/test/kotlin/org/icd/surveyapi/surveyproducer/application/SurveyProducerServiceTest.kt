@@ -31,7 +31,8 @@ class SurveyProducerServiceTest : BaseUnitTest() {
             sequence = 1,
             name = "항목",
             description = "설명",
-            itemType = ItemType.SHORT_ANSWER
+            itemType = ItemType.SHORT_ANSWER,
+            isRequired = false
         )
         survey.addItem(surveyItem)
         return surveyRepository.save(survey).id

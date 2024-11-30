@@ -10,7 +10,14 @@ fun createInvalidSurveyItemCountExceptionPostSurveyRequest(): PostSurveyRequest 
     return PostSurveyRequest(
         name = "테스트 설문조사",
         description = "설문조사 작성 테스트",
-        items = (1..11).map { PostSurveyItemRequest(sequence = it, name = "$it", itemType = ItemType.SHORT_ANSWER) }
+        items = (1..11).map {
+            PostSurveyItemRequest(
+                sequence = it,
+                name = "$it",
+                itemType = ItemType.SHORT_ANSWER,
+                isRequired = true
+            )
+        }
     )
 }
 
@@ -23,12 +30,14 @@ fun createDuplicateSurveyItemSequencePostSurveyRequest(): PostSurveyRequest {
                 sequence = 1,
                 name = "1번 항목",
                 itemType = ItemType.SHORT_ANSWER,
+                isRequired = false
             ),
             PostSurveyItemRequest(
                 sequence = 1,
                 name = "2번 항목",
                 itemType = ItemType.MULTIPLE_CHOICE,
-                options = listOf("가", "나", "다", "라")
+                options = listOf("가", "나", "다", "라"),
+                isRequired = true
             ),
         )
     )
@@ -43,12 +52,14 @@ fun createPostSurveyRequest(): PostSurveyRequest {
                 sequence = 1,
                 name = "1번 항목",
                 itemType = ItemType.SHORT_ANSWER,
+                isRequired = true
             ),
             PostSurveyItemRequest(
                 sequence = 2,
                 name = "2번 항목",
                 itemType = ItemType.MULTIPLE_CHOICE,
-                options = listOf("가", "나", "다", "라")
+                options = listOf("가", "나", "다", "라"),
+                isRequired = false
             ),
         )
     )
@@ -63,7 +74,8 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             name = "항목",
             description = "설명",
             itemType = ItemType.MULTIPLE_CHOICE,
-            options = listOf("가", "나", "다")
+            options = listOf("가", "나", "다"),
+            isRequired = true
         )
     )
 )
