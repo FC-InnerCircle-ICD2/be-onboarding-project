@@ -37,7 +37,7 @@ public class ResponseItem extends BaseTime{
 
     @ManyToOne
     @JoinColumn(name = "response_id")
-    private Response<S> response;
+    private Response response;
 
     @ManyToOne
     @JoinColumn(name = "item_id")

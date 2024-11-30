@@ -10,7 +10,7 @@ public enum StatusEnum {
     SUCCESS(200, "Success", HttpStatus.OK)
     , INVALID_REQUEST(400, "Invalid Request", HttpStatus.BAD_REQUEST)
     , INTERNAL_SERVER_ERROR(500, "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR)
-    , NOT_FOUND(404, "Not Found", HttpStatus.NOT_FOUND)
+    , NOT_FOUND(404, "Not Found", HttpStatus.NOT_FOUND);
 
     private int code;
 
