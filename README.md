@@ -275,7 +275,7 @@
 ### 3. 설문조사 응답 제출 API
 > 설문조사 응답을 제출합니다.
 
-`POST` /api/v0/survey
+`POST` /api/v0/submission
 
 
 #### Response Body > SubmissionCreationRequest
@@ -357,7 +357,58 @@
 ```
 
 ### 4. 설문조사 응답 조회 API
+> 응답한 설문조사를 조회 합니다.
 
-- 요청 값에는 [설문조사 식별자]가 포함됩니다.
-- 해당 설문조사의 전체 응답을 조회합니다.
-- **(Advanced)** 설문 응답 항목의 이름과 응답 값을 기반으로 검색 할 수 있습니다.
+`POST` /api/v0/submission/{idx}
+
+| path variable | type            | description      |
+|-------------------|-----------------|------------------|
+| `idx`             | int             | 조회 할 설문조사 응답 고유값 |
+
+#### response example
+`200 OK`
+```JSON
+{
+  "code": "00000",
+  "message": "성공했습니다.",
+  "data": {
+    "idx": 1,
+    "name": "테스트 설문 이름",
+    "description": "테스트 설문 설명",
+    "answers": [
+      {
+        "idx": 1,
+        "name": "질문 1 : 단답형",
+        "description": "질문 1 설명",
+        "answer": "단답형"
+      },
+      {
+        "idx": 2,
+        "name": "질문 2 : 장문형",
+        "description": "질문 2 설명",
+        "answer": "장문형"
+      },
+      {
+        "idx": 3,
+        "name": "질문 3 : 단일 선택 리스트",
+        "description": "질문 3 설명",
+        "answer": "1"
+      },
+      {
+        "idx": 4,
+        "name": "질문 4 : 다중 선택 리스트",
+        "description": "질문 4 설명",
+        "answer": "3, 4"
+      }
+    ]
+  }
+}
+```
+`400 Bad Request`
+```JSON
+{
+    "code": "40013",
+    "message": "유효하지 않은 설문조사 식별자 입니다.",
+    "data": null
+}
+```

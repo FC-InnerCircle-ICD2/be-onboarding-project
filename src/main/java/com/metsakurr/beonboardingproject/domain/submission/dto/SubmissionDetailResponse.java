@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class DetailAnswerResponse {
+public class SubmissionDetailResponse {
     private long idx; // response idx
     private String name;
     private String description;
@@ -28,7 +28,7 @@ public class DetailAnswerResponse {
         }
     }
 
-    public DetailAnswerResponse(Submission submission) {
+    public SubmissionDetailResponse(Submission submission) {
         this.idx = submission.getIdx();
         this.name = submission.getSurvey().getName();
         this.description = submission.getSurvey().getDescription();

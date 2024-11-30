@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class SubmissionRepository {
@@ -22,19 +24,21 @@ public class SubmissionRepository {
         entityManager.persist(submission);
     }
 
-    public Submission findById(long idx) {
+    public Optional<Submission> findById(long idx) {
         QSubmission submission = QSubmission.submission;
         QSurvey survey = QSurvey.survey;
         QAnswer answer = QAnswer.answer;
         QQuestion question = QQuestion.question;
 
-        return queryFactory
-                .select(submission)
-                .from(submission)
-                .leftJoin(submission.survey, survey).fetchJoin()
-                .leftJoin(submission.answers, answer).fetchJoin()
-                .leftJoin(answer.question, question).fetchJoin()
-                .where(submission.idx.eq(idx))
-                .fetchOne();
+        return Optional.ofNullable(
+                queryFactory
+                        .select(submission)
+                        .from(submission)
+                        .leftJoin(submission.survey, survey).fetchJoin()
+                        .leftJoin(submission.answers, answer).fetchJoin()
+                        .leftJoin(answer.question, question).fetchJoin()
+                        .where(submission.idx.eq(idx))
+                        .fetchOne()
+        );
     }
 }

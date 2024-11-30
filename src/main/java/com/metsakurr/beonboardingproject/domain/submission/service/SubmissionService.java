@@ -1,10 +1,11 @@
 package com.metsakurr.beonboardingproject.domain.submission.service;
 
+import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
 import com.metsakurr.beonboardingproject.domain.submission.dto.SubmissionCreationRequest;
 import com.metsakurr.beonboardingproject.domain.submission.dto.SubmissionCreationResponse;
-import com.metsakurr.beonboardingproject.domain.submission.dto.DetailAnswerResponse;
+import com.metsakurr.beonboardingproject.domain.submission.dto.SubmissionDetailResponse;
 import com.metsakurr.beonboardingproject.domain.submission.entity.Answer;
 import com.metsakurr.beonboardingproject.domain.submission.entity.Submission;
 import com.metsakurr.beonboardingproject.domain.submission.repository.SubmissionRepository;
@@ -24,7 +25,7 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
 
     @Transactional
-    public SubmissionCreationResponse create(SubmissionCreationRequest request) {
+    public ApiResponse<SubmissionCreationResponse> create(SubmissionCreationRequest request) {
         long surveyIdx = request.getIdx();
         Survey survey = surveyRepository.findById(surveyIdx)
                 .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_SURVEY));
@@ -52,12 +53,14 @@ public class SubmissionService {
         });
 
         submissionRepository.save(submission);
-        return SubmissionCreationResponse.fromEntity(submission);
+        SubmissionCreationResponse response = SubmissionCreationResponse.fromEntity(submission);
+        return new ApiResponse<>(ResponseCode.SUCCESS, response);
     }
 
-    public DetailAnswerResponse detail(long idx) {
-        Submission response = submissionRepository.findById(idx);
-        DetailAnswerResponse detailAnswerResponse = new DetailAnswerResponse(response);
-        return detailAnswerResponse;
+    public ApiResponse<SubmissionDetailResponse> detail(long idx) {
+        Submission response = submissionRepository.findById(idx)
+                .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_SUBMISSION));
+        SubmissionDetailResponse detailAnswerResponse = new SubmissionDetailResponse(response);
+        return new ApiResponse<>(ResponseCode.SUCCESS, detailAnswerResponse);
     }
 }
