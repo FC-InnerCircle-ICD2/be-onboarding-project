@@ -4,6 +4,6 @@ import java.util.List;
 
 public record SearchSurveyAnswerResponse(
         String surveyId,
-        List<SurveyAnswerValue> answers
+        List<SurveyAnswerValue> answerList
 ) {
 }

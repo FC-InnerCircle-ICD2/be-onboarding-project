@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -54,9 +55,12 @@ public class SurveyController {
     }
 
     @GetMapping("/{surveyId}/answer/all")
-    public ResponseEntity<ServiceResponse<SearchSurveyAnswerResponse>> getAllSurveyAnswers(@PathVariable("surveyId") String surveyId,
-                                                                                           @RequestBody SearchSurveyAnswerRequest request) {
+    public ResponseEntity<ServiceResponse<SearchSurveyAnswerResponse>> getAllSurveyAnswersWithQuery(@PathVariable("surveyId") String surveyId,
+                                                                                                    @RequestParam(value = "questionName", required = false) String questionName,
+                                                                                                    @RequestParam(value = "answer", required = false) String answerValue) {
+        SearchSurveyAnswerRequest request = SearchSurveyAnswerRequest.fromRequest(surveyId, questionName, answerValue);
         SearchSurveyAnswerResponse surveyAnswers = surveyAnswerService.getSurveyAnswers(request);
         return ResponseEntity.ok(ServiceResponse.success(surveyAnswers));
     }
+
 }
