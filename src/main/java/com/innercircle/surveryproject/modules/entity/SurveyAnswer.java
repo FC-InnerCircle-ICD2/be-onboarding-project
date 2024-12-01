@@ -50,4 +50,8 @@ public class SurveyAnswer extends BaseEntity {
         return new SurveyAnswer(surveyCreateDto, surveyAnswerMap);
     }
 
+    public Long getSurveyId() {
+        return this.survey.getId();
+    }
+
 }

@@ -77,4 +77,8 @@ public class SurveyItem {
         return surveyItemDtoList.stream().map(SurveyItem::from).toList();
     }
 
+    public Long getSurveyId() {
+        return this.survey.getId();
+    }
+
 }
