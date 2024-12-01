@@ -1,4 +1,4 @@
-package com.ic.surveydata.entity.answer
+package com.ic.surveydata.answer.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

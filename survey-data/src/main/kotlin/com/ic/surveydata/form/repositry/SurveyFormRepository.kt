@@ -1,6 +1,6 @@
-package com.ic.surveydata.repository
+package com.ic.surveydata.form.repositry
 
-import com.ic.surveydata.entity.form.SurveyFormEntity
+import com.ic.surveydata.form.entity.SurveyFormEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository

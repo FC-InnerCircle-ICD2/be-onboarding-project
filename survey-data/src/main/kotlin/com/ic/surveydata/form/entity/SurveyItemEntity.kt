@@ -1,6 +1,6 @@
-package com.ic.surveydata.entity.form
+package com.ic.surveydata.form.entity
 
-import com.ic.surveydata.entity.BaseTimeEntity
+import com.ic.surveydata.BaseTimeEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

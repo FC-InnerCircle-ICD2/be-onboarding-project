@@ -1,4 +1,4 @@
-package com.ic.surveydata.service.dto
+package com.ic.surveydata.component.dto
 
 data class SurveyFormCreateDto(
     val test: String,

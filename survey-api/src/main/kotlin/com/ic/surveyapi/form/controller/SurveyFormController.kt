@@ -23,7 +23,7 @@ class SurveyFormController(
         @RequestBody surveyForm: SurveyFormCreateRequest,
     ): SurveyFormCreateResponse {
         val surveyEntity =
-            surveyFormService.createSurvey(
+            surveyFormService.createSurveyForm(
                 surveyForm = objectMapperUtil.convertClass(value = surveyForm, clazz = SurveyFormCreateRequestDto::class.java),
             )
         return SurveyFormCreateResponse(

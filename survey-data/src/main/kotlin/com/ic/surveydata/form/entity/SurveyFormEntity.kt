@@ -1,6 +1,6 @@
-package com.ic.surveydata.entity.form
+package com.ic.surveydata.form.entity
 
-import com.ic.surveydata.entity.BaseTimeEntity
+import com.ic.surveydata.BaseTimeEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -12,7 +12,7 @@ import jakarta.persistence.Version
 @Entity
 @Table(name = "survey_form")
 data class SurveyFormEntity(
-    // TODO - 코틀린에서 엔티티 생성 베스트 프랙티스를 확인이 필요 하다.
+    // TODO - 코틀린에서 엔티티 생성 베스트 프랙티스를 확인이 필요 하다. DB 컬럼 순서 맞추기 !
     @Id
     @Column(name = "id", unique = true, nullable = false)
     val id: String,
