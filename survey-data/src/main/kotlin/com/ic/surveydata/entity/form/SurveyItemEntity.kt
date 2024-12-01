@@ -1,5 +1,6 @@
 package com.ic.surveydata.entity.form
 
+import com.ic.surveydata.entity.BaseTimeEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -10,7 +11,6 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import survey.type.ItemType
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "survey_item")
@@ -31,9 +31,6 @@ data class SurveyItemEntity(
     val description: String,
     @Column(nullable = false, unique = false)
     val type: ItemType,
-    // TODO - 혹시 kotlinx.datetime 을 사용할 수 있는 방법을 찾아보자 ... !
-    @Column(name = "created_at", nullable = false, unique = false)
-    val createdAt: LocalDateTime = LocalDateTime.now(),
     @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
     val options: List<SurveyOptionEntity> = mutableListOf(),
-)
+): BaseTimeEntity()

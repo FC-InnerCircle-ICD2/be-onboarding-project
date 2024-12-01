@@ -6,9 +6,8 @@ import jakarta.persistence.Table
 
 
 @Entity
-@Table(name = "survey_answers")
+@Table(name = "survey_answer")
 data class SurveyAnswerEntity(
     @Id
     val id: String,
-
 )

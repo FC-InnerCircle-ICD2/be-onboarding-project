@@ -1,5 +1,6 @@
 package com.ic.surveydata.entity.form
 
+import com.ic.surveydata.entity.BaseTimeEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -7,7 +8,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.Version
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "survey_form")
@@ -25,6 +25,4 @@ data class SurveyFormEntity(
     @Version
     @Column(name = "version", nullable = false, unique = false)
     val version: Int,
-    @Column(name = "created_at", nullable = false, unique = false)
-    val createdAt: LocalDateTime = LocalDateTime.now(),
-)
+): BaseTimeEntity()
