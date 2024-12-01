@@ -1,15 +1,33 @@
 package com.ic.surveyapi.answer.controller.dto
 
+import com.ic.surveyapi.util.InputParameterValidator.validateOrThrow
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import survey.type.ItemType
 
 // TODO - 클래스 네이밍을 다시 고려 필요, 벨리데이션 처리가 필요
 data class SurveyAnswerRequest(
+    @field:Size(min = 1, max = 10, message = "유효한 항목 갯수는 1개에서 10개 사이 입니다.")
     val surveyItems: List<SurveyItem>,
 ) {
     data class SurveyItem(
+        @field:NotBlank(message = "Survey Answer Name 은 값이 유효 하여야 합니다.")
         val name: String,
         val type: ItemType,
         val answer: String? = null,
         val selectedOptions: List<String> = emptyList(),
-    )
+    ) {
+        init {
+            this.validateOrThrow()
+        }
+    }
 }
+
+
+
+
+
+
+
+
+

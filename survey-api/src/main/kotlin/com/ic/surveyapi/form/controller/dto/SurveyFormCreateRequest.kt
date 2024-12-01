@@ -1,17 +1,22 @@
 package com.ic.surveyapi.form.controller.dto
 
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import survey.type.ItemType
 
 data class SurveyFormCreateRequest(
+    @field:NotBlank
     val title: String,
+    @field:NotBlank
     val description: String,
+    @field:Size(min = 1, max = 10, message = "유효한 항목 갯수는 1개에서 10개 사이 입니다.")
     val surveyItems: List<SurveyItem>,
 ) {
-    // TODO - Mapping 은 Object Mapper 같은 유틸성 클래스를 만들어서 사용이 필요 !
-    // TODO - Validation 처리도 필요하다
     data class SurveyItem(
+        @field:NotBlank
         val name: String,
         val type: ItemType,
+        @field:NotBlank
         val description: String,
         val isRequired: Boolean,
         val options: List<ItemOption>,

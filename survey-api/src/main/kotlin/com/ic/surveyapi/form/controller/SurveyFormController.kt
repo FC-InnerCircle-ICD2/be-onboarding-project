@@ -5,6 +5,8 @@ import com.ic.surveyapi.form.controller.dto.SurveyFormCreateResponse
 import com.ic.surveyapi.form.service.SurveyFormService
 import com.ic.surveyapi.form.service.dto.SurveyFormCreateRequestDto
 import com.ic.surveyapi.util.ObjectMapperUtil
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -31,5 +33,12 @@ class SurveyFormController(
             title = surveyEntity.title,
             createdDateTime = surveyEntity.createdAt.toResponseDateTimeFormat(),
         )
+    }
+
+    @GetMapping("/{surveyTitle}")
+    fun getSurveyFormHistories(
+        @PathVariable(value = "surveyTitle", required = true) surveyTitle: String,
+    ) {
+
     }
 }
