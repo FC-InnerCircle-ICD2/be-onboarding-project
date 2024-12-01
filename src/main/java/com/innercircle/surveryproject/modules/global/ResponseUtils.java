@@ -1,4 +1,4 @@
-package com.innercircle.surveryproject.modules.dto;
+package com.innercircle.surveryproject.modules.global;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

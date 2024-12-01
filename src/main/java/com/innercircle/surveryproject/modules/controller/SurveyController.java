@@ -1,9 +1,9 @@
 package com.innercircle.surveryproject.modules.controller;
 
-import com.innercircle.surveryproject.modules.dto.ResponseUtils;
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyDto;
 import com.innercircle.surveryproject.modules.dto.SurveyUpdateDto;
+import com.innercircle.surveryproject.modules.global.ResponseUtils;
 import com.innercircle.surveryproject.modules.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

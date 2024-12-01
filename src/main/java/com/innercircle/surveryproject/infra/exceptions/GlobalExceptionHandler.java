@@ -1,6 +1,6 @@
 package com.innercircle.surveryproject.infra.exceptions;
 
-import com.innercircle.surveryproject.modules.dto.ResponseUtils;
+import com.innercircle.surveryproject.modules.global.ResponseUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

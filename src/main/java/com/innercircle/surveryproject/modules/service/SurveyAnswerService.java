@@ -1,9 +1,7 @@
 package com.innercircle.surveryproject.modules.service;
 
 import com.innercircle.surveryproject.infra.exceptions.InvalidInputException;
-import com.innercircle.surveryproject.modules.dto.SurveyAnswerCreateDto;
-import com.innercircle.surveryproject.modules.dto.SurveyAnswerDto;
-import com.innercircle.surveryproject.modules.dto.SurveyItemResponseDto;
+import com.innercircle.surveryproject.modules.dto.*;
 import com.innercircle.surveryproject.modules.entity.Survey;
 import com.innercircle.surveryproject.modules.entity.SurveyAnswer;
 import com.innercircle.surveryproject.modules.entity.SurveyItem;
@@ -36,9 +34,7 @@ public class SurveyAnswerService {
      */
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
-        try {
-            Long.valueOf(surveyAnswerCreateDto.getPhoneNumber());
-        } catch (NumberFormatException e) {
+        if (!Character.isDigit(Math.toIntExact(surveyAnswerCreateDto.getPhoneNumber()))) {
             throw new InvalidInputException("휴대폰 번호는 국가번호+전화번호를 포함한 숫자만 입력 가능합니다. ex) 8201012341234");
         }
 
@@ -50,8 +46,8 @@ public class SurveyAnswerService {
         Map<Long, String> surveyAnswerMap = new HashMap<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyAnswer =
-                surveyItemRepository.findBySurveyIdAndId(surveyAnswerCreateDto.getSurveyId(),
-                                                         surveyItemResponseDto.getSurveyItemId());
+                surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
+                                                          surveyItemResponseDto.getSurveyItemId());
 
             if (optionalSurveyAnswer.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
@@ -65,6 +61,45 @@ public class SurveyAnswerService {
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
+    }
+
+    /**
+     * 설문조사 항목 조회
+     *
+     * @param surveyAnswerId
+     * @return
+     */
+    public List<SurveyAnswerKeywordDto> retrieveSurveyAnswerKeywords(Long surveyAnswerId) {
+
+        Survey survey = surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
+
+        return survey.getSurveyItemList().stream().map(SurveyAnswerKeywordDto::from).toList();
+    }
+
+    /**
+     * 설문조사 응답 조회 메소드
+     *
+     * @param surveyAnswerId
+     * @param surveyItemId
+     * @param surveyItemAnswer
+     * @return
+     */
+    public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
+
+        Survey survey =
+            surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
+
+        // 조건에 따른 필터링
+        return survey.getSurveyAnswerList().stream()
+            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
+                .filter(entry -> (surveyItemId == null || entry.getKey().equals(surveyItemId)) &&
+                    (surveyItemAnswer == null || entry.getValue().equals(surveyItemAnswer)))
+                .map(entry -> SurveyAnswerResponseDto.of(surveyAnswer.getSurveyId(),
+                                                         surveyAnswer.getPhoneNumber(),
+                                                         entry.getKey(),
+                                                         entry.getValue()))
+            )
+            .toList();
     }
 
 }
