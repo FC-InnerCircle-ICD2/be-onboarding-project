@@ -12,6 +12,6 @@ import java.time.LocalDateTime
 abstract class BaseTimeEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdAt: LocalDateTime = LocalDateTime.MIN
+    var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 }

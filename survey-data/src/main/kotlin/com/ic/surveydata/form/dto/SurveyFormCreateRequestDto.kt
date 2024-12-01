@@ -1,4 +1,4 @@
-package com.ic.surveydata.component.dto
+package com.ic.surveydata.form.dto
 
 import com.ic.surveydata.form.entity.SurveyFormEntity
 import com.ic.surveydata.form.entity.SurveyItemEntity
@@ -6,7 +6,7 @@ import com.ic.surveydata.form.entity.SurveyOptionEntity
 import survey.type.ItemType
 import survey.util.UuidGeneratorUtil
 
-data class SurveyCreateRequestDto(
+data class SurveyFormCreateRequestDto(
     val title: String,
     val description: String,
     val surveyItems: List<SurveyItem>,
@@ -25,7 +25,7 @@ data class SurveyCreateRequestDto(
 }
 
 // TODO - 정리가 필요, 날라가는 쿼리 확인이 필요
-fun SurveyCreateRequestDto.toEntity(version: Int): SurveyFormEntity {
+fun SurveyFormCreateRequestDto.toEntity(version: Int): SurveyFormEntity {
     val surveyFormEntity =
         SurveyFormEntity(
             id = UuidGeneratorUtil.generateUuid(),

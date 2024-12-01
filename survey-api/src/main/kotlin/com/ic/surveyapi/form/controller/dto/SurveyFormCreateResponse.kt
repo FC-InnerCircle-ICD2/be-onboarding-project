@@ -1,6 +1,5 @@
 package com.ic.surveyapi.form.controller.dto
 
-
 data class SurveyFormCreateResponse(
     val id: String,
     val title: String,

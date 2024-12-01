@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.Version
 
+// TODO - toString() 순환 참조 문제 해결 필요 StackOverFlow 에러가 발생
 @Entity
 @Table(name = "survey_form")
 data class SurveyFormEntity(
@@ -25,4 +26,4 @@ data class SurveyFormEntity(
     @Version
     @Column(name = "version", nullable = false, unique = false)
     val version: Int,
-): BaseTimeEntity()
+) : BaseTimeEntity()

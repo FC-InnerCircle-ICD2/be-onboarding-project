@@ -19,4 +19,4 @@ data class SurveyOptionEntity(
     @ManyToOne
     @JoinColumn(name = "survey_item_id")
     val surveyItemEntity: SurveyItemEntity? = null,
-): BaseTimeEntity()
+) : BaseTimeEntity()

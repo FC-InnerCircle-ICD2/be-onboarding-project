@@ -6,30 +6,16 @@ Content-Type: application/json
 {
   "surveyItems": [
     {
-      "name": "좋아하는 음식",
-      "answer": "아무거나 다 좋아해 !",
+      "name": "item-name-1",
+      "answer": "",
       "selectedOptions": [
-        {
-          "name": "떡볶이"
-        },
-        {
-          "name": "피자"
-        },
-        {
-          "name": "치킨"
-        }
-      ]
+        "떡볶이",
+        "치킨",
+        "피자"
+      ],
+      "type": "MULTIPLE_SELECT"
     }
   ]
 }
 
 ###
-#data class SurveyAnswerRequest(
-#    val surveyItems: List<SurveyItem>,
-#) {
-#    data class SurveyItem(
-#        val name: String,
-#        val answer: String,
-#        val selectOptions: List<String> = emptyList(),
-#    )
-#}

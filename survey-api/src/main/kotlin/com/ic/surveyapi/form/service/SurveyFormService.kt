@@ -2,8 +2,8 @@ package com.ic.surveyapi.form.service
 
 import com.ic.surveyapi.form.service.dto.SurveyFormCreateRequestDto
 import com.ic.surveyapi.util.ObjectMapperUtil
+import com.ic.surveydata.form.SurveyFormDataHandler
 import com.ic.surveydata.form.entity.SurveyFormEntity
-import com.ic.surveydata.component.SurveyFormDataHandler
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +17,8 @@ class SurveyFormService(
             surveyForm =
                 objectMapperUtil.convertClass(
                     value = surveyForm,
-                    clazz = com.ic.surveydata.component.dto.SurveyCreateRequestDto::class.java,
+                    // TODO - 클래스명 다시 고민이 필요 !
+                    clazz = com.ic.surveydata.form.dto.SurveyFormCreateRequestDto::class.java,
                 ),
         )
     }
