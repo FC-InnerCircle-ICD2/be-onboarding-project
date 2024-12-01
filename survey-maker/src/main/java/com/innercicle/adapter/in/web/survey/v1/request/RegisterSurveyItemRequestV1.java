@@ -41,15 +41,13 @@ public class RegisterSurveyItemRequestV1 {
     private List<String> options;
 
     public RegisterSurveyItemCommandV1 mapToCommand() {
-        RegisterSurveyItemCommandV1 commandV1 = RegisterSurveyItemCommandV1.builder()
+        return RegisterSurveyItemCommandV1.builder()
             .item(this.item)
             .description(this.description)
             .type(this.type)
             .required(this.required)
             .options(this.options)
             .build();
-        commandV1.validateSelf();
-        return commandV1;
     }
 
 }

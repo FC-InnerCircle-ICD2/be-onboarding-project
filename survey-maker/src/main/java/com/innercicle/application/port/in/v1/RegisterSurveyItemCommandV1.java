@@ -4,17 +4,14 @@ import com.innercicle.SelfValidating;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyItemCommandV1> {
 
     /**
@@ -43,6 +40,29 @@ public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyIt
      */
     @NotNull(message = "설문 항목 선택지 목록은 필수 입니다.")
     private List<String> options;
+
+    @Builder(builderClassName = "RegisterSurveyItemCommandV1Builder", builderMethodName = "buildInternal")
+    public static RegisterSurveyItemCommandV1 create(String item,
+                                                     String description,
+                                                     InputType type,
+                                                     boolean required,
+                                                     List<String> options) {
+        return new RegisterSurveyItemCommandV1(item, description, type, required, options);
+    }
+
+    /**
+     * builder 호출 이후 validation 체크를 위한 build 메소드
+     */
+    public static class RegisterSurveyItemCommandV1Builder {
+
+        public RegisterSurveyItemCommandV1 build() {
+            RegisterSurveyItemCommandV1 registerSurveyCommandV1 =
+                create(item, description, type, required, options);
+            registerSurveyCommandV1.validateSelf();
+            return registerSurveyCommandV1;
+        }
+
+    }
 
     public SurveyItem mapToDomain() {
         return SurveyItem.builder()

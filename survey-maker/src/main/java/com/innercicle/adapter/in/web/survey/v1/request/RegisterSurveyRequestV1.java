@@ -19,7 +19,7 @@ public class RegisterSurveyRequestV1 {
      * 설문 명
      */
     private String name;
-    
+
     /**
      * 설문 설명
      */
@@ -31,15 +31,13 @@ public class RegisterSurveyRequestV1 {
     private List<RegisterSurveyItemRequestV1> items;
 
     public RegisterSurveyCommandV1 mapToCommand() {
-        RegisterSurveyCommandV1 commandV1 = RegisterSurveyCommandV1.builder()
+        return RegisterSurveyCommandV1.builder()
             .name(this.name)
             .description(this.description)
             .items(!CollectionUtils.isEmpty(this.items) ? this.items.stream()
                 .map(RegisterSurveyItemRequestV1::mapToCommand)
                 .toList() : null)
             .build();
-        commandV1.validateSelf();
-        return commandV1;
     }
 
 }
