@@ -70,6 +70,7 @@ public class SurveyService {
      * @param surveyId
      * @return
      */
+    @Transactional(readOnly = true)
     public SurveyDto retrieveSurvey(Long surveyId) {
 
         Survey survey =
