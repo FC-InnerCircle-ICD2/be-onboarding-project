@@ -2,6 +2,7 @@ package com.innercicle.adapter.in.web.survey.v1;
 
 import com.innercicle.adapter.in.web.survey.v1.request.RegisterSurveyItemRequestV1;
 import com.innercicle.adapter.in.web.survey.v1.request.RegisterSurveyRequestV1;
+import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.common.container.AbstractMvcTestContainer;
 import com.innercicle.domain.v1.InputType;
 import jakarta.validation.ConstraintViolationException;
@@ -42,6 +43,56 @@ class RegisterSurveyControllerV1Test extends AbstractMvcTestContainer {
             .andExpect(jsonPath("response.name").value(name))
             .andExpect(jsonPath("response.description").value(description))
             .andExpect(jsonPath("response.items").isArray())
+        ;
+    }
+
+    @Test
+    @DisplayName("설문 등록 실패 - single select 일 경우 선택지 1개 이상이어야 함")
+    void register_survey_fail_single_select() throws Exception {
+        String name = "설문";
+        String description = "설문 설명";
+        RegisterSurveyRequestV1 request = RegisterSurveyRequestV1.builder().name(name).description(description)
+            .items(List.of(RegisterSurveyItemRequestV1.builder().item("항목").description("항목 설명")
+                               .type(InputType.SINGLE_SELECT)
+                               .options(List.of(
+                                   "선택지1"))
+                               .build()))
+            .build();
+        this.mockMvc.perform(post("/api/v1/survey").contentType("application/json").content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andExpect(jsonPath("$.message").exists())
+            .andExpect(result -> {
+                Exception resolvedException = result.getResolvedException();
+                assertThat(resolvedException).isNotNull();
+                assertThat(resolvedException).isInstanceOf(RequiredFieldException.class);
+            })
+            .andExpect(jsonPath("$.message", containsString("일 경우 선택지는 2개 이상 입력해 주세요.")))
+        ;
+    }
+
+    @Test
+    @DisplayName("설문 등록 실패 - multi select 일 경우 선택지 1개 이상이어야 함")
+    void register_survey_fail_multi_select() throws Exception {
+        String name = "설문";
+        String description = "설문 설명";
+        RegisterSurveyRequestV1 request = RegisterSurveyRequestV1.builder().name(name).description(description)
+            .items(List.of(RegisterSurveyItemRequestV1.builder().item("항목").description("항목 설명")
+                               .type(InputType.MULTI_SELECT)
+                               .options(List.of(
+                                   "선택지1"))
+                               .build()))
+            .build();
+        this.mockMvc.perform(post("/api/v1/survey").contentType("application/json").content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andDo(print())
+            .andExpect(jsonPath("$.message").exists())
+            .andExpect(result -> {
+                Exception resolvedException = result.getResolvedException();
+                assertThat(resolvedException).isNotNull();
+                assertThat(resolvedException).isInstanceOf(RequiredFieldException.class);
+            })
+            .andExpect(jsonPath("$.message", containsString("일 경우 선택지는 2개 이상 입력해 주세요.")))
         ;
     }
 
