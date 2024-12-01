@@ -11,10 +11,12 @@ data class SurveyAnswerRequest(
     val surveyItems: List<SurveyItem>,
 ) {
     data class SurveyItem(
+        // TODO - name 중복 되면 안됨 !!
         @field:NotBlank(message = "Survey Answer Name 은 값이 유효 하여야 합니다.")
         val name: String,
         val type: ItemType,
         val answer: String? = null,
+        // TODO - Set 으로 변경하기 !
         val selectedOptions: List<String> = emptyList(),
     ) {
         init {
