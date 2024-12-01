@@ -1,4 +1,4 @@
-package com.practice.survey.domain.enums;
+package com.practice.survey.surveyItem.model.enums;
 
 public enum InputType {
     SHORT_TEXT,

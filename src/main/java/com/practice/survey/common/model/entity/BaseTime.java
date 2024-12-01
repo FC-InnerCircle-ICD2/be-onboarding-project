@@ -1,4 +1,4 @@
-package com.practice.survey.domain.entity;
+package com.practice.survey.common.model.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
