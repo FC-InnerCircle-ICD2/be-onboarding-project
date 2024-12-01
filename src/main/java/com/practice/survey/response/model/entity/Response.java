@@ -1,14 +1,11 @@
-package com.practice.survey.domain.entity;
+package com.practice.survey.response.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.practice.survey.common.model.entity.BaseTime;
+import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,13 +16,14 @@ import org.hibernate.annotations.CreationTimestamp;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Entity
-public class Response extends BaseTime {
+public class Response<S> extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "response_id", columnDefinition = "BIGINT")
     private Long responseId;
 
     @CreationTimestamp
@@ -37,8 +35,8 @@ public class Response extends BaseTime {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "version_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "version_id", nullable = false)
     private SurveyVersion version;
 
 }

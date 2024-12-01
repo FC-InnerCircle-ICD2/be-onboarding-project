@@ -1,11 +1,11 @@
-package com.practice.survey.domain.entity;
+package com.practice.survey.surveymngt.model.entity;
 
+import com.practice.survey.common.model.entity.BaseTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
 @Entity
 public class Survey extends BaseTime {
@@ -24,7 +24,7 @@ public class Survey extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long surveyId;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(columnDefinition = "TEXT")
