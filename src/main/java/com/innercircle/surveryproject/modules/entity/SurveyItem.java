@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -45,15 +46,23 @@ public class SurveyItem {
      */
     private Boolean required;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "survey_id")
     private Survey survey;
+
+    /**
+     * 항목 별 입력 내용
+     */
+    @ElementCollection
+    private List<String> itemContentList;
 
     public SurveyItem(SurveyItemDto surveyItemDto) {
         this.name = surveyItemDto.getName();
         this.description = surveyItemDto.getDescription();
         this.itemType = surveyItemDto.getItemType();
         this.required = surveyItemDto.getRequired();
+        this.itemContentList = surveyItemDto.getItemContentList();
     }
 
     public static SurveyItem from(SurveyItemDto surveyItemDto) {
@@ -65,15 +74,7 @@ public class SurveyItem {
     }
 
     public static List<SurveyItem> convertToEntity(@NotNull List<SurveyItemDto> surveyItemDtoList) {
-        return surveyItemDtoList.stream().map(SurveyItem::toEntity).toList();
-    }
-
-    private static SurveyItem toEntity(SurveyItemDto surveyItemDto) {
-        return new SurveyItem(surveyItemDto);
-    }
-
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
+        return surveyItemDtoList.stream().map(SurveyItem::from).toList();
     }
 
 }
