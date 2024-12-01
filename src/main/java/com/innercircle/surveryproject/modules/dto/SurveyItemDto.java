@@ -5,6 +5,8 @@ import com.innercircle.surveryproject.modules.enums.ItemType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 설문 받은 항목 dto
  */
@@ -32,11 +34,14 @@ public class SurveyItemDto {
      */
     private Boolean required;
 
+    private List<String> itemContentList;
+
     public SurveyItemDto(SurveyItem surveyItem) {
         this.name = surveyItem.getName();
         this.description = surveyItem.getDescription();
         this.itemType = surveyItem.getItemType();
         this.required = surveyItem.getRequired();
+        this.itemContentList = surveyItem.getItemContentList();
     }
 
     public static SurveyItemDto toDto(SurveyItem surveyItem) {
