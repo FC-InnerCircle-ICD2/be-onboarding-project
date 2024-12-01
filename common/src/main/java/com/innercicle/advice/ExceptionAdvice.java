@@ -1,5 +1,6 @@
 package com.innercicle.advice;
 
+import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.utils.ApiUtil;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class ExceptionAdvice {
 
     @ExceptionHandler({
         ConstraintViolationException.class,
+        RequiredFieldException.class
     })
     @ResponseStatus(BAD_REQUEST)
     public ApiUtil.ApiResult<Void> badRequest(Exception e) {

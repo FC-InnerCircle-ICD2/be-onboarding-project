@@ -1,6 +1,7 @@
 package com.innercicle.application.port.in.v1;
 
 import com.innercicle.SelfValidating;
+import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
 import jakarta.validation.constraints.NotNull;
@@ -40,6 +41,16 @@ public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyIt
      */
     @NotNull(message = "설문 항목 선택지 목록은 필수 입니다.")
     private List<String> options;
+
+    @Override
+    public void validateSelf() {
+        super.validateSelf();
+        if ((type == InputType.MULTI_SELECT || type == InputType.SINGLE_SELECT)
+            && (options == null || options.isEmpty()
+            || options.size() < 2)) {
+            throw new RequiredFieldException(this.type.getType() + "일 경우 선택지는 2개 이상 입력해 주세요.");
+        }
+    }
 
     @Builder(builderClassName = "RegisterSurveyItemCommandV1Builder", builderMethodName = "buildInternal")
     public static RegisterSurveyItemCommandV1 create(String item,
