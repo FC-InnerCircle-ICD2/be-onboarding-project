@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity(name = "option")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,10 +29,23 @@ public class Option {
 
     @Builder
     public Option(
-//            Question question,
             String name
     ) {
-//        this.question = question;
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        Option option = (Option) obj;
+
+        return Objects.equals(name, option.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idx, name);
     }
 }

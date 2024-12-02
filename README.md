@@ -219,55 +219,92 @@
 
 #### request example
 ```JSON
+// 1 변경안됨, 2 수정됨, 3 옵션만 변경, 4 삭제됨 
 {
-    "idx": 1,
-    "name": "겨울 방학 설문조사",
-    "description": "겨울 방학에 대한 계획을 조사하고 있습니다. ",
-    "questions": [
-        {
-            "idx": 1,
-            "name": "항목을 변경합니다.",
-            "description": "변경된 설문입니다.",
-            "questionType": "단일 선택 리스트",
-            "isRequired": true,
-            "options": [
-                {
-                    "name": "예"
-                },
-                {
-                    "name": "아니오"
-                }
-            ]
-        }
-    ] 
+  "idx": 1,
+  "name":"테스트 설문 이름(수정됨)",
+  "description":"테스트 설문 설명(수정됨)",
+  "questions":[
+    {
+      "idx": 1,
+      "name":"질문 1 : 단답형",
+      "description":"질문 1 설명",
+      "questionType":"SHORT_SENTENCE",
+      "isRequired": false,
+      "options":null
+    },
+    {
+      "idx": 2,
+      "name":"질문 2 : 다중 선택 리스트(수정됨)",
+      "description":"질문 2 설명 (수정됨)",
+      "questionType":"MULTI_CHOICE",
+      "isRequired": false,
+      "options":["예?", "예!", "아니요", "네니요!"]
+    },
+    {
+      "idx": 3,
+      "name":"질문 3 : 단일 선택 리스트",
+      "description":"질문 3 설명",
+      "questionType":"SINGLE_CHOICE",
+      "isRequired": false,
+      "options":["옵션변경"]
+    }
+  ]
 }
 ```
 
 #### response example
 ```JSON
 {
-    "code": "00000",
-    "message": "성공했습니다.",
-    "data": {
+  "code": "00000",
+  "message": "성공했습니다.",
+  "data": {
+    "idx": 1,
+    "name": "테스트 설문 이름(수정됨)",
+    "description": "테스트 설문 설명(수정됨)",
+    "questions": [
+      {
         "idx": 1,
-        "name": "겨울 방학 설문 조사",
-        "description": "겨울 방학 계획에 대해 조사하고 있습니다.",
-        "questions": [
-            {
-                "idx": 1,
-                "name": "항목을 변경합니다.",
-                "description": "변경된 설문입니다.",
-                "options": [
-                    {
-                        "name": "예"
-                    },
-                    {
-                        "name": "아니오"
-                    }
-                ]
-            }
+        "name": "질문 1 : 단답형",
+        "description": "질문 1 설명",
+        "options": []
+      },
+      {
+        "idx": 5,
+        "name": "질문 2 : 다중 선택 리스트(수정됨)",
+        "description": "질문 2 설명 (수정됨)",
+        "options": [
+          {
+            "idx": 7,
+            "name": "예?"
+          },
+          {
+            "idx": 8,
+            "name": "예!"
+          },
+          {
+            "idx": 9,
+            "name": "아니요"
+          },
+          {
+            "idx": 10,
+            "name": "네니요!"
+          }
         ]
-    }
+      },
+      {
+        "idx": 6,
+        "name": "질문 3 : 단일 선택 리스트",
+        "description": "질문 3 설명",
+        "options": [
+          {
+            "idx": 11,
+            "name": "옵션변경"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 

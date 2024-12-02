@@ -9,9 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Entity(name = "question")
 @Getter
@@ -46,10 +44,6 @@ public class Question extends BaseEntity {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Option> options = new ArrayList<>();
-
-    public void deleteFromSurvey() {
-        this.survey = null;
-    }
 
     public void addOptions(Option option) {
         this.options.add(option);
@@ -103,6 +97,21 @@ public class Question extends BaseEntity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Question question = (Question) obj;
+
+        if(!Objects.equals(name, question.getName())) return false;
+        if(!Objects.equals(description, question.getDescription())) return false;
+        if(questionType != question.getQuestionType()) return false;
+        if(isRequired != question.isRequired()) return false;
+
+        return new HashSet<>(options).equals(new HashSet<>(question.getOptions()));
     }
 }
 

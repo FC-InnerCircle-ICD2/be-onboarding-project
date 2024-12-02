@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Getter
 public class SurveyCreationResponse {
-    private long idx;
+    private Long idx;
     private String name;
     private String description;
     private List<QuestionResponse> questions;

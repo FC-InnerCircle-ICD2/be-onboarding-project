@@ -35,41 +35,9 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyIdx)
                 .orElseThrow(() -> new ServiceException(ResponseCode.NOT_FOUND_SURVEY));
 
-        List<Question> originalQuestions = survey.getQuestions();
-        List<QuestionRequest> newQuestions = request.getQuestions();
-
-        for (Question originalQuestion: originalQuestions) {
-            boolean isDelete = true;
-            for (QuestionRequest newQuestion: newQuestions) {
-                if (originalQuestion.getIdx().equals(newQuestion.getIdx())) {
-                    isDelete = false;
-                    // 업데이트
-                    originalQuestion.deleteFromSurvey();
-                    questionRepository.save(originalQuestion);
-
-                    Question question = newQuestion.toEntity();
-                    survey.addQuestion(question);
-                    questionRepository.save(question);
-                }
-            }
-
-            // 삭제
-            if (isDelete) {
-                originalQuestion.deleteFromSurvey();
-                questionRepository.save(originalQuestion);
-            }
-        }
-
-        for (QuestionRequest newQuestion: newQuestions) {
-            // 생성
-            if (newQuestion.getIdx() == null) {
-                Question question = newQuestion.toEntity();
-                survey.addQuestion(question);
-                questionRepository.save(question);
-            }
-        }
-
-        SurveyCreationResponse response = new SurveyCreationResponse(request.toEntity());
+        survey.update(request);
+        Survey newSurvey = surveyRepository.save(survey);
+        SurveyCreationResponse response = new SurveyCreationResponse(newSurvey);
         return new ApiResponse<>(ResponseCode.SUCCESS, response);
     }
 

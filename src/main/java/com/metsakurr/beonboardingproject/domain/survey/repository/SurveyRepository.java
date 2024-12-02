@@ -18,8 +18,9 @@ public class SurveyRepository {
     private final JPAQueryFactory queryFactory;
 
     @Transactional
-    public void save(Survey survey) {
+    public Survey save(Survey survey) {
         entityManager.persist(survey);
+        return survey;
     }
 
     public Optional<Survey> findById(long idx) {
