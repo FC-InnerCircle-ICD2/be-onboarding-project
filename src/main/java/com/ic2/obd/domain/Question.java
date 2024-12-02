@@ -34,7 +34,7 @@ public class Question {
      * @Column: 해당 필드를 데이터베이스의 컬럼으로 매핑
      * nullable=false: 이 컬럼은 NULL 값을 허용하지 않음
      */
-    @Column(nullable = false) 
+    @Column(name = "question_name", nullable = false) 
     private String questionName;
     
     private String questionDescription; // 질문 설명 (선택 사항)
