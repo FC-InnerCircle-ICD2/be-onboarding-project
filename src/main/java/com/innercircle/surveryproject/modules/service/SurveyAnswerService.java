@@ -10,6 +10,7 @@ import com.innercircle.surveryproject.modules.repository.SurveyItemRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class SurveyAnswerService {
      * @param surveyAnswerCreateDto
      * @return
      */
+    @Transactional
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
         if (!Character.isDigit(Math.toIntExact(surveyAnswerCreateDto.getPhoneNumber()))) {
@@ -69,6 +71,7 @@ public class SurveyAnswerService {
      * @param surveyAnswerId
      * @return
      */
+    @Transactional(readOnly = true)
     public List<SurveyAnswerKeywordDto> retrieveSurveyAnswerKeywords(Long surveyAnswerId) {
 
         Survey survey = surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
@@ -84,12 +87,12 @@ public class SurveyAnswerService {
      * @param surveyItemAnswer
      * @return
      */
+    @Transactional(readOnly = true)
     public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
 
         Survey survey =
             surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
 
-        // 조건에 따른 필터링
         return survey.getSurveyAnswerList().stream()
             .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
                 .filter(entry -> (surveyItemId == null || entry.getKey().equals(surveyItemId)) &&
