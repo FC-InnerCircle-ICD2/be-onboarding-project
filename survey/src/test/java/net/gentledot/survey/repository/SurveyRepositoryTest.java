@@ -2,9 +2,9 @@ package net.gentledot.survey.repository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import net.gentledot.survey.model.entity.Survey;
-import net.gentledot.survey.model.entity.SurveyQuestion;
-import net.gentledot.survey.model.entity.SurveyQuestionOption;
+import net.gentledot.survey.model.entity.surveybase.Survey;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import org.junit.jupiter.api.DisplayName;

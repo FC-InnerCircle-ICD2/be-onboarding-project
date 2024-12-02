@@ -1,6 +1,6 @@
 package net.gentledot.survey.repository;
 
-import net.gentledot.survey.model.entity.SurveyAnswer;
+import net.gentledot.survey.model.entity.surveyanswer.SurveyAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

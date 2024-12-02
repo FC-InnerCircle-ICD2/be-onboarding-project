@@ -1,4 +1,4 @@
-package net.gentledot.survey.model.entity;
+package net.gentledot.survey.model.entity.surveyanswer;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -16,6 +16,9 @@ import lombok.ToString;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
+import net.gentledot.survey.model.entity.surveybase.Survey;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
 import java.util.List;

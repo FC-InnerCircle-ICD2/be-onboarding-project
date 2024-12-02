@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import net.gentledot.survey.model.entity.SurveyAnswerSubmission;
-import net.gentledot.survey.model.entity.SurveyQuestion;
+import net.gentledot.survey.model.entity.surveyanswer.SurveyAnswerSubmission;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import org.apache.commons.lang3.StringUtils;
 

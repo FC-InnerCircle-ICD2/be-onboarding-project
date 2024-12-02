@@ -1,4 +1,4 @@
-package net.gentledot.survey.model.entity;
+package net.gentledot.survey.model.entity.surveyanswer;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.gentledot.survey.model.entity.common.AnswerConverter;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,13 +33,7 @@ public class SurveyAnswerSubmission {
     @JoinColumn(name = "survey_answer_id")
     private SurveyAnswer surveyAnswer;
 
-    @ManyToOne
-    @JoinColumn(name = "survey_question_id")
-    private SurveyQuestion surveyQuestion;
-
-    @ManyToOne
-    @JoinColumn(name = "survey_question_option_id")
-    private SurveyQuestionOption surveyQuestionOption;
+    SurveyQuestionSnapshot
 
     @Lob
     @Convert(converter = AnswerConverter.class)

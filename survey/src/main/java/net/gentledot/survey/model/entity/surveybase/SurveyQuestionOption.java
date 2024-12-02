@@ -1,4 +1,4 @@
-package net.gentledot.survey.model.entity;
+package net.gentledot.survey.model.entity.surveybase;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
