@@ -23,6 +23,12 @@ public enum StatusEnum {
 //    , SURVEY_VERSION_ALREADY_EXISTS(3008, "이미 존재하는 설문조사 버전입니다.", HttpStatus.BAD_REQUEST)
     , OPTION_REQUIRED(3009, "선택지를 입력해주세요.", HttpStatus.BAD_REQUEST)
     , OPTION_NOT_REQUIRED(3010, "선택지를 입력하지 않아도 됩니다.", HttpStatus.OK)
+
+
+    // 공통 Exception 7000대
+    , NOT_NULL_VIOLATE(7000, "널값이 들어갔습니다.")
+    , DATA_LENGTH_VIOLATE(7001, "데이터 길이가 지켜지지 않았습니다.")
+    , NOT_EMPTY_VIOLATE(7003, "빈값이 들어갔습니다.")
     ;
 
     private int code;
