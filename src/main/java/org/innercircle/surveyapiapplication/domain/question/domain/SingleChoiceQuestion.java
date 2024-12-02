@@ -2,8 +2,9 @@ package org.innercircle.surveyapiapplication.domain.question.domain;
 
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
+import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomExceptionStatus;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
 import java.util.List;
 
@@ -30,13 +31,23 @@ public class SingleChoiceQuestion extends Question {
         this.options = options;
     }
 
+    public SingleChoiceQuestion(String name, String description, boolean required, List<String> options) {
+        super(name, description, required);
+        this.options = options;
+    }
+
     @Override
     public void answer(Answer answer) {
         if (!options.contains(answer.getResponse())) {
-            throw new CustomException(CustomExceptionStatus.NOT_FOUND_QUESTION_OPTION);
+            throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_OPTION);
         }
         this.answer = answer;
         answer.setQuestionId(this.getId());
+    }
+
+    @Override
+    public QuestionType getType() {
+        return QuestionType.SINGLE_CHOICE_ANSWER;
     }
 
 }

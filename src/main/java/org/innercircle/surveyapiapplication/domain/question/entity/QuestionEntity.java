@@ -18,7 +18,7 @@ import org.innercircle.surveyapiapplication.domain.question.domain.ShortAnswerQu
 import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
 import org.innercircle.surveyapiapplication.global.entity.BaseEntity;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomExceptionStatus;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
 @Entity
 @Table(name = "questions")
@@ -52,18 +52,18 @@ public abstract class QuestionEntity extends BaseEntity {
 
     public static QuestionEntity from(Question question) {
         if (question instanceof ShortAnswerQuestion) {
-            return new ShortAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((ShortAnswerQuestion) question).getAnswer());
+            return new ShortAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
         }
         if (question instanceof LongAnswerQuestion) {
-            return new LongAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((LongAnswerQuestion) question).getAnswer());
+            return new LongAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
         }
         if (question instanceof SingleChoiceQuestion) {
-            return new SingleChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((SingleChoiceQuestion) question).getOptions(), ((SingleChoiceQuestion) question).getAnswer());
+            return new SingleChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((SingleChoiceQuestion) question).getOptions());
         }
         if (question instanceof MultiChoiceQuestion) {
-            return new MultiChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((MultiChoiceQuestion) question).getOptions(), ((MultiChoiceQuestion) question).getAnswers());
+            return new MultiChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((MultiChoiceQuestion) question).getOptions());
         }
-        throw new CustomException(CustomExceptionStatus.NOT_FOUND_QUESTION_FORMAT);
+        throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
     }
 
     public abstract Question toDomain();

@@ -2,6 +2,7 @@ package org.innercircle.surveyapiapplication.domain.question.domain;
 
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
+import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
 
 import java.util.Objects;
 
@@ -29,11 +30,19 @@ public abstract class Question {
         this.required = required;
     }
 
+    public Question(String name, String description, boolean required) {
+        this.name = name;
+        this.description = description;
+        this.required = required;
+    }
+
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
     }
 
     public abstract void answer(Answer answer);
+
+    public abstract QuestionType getType();
 
     @Override
     public boolean equals(Object o) {

@@ -9,7 +9,7 @@ import org.innercircle.surveyapiapplication.domain.question.domain.ShortAnswerQu
 import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomExceptionStatus;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,7 +197,7 @@ class SurveyServiceTest {
         assertThatThrownBy(() -> survey.addQuestions(questions))
             .isInstanceOf(CustomException.class)
             .extracting(e -> ((CustomException) e).getStatus())
-            .isEqualTo(CustomExceptionStatus.QUESTION_SIZE_FULL);
+            .isEqualTo(CustomResponseStatus.QUESTION_SIZE_FULL);
     }
 
 }

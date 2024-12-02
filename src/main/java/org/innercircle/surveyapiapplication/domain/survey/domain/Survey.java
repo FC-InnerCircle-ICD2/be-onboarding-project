@@ -3,7 +3,7 @@ package org.innercircle.surveyapiapplication.domain.survey.domain;
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomExceptionStatus;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +30,15 @@ public class Survey {
         this.description = description;
     }
 
+    public Survey(String name, String description, List<Question> questions) {
+        this.name = name;
+        this.description = description;
+        this.questions = questions;
+    }
+
     public Survey addQuestions(List<Question> questions) {
         if (this.questions.size() + questions.size() > 10) {
-            throw new CustomException(CustomExceptionStatus.QUESTION_SIZE_FULL);
+            throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
         }
         questions.forEach(this::addQuestion);
         return this;
@@ -40,7 +46,7 @@ public class Survey {
 
     public Survey addQuestion(Question question) {
         if (this.questions.size() >= 10) {
-            throw new CustomException(CustomExceptionStatus.QUESTION_SIZE_FULL);
+            throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
         }
         questions.add(question);
         question.setSurveyId(this.getId());

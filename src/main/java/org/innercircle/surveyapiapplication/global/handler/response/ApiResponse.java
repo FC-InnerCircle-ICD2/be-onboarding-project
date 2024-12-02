@@ -3,6 +3,7 @@ package org.innercircle.surveyapiapplication.global.handler.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
 @Getter
 @AllArgsConstructor
@@ -13,8 +14,9 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-    public static <T> ApiResponse<T> onSuccess(ResponseStatus status, T data) {
-        return new ApiResponse<>(status.getCode(), status.getMessage(), data);
+    public static <T> ApiResponse<T> onSuccess(T data) {
+        CustomResponseStatus success = CustomResponseStatus.SUCCESS;
+        return new ApiResponse<>(success.getCode(), success.getMessage(), data);
     }
 
     public static ApiResponse<Void> onError(ResponseStatus status) {

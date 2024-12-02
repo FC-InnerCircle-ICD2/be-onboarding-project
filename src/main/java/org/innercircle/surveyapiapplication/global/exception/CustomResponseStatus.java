@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CustomExceptionStatus implements ResponseStatus {
+public enum CustomResponseStatus implements ResponseStatus {
+
+    // success
+    SUCCESS(HttpStatus.OK, 1000, "요청 정상 처리되었습니다."),
 
     // survey exception
     NOT_FOUND_SURVEY(HttpStatus.NOT_FOUND, 2500, "해당 설문조사는 존재하지 않습니다."),

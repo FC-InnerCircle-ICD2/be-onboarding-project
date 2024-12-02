@@ -6,9 +6,11 @@ import org.innercircle.surveyapiapplication.domain.question.infrastructure.Quest
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.entity.SurveyEntity;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomExceptionStatus;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,15 +21,23 @@ public class SurveyRepositoryImpl implements SurveyRepository {
     private final QuestionRepository questionRepository;
 
     @Override
+    @Transactional
     public Survey save(Survey survey) {
-        return surveyJpaRepository.save(SurveyEntity.from(survey)).toDomain(survey.getQuestions());
+        SurveyEntity savedSurveyEntity = surveyJpaRepository.save(SurveyEntity.from(survey));
+        List<Question> questions = new ArrayList<>();
+        for (Question question: survey.getQuestions()) {
+            question.setSurveyId(savedSurveyEntity.getId());
+            Question savedQuestion = questionRepository.save(question);
+            questions.add(savedQuestion);
+        }
+        return savedSurveyEntity.toDomain(questions);
     }
 
     @Override
     public Survey findById(Long surveyId) {
         List<Question> questions = questionRepository.findBySurveyId(surveyId);
         return surveyJpaRepository.findById(surveyId)
-            .orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_SURVEY))
+            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY))
             .toDomain(questions);
     }
 

@@ -33,6 +33,11 @@ public class SingleChoiceQuestionEntity extends QuestionEntity {
         this.answerEntity = answerEntity;
     }
 
+    public SingleChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(name, description, required, surveyId);
+        this.options = options;
+    }
+
     @Override
     public SingleChoiceQuestion toDomain() {
         return new SingleChoiceQuestion(
@@ -41,8 +46,7 @@ public class SingleChoiceQuestionEntity extends QuestionEntity {
             this.getDescription(),
             this.isRequired(),
             this.getSurveyId(),
-            this.getOptions(),
-            this.getAnswerEntity().toDomain()
+            this.getOptions()
         );
     }
 

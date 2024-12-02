@@ -33,6 +33,11 @@ public class MultiChoiceQuestionEntity extends QuestionEntity {
         this.answerEntities = answerEntities;
     }
 
+    public MultiChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(name, description, required, surveyId);
+        this.options = options;
+    }
+
     @Override
     public MultiChoiceQuestion toDomain() {
         return new MultiChoiceQuestion(
@@ -41,8 +46,7 @@ public class MultiChoiceQuestionEntity extends QuestionEntity {
             this.getDescription(),
             this.isRequired(),
             this.getSurveyId(),
-            this.getOptions(),
-            this.getAnswerEntities().stream().map(AnswerEntity::toDomain).toList()
+            this.getOptions()
         );
     }
 

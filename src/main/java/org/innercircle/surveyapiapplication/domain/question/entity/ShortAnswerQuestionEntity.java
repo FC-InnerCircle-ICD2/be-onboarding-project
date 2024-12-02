@@ -23,6 +23,10 @@ public class ShortAnswerQuestionEntity extends QuestionEntity {
         this.answerEntity = answerEntity;
     }
 
+    public ShortAnswerQuestionEntity(String name, String description, boolean required, Long surveyId) {
+        super(name, description, required, surveyId);
+    }
+
     @Override
     public ShortAnswerQuestion toDomain() {
         return new ShortAnswerQuestion(
@@ -30,8 +34,7 @@ public class ShortAnswerQuestionEntity extends QuestionEntity {
             this.getName(),
             this.getDescription(),
             this.isRequired(),
-            this.getSurveyId(),
-            this.getAnswerEntity().toDomain()
+            this.getSurveyId()
         );
     }
 
