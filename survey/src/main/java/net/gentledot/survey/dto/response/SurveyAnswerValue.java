@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.gentledot.survey.model.entity.surveyanswer.SurveyAnswerSubmission;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
+import net.gentledot.survey.model.entity.surveyanswer.SurveyQuestionOptionSnapshot;
+import net.gentledot.survey.model.entity.surveyanswer.SurveyQuestionSnapshot;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,10 +27,8 @@ public class SurveyAnswerValue {
 
     public static SurveyAnswerValue of(Long answerId, List<SurveyAnswerSubmission> submittedAnswers, String questionName, String answerValue) {
         List<SurveyAnswerItem> answerItems = submittedAnswers.stream()
-                .filter(answer -> filterAnswer(answer, questionName, answerValue))
-                .collect(Collectors.groupingBy(submission -> submission.getSurveyQuestion().getId()))
-                .values().stream()
                 .map(SurveyAnswerValue::generateSurveyAnswerItem)
+                .filter(answer -> filterAnswer(answer, questionName, answerValue))
                 .collect(Collectors.toList());
         return new SurveyAnswerValue(
                 answerId,
@@ -37,31 +36,32 @@ public class SurveyAnswerValue {
         );
     }
 
-    private static SurveyAnswerItem generateSurveyAnswerItem(List<SurveyAnswerSubmission> surveyAnswerSubmissions) {
-        SurveyAnswerSubmission submission = surveyAnswerSubmissions.getFirst();
-        SurveyQuestion surveyQuestion = submission.getSurveyQuestion();
+    private static SurveyAnswerItem generateSurveyAnswerItem(SurveyAnswerSubmission answerSubmission) {
+        SurveyQuestionSnapshot surveyQuestionSnapshot = answerSubmission.getSurveyQuestionSnapshot();
+        List<SurveyQuestionOptionSnapshot> surveyQuestionOptionSnapshotList = answerSubmission.getSurveyQuestionOptionSnapshot();
         String answer;
-        if (SurveyItemType.MULTI_SELECT.equals(surveyQuestion.getItemType())
-            || SurveyItemType.SINGLE_SELECT.equals(surveyQuestion.getItemType())) {
-            answer = surveyAnswerSubmissions.stream()
-                    .map(surveyAnswerSubmission -> surveyAnswerSubmission.getSurveyQuestionOption().getOptionText())
+        if (SurveyItemType.MULTI_SELECT.equals(surveyQuestionSnapshot.getItemType())
+            || SurveyItemType.SINGLE_SELECT.equals(surveyQuestionSnapshot.getItemType())) {
+            answer = surveyQuestionOptionSnapshotList.stream()
+                    .filter(optionSnapshot -> Boolean.TRUE.equals(optionSnapshot.getAnswer()))
+                    .map(SurveyQuestionOptionSnapshot::getOptionText)
                     .collect(Collectors.joining(", "));
         } else {
-            answer = submission.getAnswer();
+            answer = surveyQuestionOptionSnapshotList.getFirst().getAnswer().toString();
         }
-        return new SurveyAnswerItem(surveyQuestion.getItemName(), answer);
+        return new SurveyAnswerItem(surveyQuestionSnapshot.getItemName(), answer);
     }
 
-    private static boolean filterAnswer(SurveyAnswerSubmission answer, String questionName, String answerValue) {
+    private static boolean filterAnswer(SurveyAnswerItem answer, String questionName, String answerValue) {
         // request에서 questionName과 answerValue가 없으면 통과
         if (StringUtils.isEmpty(questionName) && StringUtils.isEmpty(answerValue)) {
             return true;
         }
 
         boolean matchesQuestionName = StringUtils.isEmpty(questionName) ||
-                                      answer.getSurveyQuestion().getItemName().equalsIgnoreCase(questionName);
+                                      answer.questionName().equalsIgnoreCase(questionName);
         boolean matchesAnswerValue = StringUtils.isEmpty(answerValue) ||
-                                     answer.getAnswer().equalsIgnoreCase(answerValue);
+                                     answer.answerValue().contains(answerValue);
 
         return matchesQuestionName && matchesAnswerValue;
     }
