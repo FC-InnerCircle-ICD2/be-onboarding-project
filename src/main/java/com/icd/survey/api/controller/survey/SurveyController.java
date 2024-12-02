@@ -32,7 +32,7 @@ public class SurveyController {
     }
 
     @GetMapping("/{surveySeq}")
-    public ApiResponse<List<SurveyDto>> getSurveyAnswer(@PathVariable Long surveySeq) {
+    public ApiResponse<SurveyDto> getSurveyAnswer(@PathVariable Long surveySeq) {
         return new ApiResponse<>(surveyService.getSurveyAnswer(surveySeq));
     }
 

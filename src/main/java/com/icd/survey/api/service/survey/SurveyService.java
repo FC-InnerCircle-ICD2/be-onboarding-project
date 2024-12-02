@@ -59,7 +59,8 @@ public class SurveyService {
         survey.update(request.createSurveyDtoRequest());
 
         /* 기존의 설문조사 항목들 모두 disable 처리. */
-        surveyActionBusiness.disableItemList(surveySeq);
+        surveyActionBusiness.updateSurveyItemAsDisabled(surveySeq);
+        //surveyActionBusiness.disableItemList(surveySeq);
 
         /* 설문 조사 항목 save */
         surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
@@ -102,7 +103,7 @@ public class SurveyService {
 
     }
 
-    public List<SurveyDto> getSurveyAnswer(Long surveySeq) {
+    public SurveyDto getSurveyAnswer(Long surveySeq) {
         Survey survey = surveyQueryBusiness.findSurveyById(surveySeq)
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 

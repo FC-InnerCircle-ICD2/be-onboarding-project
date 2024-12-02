@@ -28,8 +28,8 @@ public class SurveyQueryBusiness {
     private final SurveyQueryRepository surveyQueryRepository;
 
 
-    public List<SurveyDto> getSurveyDto(Long surveySeq) {
-        return null;
+    public SurveyDto getSurveyDto(Long surveySeq) {
+        return surveyQueryRepository.getSurveyById(surveySeq);
     }
 
     public Optional<Survey> findSurveyById(Long surveySeq) {

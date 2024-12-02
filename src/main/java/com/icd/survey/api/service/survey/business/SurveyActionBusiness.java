@@ -16,6 +16,7 @@ import com.icd.survey.api.repository.survey.AnswerOptionRepository;
 import com.icd.survey.api.repository.survey.ItemAnswerRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
 import com.icd.survey.api.repository.survey.SurveyRepository;
+import com.icd.survey.api.repository.survey.query.SurveyQueryRepository;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class SurveyActionBusiness {
     private final AnswerOptionRepository answerOptionRepository;
 
     private final SurveyQueryBusiness surveyQueryBusiness;
+    private final SurveyQueryRepository surveyQueryRepository;
 
     public Survey saveSurvey(SurveyDto surveyDto) {
         return surveyRepository.save(Survey.createSurveyRequest(surveyDto));
@@ -46,6 +48,10 @@ public class SurveyActionBusiness {
 
     public ItemAnswerOption saveItemResponseOption(ItemAnswerOptionDto responseOptionDto) {
         return answerOptionRepository.save(ItemAnswerOption.createItemResponseOptionRequest(responseOptionDto));
+    }
+
+    public void updateSurveyItemAsDisabled(Long surveySeq){
+        surveyQueryRepository.updateSurveyItemAsDisabled(surveySeq);
     }
 
     public void disableItemList(Long surveySeq) {
