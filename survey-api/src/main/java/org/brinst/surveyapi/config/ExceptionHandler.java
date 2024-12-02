@@ -1,6 +1,6 @@
 package org.brinst.surveyapi.config;
 
-import org.brinst.surveycommon.config.GlobalException;
+import org.brinst.surveycommon.exception.GlobalException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
