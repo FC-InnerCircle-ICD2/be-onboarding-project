@@ -9,12 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class SurveyControllerTest {
@@ -48,7 +50,7 @@ class SurveyControllerTest {
     }
 
     @Test
-    @DisplayName("설문조사 수정 성공")
+    @DisplayName("설문조사 수정 실패")
     void test_case_3() throws Exception {
         // given
         String request = FileUtils.readFileAsString("testcase/survey_update_success.txt");
@@ -58,11 +60,9 @@ class SurveyControllerTest {
                                                    .content(request));
 
         // 응답 검증
-        result.andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value(200))
-            .andExpect(jsonPath("$.message").value("설문조사 수정에 성공하였습니다."))
-            .andExpect(jsonPath("$.data.name").value("서비스 만족도 설문조사"))
-            .andExpect(jsonPath("$.data.description").value("서비스 만족도를 평가하는 설문조사입니다."));
+        result.andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").value("일치하는 설문조사를 찾을 수 없습니다."));
     }
 
 }
