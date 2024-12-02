@@ -15,6 +15,7 @@ public enum AnswerType {
     DATE("DATE:", attribute -> new StringBuilder("DATE:").append(attribute).toString(), dbData -> LocalDate.parse(StringUtils.removeStart(dbData, "DATE:"), DateTimeFormatUtility.DEFAULT_DATE_FORMATTER)),
     DATE_TIME("TIME:", attribute -> new StringBuilder("TIME:").append(attribute).toString(), dbData -> LocalDateTime.parse(StringUtils.removeStart(dbData, "TIME:"), DateTimeFormatUtility.DEFAULT_DATE_TIME_FORMATTER)),
     FILE("FILE:", attribute -> new StringBuilder("FILE:").append(Base64.getEncoder().encodeToString((byte[]) attribute)).toString(), dbData -> Base64.getDecoder().decode(StringUtils.removeStart(dbData, "FILE:"))),
+    BOOLEAN("BOOL:", attribute -> new StringBuilder("BOOL:").append(attribute).toString(), dbData -> Boolean.parseBoolean(StringUtils.removeStart(dbData, "BOOL:"))),
     ;
 
     private String flag;

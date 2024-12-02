@@ -23,7 +23,8 @@ public class AnswerConverter implements AttributeConverter<Object, String> {
             case LocalDateTime localDateTimeAttribute ->
                     AnswerType.DATE_TIME.convertToDatabaseData(localDateTimeAttribute);
             case byte[] bytesAttribute -> AnswerType.FILE.convertToDatabaseData(bytesAttribute);
-            case null, default -> throw new SurveySubmitValidationException(ServiceError.SUBMIT_UNSUPPORTED_ATTRIBUTE);
+            case Boolean booleanAttribute -> AnswerType.BOOLEAN.convertToDatabaseData(booleanAttribute);
+            default -> throw new SurveySubmitValidationException(ServiceError.SUBMIT_UNSUPPORTED_ATTRIBUTE);
         };
     }
 
@@ -40,6 +41,8 @@ public class AnswerConverter implements AttributeConverter<Object, String> {
             return AnswerType.DATE_TIME.getConvertToEntity(dbData);
         } else if (dbData.startsWith(AnswerType.FILE.getFlag())) {
             return AnswerType.FILE.getConvertToEntity(dbData);
+        } else if (dbData.startsWith(AnswerType.BOOLEAN.getFlag())) {
+            return AnswerType.BOOLEAN.getConvertToEntity(dbData);
         }
         throw new SurveySubmitValidationException(ServiceError.SUBMIT_DATA_CONVERT_ERROR);
     }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Builder
 @ToString
 @Getter
@@ -13,6 +15,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class SubmitSurveyAnswer {
     private Long questionId;
-    private Long questionOptionId;
-    private String answer;
+    private List<String> answer;
 }

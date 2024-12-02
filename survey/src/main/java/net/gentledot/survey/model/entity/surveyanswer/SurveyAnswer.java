@@ -22,7 +22,7 @@ import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -44,31 +44,53 @@ public class SurveyAnswer {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "surveyAnswer")
     private List<SurveyAnswerSubmission> answers;
 
-    public static SurveyAnswer of(Survey survey, List<SubmitSurveyAnswer> answers) {
-        // SubmitSurveyAnswer -> SurveyAnswerSubmission
-        List<SurveyAnswerSubmission> answerSubmissions = answers.stream()
-                .map(answer -> {
-                    SurveyQuestion question = survey.getQuestions().stream()
-                            .filter(surveyQuestion -> surveyQuestion.getId().equals(answer.getQuestionId()))
-                            .findFirst()
-                            .orElseThrow(() -> new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_ID));
+    public static SurveyAnswer of(Survey survey, List<SubmitSurveyAnswer> submitSurveyAnswers) {
+        Map<Long, SurveyQuestion> surveyQuestionMap = survey.getQuestions()
+                .stream().collect(Collectors.toMap(
+                        SurveyQuestion::getId,
+                        question -> question));
 
-                    Optional<SurveyQuestionOption> questionOptionOptional = question.getOptions().stream()
-                            .filter(option -> option.getId().equals(answer.getQuestionOptionId()))
-                            .findFirst();
+        if (surveyQuestionMap.size() != submitSurveyAnswers.size()) {
+            throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_ID);
+        }
 
-                    if ((question.getItemType().equals(SurveyItemType.SINGLE_SELECT) ||
-                         question.getItemType().equals(SurveyItemType.MULTI_SELECT))
-                        && questionOptionOptional.isEmpty()) {
+        List<SurveyAnswerSubmission> answerSubmissions = submitSurveyAnswers.stream()
+                .map(submitSurveyAnswer -> {
+                    Long questionId = submitSurveyAnswer.getQuestionId();
+                    SurveyQuestion question = surveyQuestionMap.get(questionId);
+
+                    if (question == null) {
+                        throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_ID);
+                    }
+
+                    List<String> submitAnswers = submitSurveyAnswer.getAnswer();
+                    List<SurveyQuestionOption> questionOptions = question.getOptions();
+                    SurveyQuestionSnapshot questionSnapshot = SurveyQuestionSnapshot.from(question);
+
+                    if (questionOptions.size() != submitAnswers.size()) {
                         throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
                     }
 
-                    return SurveyAnswerSubmission.of(question, questionOptionOptional.orElse(null), answer.getAnswer());
+                    List<SurveyQuestionOptionSnapshot> collectedOptionSnapshots = null;
+
+                    if (question.getItemType() == SurveyItemType.SINGLE_SELECT ||
+                        question.getItemType() == SurveyItemType.MULTI_SELECT) {
+                        collectedOptionSnapshots = question.getOptions().stream()
+                                .filter(option -> submitAnswers.contains(option.getOptionText()))
+                                .map(option -> SurveyQuestionOptionSnapshot.of(option, true))
+                                .collect(Collectors.toList());
+                    } else {
+                        String answer = submitAnswers.isEmpty() ? null : submitAnswers.getFirst();
+                        collectedOptionSnapshots = question.getOptions().stream()
+                                .map(option -> SurveyQuestionOptionSnapshot.of(option, answer))
+                                .collect(Collectors.toList());
+                    }
+                    return SurveyAnswerSubmission.of(null, questionSnapshot, collectedOptionSnapshots);
                 })
                 .collect(Collectors.toList());
 
-        SurveyAnswer surveyResponse = new SurveyAnswer(null, survey, answerSubmissions);
-        answerSubmissions.forEach(answer -> answer.setSurveyAnswer(surveyResponse));
-        return surveyResponse;
+        SurveyAnswer surveyAnswer = new SurveyAnswer(null, survey, answerSubmissions);
+        answerSubmissions.forEach(submission -> submission.setSurveyAnswer(surveyAnswer));
+        return surveyAnswer;
     }
 }
