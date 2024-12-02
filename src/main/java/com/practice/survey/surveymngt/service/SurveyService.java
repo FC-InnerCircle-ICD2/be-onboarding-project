@@ -11,5 +11,5 @@ public interface SurveyService {
 
     public ApiResponse<StatusEnum> createSurvey(SurveyRequestDto surveyRequestDto);
 
-//    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto);
+    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto);
 }

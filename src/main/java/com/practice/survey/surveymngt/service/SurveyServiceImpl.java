@@ -71,24 +71,30 @@ public class SurveyServiceImpl implements SurveyService{
         SurveyVersion surveyVersion = saveSurveyVersion(survey, surveyVersionNumber);
 
         // 설문조사 항목 저장
-        saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion, surveyVersionNumber);
+        saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
 
         return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
     }
 
-//    @Override
-//    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException{
-//
-//        // 설문조사 이름 기반 설문조사 찾기
-//        Survey survey = surveyRepository.findByName(surveyRequestDto.getName());
-//
-//        // 해당 설문조사의 최대 버전 넘버 찾기
-//        int surveyVersionNumber = surveyVersionRepository.findMaxVersionNumberBySurveyId(survey.getSurveyId());
-//
-//
-//
-//        return null;
-//    }
+    @Override
+    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException{
+
+        // 설문조사 이름 기반 설문조사 찾기
+        Survey survey = surveyRepository.findByName(surveyRequestDto.getName());
+
+        // 해당 설문조사의 최대 버전 넘버 찾기
+        int surveyVersionNumber = surveyVersionRepository.findMaxVersionNumberBySurveyId(survey.getSurveyId());
+
+        // 최대 버전 넘버에 1을 더한 버전 넘버로 저장
+        SurveyVersion surveyVersion = saveSurveyVersion(survey, surveyVersionNumber+1);
+
+        List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos = surveyRequestDto.getSurveyItems();
+
+        // 설문조사 항목 저장
+        saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
+
+        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+    }
 
     private SurveyVersion saveSurveyVersion(Survey survey, int surveyVersionNumber){
 
@@ -100,7 +106,7 @@ public class SurveyServiceImpl implements SurveyService{
         return surveyVersionRepository.save(surveyVersion);
     }
 
-    private void saveSurveyItemAndOption(List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos, SurveyVersion surveyVersion, int order){
+    private void saveSurveyItemAndOption(List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos, SurveyVersion surveyVersion){
 
         for(int i=0; i<surveyItemSaveRequestDtos.size(); i++){
             SurveyItemSaveRequestDto itemDto = surveyItemSaveRequestDtos.get(i);
