@@ -1,6 +1,7 @@
 package net.gentledot.survey.model.entity;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,15 +45,12 @@ public class SurveyQuestion {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "surveyQuestion")
+    @ElementCollection
+    @CollectionTable(name = "survey_question_option", joinColumns = @JoinColumn(name = "survey_question_id"))
     private List<SurveyQuestionOption> options;
 
     public static SurveyQuestion of(String itemName, String itemDescription, SurveyItemType itemType, ItemRequired required, List<SurveyQuestionOption> options) {
-        SurveyQuestion surveyQuestion = new SurveyQuestion(null, itemName, itemDescription, itemType, required, null, options);
-        if (options != null) {
-            options.forEach(option -> option.setSurveyQuestion(surveyQuestion));
-        }
-        return surveyQuestion;
+        return new SurveyQuestion(null, itemName, itemDescription, itemType, required, null, options);
     }
 
     public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {

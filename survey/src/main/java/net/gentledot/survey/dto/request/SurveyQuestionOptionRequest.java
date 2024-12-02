@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.model.enums.AnswerType;
 
 @ToString
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SurveyQuestionOptionRequest {
-    private String option;
+    private String optionText;
+    private AnswerType answerType;
 }
