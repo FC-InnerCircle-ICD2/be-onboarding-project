@@ -1,4 +1,4 @@
-package com.innercircle.command.domain.survey.response;
+package com.innercircle.command.domain.survey;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,7 +15,7 @@ public class SurveyResponse {
 	private String id;
 	private String surveyId;
 
-	public SurveyResponse(String id, String surveyId) {
+	SurveyResponse(String id, String surveyId) {
 		this.id = id;
 		this.surveyId = surveyId;
 	}

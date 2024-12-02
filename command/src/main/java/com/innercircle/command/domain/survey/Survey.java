@@ -16,7 +16,7 @@ public class Survey {
 	private String name;
 	private String description;
 
-	public Survey(String id, String name, String description) {
+	Survey(String id, String name, String description) {
 		this.id = id;
 		this.name = name;
 		this.description = description;

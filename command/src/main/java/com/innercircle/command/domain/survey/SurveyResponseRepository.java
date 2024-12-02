@@ -1,4 +1,4 @@
-package com.innercircle.command.domain.survey.response;
+package com.innercircle.command.domain.survey;
 
 public interface SurveyResponseRepository {
 

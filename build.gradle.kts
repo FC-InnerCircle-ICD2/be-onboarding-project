@@ -26,6 +26,7 @@ subprojects {
         dependencies {
             dependency("org.springframework.boot:spring-boot-starter-data-jpa:3.4.0")
             dependency("org.springframework.boot:spring-boot-starter-web:3.4.0")
+            dependency("org.springframework.boot:spring-boot-starter-integration:3.4.0")
 
             dependency("org.projectlombok:lombok:1.18.36")
 

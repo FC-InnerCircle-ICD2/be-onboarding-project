@@ -15,5 +15,10 @@ spring:
       enabled: true
       path: /h2-console
 
+common:
+  messaging:
+    command:
+      enabled: true
+
 server:
   port: 10001

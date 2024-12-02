@@ -1,7 +1,7 @@
 package com.innercircle.command.infra.persistence;
 
-import com.innercircle.command.domain.survey.response.SurveyResponse;
-import com.innercircle.command.domain.survey.response.SurveyResponseRepository;
+import com.innercircle.command.domain.survey.SurveyResponse;
+import com.innercircle.command.domain.survey.SurveyResponseRepository;
 import com.innercircle.command.infra.persistence.generator.IdGenerator;
 import com.innercircle.command.infra.persistence.jparepository.SurveyResponseJpaRepository;
 import org.springframework.stereotype.Repository;
