@@ -2,10 +2,9 @@ package org.icd.surveyapi.surveyproducer.fixture
 
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyItemRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
-import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyItemOptionResponse
-import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyItemResponse
-import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponse
+import org.icd.surveyapi.surveyproducer.application.dto.response.*
 import org.icd.surveycore.domain.surveyItem.ItemType
+import java.time.OffsetDateTime
 
 fun createInvalidSurveyItemCountExceptionPostSurveyRequest(): PostSurveyRequest {
     return PostSurveyRequest(
@@ -67,7 +66,10 @@ fun createPostSurveyRequest(): PostSurveyRequest {
 }
 
 fun createGetSurveyResponse() = GetSurveyResponse(
-    id = 1, name = "테스트", description = "설명", items = listOf(
+    id = 1,
+    name = "테스트",
+    description = "설명",
+    items = listOf(
         GetSurveyItemResponse(
             id = 1,
             isActive = true,
@@ -76,11 +78,30 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             description = "설명",
             itemType = ItemType.MULTIPLE_CHOICE,
             options = listOf(
-                GetSurveyItemOptionResponse(1, "가"),
-                GetSurveyItemOptionResponse(2, "나"),
-                GetSurveyItemOptionResponse(3, "다")
+                GetSurveyItemOptionResponse(1, "가", true),
+                GetSurveyItemOptionResponse(2, "나", true),
+                GetSurveyItemOptionResponse(3, "다", false)
             ),
             isRequired = true
+        )
+    ),
+    responses = listOf(
+        GetSurveyResponseResponse(
+            id = 1,
+            createdAt = OffsetDateTime.now(),
+            items = listOf(
+                GetSurveyResponseItemResponse(
+                    itemId = 1,
+                    answer = null,
+                    itemOption = null,
+                    itemOptions = listOf(
+                        GetSurveyResponseItemOptionResponse(
+                            itemOptionId = 1,
+                            itemOptionName = "가"
+                        )
+                    )
+                )
+            )
         )
     )
 )

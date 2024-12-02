@@ -75,6 +75,7 @@ data class PostSurveyResponseItemRequest(
     fun toEntity(surveyResponse: SurveyResponse): SurveyResponseItem {
         return SurveyResponseItem.of(
             surveyResponse = surveyResponse,
+            surveyItemId = itemId,
             answer = answer,
             itemOptionId = itemOptionId,
             itemOptionIds = itemOptionIds

@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/v1/survey")
 class SurveyProducerController(
-    private val surveyService: SurveyProducerService
+    private val surveyProducerService: SurveyProducerService
 ) {
     @PostMapping
     fun postSurvey(@RequestBody request: PostSurveyRequest): PostSurveyResponse {
-        return surveyService.postSurvey(request)
+        return surveyProducerService.postSurvey(request)
     }
 
     @GetMapping("/{surveyId}")
     fun getSurvey(@PathVariable surveyId: Long): GetSurveyResponse {
-        return surveyService.getSurvey(surveyId)
+        return surveyProducerService.getSurvey(surveyId)
     }
 
 }
