@@ -5,9 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.survey.api.common.api.Api;
 import org.survey.api.domain.survey.business.SurveyBusiness;
-import org.survey.api.domain.survey.controller.model.SurveyBaseRequest;
-import org.survey.api.domain.survey.controller.model.SurveyBaseResponse;
-import org.survey.api.domain.survey.controller.model.SurveyListResponse;
+import org.survey.api.domain.survey.controller.model.*;
 
 import java.util.List;
 
@@ -45,8 +43,17 @@ public class SurveyController {
         return Api.OK(response);
     }
 
+    @PostMapping("/reply")
+    public Api<SurveyReplyListResponse> reply(
+            @Valid
+            @RequestBody Api<SurveyReplyListRequest> request
+    ){
+        var response = surveyBusiness.reply(request.getBody());
+        return Api.OK(response);
+    }
+
     @PostMapping("/find/survey")
-    public Api<SurveyBaseResponse> find(
+    public Api<SurveyBaseResponse> allSurveyFind(
             @Valid
             @RequestBody Api<Long> id
     ){
@@ -54,7 +61,16 @@ public class SurveyController {
         return Api.OK(response);
     }
 
-    @GetMapping("/find/all")
+    @PostMapping("/find/replyAll")
+    public Api<SurveyReplyListResponse> allReplyFind(
+            @Valid
+            @RequestBody Api<Long> id
+    ){
+        var response = surveyBusiness.replyAllFind(id.getBody());
+        return Api.OK(response);
+    }
+
+    @GetMapping("/find/baseAll")
     public Api<List<SurveyListResponse>> baseAllFind(){
         var response = surveyBusiness.baseAllFind();
         return Api.OK(response);

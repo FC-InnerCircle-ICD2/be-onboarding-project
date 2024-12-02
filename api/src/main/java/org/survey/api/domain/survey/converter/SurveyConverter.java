@@ -6,6 +6,7 @@ import org.survey.api.common.error.CommonErrorCode;
 import org.survey.api.common.exception.ApiException;
 import org.survey.api.domain.survey.controller.model.*;
 import org.survey.db.selectlist.SelectListEntity;
+import org.survey.db.surveyanswer.SurveyReplyEntity;
 import org.survey.db.surveybase.SurveyBaseEntity;
 import org.survey.db.surveyitem.SurveyItemEntity;
 
@@ -63,6 +64,23 @@ public class SurveyConverter {
                             .build();
                 })
                 .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SelectOptionRequest Null"))
+                ;
+    }
+
+    public SurveyReplyEntity toEntity(
+            SurveyReplyRequest request,
+            Long surveyId
+    ){
+        return Optional.ofNullable(request)
+                .map(it -> {
+                    return SurveyReplyEntity.builder()
+                            .id(request.getId())
+                            .surveyId(surveyId)
+                            .itemId(request.getItemId())
+                            .content(request.getContent())
+                            .build();
+                })
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyReplyRequest Null"))
                 ;
     }
 
@@ -126,6 +144,26 @@ public class SurveyConverter {
                 ;
     }
 
+    public SurveyReplyResponse toResponse(
+            SurveyReplyEntity surveyReplyEntity
+    ){
+        return Optional.ofNullable(surveyReplyEntity)
+                .map(it -> {
+                    return SurveyReplyResponse.builder()
+                            .id(surveyReplyEntity.getItemId())
+                            .surveyId(surveyReplyEntity.getSurveyId())
+                            .itemId(surveyReplyEntity.getItemId())
+                            .content(surveyReplyEntity.getContent())
+                            .status(surveyReplyEntity.getStatus())
+                            .registeredAt(surveyReplyEntity.getRegisteredAt())
+                            .modifiedAt(surveyReplyEntity.getModifiedAt())
+                            .unregisteredAt(surveyReplyEntity.getUnregisteredAt())
+                            .build();
+                })
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyReplyEntity Null"))
+                ;
+    }
+
     public SurveyListResponse toResponse(
             SurveyBaseEntity surveyBaseEntity
     ){
@@ -145,10 +183,18 @@ public class SurveyConverter {
                 ;
     }
 
-    public List<SurveyListResponse> toResponse(
+    public List<SurveyListResponse> toBaseListResponse(
             List<SurveyBaseEntity> surveyBaseEntityList
     ){
         return surveyBaseEntityList.stream()
+                .map(it -> toResponse(it))
+                .collect(Collectors.toList());
+    }
+
+    public List<SurveyReplyResponse> toReplyListResponse(
+            List<SurveyReplyEntity> surveyReplyEntityList
+    ){
+        return surveyReplyEntityList.stream()
                 .map(it -> toResponse(it))
                 .collect(Collectors.toList());
     }

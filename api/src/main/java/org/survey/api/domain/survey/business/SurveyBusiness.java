@@ -1,17 +1,23 @@
 package org.survey.api.domain.survey.business;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.survey.api.common.annotation.Business;
+import org.survey.api.common.error.SelectErrorCode;
+import org.survey.api.common.exception.ApiException;
 import org.survey.api.domain.survey.controller.model.*;
 import org.survey.api.domain.survey.converter.SurveyConverter;
 import org.survey.api.domain.survey.service.SurveyService;
 import org.survey.db.selectlist.SelectListEntity;
+import org.survey.db.surveyanswer.SurveyReplyEntity;
+import org.survey.db.surveybase.SurveyBaseEntity;
 import org.survey.db.surveyitem.ItemInputType;
 import org.survey.db.surveyitem.SurveyItemEntity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Business
@@ -20,6 +26,7 @@ public class SurveyBusiness {
     private final SurveyService surveyService;
     private final SurveyConverter surveyConverter;
 
+    @Transactional
     public SurveyBaseResponse register(SurveyBaseRequest request){
         var baseEntity = surveyConverter.toEntity(request);
         var newBaseEntity = surveyService.baseRegister(baseEntity);
@@ -46,6 +53,7 @@ public class SurveyBusiness {
         return response;
     }
 
+    @Transactional
     public SurveyBaseResponse find(Long id){
         var baseEntity = surveyService.baseFindById(id);
         var itemEntityList = surveyService.itemAllFind(baseEntity.getId());
@@ -69,6 +77,7 @@ public class SurveyBusiness {
         return response;
     }
 
+    @Transactional
     public SurveyBaseResponse updateAll(
             SurveyBaseRequest request
     ){
@@ -124,11 +133,55 @@ public class SurveyBusiness {
         return response;
     }
 
-    public List<SurveyListResponse> baseAllFind(){
-        var baseEntityList = surveyService.baseAllFind();
-        return surveyConverter.toResponse(baseEntityList);
+    @Transactional
+    public SurveyReplyListResponse reply(SurveyReplyListRequest surveyReplyListRequest){
+        SurveyBaseEntity surveyBaseEntity = surveyService.baseFindById(surveyReplyListRequest.getId());
+        List<SurveyReplyResponse> replies = new ArrayList<>();
+        for(SurveyReplyRequest surveyReplyRequest : surveyReplyListRequest.getReply()){
+            var surveyReplyEntity = surveyConverter.toEntity(surveyReplyRequest, surveyReplyListRequest.getId());
+            var surveyItem = surveyService.itemFindById(surveyReplyEntity.getItemId(), surveyReplyListRequest.getId());
+            if(surveyItem.getInputType() == ItemInputType.SINGLE_SELECT_LIST
+            || surveyItem.getInputType() == ItemInputType.MULTI_SELECT_LIST){
+                List<SelectListEntity> selectListEntityList = surveyService.selectListAllFind(
+                        surveyReplyListRequest.getId(), surveyReplyEntity.getItemId());
+                Set<String> contentHashSet = new HashSet<>();
+                for(SelectListEntity options : selectListEntityList){
+                    contentHashSet.add(options.getContent());
+                }
+                if(!contentHashSet.contains(surveyReplyRequest.getContent())){
+                    throw new ApiException(SelectErrorCode.NON_EXIST_REQUEST, "The request does not exist in the selection list.");
+                }
+            }
+            if(!(surveyItem.getInputType() == ItemInputType.MULTI_SELECT_LIST)){
+                List<SurveyReplyEntity> surveyReplyEntityList = surveyService.replyMultiFind(
+                        surveyReplyListRequest.getId(), surveyReplyEntity.getItemId());
+                if(surveyReplyEntityList.size() > 0){
+                    throw new ApiException(SelectErrorCode.DUPLICATE_REQUEST, "This is a duplicate request");
+                }
+            }
+            var newSurveyReplyEntity = surveyService.replyRegister(surveyReplyEntity);
+            var surveyReplyResponse = surveyConverter.toResponse(newSurveyReplyEntity);
+            replies.add(surveyReplyResponse);
+        }
+        var response = new SurveyReplyListResponse(surveyReplyListRequest.getId(), replies);
+        return response;
     }
 
+    @Transactional
+    public List<SurveyListResponse> baseAllFind(){
+        var baseEntityList = surveyService.baseAllFind();
+        return surveyConverter.toBaseListResponse(baseEntityList);
+    }
+
+    @Transactional
+    public SurveyReplyListResponse replyAllFind(Long id){
+        var replyEntityList = surveyService.replyAllFind(id);
+        var replyResponseList = surveyConverter.toReplyListResponse(replyEntityList);
+        var response = new SurveyReplyListResponse(id, replyResponseList);
+        return response;
+    }
+
+    @Transactional
     public SurveyListResponse deleteSurvey(Long id){
         var baseEntity = surveyService.baseDelete(id);
         return surveyConverter.toResponse(baseEntity);

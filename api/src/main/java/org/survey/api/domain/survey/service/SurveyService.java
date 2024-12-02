@@ -7,6 +7,8 @@ import org.survey.api.common.exception.ApiException;
 import org.survey.db.BaseStatus;
 import org.survey.db.selectlist.SelectListEntity;
 import org.survey.db.selectlist.SelectListRepository;
+import org.survey.db.surveyanswer.SurveyReplyEntity;
+import org.survey.db.surveyanswer.SurveyReplyRepository;
 import org.survey.db.surveybase.SurveyBaseEntity;
 import org.survey.db.surveybase.SurveyBaseRepository;
 import org.survey.db.surveyitem.SurveyItemEntity;
@@ -23,6 +25,7 @@ public class SurveyService {
     private final SurveyBaseRepository surveyBaseRepository;
     private final SurveyItemRepository surveyItemRepository;
     private final SelectListRepository selectListRepository;
+    private final SurveyReplyRepository surveyReplyRepository;
 
     public SurveyBaseEntity baseRegister(
             SurveyBaseEntity surveyBaseEntity
@@ -63,11 +66,24 @@ public class SurveyService {
                 ;
     }
 
+    public SurveyReplyEntity replyRegister(
+            SurveyReplyEntity surveyReplyEntity
+    ){
+        return Optional.ofNullable(surveyReplyEntity)
+                .map(it ->{
+                    surveyReplyEntity.setStatus(BaseStatus.REGISTERED);
+                    surveyReplyEntity.setRegisteredAt(LocalDateTime.now());
+                    return surveyReplyRepository.save(surveyReplyEntity);
+                })
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyReplyEntity Null"))
+                ;
+    }
+
     public SurveyBaseEntity baseFindById(
             Long id
     ){
         return surveyBaseRepository.findFirstByIdAndStatusOrderByIdDesc(id, BaseStatus.REGISTERED)
-                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyBaseEntity Null"));
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyBaseEntity not exist"));
     }
 
     public SurveyItemEntity itemFindById(
@@ -78,7 +94,7 @@ public class SurveyService {
                 id,
                 surveyId,
                 BaseStatus.REGISTERED)
-                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyItemEntity Null"));
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyItemEntity not exist"));
     }
 
     public SelectListEntity selectListFindById(
@@ -91,7 +107,20 @@ public class SurveyService {
                 surveyId,
                 itemId,
                 BaseStatus.REGISTERED)
-                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "selectListEntity Null"));
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "selectListEntity not exist"));
+    }
+
+    public SurveyReplyEntity replyFindById(
+            Long id,
+            Long surveyId,
+            Long itemId
+    ){
+        return surveyReplyRepository.findFirstByIdAndSurveyIdAndItemIdAndStatusOrderByIdDesc(
+                        id,
+                        surveyId,
+                        itemId,
+                        BaseStatus.REGISTERED)
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyReplyEntity Null"));
     }
 
     public List<SurveyBaseEntity> baseAllFind(){
@@ -114,6 +143,25 @@ public class SurveyService {
                 BaseStatus.REGISTERED);
     }
 
+    public List<SurveyReplyEntity> replyAllFind(
+            Long surveyId
+    ){
+        return surveyReplyRepository.findAllBySurveyIdAndStatusOrderByIdAscItemIdAsc(
+                surveyId,
+                BaseStatus.REGISTERED);
+    }
+
+    public List<SurveyReplyEntity> replyMultiFind(
+            Long surveyId,
+            Long itemId
+    ){
+        return surveyReplyRepository.findAllBySurveyIdAndItemIdAndStatusOrderByIdAsc(
+                surveyId,
+                itemId,
+                BaseStatus.REGISTERED);
+    }
+
+
     public SurveyBaseEntity baseDelete(Long id){
         var surveyBaseEntity = this.baseFindById(id);
         surveyBaseEntity.setStatus(BaseStatus.UNREGISTERED);
@@ -133,6 +181,13 @@ public class SurveyService {
         selectListEntity.setStatus(BaseStatus.UNREGISTERED);
         selectListEntity.setUnregisteredAt(LocalDateTime.now());
         return selectListRepository.save(selectListEntity);
+    }
+
+    public SurveyReplyEntity replyDelete(Long id, long surveyId, long itemId){
+        var surveyReplyEntity = this.replyFindById(id, surveyId, itemId);
+        surveyReplyEntity.setStatus(BaseStatus.UNREGISTERED);
+        surveyReplyEntity.setUnregisteredAt(LocalDateTime.now());
+        return surveyReplyRepository.save(surveyReplyEntity);
     }
 
     public SurveyBaseEntity baseUpdate(
@@ -206,4 +261,6 @@ public class SurveyService {
         newSelectListEntity.setModifiedAt(LocalDateTime.now());
         return selectListRepository.save(newSelectListEntity);
     }
+
+
 }

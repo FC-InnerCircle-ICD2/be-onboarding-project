@@ -1,29 +1,28 @@
 package org.survey.db.surveyanswer;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.survey.db.BaseEntity;
+import lombok.*;
 import org.survey.db.BaseStatus;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "survey_answer")
+@Table(name = "survey_reply")
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class SurveyAnswerEntity extends BaseEntity{
+@Builder
+@IdClass(SurveyReplyPK.class)
+public class SurveyReplyEntity{
 
-    @Column(nullable = false)
+    @Id
+    private Long id;
+
+    @Id
     private Long surveyId;
 
-    @Column(nullable = false)
+    @Id
     private Long itemId;
 
     @Column(nullable = false)
