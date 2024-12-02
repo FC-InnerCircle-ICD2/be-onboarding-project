@@ -34,10 +34,6 @@ public class Survey extends BaseEntity {
         Survey survey = new Survey(surveyId, name, description, surveyQuestions);
         surveyQuestions.forEach(surveyQuestion -> {
             surveyQuestion.setSurvey(survey);
-            List<SurveyQuestionOption> options = surveyQuestion.getOptions();
-            if (options != null) {
-                options.forEach(option -> option.setSurveyQuestion(surveyQuestion));
-            }
         });
         return survey;
     }
@@ -48,10 +44,6 @@ public class Survey extends BaseEntity {
         disconnectRelationFromSurvey(); // update 시 Survey와의 관계 끊기
         this.questions.clear();
         this.questions.addAll(surveyQuestions);
-        surveyQuestions.forEach(surveyQuestion -> {
-            surveyQuestion.setSurvey(this);
-            surveyQuestion.getOptions().forEach(option -> option.setSurveyQuestion(surveyQuestion));
-        });
     }
 
     private void disconnectRelationFromSurvey() {
