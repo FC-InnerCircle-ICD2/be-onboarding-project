@@ -80,36 +80,21 @@ public class SurveyAnswerService {
 
             SurveyQuestion question = questionMap.get(answer.getQuestionId());
 
-            // 2. questionOptionId가 유효한지 확인
-            if (question.getItemType() == SurveyItemType.SINGLE_SELECT || question.getItemType() == SurveyItemType.MULTI_SELECT) {
-                boolean optionExists = question.getOptions().stream()
-                        .anyMatch(option -> option.getId().equals(answer.getQuestionOptionId()));
-                if (!optionExists) {
-                    throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
-                }
-            }
-
-            // 3. answer가 비어 있는지 확인 (필수 항목)
+            // 2. answer가 비어 있는지 확인 (필수 항목)
             if (question.getRequired() == ItemRequired.REQUIRED) {
                 if (SurveyItemType.SINGLE_SELECT.equals(question.getItemType()) ||
                     SurveyItemType.MULTI_SELECT.equals(question.getItemType())) {
-                    if (answer.getQuestionOptionId() == null) {
-                        throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
+                    long optionCount = question.getOptions().stream()
+                            .filter(option -> answer.getAnswer().contains(option.getOptionText()))
+                            .count();
+
+                    if (optionCount != answer.getAnswer().size()) {
+                        throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
                     }
                 } else {
-                    if (StringUtils.isEmpty(answer.getAnswer())) {
+                    if (answer.getAnswer().isEmpty() || StringUtils.isBlank(answer.getAnswer().getFirst())) {
                         throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
                     }
-                }
-            }
-
-            // 4. SINGLE_SELECT 타입 - option이 없거나 2개 이상인 경우 확인
-            if (question.getItemType() == SurveyItemType.SINGLE_SELECT) {
-                long optionCount = answers.stream()
-                        .filter(a -> a.getQuestionId().equals(answer.getQuestionId()))
-                        .count();
-                if (optionCount != 1) {
-                    throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
                 }
             }
         }
