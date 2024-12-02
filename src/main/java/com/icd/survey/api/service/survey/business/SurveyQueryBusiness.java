@@ -4,10 +4,12 @@ import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
+import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.repository.survey.AnswerOptionRepository;
 import com.icd.survey.api.repository.survey.ItemAnswerRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
 import com.icd.survey.api.repository.survey.SurveyRepository;
+import com.icd.survey.api.repository.survey.query.SurveyQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,15 @@ public class SurveyQueryBusiness {
     private final SurveyItemRepository surveyItemRepository;
     private final ItemAnswerRepository itemAnswerRepository;
     private final AnswerOptionRepository answerOptionRepository;
+    private final SurveyQueryRepository surveyQueryRepository;
 
+
+    public List<SurveyDto> getSurveyDto(Long surveySeq) {
+        return null;
+    }
 
     public Optional<Survey> findSurveyById(Long surveySeq) {
         return surveyRepository.findById(surveySeq);
-    }
-
-    public Optional<List<SurveyItem>> findAllItemInfoBySurveySeq(Long surveySeq) {
-        return surveyItemRepository.findSurveyItemsWithAnswers(surveySeq);
     }
 
     public Optional<List<SurveyItem>> findItemAllBySurveySeq(Long surveySeq) {

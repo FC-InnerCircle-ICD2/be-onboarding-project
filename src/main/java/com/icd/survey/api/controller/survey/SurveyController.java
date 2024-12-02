@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/survey")
@@ -30,7 +32,7 @@ public class SurveyController {
     }
 
     @GetMapping("/{surveySeq}")
-    public ApiResponse<SurveyDto> getSurveyAnswer(@PathVariable Long surveySeq) {
+    public ApiResponse<List<SurveyDto>> getSurveyAnswer(@PathVariable Long surveySeq) {
         return new ApiResponse<>(surveyService.getSurveyAnswer(surveySeq));
     }
 

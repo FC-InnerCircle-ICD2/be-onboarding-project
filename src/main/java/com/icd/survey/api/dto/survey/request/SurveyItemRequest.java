@@ -1,9 +1,9 @@
 package com.icd.survey.api.dto.survey.request;
 
+import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
 import com.icd.survey.exception.ApiException;
-import com.icd.survey.exception.response.ExceptionResponse;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -34,6 +34,7 @@ public class SurveyItemRequest {
     @Max(value = 4, message = "응답 방식을 확인해주세요.")
     private Integer itemResponseType;
 
+    private List<ItemAnswerDto> answerList;
     /* create, update survey 를 위한 항목 리스트 */
     private List<ItemOptionRequest> optionList;
 

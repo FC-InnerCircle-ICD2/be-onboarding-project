@@ -7,7 +7,6 @@ import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
-import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import com.icd.survey.common.CommonUtils;
@@ -103,21 +102,18 @@ public class SurveyService {
 
     }
 
-    public SurveyDto getSurveyAnswer(Long surveySeq) {
+    public List<SurveyDto> getSurveyAnswer(Long surveySeq) {
         Survey survey = surveyQueryBusiness.findSurveyById(surveySeq)
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
         surveyValidCheck(survey);
-
-        List<SurveyItem> itemList = surveyQueryBusiness.findAllItemInfoBySurveySeq(surveySeq)
-                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
 
         /* todo : entity to dto and return 너무 하기 싫어서.... 담주에 하자..*/
 
         SurveyDto result = survey.of();
 
-        return null;
+        return surveyQueryBusiness.getSurveyDto(surveySeq);
     }
 
     public void surveyValidCheck(Survey survey) {

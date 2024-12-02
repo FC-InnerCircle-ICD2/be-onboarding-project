@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-/build/generated/
+/$buildDir
 
 ### STS ###
 .apt_generated

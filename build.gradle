@@ -45,7 +45,7 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
-def querydslSrcDir = 'src/main/generated'
+def querydslSrcDir = '$buildDir/generated/querydsl'
 
 clean {
     delete file(querydslSrcDir)

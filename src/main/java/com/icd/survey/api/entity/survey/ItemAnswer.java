@@ -23,7 +23,7 @@ public class ItemAnswer {
     @Column(name = "answer", nullable = true)
     private String answer;
     @Column(name = "is_optional_answer", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private Boolean isOptionAnswer;
+    private Boolean isOptionalAnswer;
     @Column(name = "option_seq", nullable = true)
     private Long optionSeq;
     @Column(name = "option_answer", nullable = true)
@@ -36,7 +36,7 @@ public class ItemAnswer {
         ItemAnswer itemAnswer = new ItemAnswer();
         itemAnswer.itemSeq = dto.getItemSeq();
         if (Boolean.TRUE.equals(dto.getIsOptionalAnswer())) {
-            itemAnswer.isOptionAnswer = dto.getIsOptionalAnswer();
+            itemAnswer.isOptionalAnswer = dto.getIsOptionalAnswer();
             itemAnswer.optionSeq = dto.getOptionSeq();
             itemAnswer.optionAnswer = dto.getOptionAnswer();
         } else {
@@ -50,7 +50,7 @@ public class ItemAnswer {
                 ItemAnswerDto.builder()
                         .answerSeq(this.answerSeq)
                         .build();
-        if (Boolean.TRUE.equals(isOptionAnswer)) {
+        if (Boolean.TRUE.equals(isOptionalAnswer)) {
             result.setOptionSeq(this.optionSeq);
             result.setOptionAnswer(this.optionAnswer);
         } else {
