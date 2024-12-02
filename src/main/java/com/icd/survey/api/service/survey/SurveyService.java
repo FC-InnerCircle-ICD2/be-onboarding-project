@@ -7,6 +7,7 @@ import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
+import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import com.icd.survey.common.CommonUtils;
@@ -52,15 +53,14 @@ public class SurveyService {
         Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
-        Long surveySeq = survey.getSurveySeq();
+        survey.deletedCheck();
 
-        surveyValidCheck(survey);
+        Long surveySeq = survey.getSurveySeq();
 
         survey.update(request.createSurveyDtoRequest());
 
         /* 기존의 설문조사 항목들 모두 disable 처리. */
         surveyActionBusiness.updateSurveyItemAsDisabled(surveySeq);
-        //surveyActionBusiness.disableItemList(surveySeq);
 
         /* 설문 조사 항목 save */
         surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
@@ -74,7 +74,7 @@ public class SurveyService {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
         }
 
-        surveyValidCheck(survey);
+        survey.deletedCheck();
 
         List<SurveyItem> itemList = surveyQueryBusiness.findItemAllBySurveySeq(survey.getSurveySeq())
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
@@ -89,9 +89,7 @@ public class SurveyService {
         List<SurveyItemRequest> itemRequestList = request.getSurveyItemList();
 
         itemRequestList.forEach(x -> {
-            if (essentialItemSeqSet.contains(x.getItemSeq())) {
-                essentialItemSeqSet.remove(x.getItemSeq());
-            }
+            essentialItemSeqSet.remove(x.getItemSeq());
         });
 
         if (Boolean.FALSE.equals(essentialItemSeqSet.isEmpty())) {
@@ -104,22 +102,14 @@ public class SurveyService {
     }
 
     public SurveyDto getSurveyAnswer(Long surveySeq) {
+
         Survey survey = surveyQueryBusiness.findSurveyById(surveySeq)
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
 
-        surveyValidCheck(survey);
+        survey.deletedCheck();
 
-
-        /* todo : entity to dto and return 너무 하기 싫어서.... 담주에 하자..*/
-
-        SurveyDto result = survey.of();
 
         return surveyQueryBusiness.getSurveyDto(surveySeq);
     }
 
-    public void surveyValidCheck(Survey survey) {
-        if (survey.getIsDeleted() != null && Boolean.TRUE.equals(survey.getIsDeleted())) {
-            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
-        }
-    }
 }

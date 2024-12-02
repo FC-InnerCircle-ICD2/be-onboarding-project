@@ -6,7 +6,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ItemAnswerDto {
     private Long itemSeq;
     private Long answerSeq;

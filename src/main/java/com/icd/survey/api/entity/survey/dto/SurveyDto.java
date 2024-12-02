@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class SurveyDto {
     private Long surveySeq;
     private String surveyName;

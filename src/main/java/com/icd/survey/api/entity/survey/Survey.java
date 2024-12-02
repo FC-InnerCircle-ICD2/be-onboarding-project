@@ -2,6 +2,8 @@ package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.base.BaseEntity;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
+import com.icd.survey.exception.ApiException;
+import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,12 @@ public class Survey extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_seq")
     private List<SurveyItem> surveyItemList;
+
+    public void deletedCheck() {
+        if(this.getIsDeleted() == null || Boolean.TRUE.equals(this.getIsDeleted())){
+            throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
+        }
+    }
 
     public static Survey createSurveyRequest(SurveyDto dto) {
         Survey survey = new Survey();
