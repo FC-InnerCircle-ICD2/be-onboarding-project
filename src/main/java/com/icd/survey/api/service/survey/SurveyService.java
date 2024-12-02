@@ -4,8 +4,10 @@ import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
 import com.icd.survey.api.dto.survey.request.SubmitSurveyRequest;
 import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
 import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
+import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
+import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -108,8 +111,29 @@ public class SurveyService {
 
         survey.deletedCheck();
 
+        SurveyDto result = survey.of();
 
-        return surveyQueryBusiness.getSurveyDto(surveySeq);
+        List<SurveyItemDto> itemDtoList = new ArrayList<>();
+
+        List<SurveyItem> itemList = surveyQueryBusiness.findItemAllBySurveySeq(survey.getSurveySeq())
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        itemList.forEach(x -> {
+            List<ItemAnswerDto> answerDtoList = new ArrayList<>();
+
+            List<ItemAnswer> answerList = surveyQueryBusiness.findItemAnswerList(x.getItemSeq())
+                    .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+            answerList.forEach(y -> answerDtoList.add(y.of()));
+
+            SurveyItemDto itemDto = x.of();
+            itemDto.setItemAnswerList(answerDtoList);
+            itemDtoList.add(itemDto);
+        });
+
+        result.setSurveyItemList(itemDtoList);
+
+        return result;
     }
 
 }

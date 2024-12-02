@@ -27,6 +27,9 @@ public class SurveyQueryBusiness {
     private final AnswerOptionRepository answerOptionRepository;
     private final SurveyQueryRepository surveyQueryRepository;
 
+    public Optional<List<ItemAnswer>> findItemAnswerList(Long itemSeq){
+        return itemAnswerRepository.findAllByItemSeq(itemSeq);
+    }
 
     public SurveyDto getSurveyDto(Long surveySeq) {
         return surveyQueryRepository.getSurveyById(surveySeq);
