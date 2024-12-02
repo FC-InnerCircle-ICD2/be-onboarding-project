@@ -28,6 +28,7 @@ class SurveyFormController(
             surveyFormService.createSurveyForm(
                 surveyForm = objectMapperUtil.convertClass(value = surveyForm, clazz = SurveyFormCreateRequestDto::class.java),
             )
+
         return SurveyFormCreateResponse(
             id = surveyEntity.id,
             title = surveyEntity.title,
