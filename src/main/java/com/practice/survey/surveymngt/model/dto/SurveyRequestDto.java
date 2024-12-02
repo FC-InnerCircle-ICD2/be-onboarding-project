@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SurveySaveRequestDto {
+public class SurveyRequestDto {
 
     @NotEmpty(message = "설문조사 이름은 필수 입력 값입니다.")
     private String name;  // 설문조사 이름
