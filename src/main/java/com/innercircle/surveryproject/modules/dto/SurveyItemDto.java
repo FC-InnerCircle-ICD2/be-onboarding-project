@@ -34,6 +34,9 @@ public class SurveyItemDto {
      */
     private Boolean required;
 
+    /**
+     * 설문조사 항목 별 콘텐츠
+     */
     private List<String> itemContentList;
 
     public SurveyItemDto(SurveyItem surveyItem) {
