@@ -11,7 +11,7 @@ import com.practice.survey.surveyItemOption.repository.SurveyItemOptionRepositor
 import com.practice.survey.surveyVersion.model.dto.SurveyVersionSaveRequestDto;
 import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
 import com.practice.survey.surveyVersion.repository.SurveyVersionRepository;
-import com.practice.survey.surveymngt.model.dto.SurveySaveRequestDto;
+import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
 import com.practice.survey.surveymngt.model.entity.Survey;
 import com.practice.survey.surveymngt.repository.SurveyRepository;
 import jakarta.transaction.Transactional;
@@ -34,19 +34,19 @@ public class SurveyServiceImpl implements SurveyService{
     private final SurveyVersionRepository surveyVersionRepository;
 
     @Override
-    public ApiResponse<StatusEnum> createSurvey(SurveySaveRequestDto surveySaveRequestDto) throws NullPointerException {
+    public ApiResponse<StatusEnum> createSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException {
 
         int surveyVersionNumber=1; // 최초 생성이므로 1
-        List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos = surveySaveRequestDto.getSurveyItems();
+        List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos = surveyRequestDto.getSurveyItems();
 
         // 유효성 체크
-        // 1. 설문조사 이름 중복 체크
-        String surveyName=surveySaveRequestDto.getName();
+        // 1. 설문조사 이름 중복 체크 -> 향후 유효성 체크로 처리 가능한지 확인
+        String surveyName= surveyRequestDto.getName();
         if(surveyRepository.existsByName(surveyName)){
             return new ApiResponse<StatusEnum>().serverError(StatusEnum.SURVEY_ALREADY_EXISTS);
         }
 
-        // 2. 설문조사 inputType에 따른 option 체크
+        // 2. 설문조사 inputType에 따른 option 체크 -> 향후 유효성 체크로 처리
         for(int i=0; i<surveyItemSaveRequestDtos.size(); i++) {
             SurveyItemSaveRequestDto itemDto = surveyItemSaveRequestDtos.get(i);
             // item의 input_type이 SINGLE_CHOICE, MULTIPLE_CHOICE인 경우에 option 없을 경우 에러 처리
@@ -63,18 +63,51 @@ public class SurveyServiceImpl implements SurveyService{
             }
         }
 
-        // 설문조사 생성
-        Survey survey = surveySaveRequestDto.toEntity();
+        // 설문조사 저장
+        Survey survey = surveyRequestDto.toEntity();
         surveyRepository.save(survey);
 
-        // 설문조사 버전 생성
+        // 설문조사 버전 저장
+        SurveyVersion surveyVersion = saveSurveyVersion(survey, surveyVersionNumber);
+
+        // 설문조사 항목 저장
+        saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
+
+        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+    }
+
+    @Override
+    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException{
+
+        // 설문조사 이름 기반 설문조사 찾기
+        Survey survey = surveyRepository.findByName(surveyRequestDto.getName());
+
+        // 해당 설문조사의 최대 버전 넘버 찾기
+        int surveyVersionNumber = surveyVersionRepository.findMaxVersionNumberBySurveyId(survey.getSurveyId());
+
+        // 최대 버전 넘버에 1을 더한 버전 넘버로 저장
+        SurveyVersion surveyVersion = saveSurveyVersion(survey, surveyVersionNumber+1);
+
+        List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos = surveyRequestDto.getSurveyItems();
+
+        // 설문조사 항목 저장
+        saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
+
+        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+    }
+
+    private SurveyVersion saveSurveyVersion(Survey survey, int surveyVersionNumber){
+
         SurveyVersionSaveRequestDto surveyVersionSaveRequestDto = SurveyVersionSaveRequestDto.builder()
                 .versionNumber(surveyVersionNumber)
                 .build();
         SurveyVersion surveyVersion = surveyVersionSaveRequestDto.toEntity(survey,surveyVersionNumber);
-        surveyVersionRepository.save(surveyVersion);
 
-        // 설문조사 항목 생성
+        return surveyVersionRepository.save(surveyVersion);
+    }
+
+    private void saveSurveyItemAndOption(List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos, SurveyVersion surveyVersion){
+
         for(int i=0; i<surveyItemSaveRequestDtos.size(); i++){
             SurveyItemSaveRequestDto itemDto = surveyItemSaveRequestDtos.get(i);
 
@@ -94,6 +127,5 @@ public class SurveyServiceImpl implements SurveyService{
             }
         }
 
-        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
     }
 }
