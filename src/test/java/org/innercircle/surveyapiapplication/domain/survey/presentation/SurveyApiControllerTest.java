@@ -52,7 +52,7 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사 단건을 조회한다.")
     void inquireSurvey() throws Exception {
         // given
-        List<Question> questions = List.of(QuestionFixture.createShortQuestion());
+        List<Question> questions = List.of(QuestionFixture.createShortAnswerQuestion());
         Survey survey = SurveyFixture.createSurvey(questions);
 
         // when
@@ -91,7 +91,7 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사를 생성한다.")
     void createSurvey() throws Exception {
         // given
-        Question shortQuestion = QuestionFixture.createShortQuestion();
+        Question shortQuestion = QuestionFixture.createShortAnswerQuestion();
         List<Question> questions = List.of(shortQuestion);
         Survey survey = SurveyFixture.createSurvey(questions);
 

@@ -7,7 +7,9 @@ import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQu
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.domain.question.domain.ShortAnswerQuestion;
 import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
+import org.innercircle.surveyapiapplication.domain.question.fixture.QuestionFixture;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
+import org.innercircle.surveyapiapplication.domain.survey.fixture.SurveyFixture;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -41,16 +43,10 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단답형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithShortAnswerQuestion() {
         // given
-        final Long surveyId = 1L;
-        final Long questionId = 1L;
-
-        Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
-        ShortAnswerQuestion question = new ShortAnswerQuestion(questionId,
-            "설문항목이름",
-            "설문항목설명",
-            false);
-
-        survey = survey.addQuestion(question);
+        ShortAnswerQuestion question = QuestionFixture.createShortAnswerQuestion();
+        Survey survey = SurveyFixture.createSurvey(List.of(question));
+        final Long surveyId = survey.getId();
+        final Long questionId = question.getId();
 
         // when
         surveyService.createSurvey(survey);
@@ -75,15 +71,10 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 장문형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithLongAnswerQuestion() {
         // given
-        final Long surveyId = 1L;
-        final Long questionId = 1L;
-
-        Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
-        LongAnswerQuestion question = new LongAnswerQuestion(questionId,
-            "설문항목이름",
-            "설문항목설명",
-            false);
-        survey.addQuestion(question);
+        LongAnswerQuestion question = QuestionFixture.createLongAnswerQuestion();
+        Survey survey = SurveyFixture.createSurvey(List.of(question));
+        final Long surveyId = survey.getId();
+        final Long questionId = question.getId();
 
         // when
         surveyService.createSurvey(survey);
@@ -107,17 +98,10 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithSingleChoiceQuestion() {
         // given
-        final Long surveyId = 1L;
-        final Long questionId = 1L;
-
-        Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
-        SingleChoiceQuestion question = new SingleChoiceQuestion(questionId,
-            "설문항목이름",
-            "설문항목설명",
-            false,
-            List.of("설문항목답변1", "설문항목답변2", "설문항목답변3", "설문항목답변4", "설문항목답변5")
-        );
-        survey.addQuestion(question);
+        SingleChoiceQuestion question = QuestionFixture.createSingleChoiceQuestion();
+        Survey survey = SurveyFixture.createSurvey(List.of(question));
+        final Long surveyId = survey.getId();
+        final Long questionId = question.getId();
 
         // when
         surveyService.createSurvey(survey);
@@ -142,17 +126,10 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 다항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithMultiChoiceQuestion() {
         // given
-        final Long surveyId = 1L;
-        final Long questionId = 1L;
-
-        Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
-        MultiChoiceQuestion question = new MultiChoiceQuestion(questionId,
-            "설문항목이름",
-            "설문항목설명",
-            false,
-            List.of("설문항목답변1", "설문항목답변2", "설문항목답변3", "설문항목답변4", "설문항목답변5")
-        );
-        survey.addQuestion(question);
+        MultiChoiceQuestion question = QuestionFixture.createMultiChoiceQuestion();
+        Survey survey = SurveyFixture.createSurvey(List.of(question));
+        final Long surveyId = survey.getId();
+        final Long questionId = question.getId();
 
         // when
         surveyService.createSurvey(survey);
@@ -198,6 +175,12 @@ class SurveyServiceTest {
             .isInstanceOf(CustomException.class)
             .extracting(e -> ((CustomException) e).getStatus())
             .isEqualTo(CustomResponseStatus.QUESTION_SIZE_FULL);
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 설문조사의 이름, 설명을 수정할 수 있다.")
+    void updateSurveyNameAndDescription() {
+
     }
 
 }
