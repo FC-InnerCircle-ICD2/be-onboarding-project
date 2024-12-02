@@ -12,14 +12,8 @@ class SurveyFormService(
     private val objectMapperUtil: ObjectMapperUtil,
 ) {
     // TODO : DTO 어디서 매핑 할 건지 결정이 필요
-    fun createSurveyForm(surveyForm: SurveyFormCreateRequestDto): SurveyFormEntity {
-        return surveyFormDataHandler.insertSurveyForm(
-            surveyForm =
-                objectMapperUtil.convertClass(
-                    value = surveyForm,
-                    // TODO - 클래스명 다시 고민이 필요 !
-                    clazz = com.ic.surveydata.form.dto.SurveyFormCreateRequestDto::class.java,
-                ),
-        )
-    }
+    fun createSurveyForm(surveyForm: SurveyFormCreateRequestDto): SurveyFormEntity =
+        run { objectMapperUtil.convertClass(value = surveyForm, clazz = com.ic.surveydata.form.dto.SurveyFormCreateRequestDto::class.java) }
+        .let { surveyFormDataHandler.insertSurveyForm(surveyForm = it) }
+
 }

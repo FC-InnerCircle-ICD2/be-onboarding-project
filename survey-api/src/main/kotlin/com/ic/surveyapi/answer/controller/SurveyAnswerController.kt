@@ -26,14 +26,14 @@ class SurveyAnswerController(
     fun submitSurveyAnswer(
         @RequestBody @Validated surveyAnswerRequest: SurveyAnswerRequest,
         @PathVariable(name = "surveyFormId", required = true) surveyFormId: String,
+    ) = run { objectMapperUtil.convertClass(value = surveyAnswerRequest, clazz = SurveyAnswerDto::class.java) }
+        .let { surveyAnswerService.submitSurveyAnswer(surveyFormId = surveyFormId, surveyAnswer = it) }
+
+    // 해당 설문 조사를 조회
+    @GetMapping("/{surveyFormId}/answers")
+    fun getSurveyAnswers(
+        @PathVariable(name = "surveyFormId", required = true) surveyFormId: String,
     ) {
-        surveyAnswerService.submitSurveyAnswer(
-            surveyFormId = surveyFormId,
-            surveyAnswer =
-                objectMapperUtil.convertClass(
-                    value = surveyAnswerRequest,
-                    clazz = SurveyAnswerDto::class.java,
-                ),
-        )
+
     }
 }

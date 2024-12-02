@@ -17,19 +17,10 @@ data class SurveyAnswerRequest(
         val type: ItemType,
         val answer: String? = null,
         // TODO - Set 으로 변경하기 !
-        val selectedOptions: List<String> = emptyList(),
+        val selectedOptions: Set<String> = emptySet(),
     ) {
         init {
             this.validateOrThrow()
         }
     }
 }
-
-
-
-
-
-
-
-
-

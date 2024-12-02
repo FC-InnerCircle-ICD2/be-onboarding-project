@@ -18,8 +18,9 @@ class SurveyAnswerService(
         surveyAnswer: SurveyAnswerDto,
     ) {
         // TODO - Entity 가 아닌 DTO 로 가져오자 .. !
-        val surveyFormEntity = surveyFormDataHandler.findSurveyFormByIdOrNull(surveyFormId)
-            ?: throw IllegalArgumentException("SurveyForm with $surveyFormId does not exist")
+        val surveyFormEntity =
+            surveyFormDataHandler.findSurveyFormByIdOrNull(surveyFormId)
+                ?: throw IllegalArgumentException("SurveyForm with $surveyFormId does not exist")
 
         surveyAnswer.validateOrThrow(surveyFormEntity = surveyFormEntity)
         surveyAnswerDataHandler.insertSurveyAnswers(

@@ -7,7 +7,6 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import jakarta.persistence.Version
 
 // TODO - toString() 순환 참조 문제 해결 필요 StackOverFlow 에러가 발생
 @Entity
@@ -22,8 +21,21 @@ data class SurveyFormEntity(
     @Column(name = "description")
     val description: String,
     @OneToMany(mappedBy = "surveyFormEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var surveyItems: MutableList<SurveyItemEntity> = mutableListOf(),
-    @Version
+    val surveyItems: MutableList<SurveyItemEntity> = mutableListOf(),
     @Column(name = "version", nullable = false, unique = false)
     val version: Int,
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+    fun addSurveyItems(items: List<SurveyItemEntity>) {
+        surveyItems.addAll(items)
+        items.forEach { surveyItemEntity -> surveyItemEntity.surveyFormEntity = this }
+    }
+
+    // TODO - 해당 이유를 못찾았다. 원인을 파악하여야 한다. 지우면 널포인터 발생 .. ㅜㅜ ! 원인 파악이 필요 !!
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+    override fun toString(): String {
+        return ""
+    }
+}

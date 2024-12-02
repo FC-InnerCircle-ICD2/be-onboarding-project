@@ -18,5 +18,9 @@ data class SurveyOptionEntity(
     val name: String,
     @ManyToOne
     @JoinColumn(name = "survey_item_id")
-    val surveyItemEntity: SurveyItemEntity? = null,
-) : BaseTimeEntity()
+    var surveyItemEntity: SurveyItemEntity? = null,
+) : BaseTimeEntity() {
+    override fun toString(): String {
+        return ""
+    }
+}

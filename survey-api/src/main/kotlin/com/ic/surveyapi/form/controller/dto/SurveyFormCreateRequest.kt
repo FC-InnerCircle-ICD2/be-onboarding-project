@@ -19,7 +19,7 @@ data class SurveyFormCreateRequest(
         @field:NotBlank
         val description: String,
         val isRequired: Boolean,
-        val options: List<ItemOption>,
+        val options: Set<ItemOption>,
     )
 
     data class ItemOption(

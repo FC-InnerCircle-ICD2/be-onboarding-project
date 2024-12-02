@@ -37,21 +37,11 @@ Content-Type: application/json
   "description": "음식 선호도 조사를 하기 위한 설문 조사 입니다.",
   "surveyItems": [
     {
-      "name": "아이템 1",
+      "name": "음식 1",
       "type": "SHORT_ANSWER",
       "description": "디스크립션 1",
-      "isRequired": false,
-      "options": [
-        {
-          "name": "고기"
-        },
-        {
-          "name": "파스타"
-        },
-        {
-          "name": "국밥"
-        }
-      ]
+      "isRequired": true,
+      "options": []
     }
   ]
 }
@@ -68,9 +58,9 @@ Content-Type: application/json
   "surveyItems": [
     {
       "name": "아이템 1",
-      "type": "SHORT_ANSWER",
-      "description": "디스크립션 1",
-      "isRequired": false,
+      "type": "SINGLE_SELECT",
+      "description": "아이템 1 입니다.",
+      "isRequired": true,
       "options": [
         {
           "name": "고기"
@@ -85,9 +75,9 @@ Content-Type: application/json
     },
     {
       "name": "아이템 2",
-      "type": "LONG_ANSWER",
-      "description": "디스크립션 2",
-      "isRequired": false,
+      "type": "MULTIPLE_SELECT",
+      "description": "아이템 2 입니다.",
+      "isRequired": true,
       "options": [
         {
           "name": "국수"

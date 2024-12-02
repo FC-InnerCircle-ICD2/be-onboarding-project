@@ -23,23 +23,14 @@ class SurveyFormController(
     @PostMapping
     fun createSurveyForms(
         @RequestBody surveyForm: SurveyFormCreateRequest,
-    ): SurveyFormCreateResponse {
-        val surveyEntity =
-            surveyFormService.createSurveyForm(
-                surveyForm = objectMapperUtil.convertClass(value = surveyForm, clazz = SurveyFormCreateRequestDto::class.java),
-            )
-
-        return SurveyFormCreateResponse(
-            id = surveyEntity.id,
-            title = surveyEntity.title,
-            createdDateTime = surveyEntity.createdAt.toResponseDateTimeFormat(),
-        )
-    }
+    ): SurveyFormCreateResponse =
+        run { objectMapperUtil.convertClass(value = surveyForm, clazz = SurveyFormCreateRequestDto::class.java) }
+            .let { surveyFormService.createSurveyForm(surveyForm = it) }
+            .let { SurveyFormCreateResponse.of(it) }
 
     @GetMapping("/{surveyTitle}")
     fun getSurveyFormHistories(
         @PathVariable(value = "surveyTitle", required = true) surveyTitle: String,
     ) {
-
     }
 }

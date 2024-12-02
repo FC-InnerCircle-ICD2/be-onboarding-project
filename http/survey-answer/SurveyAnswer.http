@@ -8,14 +8,10 @@ Content-Type: application/json
     {
       "name": "item-name-1",
       "answer": "",
-      "selectedOptions": [
-        "떡볶이",
-        "치킨",
-        "피자"
-      ],
-      "type": "MULTIPLE_SELECT"
+      "selectedOptions": ["치킨"],
+      "type": "SINGLE_SELECT"
     }
   ]
 }
 
-###
+### 설문 조사 조회
