@@ -25,14 +25,17 @@ public class SurveyResponseEntity {
     @Column(updatable = false)
     private LocalDateTime regDtm;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "surveyId")
-    private SurveyEntity survey; // 설문 항목 참조
+    private long surveyId; // 설문 항목 참조
 
-    @OneToOne(mappedBy = "response", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private SurveyResponseItemEntity responseItems; // 설문 항목 리스트목 리스트
+    private String snapShotName;
+    private String snapShotDescription;
 
-    public SurveyResponseEntity(SurveyEntity survey) {
-        this.survey = survey;
+    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SurveyResponseItemEntity> responseItems; // 설문 항목 리스트
+
+    public SurveyResponseEntity(long surveyId, String snapShotName, String snapShotDescription) {
+        this.surveyId = surveyId;
+        this.snapShotName = snapShotName;
+        this.snapShotDescription = snapShotDescription;
     }
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,25 +21,30 @@ public class SurveyResponseItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String answerText; // 단답형, 장문형의 답변
+    private String itemSnapShotDescription;
+    private String itemSnapShotName;
+    private String itemSnapShotType;
+    private boolean itemSnapShotRequired;
+    private String itemSnapShotUseYn;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime regDtm;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responseId")
     private SurveyResponseEntity response; //
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "itemId")
-    private SurveyItemEntity surveyItem; //
+    @OneToMany(mappedBy = "responseItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SurveyResponseOptionEntity> responseOption; //
 
-    @OneToOne(mappedBy = "responseItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private SurveyResponseOptionEntity reponseOption; //
-
-    public SurveyResponseItemEntity(String answerText, SurveyResponseEntity response, SurveyItemEntity surveyItem) {
+    public SurveyResponseItemEntity(String answerText, SurveyResponseEntity response, String itemSnapShotName, String itemSnapShotDescription, String itemSnapShotType, String itemSnapShotUseYn, boolean itemSnapShotRequired) {
         this.answerText = answerText;
         this.response = response;
-        this.surveyItem = surveyItem;
+        this.itemSnapShotDescription = itemSnapShotDescription;
+        this.itemSnapShotName = itemSnapShotName;
+        this.itemSnapShotType = itemSnapShotType;
+        this.itemSnapShotUseYn = itemSnapShotUseYn;
+        this.itemSnapShotRequired = itemSnapShotRequired;
     }
 }

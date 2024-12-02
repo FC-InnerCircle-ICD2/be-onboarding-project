@@ -17,23 +17,23 @@ public class SurveyResponseOptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String optionSnapShotName;
+    private int optionSnapShotOrder;
+    private String optionSnapShotUseYn;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime regDtm;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "optionId")
-    private SurveyOptionEntity surveyOtion; // 설문 항목 참조
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "responseItemId")
     private SurveyResponseItemEntity responseItem; // 설문 항목 참조
 
-    public SurveyResponseOptionEntity(SurveyResponseItemEntity responseItem, SurveyOptionEntity surveyOtion) {
-        this.regDtm = regDtm;
+    public SurveyResponseOptionEntity(SurveyResponseItemEntity responseItem, String optionSnapShotName, int optionSnapShotOrder, String optionSnapShotUseYn) {
         this.responseItem = responseItem;
-        this.surveyOtion = surveyOtion;
+        this.optionSnapShotName = optionSnapShotName;
+        this.optionSnapShotOrder = optionSnapShotOrder;
+        this.optionSnapShotUseYn = optionSnapShotUseYn;
 
     }
 }

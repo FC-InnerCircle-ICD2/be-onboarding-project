@@ -32,7 +32,4 @@ public class CommonConstant {
     public static final String ERR_MSG_DATA_ID_NOT_FOUND = "잘못된 ID: ";
 
     public static final String ERROR_TYPE_REQUEST_INVALID = "REQUEST_INVALID";
-
-
-
 }

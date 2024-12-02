@@ -8,9 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SurveyRepository extends JpaRepository<SurveyEntity, Long> {
-    public List<SurveyEntity> findById(String id);
+    public SurveyEntity findSurveyById(long id);
 
-    public List<SurveyEntity> findByName(String name);
-
-    public List<SurveyEntity> findByDescription(String name);
 }

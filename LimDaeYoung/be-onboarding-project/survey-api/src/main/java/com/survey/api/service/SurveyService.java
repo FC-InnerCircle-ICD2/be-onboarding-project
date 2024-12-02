@@ -2,8 +2,8 @@ package com.survey.api.service;
 
 import com.survey.api.constant.CommonConstant;
 import com.survey.api.dto.SurveyResponseDto;
-import com.survey.api.dto.SurveyResponseItemDto;
 import com.survey.api.entity.*;
+import com.survey.api.exception.SurveyApiException;
 import com.survey.api.form.*;
 import com.survey.api.repository.*;
 import com.survey.api.util.ConvertUtil;
@@ -38,29 +38,40 @@ public class SurveyService {
     @Autowired
     private SurveyResponseOptionRepository surveyResponseOptionRepository;
 
-    public long countItemBySurvey(SurveyEntity survey) {
-        return surveyItemRepository.countBySurvey(survey);
+    public long countBySurveyAndUseYn(SurveyEntity survey, String useYn) {
+        return surveyItemRepository.countBySurveyAndUseYn(survey, useYn);
     }
 
     public SurveyItemEntity findItemByIdAndItemTypeAndSurvey(Long id, String itemType, SurveyEntity survey) {
         return surveyItemRepository.findByIdAndItemTypeAndSurvey(id, itemType, survey);
     }
 
+    public SurveyEntity findSurveyById(Long id) {
+        return surveyRepository.findSurveyById(id);
+    }
+
+
+    public SurveyItemEntity findItemById(Long id) {
+        return surveyItemRepository.findItemById(id);
+    }
+
+    public SurveyOptionEntity findOptionById(Long id) {
+        return surveyOptionRepository.findOptionById(id);
+    }
+
+    public List<SurveyResponseOptionEntity> findResponseOptionById(Long id) {
+        return surveyResponseOptionRepository.findByresponseItemId(id);
+    }
+
     public boolean existsSurveyById(Long id) {
         return !surveyRepository.existsById(id);
     }
 
-    public boolean existsByIdAndSurvey(Long id, SurveyEntity survey) {
-        return !surveyItemRepository.existsByIdAndSurvey(id, survey);
-    }
 
     public boolean existsSurveyOptionByIdAndItemId(Long id, SurveyItemEntity surveyItem) {
         return !surveyOptionRepository.existsByIdAndSurveyItem(id, surveyItem);
     }
 
-    public void deleteById(Long mbrNo) {
-        surveyRepository.deleteById(mbrNo);
-    }
 
     public SurveyEntity sureveySave(SurveyEntity survey) {
         surveyRepository.save(survey);
@@ -110,11 +121,11 @@ public class SurveyService {
     }
 
     @Transactional
-    public void surveyUpdate(SurveyUpdateForm survey) {
+    public void surveyUpdate(SurveyForm survey) {
         SurveyEntity surveyResult = sureveySave(new SurveyEntity(survey.getId(), survey.getName(), survey.getDescription(), CommonConstant.Y));
 
         if(survey.getItems() != null) {
-            for (SurveyItemUpdateForm itemForm : survey.getItems()) {
+            for (SurveyItemForm itemForm : survey.getItems()) {
                 SurveyItemEntity itemEntity = null;
 
                 if(CommonConstant.ACTION_TYPE_CREATE.equals(itemForm.getActionType())) {
@@ -127,7 +138,7 @@ public class SurveyService {
 
                 if (CommonConstant.SINGLE_ITEM.equals(itemForm.getItemType()) || CommonConstant.MULTI_ITEM.equals(itemForm.getItemType())) {
                     if (itemForm.getOptionList() != null) {
-                        for (SurveyOptionUpdateForm optionForm : itemForm.getOptionList()) {
+                        for (SurveyOptionForm optionForm : itemForm.getOptionList()) {
                             if(CommonConstant.ACTION_TYPE_CREATE.equals(optionForm.getActionType()) && !CommonConstant.ACTION_TYPE_DELETE.equals(itemForm.getActionType())) {
                                 optionSave(new SurveyOptionEntity(optionForm.getOptionName(), optionForm.getOptionOrder(), CommonConstant.Y, itemEntity));
                             } else if(CommonConstant.ACTION_TYPE_DELETE.equals(optionForm.getActionType()) || CommonConstant.ACTION_TYPE_DELETE.equals(itemForm.getActionType())) {
@@ -142,33 +153,55 @@ public class SurveyService {
         }
     }
 
-    public List<SurveyResponseDto> findResponsesBySurveyIdWithFilters(long id, String searchParam, int pageNumber) {
+    public List<SurveyResponseEntity> findResponsesBySurveyIdWithFilters(long id, String searchParam, int pageNumber) {
         Pageable pageable = (Pageable) PageRequest.of(pageNumber, 10, Sort.by("id").descending());
-        return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, pageable).getContent();
-    }
-
-    public List<SurveyResponseItemDto> findResponseItemByFilters(long id, String searchParam) {
-        return surveyResponseItemRepository.findResponseItemByFilters(id, searchParam);
+        return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, pageable);
     }
 
     @Transactional
-    public void surveyResponseSave(SurveyResponseForm survey) {
-        SurveyResponseEntity surveyResult = responseSave(new SurveyResponseEntity(new SurveyEntity(survey.getId())));
+    public void surveyResponseSave(SurveyForm survey) {
+        SurveyEntity surveyEntity = findSurveyById(survey.getId());
 
-        for (SurveyResponseItemForm itemForm : survey.getItems()) {
+        SurveyResponseEntity surveyResult = responseSave(new SurveyResponseEntity(surveyEntity.getId(), surveyEntity.getName(), surveyEntity.getDescription()));
+
+        for (SurveyItemForm itemResponseForm : survey.getItems()) {
             String answer = "";
 
-            if(CommonConstant.SHORT_ITEM.equals(itemForm.getReponseType()) || CommonConstant.LONG_ITEM.equals(itemForm.getReponseType())) {
-                answer = (itemForm.getAnswer() != null && itemForm.getAnswer().length > 0 ? itemForm.getAnswer()[0] : "");
+            if(CommonConstant.SHORT_ITEM.equals(itemResponseForm.getResponseType()) || CommonConstant.LONG_ITEM.equals(itemResponseForm.getResponseType())) {
+                answer = (itemResponseForm.getAnswer() != null && itemResponseForm.getAnswer().length > 0 ? itemResponseForm.getAnswer()[0] : "");
             }
+            SurveyItemEntity itemEntity = findItemById(itemResponseForm.getId());
+            SurveyResponseItemEntity reponseItem = responseItemSave(new SurveyResponseItemEntity(answer, surveyResult, itemEntity.getItemName(),  itemEntity.getDescription(), itemEntity.getItemType(), itemEntity.getUseYn(), itemEntity.isRequired()));
 
-            SurveyResponseItemEntity reponseItem = responseItemSave(new SurveyResponseItemEntity(answer, surveyResult, new SurveyItemEntity(itemForm.getId())));
-
-            if(CommonConstant.MULTI_ITEM.equals(itemForm.getReponseType()) || CommonConstant.SINGLE_ITEM.equals(itemForm.getReponseType())) {
-                for(String optionId : itemForm.getAnswer()) {
-                    SurveyResponseOptionEntity reponseOption = responseOptionSave(new SurveyResponseOptionEntity(reponseItem, new SurveyOptionEntity(ConvertUtil.stringToLong(optionId))));
+            if(CommonConstant.MULTI_ITEM.equals(itemResponseForm.getResponseType()) || CommonConstant.SINGLE_ITEM.equals(itemResponseForm.getResponseType())) {
+                for(String optionId : itemResponseForm.getAnswer()) {
+                    SurveyOptionEntity optionEntity = findOptionById(ConvertUtil.stringToLong(optionId));
+                    SurveyResponseOptionEntity reponseOption = responseOptionSave(new SurveyResponseOptionEntity(reponseItem, optionEntity.getOptionName(), optionEntity.getOptionOrder(), optionEntity.getUseYn()));
                 }
             }
         }
+    }
+
+    public boolean itemValidator(List<SurveyItemForm> itemForm) {
+        for(SurveyItemForm item : itemForm) {
+            SurveyItemEntity itemEntity = findItemByIdAndItemTypeAndSurvey(item.getId(), item.getResponseType(), new SurveyEntity(item.getId()));
+
+            if (itemEntity == null) {
+                throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대해 응답하였습니다.");
+            }
+
+            if (CommonConstant.SINGLE_ITEM.equals(item.getResponseType())
+                    || CommonConstant.MULTI_ITEM.equals(item.getResponseType())) {
+                String[] optionList = item.getAnswer();
+                for (String optionId : optionList) {
+                    if (existsSurveyOptionByIdAndItemId(ConvertUtil.stringToLong(optionId), itemEntity)) {
+                        throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 선택지를 선택하였습니다.");
+                    }
+                }
+            }
+        }
+
+
+        return true;
     }
 }

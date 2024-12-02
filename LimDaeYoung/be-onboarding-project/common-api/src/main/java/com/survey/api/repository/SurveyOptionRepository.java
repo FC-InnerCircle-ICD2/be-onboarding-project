@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SurveyOptionRepository extends JpaRepository<SurveyOptionEntity, Long> {
     public boolean existsByIdAndSurveyItem(long id, SurveyItemEntity surveyItem);
+    public SurveyOptionEntity findOptionById(long id);
 }

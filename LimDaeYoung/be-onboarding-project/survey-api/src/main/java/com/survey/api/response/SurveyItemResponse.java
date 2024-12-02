@@ -1,6 +1,5 @@
 package com.survey.api.response;
 
-import com.survey.api.util.DateUtil;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -18,4 +17,5 @@ public class SurveyItemResponse implements Serializable {
     private String regDtm;
     private String useYn;
 
+    List<SurveyOptionResponse> selectOptions;
 }
