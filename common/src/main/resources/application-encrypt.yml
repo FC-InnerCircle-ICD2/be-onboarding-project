@@ -1,0 +1,6 @@
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithSHA1AndDESede
+    password: dpsdpdlcldpsjasyptqlalfqjsgh
+    provider-class-name: org.bouncycastle.jce.provider.BouncyCastleProvider
