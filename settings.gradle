@@ -1,0 +1,2 @@
+rootProject.name = 'be-onboarding-project'
+include('survey-api', 'survey-core', 'survey-common', 'survey-h2')
