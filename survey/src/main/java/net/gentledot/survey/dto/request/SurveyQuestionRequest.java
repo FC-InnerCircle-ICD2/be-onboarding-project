@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SurveyQuestionRequest {
+    private Long questionId;
     private String question;
     private String description;
     private SurveyItemType type;

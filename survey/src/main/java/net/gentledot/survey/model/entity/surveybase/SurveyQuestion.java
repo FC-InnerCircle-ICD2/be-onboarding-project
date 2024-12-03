@@ -70,4 +70,14 @@ public class SurveyQuestion {
                 options
         );
     }
+
+    public void updateFromRequest(SurveyQuestionRequest questionRequest) {
+        this.itemName = questionRequest.getQuestion();
+        this.itemDescription = questionRequest.getDescription();
+        this.itemType = questionRequest.getType();
+        this.required = questionRequest.getRequired();
+        this.options = questionRequest.getOptions().stream()
+                .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
+                .collect(Collectors.toList());
+    }
 }

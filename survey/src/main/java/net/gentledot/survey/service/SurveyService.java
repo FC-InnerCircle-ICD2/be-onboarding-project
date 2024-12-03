@@ -17,7 +17,9 @@ import net.gentledot.survey.repository.SurveyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,13 +56,14 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND));
 
-        List<SurveyQuestion> questions = convertToSurveyQuestions(surveyRequest.getQuestions());
-        survey.updateSurvey(surveyRequest.getName(), surveyRequest.getDescription(), questions);
+
+        survey.updateSurvey(surveyRequest.getName(), surveyRequest.getDescription(), surveyRequest.getQuestions());
 
         Survey saved = surveyRepository.save(survey);
 
         return new SurveyUpdateResponse(saved.getId(), saved.getUpdatedAt());
     }
+
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
         return questionRequests.stream()
@@ -77,12 +80,28 @@ public class SurveyService {
             throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_QUESTIONS);
         }
 
+        Map<Long, Long> questionCountMap = new HashMap<>();
         for (SurveyQuestionRequest question : questions) {
+            Long questionId = question.getQuestionId();
+            if (questionId != null) {
+                questionCountMap.put(
+                        questionId,
+                        questionCountMap.getOrDefault(questionId, 0L) + 1
+                );
+            }
+
             if ((question.getType() == SurveyItemType.SINGLE_SELECT || question.getType() == SurveyItemType.MULTI_SELECT)
                 && (question.getOptions() == null || question.getOptions().isEmpty())) {
                 throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_OPTIONS);
             }
         }
+
+        questionCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .findFirst()
+                .ifPresent(entry -> {
+                    throw new SurveyCreationException(ServiceError.CREATION_DUPLICATE_QUESTIONS);
+                });
     }
 
 

@@ -9,11 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.model.entity.common.BaseEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,23 +35,45 @@ public class Survey extends BaseEntity {
     public static Survey of(String name, String description, List<SurveyQuestion> surveyQuestions) {
         String surveyId = UUID.randomUUID().toString();
         Survey survey = new Survey(surveyId, name, description, surveyQuestions);
-        surveyQuestions.forEach(surveyQuestion -> {
-            surveyQuestion.setSurvey(survey);
-        });
+        surveyQuestions.forEach(surveyQuestion -> surveyQuestion.setSurvey(survey));
         return survey;
     }
 
-    public void updateSurvey(String name, String description, List<SurveyQuestion> surveyQuestions) {
+    public void updateSurvey(String name, String description, List<SurveyQuestionRequest> questionRequests) {
         this.name = name;
         this.description = description;
-        disconnectRelationFromSurvey(); // update 시 Survey와의 관계 끊기
-        this.questions.clear();
-        this.questions.addAll(surveyQuestions);
+
+        Map<Long, SurveyQuestion> existingQuestionsMap = this.getQuestions().stream()
+                .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));
+
+        List<SurveyQuestion> updatedQuestions = questionRequests.stream()
+                .map(questionRequest -> {
+                    SurveyQuestion existingQuestion = existingQuestionsMap.get(questionRequest.getQuestionId());
+                    if (existingQuestion != null) {
+                        existingQuestion.updateFromRequest(questionRequest);
+                        return existingQuestion;
+                    } else {
+                        return SurveyQuestion.from(questionRequest);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        List<SurveyQuestion> questionsToRemove = this.getQuestions().stream()
+                .filter(existingQuestion -> updatedQuestions.stream()
+                        .noneMatch(updatedQuestion -> updatedQuestion.getId().equals(existingQuestion.getId())))
+                .collect(Collectors.toList());
+
+        this.getQuestions().removeAll(questionsToRemove);
+        this.updateQuestions(updatedQuestions);
+
     }
 
-    private void disconnectRelationFromSurvey() {
-        this.questions.forEach(question -> question.setSurvey(null));
+    public void updateQuestions(List<SurveyQuestion> updatedQuestions) {
+        this.questions.clear();
+        this.questions.addAll(updatedQuestions);
+        updatedQuestions.forEach(question -> question.setSurvey(this));
     }
+
 
     @Override
     public boolean equals(Object o) {

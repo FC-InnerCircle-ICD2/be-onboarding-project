@@ -7,6 +7,8 @@ import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyUpdateRequest;
 import net.gentledot.survey.dto.response.SurveyCreateResponse;
 import net.gentledot.survey.dto.response.SurveyUpdateResponse;
+import net.gentledot.survey.exception.ServiceError;
+import net.gentledot.survey.exception.SurveyCreationException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.enums.ItemRequired;
@@ -82,6 +84,7 @@ class SurveyServiceProcessTest {
                 .description("changed description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
+                                .questionId(beforeQuestion.getId())
                                 .question("changed1")
                                 .description("changed1 description")
                                 .type(SurveyItemType.MULTI_SELECT)
@@ -89,6 +92,14 @@ class SurveyServiceProcessTest {
                                 .options(List.of(
                                         new SurveyQuestionOptionRequest("changed option1"),
                                         new SurveyQuestionOptionRequest("changed option2")
+                                )).build(),
+                        SurveyQuestionRequest.builder()
+                                .question("added1")
+                                .description("add1 description")
+                                .type(SurveyItemType.TEXT)
+                                .required(ItemRequired.REQUIRED)
+                                .options(List.of(
+                                        new SurveyQuestionOptionRequest("insert one")
                                 )).build()
                 )).build();
 
@@ -103,7 +114,7 @@ class SurveyServiceProcessTest {
         Assertions.assertThat(surveyUpdateResponse.surveyId()).isEqualTo(surveyId);
         Assertions.assertThat(surveyUpdateResponse.updatedAt()).isBefore(LocalDateTime.now());
 
-        Assertions.assertThat(updatedQuestions).hasSize(1);
+        Assertions.assertThat(updatedQuestions).hasSize(2);
         SurveyQuestion updatedQuestion = updatedQuestions.get(0);
         Assertions.assertThat(updatedQuestion.getSurvey()).isEqualTo(updatedSurvey);
         Assertions.assertThat(updatedQuestion.getItemName()).isEqualTo("changed1");
@@ -112,8 +123,50 @@ class SurveyServiceProcessTest {
         Assertions.assertThat(updatedQuestion.getOptions().get(0).getOptionText()).isEqualTo("changed option1");
         Assertions.assertThat(updatedQuestion.getOptions().get(1).getOptionText()).isEqualTo("changed option2");
 
-        Assertions.assertThat(beforeQuestion.getSurvey()).isNull();
-        Assertions.assertThat(beforeQuestion.getItemName()).isEqualTo("question1");
-        Assertions.assertThat(updatedQuestion.getSurvey()).isEqualTo(updatedSurvey);
+        Assertions.assertThat(beforeQuestion.getSurvey()).isNotNull();
+        Assertions.assertThat(beforeQuestion.getId()).isEqualTo(updatedQuestion.getId());
+    }
+
+    @Transactional
+    @Test
+    void failTest_updateProcessWithDuplicateQuestionIdTest() {
+        // a
+        SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
+        String surveyId = createdSurvey.surveyId();
+
+        Survey survey = surveyRepository.findById(surveyId).get();
+        List<SurveyQuestion> questions = survey.getQuestions();
+        SurveyQuestion beforeQuestion = surveyQuestionRepository.findById(questions.get(0).getId()).get();
+
+        SurveyUpdateRequest updateRequest = SurveyUpdateRequest.builder()
+                .id(surveyId)
+                .name("test changed")
+                .description("changed description")
+                .questions(List.of(
+                        SurveyQuestionRequest.builder()
+                                .questionId(beforeQuestion.getId())
+                                .question("changed1")
+                                .description("changed1 description")
+                                .type(SurveyItemType.MULTI_SELECT)
+                                .required(ItemRequired.REQUIRED)
+                                .options(List.of(
+                                        new SurveyQuestionOptionRequest("changed option1"),
+                                        new SurveyQuestionOptionRequest("changed option2")
+                                )).build(),
+                        SurveyQuestionRequest.builder()
+                                .questionId(beforeQuestion.getId())
+                                .question("added1")
+                                .description("add1 description")
+                                .type(SurveyItemType.TEXT)
+                                .required(ItemRequired.REQUIRED)
+                                .options(List.of(
+                                        new SurveyQuestionOptionRequest("insert one")
+                                )).build()
+                )).build();
+
+        // a
+        Assertions.assertThatThrownBy(() -> surveyService.updateSurvey(updateRequest))
+                .isInstanceOf(SurveyCreationException.class)
+                .hasMessageContaining(ServiceError.CREATION_DUPLICATE_QUESTIONS.getMessage());
     }
 }
