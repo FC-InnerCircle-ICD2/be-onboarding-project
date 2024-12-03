@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Getter
-@NoArgsConstructor
 public class QuestionRequest {
     private Long idx;
 
@@ -65,5 +65,20 @@ public class QuestionRequest {
                 .forEach(question::addOptions);
 
         return question;
+    }
+
+    @Builder
+    protected QuestionRequest(
+            String name,
+            String description,
+            String questionType,
+            Boolean isRequired,
+            List<String> options
+    ) {
+        this.name = name;
+        this.description = description;
+        this.questionType = questionType;
+        this.isRequired = isRequired;
+        this.options = options;
     }
 }

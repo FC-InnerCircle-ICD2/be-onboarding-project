@@ -20,7 +20,7 @@ public class OptionRequest {
     }
 
     @Builder
-    public OptionRequest(
+    protected OptionRequest(
             String name
     ) {
         this.name = name;

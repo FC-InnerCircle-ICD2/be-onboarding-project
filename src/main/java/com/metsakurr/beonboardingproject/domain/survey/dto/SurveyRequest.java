@@ -4,12 +4,12 @@ import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 public class SurveyRequest {
     private long idx;
 
@@ -46,5 +46,16 @@ public class SurveyRequest {
                 .forEach(survey::addQuestion);
 
         return survey;
+    }
+
+    @Builder
+    protected SurveyRequest(
+            String name,
+            String description,
+            List<QuestionRequest> questions
+    ) {
+        this.name = name;
+        this.description = description;
+        this.questions = questions;
     }
 }
