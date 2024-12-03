@@ -1,6 +1,7 @@
 package com.innercicle.application.port.in.v1;
 
 import com.innercicle.SelfValidating;
+import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.Survey;
 import lombok.*;
 
@@ -19,6 +20,14 @@ public class ModifySurveyCommandV1 extends SelfValidating<ModifySurveyCommandV1>
     private String description;
 
     private List<ModifySurveyItemCommandV1> items;
+
+    @Override
+    public void validateSelf() {
+        super.validateSelf();
+        if (items.stream().filter(item -> item.getId() != null).toList().isEmpty()) {
+            throw new RequiredFieldException("설문 항목은 반드시 하나 이상 존재해야 합니다.");
+        }
+    }
 
     @Builder(builderClassName = "ModifySurveyCommandV1Builder", builderMethodName = "buildInternal")
     public static ModifySurveyCommandV1 create(Long id, String name, String description, List<ModifySurveyItemCommandV1> items) {

@@ -1,12 +1,14 @@
 package com.innercicle.adapter.in.web.survey.v1.request;
 
 import com.innercicle.application.port.in.v1.ModifySurveyCommandV1;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 @Getter
+@Builder
 public class ModifySurveyRequestV1 {
 
     /**

@@ -1,6 +1,0 @@
-jwt:
-  token:
-    header: Authorization
-    issuer: seunggulee
-    client-secret: dpsdpdlcldpsdlstktjqltmroqkfxlawlrkrgkwlakfwk
-    token-validity-in-milliseconds: 300000

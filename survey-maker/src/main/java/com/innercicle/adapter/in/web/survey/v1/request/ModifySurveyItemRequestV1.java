@@ -2,11 +2,13 @@ package com.innercicle.adapter.in.web.survey.v1.request;
 
 import com.innercicle.application.port.in.v1.ModifySurveyItemCommandV1;
 import com.innercicle.domain.v1.InputType;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
+@Builder
 public class ModifySurveyItemRequestV1 {
 
     private Long id;

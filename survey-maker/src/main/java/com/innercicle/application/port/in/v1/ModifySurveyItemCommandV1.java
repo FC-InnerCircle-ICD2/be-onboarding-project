@@ -1,6 +1,7 @@
 package com.innercicle.application.port.in.v1;
 
 import com.innercicle.SelfValidating;
+import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
 import lombok.*;
@@ -39,6 +40,14 @@ public class ModifySurveyItemCommandV1 extends SelfValidating<ModifySurveyItemCo
      * 설문 항목 선택지 목록
      */
     private List<String> options;
+
+    @Override
+    public void validateSelf() {
+        super.validateSelf();
+        if ((type == InputType.MULTI_SELECT || type == InputType.SINGLE_SELECT) && options != null && options.isEmpty()) {
+            throw new RequiredFieldException(String.format("%s 일 경우 설문 항목 선택지 목록은 비어있을 수 없습니다.", this.type.getType()));
+        }
+    }
 
     @Builder(builderClassName = "ModifySurveyItemCommandV1Builder", builderMethodName = "buildInternal")
     public static ModifySurveyItemCommandV1 create(Long id,
