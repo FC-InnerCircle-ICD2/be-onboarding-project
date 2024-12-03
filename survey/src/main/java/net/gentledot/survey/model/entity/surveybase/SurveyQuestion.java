@@ -58,7 +58,7 @@ public class SurveyQuestion {
         List<SurveyQuestionOption> options = null;
         if (questionRequestOptions != null) {
             options = questionRequestOptions.stream()
-                    .map(SurveyQuestionOption::from)
+                    .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
                     .collect(Collectors.toList());
         }
 
