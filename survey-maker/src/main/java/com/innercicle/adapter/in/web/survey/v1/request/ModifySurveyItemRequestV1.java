@@ -1,19 +1,17 @@
 package com.innercicle.adapter.in.web.survey.v1.request;
 
-import com.innercicle.application.port.in.v1.RegisterSurveyItemCommandV1;
+import com.innercicle.application.port.in.v1.ModifySurveyItemCommandV1;
 import com.innercicle.domain.v1.InputType;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class RegisterSurveyItemRequestV1 {
+public class ModifySurveyItemRequestV1 {
+
+    private Long id;
 
     /**
      * 설문 항목 명
@@ -40,8 +38,9 @@ public class RegisterSurveyItemRequestV1 {
      */
     private List<String> options;
 
-    public RegisterSurveyItemCommandV1 mapToCommand() {
-        return RegisterSurveyItemCommandV1.builder()
+    public ModifySurveyItemCommandV1 mapToCommand() {
+        return ModifySurveyItemCommandV1.builder()
+            .id(this.id)
             .item(this.item)
             .description(this.description)
             .type(this.type)
@@ -51,4 +50,3 @@ public class RegisterSurveyItemRequestV1 {
     }
 
 }
-

@@ -1,6 +1,17 @@
 spring:
   application:
     name: survey-maker
-
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/survey
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 server:
   port: 9232

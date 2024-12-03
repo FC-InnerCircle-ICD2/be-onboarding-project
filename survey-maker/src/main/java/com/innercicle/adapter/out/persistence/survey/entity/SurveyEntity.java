@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ import java.util.List;
  */
 @Getter
 @Entity
+@Audited
 @Table(name = "survey")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyEntity extends UpdatedEntity {
@@ -40,15 +43,15 @@ public class SurveyEntity extends UpdatedEntity {
     private String description;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyItemEntity> items;
+    private final List<SurveyItemEntity> items = new ArrayList<>();
 
     public static SurveyEntity from(Survey survey) {
         SurveyEntity entity = new SurveyEntity();
         entity.name = survey.name();
         entity.description = survey.description();
-        entity.items = survey.items().stream()
-            .map(SurveyItemEntity::from)
-            .toList();
+        entity.items.addAll(survey.items().stream()
+                                .map(s -> SurveyItemEntity.from(s, entity))
+                                .toList());
         return entity;
     }
 
@@ -61,6 +64,11 @@ public class SurveyEntity extends UpdatedEntity {
                        .map(SurveyItemEntity::mapToDomain)
                        .toList())
             .build();
+    }
+
+    public void update(Survey survey) {
+        this.name = survey.name();
+        this.description = survey.description();
     }
 
 }
