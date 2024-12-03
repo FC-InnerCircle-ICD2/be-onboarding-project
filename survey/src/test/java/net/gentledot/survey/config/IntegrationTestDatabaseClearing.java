@@ -28,12 +28,11 @@ public class IntegrationTestDatabaseClearing {
 
             statement.executeUpdate("TRUNCATE TABLE survey");
             statement.executeUpdate("TRUNCATE TABLE survey_question");
-            statement.executeUpdate("TRUNCATE TABLE survey_question_option");
             statement.executeUpdate("TRUNCATE TABLE survey_answer");
+            statement.executeUpdate("TRUNCATE TABLE survey_question_option");
             statement.executeUpdate("TRUNCATE TABLE survey_answer_submission");
 
             statement.executeUpdate("ALTER TABLE survey_question ALTER COLUMN id RESTART WITH 1");
-            statement.executeUpdate("ALTER TABLE survey_question_option ALTER COLUMN id RESTART WITH 1");
             statement.executeUpdate("ALTER TABLE survey_answer ALTER COLUMN id RESTART WITH 1");
             statement.executeUpdate("ALTER TABLE survey_answer_submission ALTER COLUMN id RESTART WITH 1");
 
