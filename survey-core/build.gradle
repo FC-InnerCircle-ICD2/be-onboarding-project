@@ -1,9 +1,10 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
     implementation project(':survey-common')
+    implementation project(':survey-h2')
 }
 
 tasks.named('test') {
