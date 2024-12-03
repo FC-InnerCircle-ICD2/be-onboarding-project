@@ -9,6 +9,7 @@ import com.innercircle.surveryproject.modules.repository.SurveyAnswerRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyItemRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,22 +38,23 @@ public class SurveyAnswerService {
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
         Survey survey = surveyRepository.findById(surveyAnswerCreateDto.getSurveyId()).orElseThrow(() -> new InvalidInputException(
-                "일치하는 설문조사를 찾을 수 없습니다."));
+            "일치하는 설문조사를 찾을 수 없습니다."));
 
         List<SurveyItemResponseDto> surveyItemResponseDtoList = surveyAnswerCreateDto.getSurveyItemResponseDtoList();
 
         Map<Long, String> surveyAnswerMap = new HashMap<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyItem =
-                    surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
-                            surveyItemResponseDto.getSurveyItemId());
+                surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
+                                                          surveyItemResponseDto.getSurveyItemId());
 
             if (optionalSurveyItem.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
             }
 
             SurveyItem surveyItem = optionalSurveyItem.get();
-            if (surveyItem.getRequired() && (surveyItemResponseDto.getAnswer() == null || surveyItemResponseDto.getAnswer().isEmpty())) {
+            if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
+                || surveyItemResponseDto.getAnswer().isEmpty())) {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
@@ -92,18 +94,22 @@ public class SurveyAnswerService {
     public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
 
         Survey survey =
-                surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
+            surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
 
         return survey.getSurveyAnswerList().stream()
-                .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
-                        .filter(entry -> (surveyItemId == null || entry.getKey().equals(surveyItemId)) &&
-                                (surveyItemAnswer == null || entry.getValue().equals(surveyItemAnswer)))
-                        .map(entry -> SurveyAnswerResponseDto.of(surveyAnswer.getSurveyId(),
-                                surveyAnswer.getPhoneNumber(),
-                                entry.getKey(),
-                                entry.getValue()))
+            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
+                .filter(entry ->
+                            (ObjectUtils.isEmpty(surveyItemId) || entry.getKey().equals(surveyItemId)) &&
+                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getValue().equals(surveyItemAnswer))
                 )
-                .toList();
+                .map(entry -> SurveyAnswerResponseDto.of(
+                    surveyAnswer.getSurveyId(),
+                    surveyAnswer.getPhoneNumber(),
+                    entry.getKey(),
+                    entry.getValue()
+                ))
+            )
+            .toList();
     }
 
 }
