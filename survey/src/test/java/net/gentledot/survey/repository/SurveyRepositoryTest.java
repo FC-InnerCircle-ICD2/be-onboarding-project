@@ -6,6 +6,7 @@ import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.model.enums.AnswerType;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +74,7 @@ class SurveyRepositoryTest {
         assertThat(questions.getFirst().getId()).isNotNull();
         List<SurveyQuestionOption> options = questions.getFirst().getOptions();
         assertThat(options).hasSize(2);
-        assertThat(options.getFirst().getAnswerType()).isEqualTo(SurveyItemType.SINGLE_SELECT);
+        assertThat(options.getFirst().getAnswerType()).isEqualTo(AnswerType.BOOLEAN);
         assertThat(options.getFirst().getOptionText()).isEqualTo("option1");
     }
 }

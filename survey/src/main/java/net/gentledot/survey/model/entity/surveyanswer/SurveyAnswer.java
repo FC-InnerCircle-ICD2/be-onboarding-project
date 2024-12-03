@@ -19,6 +19,7 @@ import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
 import java.util.List;
@@ -67,7 +68,8 @@ public class SurveyAnswer {
                     List<SurveyQuestionOption> questionOptions = question.getOptions();
                     SurveyQuestionSnapshot questionSnapshot = SurveyQuestionSnapshot.from(question);
 
-                    if (questionOptions.size() != submitAnswers.size()) {
+                    if (ItemRequired.REQUIRED.equals(question.getRequired()) &&
+                        (questionOptions.size() < submitAnswers.size())) {
                         throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
                     }
 

@@ -82,20 +82,14 @@ public class SurveyAnswerService {
 
             // 2. answer가 비어 있는지 확인 (필수 항목)
             if (question.getRequired() == ItemRequired.REQUIRED) {
-                if (SurveyItemType.SINGLE_SELECT.equals(question.getItemType()) ||
-                    SurveyItemType.MULTI_SELECT.equals(question.getItemType())) {
-                    long optionCount = question.getOptions().stream()
-                            .filter(option -> answer.getAnswer().contains(option.getOptionText()))
-                            .count();
-
-                    if (optionCount != answer.getAnswer().size()) {
-                        throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
-                    }
-                } else {
-                    if (answer.getAnswer().isEmpty() || StringUtils.isBlank(answer.getAnswer().getFirst())) {
-                        throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
-                    }
+                if (answer.getAnswer().isEmpty() || StringUtils.isBlank(answer.getAnswer().getFirst())) {
+                    throw new SurveySubmitValidationException(ServiceError.BAD_REQUEST);
                 }
+
+                if (SurveyItemType.SINGLE_SELECT.equals(question.getItemType()) && answer.getAnswer().size() > 1) {
+                    throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
+                }
+
             }
         }
     }

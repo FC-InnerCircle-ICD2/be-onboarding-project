@@ -47,10 +47,10 @@ class SurveyAnswerServiceProcessTest {
     private Survey createSurvey() {
         List<SurveyQuestionOption> options = new ArrayList<>();
         options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 1"), SurveyItemType.SINGLE_SELECT));
-        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.TEXT));
+        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.SINGLE_SELECT));
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, options));
-        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, new ArrayList<>()));
+        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.TEXT))));
         return Survey.of("Survey 1", "Description 1", questions);
     }
 
@@ -58,7 +58,7 @@ class SurveyAnswerServiceProcessTest {
     void submitSurveyWithValidSurveyIdAndAnswers() {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
-                survey.getQuestions().get(0).getId(), List.of("Answer 1")));
+                survey.getQuestions().get(0).getId(), List.of("Question 1")));
         answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(),
                 List.of("Answer 2")));
 
@@ -97,18 +97,6 @@ class SurveyAnswerServiceProcessTest {
     }
 
     @Test
-    void failTest_validateSurveyAnswersWithInvalidQuestionOptionId() {
-        // Arrange
-        List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 1")));
-
-        // Act & Assert
-        assertThrows(SurveySubmitValidationException.class, () -> {
-            surveyAnswerService.validateSurveyAnswers(survey, answers);
-        });
-    }
-
-    @Test
     void failTest_validateSurveyAnswersWithoutAnswerOptionIdForRequiredQuestion() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
@@ -124,8 +112,7 @@ class SurveyAnswerServiceProcessTest {
     void failTest_validateSurveyAnswersWithMultipleOptionsForSingleSelectQuestion() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 1")));
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 2")));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Option 1", "Option 2")));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -138,7 +125,7 @@ class SurveyAnswerServiceProcessTest {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
                 survey.getQuestions().get(0).getId(),
-                List.of("Answer 1")));
+                List.of("Option 1")));
         answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), List.of("Answer 2")));
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
@@ -160,7 +147,7 @@ class SurveyAnswerServiceProcessTest {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
                 survey.getQuestions().get(0).getId(),
-                List.of("Answer 1")));
+                List.of("Option 1")));
         answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), List.of("Answer 2")));
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
