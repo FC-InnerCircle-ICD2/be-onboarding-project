@@ -90,6 +90,290 @@
 ```
 [Exception & Error]<br>
 
+### 설문조사 수정
+[Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "content": "string"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:23:32.752Z",
+            "modified_at": "2024-12-03T13:23:32.752Z",
+            "unregistered_at": "2024-12-03T13:23:32.752Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:23:32.752Z",
+        "modified_at": "2024-12-03T13:23:32.752Z",
+        "unregistered_at": "2024-12-03T13:23:32.752Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:23:32.752Z",
+    "modified_at": "2024-12-03T13:23:32.752Z",
+    "unregistered_at": "2024-12-03T13:23:32.752Z"
+  }
+}
+```
+[Exception & Error]<br>
+
+### 설문조사 응답 제출
+[Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "item_id": 0,
+        "content": "string"
+      }
+    ]
+  }
+}
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "item_id": 0,
+        "content": "string",
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:12.117Z",
+        "modified_at": "2024-12-03T13:24:12.117Z",
+        "unregistered_at": "2024-12-03T13:24:12.117Z"
+      }
+    ]
+  }
+}
+```
+[Exception & Error]<br>
+
+### 설문조사 응답 조회
+[Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "item_id": 0,
+        "content": "string",
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:40.007Z",
+        "modified_at": "2024-12-03T13:24:40.007Z",
+        "unregistered_at": "2024-12-03T13:24:40.007Z"
+      }
+    ]
+  }
+}
+```
+[Exception & Error]<br>
+
+### 설문조사 조회
+[Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:24:57.892Z",
+            "modified_at": "2024-12-03T13:24:57.893Z",
+            "unregistered_at": "2024-12-03T13:24:57.893Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:57.893Z",
+        "modified_at": "2024-12-03T13:24:57.893Z",
+        "unregistered_at": "2024-12-03T13:24:57.893Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:24:57.893Z",
+    "modified_at": "2024-12-03T13:24:57.893Z",
+    "unregistered_at": "2024-12-03T13:24:57.893Z"
+  }
+}
+```
+[Exception & Error]<br>
+
+### 설문조사 전체 조회
+[Request]<br>
+```
+No parameters
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": [
+    {
+      "id": 0,
+      "title": "string",
+      "description": "string",
+      "status": "REGISTERED",
+      "registered_at": "2024-12-03T13:25:14.631Z",
+      "modified_at": "2024-12-03T13:25:14.631Z",
+      "unregistered_at": "2024-12-03T13:25:14.631Z"
+    }
+  ]
+}
+```
+[Exception & Error]<br>
+
+### 설문조사 삭제
+[Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:25:50.301Z",
+    "modified_at": "2024-12-03T13:25:50.301Z",
+    "unregistered_at": "2024-12-03T13:25:50.301Z"
+  }
+}
+```
+[Exception & Error]<br>
 ---------------------------------------
 # 이너써클 BE 온보딩 프로젝트
 
