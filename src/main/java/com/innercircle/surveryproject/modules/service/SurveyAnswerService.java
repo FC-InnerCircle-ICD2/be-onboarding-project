@@ -9,6 +9,7 @@ import com.innercircle.surveryproject.modules.repository.SurveyAnswerRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyItemRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +37,6 @@ public class SurveyAnswerService {
     @Transactional
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
-        if (!Character.isDigit(Math.toIntExact(surveyAnswerCreateDto.getPhoneNumber()))) {
-            throw new InvalidInputException("휴대폰 번호는 국가번호+전화번호를 포함한 숫자만 입력 가능합니다. ex) 8201012341234");
-        }
-
         Survey survey = surveyRepository.findById(surveyAnswerCreateDto.getSurveyId()).orElseThrow(() -> new InvalidInputException(
             "일치하는 설문조사를 찾을 수 없습니다."));
 
@@ -47,19 +44,24 @@ public class SurveyAnswerService {
 
         Map<Long, String> surveyAnswerMap = new HashMap<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
-            Optional<SurveyItem> optionalSurveyAnswer =
+            Optional<SurveyItem> optionalSurveyItem =
                 surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
                                                           surveyItemResponseDto.getSurveyItemId());
 
-            if (optionalSurveyAnswer.isEmpty()) {
+            if (optionalSurveyItem.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
+            }
+
+            SurveyItem surveyItem = optionalSurveyItem.get();
+            if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
+                || surveyItemResponseDto.getAnswer().isEmpty())) {
+                throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
             surveyAnswerMap.put(surveyItemResponseDto.getSurveyItemId(), surveyItemResponseDto.getAnswer());
         }
 
         SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto, surveyAnswerMap);
-        surveyAnswer.setSurvey(survey);
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
@@ -90,17 +92,25 @@ public class SurveyAnswerService {
     @Transactional(readOnly = true)
     public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
 
-        Survey survey =
-            surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
+        List<SurveyAnswer> surveyAnswerList =
+            surveyAnswerRepository.findBySurveyAnswerIdSurveyId(surveyAnswerId);
 
-        return survey.getSurveyAnswerList().stream()
+        if (surveyAnswerList.isEmpty()) {
+            throw new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다.");
+        }
+
+        return surveyAnswerList.stream()
             .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
-                .filter(entry -> (surveyItemId == null || entry.getKey().equals(surveyItemId)) &&
-                    (surveyItemAnswer == null || entry.getValue().equals(surveyItemAnswer)))
-                .map(entry -> SurveyAnswerResponseDto.of(surveyAnswer.getSurveyId(),
-                                                         surveyAnswer.getPhoneNumber(),
-                                                         entry.getKey(),
-                                                         entry.getValue()))
+                .filter(entry ->
+                            (ObjectUtils.isEmpty(surveyItemId) || entry.getKey().equals(surveyItemId)) &&
+                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getValue().equals(surveyItemAnswer))
+                )
+                .map(entry -> SurveyAnswerResponseDto.of(
+                    surveyAnswer.getSurveyId(),
+                    surveyAnswer.getPhoneNumber(),
+                    entry.getKey(),
+                    entry.getValue()
+                ))
             )
             .toList();
     }

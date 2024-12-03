@@ -31,12 +31,6 @@ public class Survey {
     @OneToMany(mappedBy = "survey")
     private List<SurveyItem> surveyItemList;
 
-    /**
-     * 설문조사 응답
-     */
-    @OneToMany(mappedBy = "survey")
-    private List<SurveyAnswer> surveyAnswerList;
-
     public Survey(SurveyCreateDto surveyCreateDto) {
         this.name = surveyCreateDto.getName();
         this.description = surveyCreateDto.getDescription();

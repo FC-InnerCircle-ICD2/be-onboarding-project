@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,13 +38,10 @@ class SurveyServiceTest {
     }
 
     @Test
+    @Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("설문조사 수정 성공")
     void test_case_2() throws Exception {
         // given
-        JsonNode jsonNode = FileUtils.readFileAsJson("testcase/success_survey.txt");
-        // when
-        SurveyCreateDto request = objectMapper.treeToValue(jsonNode, SurveyCreateDto.class);
-        surveyService.createSurvey(request);
         // then
         JsonNode jsonNode1 = FileUtils.readFileAsJson("testcase/survey_update_success.txt");
         SurveyUpdateDto surveyUpdateDto = objectMapper.treeToValue(jsonNode1, SurveyUpdateDto.class);

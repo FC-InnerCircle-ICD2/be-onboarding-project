@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Map;
 
@@ -18,11 +17,10 @@ import java.util.Map;
 public class SurveyAnswer extends BaseEntity {
 
     /**
-     * 핸드폰 번호 (국가번호+전화번호)
+     * 설문조사 ID
      */
-    @Id
-    @Column(nullable = false)
-    private Long phoneNumber;
+    @EmbeddedId
+    private SurveyAnswerId surveyAnswerId;
 
     /**
      * 사용자 이름
@@ -33,15 +31,18 @@ public class SurveyAnswer extends BaseEntity {
      * 설문조사 응답 결과
      */
     @ElementCollection
+    @CollectionTable(
+        name = "survey_answer_survey_answer_map",
+        joinColumns = {
+            @JoinColumn(name = "survey_id", referencedColumnName = "surveyId"),
+            @JoinColumn(name = "phone_number", referencedColumnName = "phoneNumber")
+        }
+    )
+    @MapKeyColumn(name = "survey_answer_map_key") // 맵의 키를 컬럼으로 지정
     private Map<Long, String> surveyAnswerMap;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "survey_id", nullable = false)
-    private Survey survey;
-
     public SurveyAnswer(SurveyAnswerCreateDto surveyCreateDto, Map<Long, String> surveyAnswerMap) {
-        this.phoneNumber = surveyCreateDto.getPhoneNumber();
+        this.surveyAnswerId = SurveyAnswerId.of(surveyCreateDto.getSurveyId(), surveyCreateDto.getPhoneNumber());
         this.username = surveyCreateDto.getUsername();
         this.surveyAnswerMap = surveyAnswerMap;
     }
@@ -51,7 +52,11 @@ public class SurveyAnswer extends BaseEntity {
     }
 
     public Long getSurveyId() {
-        return this.survey.getId();
+        return this.surveyAnswerId.getSurveyId();
+    }
+
+    public Long getPhoneNumber() {
+        return this.surveyAnswerId.getPhoneNumber();
     }
 
 }
