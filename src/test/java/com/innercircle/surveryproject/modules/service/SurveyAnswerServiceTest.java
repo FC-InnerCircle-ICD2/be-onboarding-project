@@ -4,7 +4,6 @@ import com.innercircle.surveryproject.global.utils.FileUtils;
 import com.innercircle.surveryproject.infra.exceptions.InvalidInputException;
 import com.innercircle.surveryproject.modules.dto.SurveyAnswerCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyAnswerDto;
-import com.innercircle.surveryproject.modules.repository.SurveyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
-@Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest
 class SurveyAnswerServiceTest {
 
     @Autowired
     private SurveyAnswerService surveyAnswerService;
-
-    @Autowired
-    private SurveyRepository surveyRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
