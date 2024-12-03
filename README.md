@@ -13,9 +13,81 @@
 ## API 상세
 
 ### 설문조사 생성
-[Header]<br>
 [Request]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "content": "string"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 [Response]<br>
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:07:38.529Z",
+            "modified_at": "2024-12-03T13:07:38.529Z",
+            "unregistered_at": "2024-12-03T13:07:38.529Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:07:38.529Z",
+        "modified_at": "2024-12-03T13:07:38.529Z",
+        "unregistered_at": "2024-12-03T13:07:38.529Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:07:38.530Z",
+    "modified_at": "2024-12-03T13:07:38.530Z",
+    "unregistered_at": "2024-12-03T13:07:38.530Z"
+  }
+}
+```
 [Exception & Error]<br>
 
 ---------------------------------------
