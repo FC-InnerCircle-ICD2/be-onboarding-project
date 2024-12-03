@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
-@Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest
 class SurveyAnswerServiceTest {
 
@@ -31,6 +30,7 @@ class SurveyAnswerServiceTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("설문조사 응답 생성 시 필수 항목이 누락된 경우 에러")
     void testSurveyAnswer() throws IOException {
         JsonNode jsonNode = FileUtils.readFileAsJson("testcase/survey_answer_testcase1.txt");
@@ -41,6 +41,7 @@ class SurveyAnswerServiceTest {
     }
 
     @Test
+    @Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @DisplayName("설문조사 응답 제출 시 저장 성공")
     void test_case_1() throws Exception {
         // given

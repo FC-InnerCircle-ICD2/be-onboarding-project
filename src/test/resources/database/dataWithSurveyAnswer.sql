@@ -18,18 +18,20 @@ CREATE TABLE IF NOT EXISTS survey_item_item_content_list (
    CONSTRAINT fk_survey_item FOREIGN KEY (survey_item_id) REFERENCES survey_item (id) ON DELETE CASCADE -- 외래 키 제약조건
 );
 CREATE TABLE IF NOT EXISTS survey_answer (
-    phone_number BIGINT PRIMARY KEY, -- Primary Key로 설정
-    username VARCHAR(255),
-    survey_id BIGINT NOT NULL,
-    CONSTRAINT fk_survey FOREIGN KEY (survey_id) REFERENCES survey (id) ON DELETE CASCADE
+    survey_id BIGINT NOT NULL,         -- 설문조사 ID
+    phone_number BIGINT NOT NULL,     -- 핸드폰 번호
+    username VARCHAR(255),            -- 사용자 이름
+    PRIMARY KEY (survey_id, phone_number) -- 복합키
 );
 CREATE TABLE IF NOT EXISTS survey_answer_survey_answer_map (
-    survey_answer_phone_number BIGINT NOT NULL,
-    map_key BIGINT NOT NULL,
-    map_value VARCHAR(255),
-    CONSTRAINT fk_survey_answer FOREIGN KEY (survey_answer_phone_number) REFERENCES survey_answer (phone_number) ON DELETE CASCADE
+    survey_id BIGINT NOT NULL,               -- 외래 키 (NOT NULL)
+    phone_number BIGINT NOT NULL,           -- 외래 키 (NOT NULL)
+    survey_answer_map_key BIGINT NOT NULL,  -- Map의 키
+    survey_answer_map VARCHAR(255),         -- Map의 값
+    PRIMARY KEY (survey_id, phone_number, survey_answer_map_key),
+    CONSTRAINT fk_survey_answer FOREIGN KEY (survey_id, phone_number)
+        REFERENCES survey_answer (survey_id, phone_number) ON DELETE CASCADE
 );
-
 INSERT INTO SURVEY
 VALUES (1, '정상적인 설문조사 데이터 저장', '설문조사 저장 테스트');
 INSERT INTO survey_item (id, name, description, item_type, required, survey_id)
@@ -38,8 +40,9 @@ VALUES
     (2,'항목 이름 2', '항목 설명 2', 'SHORT_TEXT', FALSE, 1);
 INSERT INTO survey_answer (phone_number, username, survey_id)
 VALUES (821012345678, 'John Doe', 1);
-INSERT INTO survey_answer_survey_answer_map (survey_answer_phone_number, survey_answer_map_key, survey_answer_map)
+INSERT INTO survey_answer_survey_answer_map (survey_id, phone_number, survey_answer_map_key, survey_answer_map)
 VALUES
-    (821012345678, 101, '응답 내용 1'),
-    (821012345678, 102, '응답 내용 2'),
-    (821012345678, 103, '응답 내용 3');
+    (1, 821012345678, 101, '응답 내용 1'),
+    (1, 821012345678, 102, '응답 내용 2'),
+    (1, 821012345678, 103, '응답 내용 3');
+$

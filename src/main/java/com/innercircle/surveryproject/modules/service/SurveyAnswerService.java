@@ -62,7 +62,6 @@ public class SurveyAnswerService {
         }
 
         SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto, surveyAnswerMap);
-        surveyAnswer.setSurvey(survey);
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
@@ -93,10 +92,14 @@ public class SurveyAnswerService {
     @Transactional(readOnly = true)
     public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
 
-        Survey survey =
-            surveyRepository.findById(surveyAnswerId).orElseThrow(() -> new InvalidInputException("일치하는 설문조사가 없습니다."));
+        List<SurveyAnswer> surveyAnswerList =
+            surveyAnswerRepository.findBySurveyAnswerIdSurveyId(surveyAnswerId);
 
-        return survey.getSurveyAnswerList().stream()
+        if (surveyAnswerList.isEmpty()) {
+            throw new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다.");
+        }
+
+        return surveyAnswerList.stream()
             .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
                 .filter(entry ->
                             (ObjectUtils.isEmpty(surveyItemId) || entry.getKey().equals(surveyItemId)) &&
