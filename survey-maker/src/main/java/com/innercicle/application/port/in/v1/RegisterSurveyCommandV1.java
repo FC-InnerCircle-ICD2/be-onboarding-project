@@ -1,7 +1,7 @@
 package com.innercicle.application.port.in.v1;
 
-import com.innercicle.SelfValidating;
 import com.innercicle.domain.v1.Survey;
+import com.innercicle.validation.SelfValidating;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

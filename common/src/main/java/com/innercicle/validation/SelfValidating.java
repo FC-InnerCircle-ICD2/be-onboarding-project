@@ -1,4 +1,4 @@
-package com.innercicle;
+package com.innercicle.validation;
 
 import jakarta.validation.*;
 

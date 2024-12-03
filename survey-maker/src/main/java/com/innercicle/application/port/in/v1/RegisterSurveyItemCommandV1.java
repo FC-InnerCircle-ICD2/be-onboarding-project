@@ -1,9 +1,9 @@
 package com.innercicle.application.port.in.v1;
 
-import com.innercicle.SelfValidating;
 import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
+import com.innercicle.validation.SelfValidating;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
