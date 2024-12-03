@@ -11,7 +11,6 @@ import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
-import net.gentledot.survey.repository.SurveyQuestionOptionRepository;
 import net.gentledot.survey.repository.SurveyQuestionRepository;
 import net.gentledot.survey.repository.SurveyRepository;
 import org.assertj.core.api.Assertions;
@@ -37,8 +36,6 @@ class SurveyServiceProcessTest {
     @Autowired
     SurveyQuestionRepository questionRepository;
 
-    @Autowired
-    SurveyQuestionOptionRepository questionOptionRepository;
     @Autowired
     private SurveyQuestionRepository surveyQuestionRepository;
 

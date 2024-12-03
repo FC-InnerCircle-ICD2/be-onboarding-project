@@ -2,6 +2,7 @@ package net.gentledot.survey.service;
 
 import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.response.SearchSurveyAnswerResponse;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,8 +46,8 @@ class SurveyAnswerServiceProcessTest {
 
     private Survey createSurvey() {
         List<SurveyQuestionOption> options = new ArrayList<>();
-        options.add(SurveyQuestionOption.of("Option 1"));
-        options.add(SurveyQuestionOption.of("Option 2"));
+        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 1"), SurveyItemType.SINGLE_SELECT));
+        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.TEXT));
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, options));
         questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, new ArrayList<>()));
@@ -56,9 +58,9 @@ class SurveyAnswerServiceProcessTest {
     void submitSurveyWithValidSurveyIdAndAnswers() {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
-                survey.getQuestions().get(0).getId(),
-                survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
+                survey.getQuestions().get(0).getId(), List.of("Answer 1")));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(),
+                List.of("Answer 2")));
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
 
@@ -68,7 +70,7 @@ class SurveyAnswerServiceProcessTest {
     @Test
     void failTest_submitSurveyWithInvalidSurveyId() {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 1")));
 
 
         Assertions.assertThatThrownBy(() ->
@@ -86,7 +88,7 @@ class SurveyAnswerServiceProcessTest {
     void failTest_validateSurveyAnswersWithInvalidQuestionId() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(999L, survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
+        answers.add(new SubmitSurveyAnswer(999L, List.of("Answer 1")));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -98,7 +100,7 @@ class SurveyAnswerServiceProcessTest {
     void failTest_validateSurveyAnswersWithInvalidQuestionOptionId() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), 999L, "Answer 1"));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 1")));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -110,7 +112,7 @@ class SurveyAnswerServiceProcessTest {
     void failTest_validateSurveyAnswersWithoutAnswerOptionIdForRequiredQuestion() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), null, ""));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), Collections.emptyList()));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -122,8 +124,8 @@ class SurveyAnswerServiceProcessTest {
     void failTest_validateSurveyAnswersWithMultipleOptionsForSingleSelectQuestion() {
         // Arrange
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), survey.getQuestions().get(0).getOptions().get(1).getId(), "Answer 2"));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 1")));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(0).getId(), List.of("Answer 2")));
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
@@ -136,8 +138,8 @@ class SurveyAnswerServiceProcessTest {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
                 survey.getQuestions().get(0).getId(),
-                survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
+                List.of("Answer 1")));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), List.of("Answer 2")));
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
 
@@ -158,8 +160,8 @@ class SurveyAnswerServiceProcessTest {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
                 survey.getQuestions().get(0).getId(),
-                survey.getQuestions().get(0).getOptions().get(0).getId(), "Answer 1"));
-        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), null, "Answer 2"));
+                List.of("Answer 1")));
+        answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(), List.of("Answer 2")));
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
 

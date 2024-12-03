@@ -149,7 +149,7 @@ class SurveyServiceTest {
     private SurveyQuestion convertToSurveyQuestion(SurveyQuestionRequest questionRequest) {
         List<SurveyQuestionOption> options = questionRequest.getOptions()
                 .stream()
-                .map(this::convertToSurveyItemOption)
+                .map(surveyQuestionOptionRequest -> this.convertToSurveyItemOption(surveyQuestionOptionRequest, questionRequest.getType()))
                 .collect(Collectors.toList());
 
         return SurveyQuestion.of(
@@ -161,7 +161,7 @@ class SurveyServiceTest {
         );
     }
 
-    private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest) {
-        return SurveyQuestionOption.of(optionRequest.getOptionText());
+    private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest, SurveyItemType questionType) {
+        return SurveyQuestionOption.of(new SurveyQuestionOptionRequest(optionRequest.getOptionText()), questionType);
     }
 }

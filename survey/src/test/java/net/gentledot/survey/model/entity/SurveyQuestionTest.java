@@ -1,6 +1,7 @@
 package net.gentledot.survey.model.entity;
 
 import lombok.extern.slf4j.Slf4j;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
@@ -20,16 +21,18 @@ class SurveyItemTest {
     @Test
     void createSurveyTest() {
         /*Survey - SurveyQuestion - SurveyOption 의 관계 */
+        SurveyItemType singleSelect = SurveyItemType.SINGLE_SELECT;
+        SurveyItemType text = SurveyItemType.TEXT;
         Survey survey = Survey.of(
                 "test Survey",
                 "desc",
                 List.of(
                         SurveyQuestion.of("question1", "this is question1",
-                                SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED,
-                                List.of(SurveyQuestionOption.of("option1"), SurveyQuestionOption.of("option2"))),
+                                singleSelect, ItemRequired.REQUIRED,
+                                List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), singleSelect), SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option2"), singleSelect))),
                         SurveyQuestion.of("question2", "this is question2",
-                                SurveyItemType.TEXT, ItemRequired.OPTIONAL,
-                                List.of(SurveyQuestionOption.of("option1"))
+                                text, ItemRequired.OPTIONAL,
+                                List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), text))
                         )));
 
         log.info("created survey : {}", survey);

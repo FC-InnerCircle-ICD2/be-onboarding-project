@@ -2,6 +2,7 @@ package net.gentledot.survey.repository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
@@ -30,15 +31,16 @@ class SurveyRepositoryTest {
     @Transactional
     void createAndSaveSurveyTest() {
         // option 생성
-        SurveyQuestionOption option1 = SurveyQuestionOption.of("option1");
-        SurveyQuestionOption option2 = SurveyQuestionOption.of("option2");
-        SurveyQuestionOption option3 = SurveyQuestionOption.of("option3");
+        SurveyItemType singleSelect = SurveyItemType.SINGLE_SELECT;
+        SurveyQuestionOption option1 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), singleSelect);
+        SurveyQuestionOption option2 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option2"), singleSelect);
+        SurveyQuestionOption option3 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option3"), singleSelect);
 
         // question 생성
         SurveyQuestion question1 = SurveyQuestion.of(
                 "question1",
                 "this is question1",
-                SurveyItemType.SINGLE_SELECT,
+                singleSelect,
                 ItemRequired.REQUIRED,
                 List.of(option1, option2)
         );
@@ -71,7 +73,7 @@ class SurveyRepositoryTest {
         assertThat(questions.getFirst().getId()).isNotNull();
         List<SurveyQuestionOption> options = questions.getFirst().getOptions();
         assertThat(options).hasSize(2);
-        assertThat(options.getFirst().getId()).isNotNull();
+        assertThat(options.getFirst().getAnswerType()).isEqualTo(SurveyItemType.SINGLE_SELECT);
         assertThat(options.getFirst().getOptionText()).isEqualTo("option1");
     }
 }
