@@ -53,8 +53,7 @@ public class SurveyService {
     public void updateSurvey(UpdateSurveyUpdateRequest request) {
 
         /* 엔티티 확인 */
-        Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
-                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+        Survey survey = checkSurveyBySeq(request.getSurveySeq());
 
         survey.deletedCheck();
 
@@ -70,8 +69,8 @@ public class SurveyService {
     }
 
     public void submitSurvey(SubmitSurveyRequest request) {
-        Survey survey = surveyQueryBusiness.findSurveyById(request.getSurveySeq())
-                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+
+        Survey survey = checkSurveyBySeq(request.getSurveySeq());
 
         if (Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
@@ -136,4 +135,8 @@ public class SurveyService {
         return result;
     }
 
+    public Survey checkSurveyBySeq(Long surveySeq){
+        return surveyQueryBusiness.findSurveyById(surveySeq)
+                .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
+    }
 }
