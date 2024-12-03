@@ -22,7 +22,7 @@ import java.util.List;
 @Tag(name = "설문조사 응답 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/survey_answer")
+@RequestMapping("/api/survey-answer")
 public class SurveyAnswerController {
 
     private final SurveyAnswerService surveyAnswerService;
