@@ -3,23 +3,17 @@ package com.metsakurr.beonboardingproject.domain.survey.service;
 import com.metsakurr.beonboardingproject.common.dto.ApiResponse;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
-import com.metsakurr.beonboardingproject.domain.survey.dto.QuestionRequest;
 import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyCreationResponse;
 import com.metsakurr.beonboardingproject.domain.survey.dto.SurveyRequest;
-import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
-import com.metsakurr.beonboardingproject.domain.survey.repository.QuestionRepository;
 import com.metsakurr.beonboardingproject.domain.survey.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SurveyService {
     private final SurveyRepository surveyRepository;
-    private final QuestionRepository questionRepository;
 
     public ApiResponse<SurveyCreationResponse> create(SurveyRequest request) {
         Survey survey = request.toEntity();
