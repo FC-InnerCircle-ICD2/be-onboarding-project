@@ -1,7 +1,7 @@
 # API 명세서
 
 |구분|API 명|HTTP method|API Path|설명|
-|------|---|---|---|
+|------|---|---|---|---|
 |생성|설문조사 생성|Post|//survey//register|설문조사를 생성하는 API|
 |수정|설문조사 수정|Post|//survey//update|설문조사를 수정하는 API|
 |생성|설문조사 응답 제출|Post|//survey//reply|설문조사 응답을 제출하는 API|
