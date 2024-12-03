@@ -5,7 +5,7 @@
 |생성|설문조사 생성|Post|/survey/register|설문조사를 생성하는 API|
 |수정|설문조사 수정|Post|/survey/update|설문조사를 수정하는 API|
 |생성|설문조사 응답 제출|Post|/survey/reply|설문조사 응답을 제출하는 API|
-|조회|설문조사 응답 조회|Post|/survey/find//replyAll|설문조사 ID를 기반으로 응답을 조회하는 API|
+|조회|설문조사 응답 조회|Post|/survey/find/replyAll|설문조사 ID를 기반으로 응답을 조회하는 API|
 |조회|설문조사 조회|Post|/survey/find/survey|설문조사 ID를 기반으로 설문조사를 조회하는 API|
 |조회|설문조사 전체 조회|Get|/survey/find/baseAll|설문조사 전체 목록을 조회하는 API|
 |삭제|설문조사 삭제|Post|/survey/delete|설문조사 ID를 기반으로 설문조사를 삭제하는 API|
