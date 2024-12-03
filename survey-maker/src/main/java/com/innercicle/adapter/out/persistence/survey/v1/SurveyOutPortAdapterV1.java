@@ -6,6 +6,8 @@ import com.innercicle.adapter.out.persistence.survey.repository.SurveyItemReposi
 import com.innercicle.adapter.out.persistence.survey.repository.SurveyRepository;
 import com.innercicle.advice.exceptions.NotExistsSurveyException;
 import com.innercicle.annotations.PersistenceAdapter;
+import com.innercicle.application.port.in.SearchSurveyQuery;
+import com.innercicle.application.port.out.SearchSurveyOutPort;
 import com.innercicle.application.port.out.v1.ModifySurveyOutPortV1;
 import com.innercicle.application.port.out.v1.RegisterSurveyOutPortV1;
 import com.innercicle.domain.v1.Survey;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class SurveyOutPortAdapterV1 implements RegisterSurveyOutPortV1, ModifySurveyOutPortV1 {
+public class SurveyOutPortAdapterV1 implements RegisterSurveyOutPortV1, ModifySurveyOutPortV1, SearchSurveyOutPort {
 
     private final SurveyRepository surveyRepository;
     private final SurveyItemRepository surveyItemRepository;
@@ -109,6 +111,13 @@ public class SurveyOutPortAdapterV1 implements RegisterSurveyOutPortV1, ModifySu
             surveyItemRepository.save(itemEntity);
             surveyEntity.getItems().add(itemEntity);
         });
+    }
+
+    @Override
+    public Survey searchSurvey(SearchSurveyQuery searchSurveyQuery) {
+        return surveyRepository.findById(searchSurveyQuery.getSurveyId())
+            .map(SurveyEntity::mapToDomain)
+            .orElseThrow();
     }
 
 }

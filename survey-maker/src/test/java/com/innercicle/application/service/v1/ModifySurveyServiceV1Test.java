@@ -2,9 +2,8 @@ package com.innercicle.application.service.v1;
 
 import com.innercicle.adapter.in.web.survey.v1.request.ModifySurveyItemRequestV1;
 import com.innercicle.adapter.in.web.survey.v1.request.ModifySurveyRequestV1;
-import com.innercicle.adapter.out.persistence.survey.entity.SurveyEntity;
-import com.innercicle.adapter.out.persistence.survey.repository.SurveyRepository;
 import com.innercicle.advice.exceptions.RequiredFieldException;
+import com.innercicle.application.port.in.SearchSurveyQuery;
 import com.innercicle.application.port.in.v1.RegisterSurveyCommandV1;
 import com.innercicle.application.port.in.v1.RegisterSurveyItemCommandV1;
 import com.innercicle.common.annotations.MockMvcTest;
@@ -20,7 +19,6 @@ import org.testcontainers.utility.TestcontainersConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +37,7 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
     private ModifySurveyServiceV1 modifySurveyServiceV1;
 
     @Autowired
-    private SurveyRepository surveyRepository;  // 검색 API 만들기 전까지 임시로 사용
+    private SearchSurveyServiceV1 searchSurveyServiceV1;
 
     private Survey saveDummyData() {
         // given
@@ -78,6 +76,7 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
             .description(description)
             .items(List.of(
                 ModifySurveyItemRequestV1.builder()
+                    .id(survey.items().getFirst().id())
                     .item(item)
                     .description(subDescription)
                     .type(type)
@@ -134,16 +133,15 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
             .build();
         // when
         modifySurveyServiceV1.modifySurvey(request.mapToCommand());
-        Optional<SurveyEntity> optionalSurvey = surveyRepository.findById(survey.id());
+        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQuery.of(survey.id()));
 
         // then
-        assertThat(optionalSurvey).isPresent();
-        assertThat(optionalSurvey.get().getItems()).hasSize(2);
-        assertThat(optionalSurvey.get().getItems().getLast().getItem()).isEqualTo(newItem);
-        assertThat(optionalSurvey.get().getItems().getLast().getDescription()).isEqualTo(newDescription);
-        assertThat(optionalSurvey.get().getItems().getLast().getInputType()).isEqualTo(InputType.SINGLE_SELECT);
-        assertThat(optionalSurvey.get().getItems().getLast().isRequired()).isTrue();
-        assertThat(optionalSurvey.get().getItems().getLast().getOptions()).containsExactly(newOption1, newOption2);
+        assertThat(searchedSurvey.items()).hasSize(2);
+        assertThat(searchedSurvey.items().getLast().item()).isEqualTo(newItem);
+        assertThat(searchedSurvey.items().getLast().description()).isEqualTo(newDescription);
+        assertThat(searchedSurvey.items().getLast().inputType()).isEqualTo(InputType.SINGLE_SELECT);
+        assertThat(searchedSurvey.items().getLast().required()).isTrue();
+        assertThat(searchedSurvey.items().getLast().options()).containsExactly(newOption1, newOption2);
 
     }
 
@@ -216,9 +214,9 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
             }
         }
         // then
-        Optional<SurveyEntity> optionalSurvey = surveyRepository.findById(survey.id());
-        assertThat(optionalSurvey).isPresent();
-        assertThat(optionalSurvey.get().getName()).isNotEqualTo("수정된 설문 명" + threadCount);
+        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQuery.of(survey.id()));
+        assertThat(searchedSurvey).isNotNull();
+        assertThat(searchedSurvey.name()).isNotEqualTo("수정된 설문 명" + threadCount);
     }
 
 }
