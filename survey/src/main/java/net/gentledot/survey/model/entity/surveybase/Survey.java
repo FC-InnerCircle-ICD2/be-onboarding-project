@@ -60,9 +60,9 @@ public class Survey extends BaseEntity {
 
         List<SurveyQuestion> questionsToRemove = this.getQuestions().stream()
                 .filter(existingQuestion -> updatedQuestions.stream()
+                        .filter(updatedQuestion -> updatedQuestion.getId() != null)
                         .noneMatch(updatedQuestion -> updatedQuestion.getId().equals(existingQuestion.getId())))
                 .collect(Collectors.toList());
-
         this.getQuestions().removeAll(questionsToRemove);
         this.updateQuestions(updatedQuestions);
 

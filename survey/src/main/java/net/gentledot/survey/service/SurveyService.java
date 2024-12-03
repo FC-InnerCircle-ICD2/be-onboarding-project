@@ -2,6 +2,7 @@ package net.gentledot.survey.service;
 
 
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
+import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyRequest;
 import net.gentledot.survey.dto.request.SurveyUpdateRequest;
@@ -45,7 +46,7 @@ public class SurveyService {
 
         Survey saved = surveyRepository.save(survey);
 
-        return new SurveyCreateResponse(saved.getId(), saved.getCreatedAt());
+        return SurveyCreateResponse.of(saved.getId(), saved.getCreatedAt(), saved.getQuestions());
     }
 
     @Transactional
@@ -82,6 +83,17 @@ public class SurveyService {
 
         Map<Long, Long> questionCountMap = new HashMap<>();
         for (SurveyQuestionRequest question : questions) {
+            if (SurveyItemType.TEXT.equals(question.getType()) || SurveyItemType.PARAGRAPH.equals(question.getType())) {
+                if (question.getOptions() == null || question.getOptions().isEmpty()) {
+                    SurveyQuestionOptionRequest defaultOption = new SurveyQuestionOptionRequest("input");
+                    question.setOptions(List.of(defaultOption));
+                }
+            }
+
+            if (question.getOptions().isEmpty()) {
+                throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
+            }
+
             Long questionId = question.getQuestionId();
             if (questionId != null) {
                 questionCountMap.put(

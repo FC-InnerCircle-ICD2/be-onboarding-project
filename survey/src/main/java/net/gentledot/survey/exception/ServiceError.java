@@ -13,6 +13,7 @@ public enum ServiceError {
     CREATION_INSUFFICIENT_QUESTIONS("1002", "서베이 생성에 필요한 질문은 최소 1개 이상, 10개 이하까지 생성 가능합니다."),
     CREATION_INSUFFICIENT_OPTIONS("1003", "서베이 생성에 필요한 질문 옵션이 유효하지 않습니다."),
     CREATION_DUPLICATE_QUESTIONS("1004", "서베이 생성/수정 요청 시 중복된 질문이 설정될 수 없습니다."),
+    CREATION_REQUIRED_OPTIONS("1005", "서베이 생성에 필요한 옵션이 확인되지 않습니다."),
 
     // 조회 관련 오류 (200)
     INQUIRY_SURVEY_NOT_FOUND("2001", "요청한 서베이를 찾을 수 없습니다."),

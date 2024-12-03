@@ -63,8 +63,8 @@ class SurveyServiceProcessTest {
     @Test
     void createProcessTest() {
         SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
-        Assertions.assertThat(createdSurvey.surveyId()).isNotBlank();
-        Assertions.assertThat(createdSurvey.createdAt()).isBefore(LocalDateTime.now());
+        Assertions.assertThat(createdSurvey.getSurveyId()).isNotBlank();
+        Assertions.assertThat(createdSurvey.getCreatedAt()).isBefore(LocalDateTime.now());
     }
 
     @Transactional
@@ -72,7 +72,7 @@ class SurveyServiceProcessTest {
     void updateProcessTest() {
         // a
         SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
-        String surveyId = createdSurvey.surveyId();
+        String surveyId = createdSurvey.getSurveyId();
 
         Survey survey = surveyRepository.findById(surveyId).get();
         List<SurveyQuestion> questions = survey.getQuestions();
@@ -132,7 +132,7 @@ class SurveyServiceProcessTest {
     void failTest_updateProcessWithDuplicateQuestionIdTest() {
         // a
         SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
-        String surveyId = createdSurvey.surveyId();
+        String surveyId = createdSurvey.getSurveyId();
 
         Survey survey = surveyRepository.findById(surveyId).get();
         List<SurveyQuestion> questions = survey.getQuestions();

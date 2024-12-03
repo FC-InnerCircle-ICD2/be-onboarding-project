@@ -67,7 +67,6 @@ class SurveyIntegrationTest {
                         "description": "당신의 이름은 무엇입니까?",
                         "type": "TEXT",
                         "required": "REQUIRED"
-                
                       },
                       {
                         "question": "오늘의 기분을 알려주세요",

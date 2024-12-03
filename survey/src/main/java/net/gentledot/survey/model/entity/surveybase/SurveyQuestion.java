@@ -55,12 +55,9 @@ public class SurveyQuestion {
 
     public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {
         List<SurveyQuestionOptionRequest> questionRequestOptions = questionRequest.getOptions();
-        List<SurveyQuestionOption> options = null;
-        if (questionRequestOptions != null) {
-            options = questionRequestOptions.stream()
-                    .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
-                    .collect(Collectors.toList());
-        }
+        List<SurveyQuestionOption> options = questionRequestOptions.stream()
+                .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
+                .collect(Collectors.toList());
 
         return SurveyQuestion.of(
                 questionRequest.getQuestion(),
