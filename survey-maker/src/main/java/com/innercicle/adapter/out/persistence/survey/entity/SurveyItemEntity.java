@@ -8,11 +8,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import java.util.List;
 
 @Getter
 @Entity
+@Audited
 @Table(name = "survey_item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyItemEntity extends UpdatedEntity {
@@ -55,13 +57,14 @@ public class SurveyItemEntity extends UpdatedEntity {
     @Column(name = "options")
     private List<String> options;
 
-    public static SurveyItemEntity from(SurveyItem surveyItem) {
+    public static SurveyItemEntity from(SurveyItem surveyItem, SurveyEntity survey) {
         SurveyItemEntity entity = new SurveyItemEntity();
         entity.item = surveyItem.item();
         entity.description = surveyItem.description();
         entity.inputType = surveyItem.inputType();
         entity.required = surveyItem.required();
         entity.options = surveyItem.options();
+        entity.survey = survey;
         return entity;
     }
 
@@ -74,6 +77,19 @@ public class SurveyItemEntity extends UpdatedEntity {
             .required(this.required)
             .options(this.options)
             .build();
+    }
+
+    public void setRelation(SurveyEntity surveyEntity) {
+        this.survey = surveyEntity;
+        this.survey.getItems().add(this);
+    }
+
+    public void update(SurveyItem item) {
+        this.item = item.item();
+        this.description = item.description();
+        this.inputType = item.inputType();
+        this.required = item.required();
+        this.options = item.options();
     }
 
 }
