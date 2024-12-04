@@ -4,7 +4,6 @@ import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
-import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.repository.survey.AnswerOptionRepository;
 import com.icd.survey.api.repository.survey.ItemAnswerRepository;
 import com.icd.survey.api.repository.survey.SurveyItemRepository;
@@ -27,12 +26,8 @@ public class SurveyQueryBusiness {
     private final AnswerOptionRepository answerOptionRepository;
     private final SurveyQueryRepository surveyQueryRepository;
 
-    public Optional<List<ItemAnswer>> findItemAnswerList(Long itemSeq){
+    public Optional<List<ItemAnswer>> findItemAnswerList(Long itemSeq) {
         return itemAnswerRepository.findAllByItemSeq(itemSeq);
-    }
-
-    public SurveyDto getSurveyDto(Long surveySeq) {
-        return surveyQueryRepository.getSurveyById(surveySeq);
     }
 
     public Optional<Survey> findSurveyById(Long surveySeq) {
@@ -41,14 +36,6 @@ public class SurveyQueryBusiness {
 
     public Optional<List<SurveyItem>> findItemAllBySurveySeq(Long surveySeq) {
         return surveyItemRepository.findAllBySurveySeq(surveySeq);
-    }
-
-    public Optional<List<ItemAnswer>> findAnswerListBySurveySeq(Long surveySeq) {
-        return null;
-    }
-
-    public Optional<List<ItemAnswerOption>> findOptionAllByItemSeq(Long itemSeq) {
-        return answerOptionRepository.findAllByItemSeq(itemSeq);
     }
 
     public Optional<ItemAnswerOption> findOptionByIdAndItemSeq(Long optionSeq, Long itemSeq) {

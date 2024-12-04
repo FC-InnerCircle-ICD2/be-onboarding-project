@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -46,21 +45,16 @@ public class SurveyActionBusiness {
         return surveyItemRepository.save(SurveyItem.createSurveyItemRequest(surveyItemDto));
     }
 
-    public ItemAnswerOption saveItemResponseOption(ItemAnswerOptionDto responseOptionDto) {
+    public ItemAnswerOption saveAnswerOption(ItemAnswerOptionDto responseOptionDto) {
         return answerOptionRepository.save(ItemAnswerOption.createItemResponseOptionRequest(responseOptionDto));
     }
 
-    public void updateSurveyItemAsDisabled(Long surveySeq){
+    public void updateSurveyItemAsDisabled(Long surveySeq) {
         surveyQueryRepository.updateSurveyItemAsDisabled(surveySeq);
     }
 
-    public void disableItemList(Long surveySeq) {
-        Optional<List<SurveyItem>> optionalSurveyItemList = surveyQueryBusiness.findItemAllBySurveySeq(surveySeq);
-
-        if (Boolean.TRUE.equals(optionalSurveyItemList.isPresent())) {
-            List<SurveyItem> surveyItemList = optionalSurveyItemList.get();
-            surveyItemList.forEach(SurveyItem::disable);
-        }
+    public void saveAnswer(ItemAnswerDto answerDto) {
+        itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
     }
 
     public void saveSurveyItemList(List<SurveyItemRequest> itemDtoList, Long surveySeq) {
@@ -69,7 +63,7 @@ public class SurveyActionBusiness {
 
             SurveyItemDto dto = x.createSurveyItemDtoRequest();
             dto.setSurveySeq(surveySeq);
-            Long itemSeq = surveyItemRepository.save(SurveyItem.createSurveyItemRequest(dto)).getItemSeq();
+            Long itemSeq = saveSurveyItem(x.createSurveyItemDtoRequest()).getItemSeq();
 
             if (Boolean.TRUE.equals(x.isChoiceType())) {
                 saveItemOptionList(x.getOptionList(), itemSeq);
@@ -82,7 +76,7 @@ public class SurveyActionBusiness {
 
             ItemAnswerOptionDto dto = x.createItemResponseOptionDto();
             dto.setItemSeq(itemSeq);
-            answerOptionRepository.save(ItemAnswerOption.createItemResponseOptionRequest(dto));
+            saveAnswerOption(dto);
         });
     }
 
@@ -135,10 +129,5 @@ public class SurveyActionBusiness {
                     .build());
         }
     }
-
-    public void saveAnswer(ItemAnswerDto answerDto) {
-        itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
-    }
-
 
 }
