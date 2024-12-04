@@ -3,9 +3,9 @@ package com.innercicle.application.service.v1;
 import com.innercicle.adapter.in.web.survey.v1.request.ModifySurveyItemRequestV1;
 import com.innercicle.adapter.in.web.survey.v1.request.ModifySurveyRequestV1;
 import com.innercicle.advice.exceptions.RequiredFieldException;
-import com.innercicle.application.port.in.SearchSurveyQuery;
 import com.innercicle.application.port.in.v1.RegisterSurveyCommandV1;
 import com.innercicle.application.port.in.v1.RegisterSurveyItemCommandV1;
+import com.innercicle.application.port.in.v1.SearchSurveyQueryV1;
 import com.innercicle.common.annotations.MockMvcTest;
 import com.innercicle.common.container.RedisTestContainer;
 import com.innercicle.domain.v1.InputType;
@@ -133,7 +133,7 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
             .build();
         // when
         modifySurveyServiceV1.modifySurvey(request.mapToCommand());
-        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQuery.of(survey.id()));
+        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQueryV1.of(survey.id()));
 
         // then
         assertThat(searchedSurvey.items()).hasSize(2);
@@ -214,7 +214,7 @@ class ModifySurveyServiceV1Test extends RedisTestContainer {
             }
         }
         // then
-        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQuery.of(survey.id()));
+        Survey searchedSurvey = searchSurveyServiceV1.searchSurvey(SearchSurveyQueryV1.of(survey.id()));
         assertThat(searchedSurvey).isNotNull();
         assertThat(searchedSurvey.name()).isNotEqualTo("수정된 설문 명" + threadCount);
     }

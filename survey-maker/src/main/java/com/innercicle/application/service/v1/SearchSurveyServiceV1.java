@@ -1,9 +1,9 @@
 package com.innercicle.application.service.v1;
 
 import com.innercicle.annotations.UseCase;
-import com.innercicle.application.port.in.SearchSurveyQuery;
-import com.innercicle.application.port.in.SearchSurveyUseCaseV1;
-import com.innercicle.application.port.out.SearchSurveyOutPort;
+import com.innercicle.application.port.in.v1.SearchSurveyQueryV1;
+import com.innercicle.application.port.in.v1.SearchSurveyUseCaseV1;
+import com.innercicle.application.port.out.v1.SearchSurveyOutPortV1;
 import com.innercicle.domain.v1.Survey;
 import lombok.RequiredArgsConstructor;
 
@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SearchSurveyServiceV1 implements SearchSurveyUseCaseV1 {
 
-    private final SearchSurveyOutPort searchSurveyOutPort;
+    private final SearchSurveyOutPortV1 searchSurveyOutPortV1;
 
     @Override
-    public Survey searchSurvey(SearchSurveyQuery searchSurveyQuery) {
-        return searchSurveyOutPort.searchSurvey(searchSurveyQuery);
+    public Survey searchSurvey(SearchSurveyQueryV1 searchSurveyQueryV1) {
+        return searchSurveyOutPortV1.searchSurvey(searchSurveyQueryV1);
     }
 
 }

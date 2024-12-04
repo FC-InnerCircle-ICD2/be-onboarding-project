@@ -1,8 +1,8 @@
 package com.innercicle.adapter.in.web.survey.v1;
 
 import com.innercicle.adapter.in.web.survey.v1.response.SearchSurveyResponse;
-import com.innercicle.application.port.in.SearchSurveyQuery;
-import com.innercicle.application.port.in.SearchSurveyUseCaseV1;
+import com.innercicle.application.port.in.v1.SearchSurveyQueryV1;
+import com.innercicle.application.port.in.v1.SearchSurveyUseCaseV1;
 import com.innercicle.utils.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class SearchSurveyControllerV1 {
 
     @GetMapping("/{surveyId}")
     public ApiUtil.ApiResult<SearchSurveyResponse> searchSurvey(@PathVariable(name = "surveyId") Long surveyId) {
-        return success(SearchSurveyResponse.from(searchSurveyUseCaseV1.searchSurvey(SearchSurveyQuery.of(surveyId))));
+        return success(SearchSurveyResponse.from(searchSurveyUseCaseV1.searchSurvey(SearchSurveyQueryV1.of(surveyId))));
     }
 
 }

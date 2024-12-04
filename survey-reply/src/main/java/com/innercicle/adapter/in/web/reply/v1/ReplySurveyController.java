@@ -1,0 +1,26 @@
+package com.innercicle.adapter.in.web.reply.v1;
+
+import com.innercicle.adapter.in.web.reply.v1.request.ReplySurveyRequest;
+import com.innercicle.adapter.in.web.reply.v1.response.ReplySurveyResponse;
+import com.innercicle.application.port.in.v1.ReplySurveyUsecaseV1;
+import com.innercicle.utils.ApiUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import static com.innercicle.utils.ApiUtil.success;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/survey/reply")
+public class ReplySurveyController {
+
+    private final ReplySurveyUsecaseV1 replySurveyUsecaseV1;
+
+    @PostMapping
+    public ApiUtil.ApiResult<ReplySurveyResponse> replySurvey(ReplySurveyRequest request) {
+        return success(ReplySurveyResponse.from(replySurveyUsecaseV1.replySurvey(request.mapToCommand())));
+    }
+
+}

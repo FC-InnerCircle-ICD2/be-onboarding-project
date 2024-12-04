@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: survey-response
-
-server:
-  port: 9233

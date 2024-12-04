@@ -1,6 +1,5 @@
 package com.innercicle.application.port.in.v1;
 
-import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
 import com.innercicle.validation.SelfValidating;
@@ -44,9 +43,7 @@ public class ModifySurveyItemCommandV1 extends SelfValidating<ModifySurveyItemCo
     @Override
     public void validateSelf() {
         super.validateSelf();
-        if ((type == InputType.MULTI_SELECT || type == InputType.SINGLE_SELECT) && options != null && options.isEmpty()) {
-            throw new RequiredFieldException(String.format("%s 일 경우 설문 항목 선택지 목록은 비어있을 수 없습니다.", this.type.getType()));
-        }
+        type.validateOptions(this.options);
     }
 
     @Builder(builderClassName = "ModifySurveyItemCommandV1Builder", builderMethodName = "buildInternal")
@@ -59,17 +56,6 @@ public class ModifySurveyItemCommandV1 extends SelfValidating<ModifySurveyItemCo
         return new ModifySurveyItemCommandV1(id, item, description, type, required, options);
     }
 
-    public SurveyItem mapToDomain() {
-        return SurveyItem.builder()
-            .id(id)
-            .item(item)
-            .description(description)
-            .inputType(type)
-            .required(required)
-            .options(options)
-            .build();
-    }
-
     public static class ModifySurveyItemCommandV1Builder {
 
         public ModifySurveyItemCommandV1 build() {
@@ -79,6 +65,17 @@ public class ModifySurveyItemCommandV1 extends SelfValidating<ModifySurveyItemCo
             return modifySurveyItemCommandV1;
         }
 
+    }
+
+    public SurveyItem mapToDomain() {
+        return SurveyItem.builder()
+            .id(id)
+            .item(item)
+            .description(description)
+            .inputType(type)
+            .required(required)
+            .options(options)
+            .build();
     }
 
 }

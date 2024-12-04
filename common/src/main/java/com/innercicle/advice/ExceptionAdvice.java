@@ -1,5 +1,8 @@
 package com.innercicle.advice;
 
+import com.innercicle.advice.exceptions.AlreadyLockedException;
+import com.innercicle.advice.exceptions.NotExistsSurveyException;
+import com.innercicle.advice.exceptions.NotMatchedException;
 import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.utils.ApiUtil;
 import jakarta.validation.ConstraintViolationException;
@@ -25,7 +28,10 @@ public class ExceptionAdvice {
 
     @ExceptionHandler({
         ConstraintViolationException.class,
-        RequiredFieldException.class
+        RequiredFieldException.class,
+        AlreadyLockedException.class,
+        NotExistsSurveyException.class,
+        NotMatchedException.class
     })
     @ResponseStatus(BAD_REQUEST)
     public ApiUtil.ApiResult<Void> badRequest(Exception e) {
