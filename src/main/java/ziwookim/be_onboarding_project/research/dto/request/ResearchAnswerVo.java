@@ -10,15 +10,6 @@ import lombok.*;
 public class ResearchAnswerVo {
     private Object answer;
 
-    public boolean isValidAnswerType() {
-        return switch (answer) {
-            case String s -> true;
-            case Long l -> true;
-            case Long[] longs -> true;
-            case null, default -> false;
-        };
-    }
-
     public boolean isEmptyStringAnswerType() {
         return (answer instanceof String && ((String) answer).isEmpty());
     }

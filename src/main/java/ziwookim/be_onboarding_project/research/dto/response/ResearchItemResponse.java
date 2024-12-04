@@ -27,7 +27,7 @@ public class ResearchItemResponse {
                 .itemType(vo.getItemType())
                 .itemTypeName(vo.getItemTypeName())
                 .isRequired(vo.getIsRequired())
-                .researchItemChoiceResponseList(vo.getResearchItemChoiceVoList().stream().map(ResearchItemChoiceResponse::of).toList())
+                .researchItemChoiceResponseList(vo.getItemChoiceList().stream().map(ResearchItemChoiceResponse::of).toList())
                 .build();
     }
 

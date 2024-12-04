@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ziwookim.be_onboarding_project.common.web.enums.HttpErrors;
 import ziwookim.be_onboarding_project.common.web.exception.BadRequestException;
-import ziwookim.be_onboarding_project.research.dto.request.*;
 import ziwookim.be_onboarding_project.research.dto.request.ResearchAnswerVo;
+import ziwookim.be_onboarding_project.research.dto.request.*;
 import ziwookim.be_onboarding_project.research.dto.response.ResearchAnswerResponse;
 import ziwookim.be_onboarding_project.research.entity.Research;
 import ziwookim.be_onboarding_project.research.entity.ResearchAnswer;
@@ -25,9 +25,9 @@ import ziwookim.be_onboarding_project.research.service.ResearchService;
 import ziwookim.be_onboarding_project.validator.ResearchValidator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -179,27 +179,36 @@ public class ResearchServiceImpl implements ResearchService {
         }
 
         for(int i=0; i < research.getResearchItems().size(); i++) {
+            log.info("item Order Number: {}", i);
             ResearchItem researchItem = research.getResearchItems().get(i);
+            log.info("itemTypeName: {}", ResearchItemType.getResearchItemTypeName(researchItem.getItemType()));
             ResearchAnswerVo answerVo = answerVoList.get(i);
+            log.info("answer value: {}", answerVo.getAnswer());
 
-            if(!answerVo.isValidAnswerType()) {
-                log.error("invalid research answer data.");
-                throw BadRequestException.of(HttpErrors.INVALID_RESEARCH_ANSWER);
-            }
+//            if(!answerVo.isValidAnswerType()) {
+//                log.error("invalid research answer data.");
+//                throw BadRequestException.of(HttpErrors.INVALID_RESEARCH_ANSWER);
+//            }
 
             if(researchItem.getIsRequired() && answerVo.isEmptyStringAnswerType()) {
                 log.error("required item is ignored.");
                 throw BadRequestException.of(HttpErrors.IGNORED_REQUIRED_ITEM);
             }
 
-            if(!isValidResearchItemTypeAndAnswer(researchItem, answerVo)) {
-                log.error("this itemType and answer data does not matched.");
-                throw BadRequestException.of(HttpErrors.MISMATCH_RESEARCH_ITEM_ANSWER);
+            if(!answerVo.isEmptyStringAnswerType()) {
+                if(!isValidResearchItemTypeAndAnswer(researchItem, answerVo)) {
+                    log.error("this itemType and answer data does not matched.");
+                    throw BadRequestException.of(HttpErrors.MISMATCH_RESEARCH_ITEM_ANSWER);
+                }
             }
+
         }
 
         ResearchAnswerResearchVo researchAnswerVo = convertResearchAnswerVo(research, answerVoList);
+
         String data = objectMapper.writeValueAsString(researchAnswerVo);
+
+        log.info("data: {}", data);
 
         researchAnswerRepository.save(ResearchAnswer.create(requestVo.getResearchId(), data));
 
@@ -244,11 +253,50 @@ public class ResearchServiceImpl implements ResearchService {
                     return true;
                 }
             case "SINGLE_SELECTION":
-                if(answerVo.getAnswer() instanceof Long) {
-                    return true;
-                }
+               if(answerVo.getAnswer() instanceof Number) {
+                   Long answer =  ((Number) answerVo.getAnswer()).longValue();
+
+                   List<ResearchItemChoice> researchItemChoiceList = researchItem.getItemChoiceList().stream()
+                           .filter(c -> c.getId().equals(answer))
+                           .toList();
+                   log.info("researchItemChoiceList size: {}", researchItemChoiceList.size());
+
+                   if(researchItemChoiceList.size() != 1) {
+                       throw BadRequestException.of(HttpErrors.INVALID_ANSWER_SINGLE_SELECTION_ITEM);
+                   }
+
+                   return true;
+               }
             case "MULTIPLE_SELECTION":
-                if(answerVo.getAnswer() instanceof Long[]) {
+                log.info("answer is instanceof List<?> : {}", answerVo.getAnswer() instanceof List<?> answerList);
+
+                if(answerVo.getAnswer() instanceof List<?> answerList) {
+
+                    List<Long> selectedIdList = List.of(answerList.stream()
+                            .filter(a -> a instanceof Number)
+                            .map(a -> ((Number) a).longValue())
+                            .toArray(Long[]::new));
+                    log.info("selectedIdList: {}", selectedIdList);
+
+                    Set<Long> uniqueIdSet = new HashSet<>();
+
+                    if(!selectedIdList.stream().allMatch(uniqueIdSet::add)) {
+                        throw BadRequestException.of(HttpErrors.INVALID_ANSWER_DUPLICATED_ANSWER);
+                    }
+
+                    List<ResearchItemChoice> itemChoiceList = researchItem.getItemChoiceList();
+                    if(selectedIdList.isEmpty() || selectedIdList.size() > itemChoiceList.size()) {
+                        throw BadRequestException.of(HttpErrors.INVALID_ANSWER_SIZE_MULTIPLE_SELECTION_ITEM);
+                    }
+
+                    List<ResearchItemChoice> selectedItemChoiceList = itemChoiceList.stream()
+                            .filter(c -> selectedIdList.contains(c.getId()))
+                            .toList();
+
+                    if(selectedItemChoiceList.size() != selectedIdList.size()) {
+                        throw BadRequestException.of(HttpErrors.INVALID_ANSWER_MULTIPLE_SELECTION_ITEM);
+                    }
+
                     return true;
                 }
             default:

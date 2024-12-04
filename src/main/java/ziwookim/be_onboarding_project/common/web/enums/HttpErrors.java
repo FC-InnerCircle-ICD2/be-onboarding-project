@@ -24,7 +24,11 @@ public enum HttpErrors implements HttpError {
     INVALID_MULTIPLE_SELECTION_ANSWER(HttpStatus.BAD_REQUEST, "다중 선택 리스트 항목의 응답 정보로 적절하지 않은 데이터가 포함 되어 있습니다."),
     MISMATCH_RESEARCH_ITEM_ANSWER_SIZE(HttpStatus.BAD_REQUEST, "설문 항목과 응답 개수가 일치하지 않습니다."),
     INVALID_RESEARCH_ANSWER(HttpStatus.BAD_REQUEST, "응답 형식이 적절하지 않습니다."),
-    MISMATCH_RESEARCH_ITEM_ANSWER(HttpStatus.BAD_REQUEST, "설문 항목 입력 형태와 응답 형식이 매칭 되지 않습니다.")
+    MISMATCH_RESEARCH_ITEM_ANSWER(HttpStatus.BAD_REQUEST, "설문 항목 입력 형태와 응답 형식이 매칭 되지 않습니다."),
+    INVALID_ANSWER_SINGLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "단일 선택 항목은 한가지 값만 선택할 수 있습니다."),
+    INVALID_ANSWER_DUPLICATED_ANSWER(HttpStatus.BAD_REQUEST, "다중 선택 항목에 중복된 선택 값이 포함 되어 있습니다."),
+    INVALID_ANSWER_SIZE_MULTIPLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "다중 선택 항목의 값의 길이가 부적절합니다."),
+    INVALID_ANSWER_MULTIPLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "다중 선택 항목의 값 중 부적절한 값이 포함 되어 있습니다."),
     ;
     private final HttpStatus status;
     private final String message;
