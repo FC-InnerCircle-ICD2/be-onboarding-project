@@ -82,11 +82,13 @@ public class Survey extends BaseEntity {
     }
 
     @Builder
-    public Survey(
+    private Survey(
             String name,
-            String description
+            String description,
+            List<Question> questions
     ) {
         this.name = name;
         this.description = description;
+        this.questions = questions;
     }
 }

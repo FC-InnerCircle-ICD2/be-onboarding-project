@@ -51,18 +51,20 @@ public class Question extends BaseEntity {
     }
 
     @Builder
-    public Question(
+    private Question(
             Survey survey,
             String name,
             String description,
             QuestionType questionType,
-            boolean isRequired
+            boolean isRequired,
+            List<Option> options
     ) {
         this.survey = survey;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
         this.isRequired = isRequired;
+        this.options = options;
     }
 
     public void validAnswer(String answer) {

@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    default: local
+
   application:
     name: be-onboarding-project
 
@@ -7,13 +10,50 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-  h2:
-    console:
-      enabled: true
+
   jpa:
+    hibernate:
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate.format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+    defer-datasource-initialization: true
+
+  h2:
+    console:
+      enabled: true
+
 logging:
   level:
     org.hibernate.type.descriptor.sql: TRACE
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  sql:
+    init:
+      mode: never

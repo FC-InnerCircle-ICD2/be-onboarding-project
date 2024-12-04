@@ -1,0 +1,2 @@
+-- insert into survey(name, description, created_at, updated_at)
+-- values ('테스트 설문 조사', '테스트 설문 조사 설명', now(), now());
