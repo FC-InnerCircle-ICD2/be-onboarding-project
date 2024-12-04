@@ -47,12 +47,6 @@ public class SurveyService {
 			survey.getName(),
 			survey.getDescription(),
 			surveyVersion.getVersion(),
-			// surveyVersion.getSurveyQuestions().stream().map(question -> new SurveyDTO.ItemResDTO(
-			// 	question.getName(),
-			// 	question.getDescription(),
-			// 	question.isRequired(),
-			// 	question.getOptionType(),
-			// 	question.getSurveyOptions().stream().map(SurveyOption::getOption).toList()
 			surveyVersion.getSurveyQuestions().stream().map(SurveyMapper::convertAnswerToDTO).toList());
 	}
 
