@@ -1,6 +1,5 @@
 package org.innercircle.surveyapiapplication.domain.survey.presentation.dto;
 
-import org.innercircle.surveyapiapplication.domain.question.presentation.dto.QuestionInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 
 import java.util.List;

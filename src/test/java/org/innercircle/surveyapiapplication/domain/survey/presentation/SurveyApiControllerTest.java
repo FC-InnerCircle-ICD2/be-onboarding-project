@@ -1,10 +1,11 @@
 package org.innercircle.surveyapiapplication.domain.survey.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQuestion;
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
 import org.innercircle.surveyapiapplication.domain.question.fixture.QuestionFixture;
-import org.innercircle.surveyapiapplication.domain.question.presentation.dto.QuestionInquiryResponse;
+import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.QuestionInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.survey.application.SurveyService;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.fixture.SurveyFixture;
@@ -78,10 +79,12 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.description").value(surveyInquiryResponse.description()),
 
                 jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
                 jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
                 jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
                 jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required())
+                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
             );
 
         verify(surveyService, times(1)).findById(survey.getId());
@@ -91,14 +94,14 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사를 생성한다.")
     void createSurvey() throws Exception {
         // given
-        Question shortQuestion = QuestionFixture.createShortAnswerQuestion();
-        List<Question> questions = List.of(shortQuestion);
+        Question question = QuestionFixture.createShortAnswerQuestion();
+        List<Question> questions = List.of(question);
         Survey survey = SurveyFixture.createSurvey(questions);
 
         QuestionCreateRequest questionCreateRequest = new QuestionCreateRequest(
-            shortQuestion.getName(),
-            shortQuestion.getDescription(),
-            shortQuestion.isRequired(),
+            question.getName(),
+            question.getDescription(),
+            question.isRequired(),
             QuestionType.SHORT_ANSWER,
             null
         );
@@ -133,10 +136,69 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.description").value(surveyInquiryResponse.description()),
 
                 jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
                 jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
                 jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
                 jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required())
+                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
+            );
+
+        verify(surveyService, times(1)).createSurvey(surveyCreateRequest.toDomain());
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 설문항목 내 선택지가 있는 설문조사를 생성한다.")
+    void createSurveyWithOptions() throws Exception {
+        // given
+        MultiChoiceQuestion question = QuestionFixture.createMultiChoiceQuestion();
+        List<Question> questions = List.of(question);
+        Survey survey = SurveyFixture.createSurvey(questions);
+
+        QuestionCreateRequest questionCreateRequest = new QuestionCreateRequest(
+            question.getName(),
+            question.getDescription(),
+            question.isRequired(),
+            QuestionType.SHORT_ANSWER,
+            question.getOptions()
+        );
+        SurveyCreateRequest surveyCreateRequest = new SurveyCreateRequest(
+            survey.getName(),
+            survey.getDescription(),
+            List.of(questionCreateRequest)
+        );
+
+        // when
+        when(
+            surveyService.createSurvey(surveyCreateRequest.toDomain())
+        ).thenReturn(survey);
+
+        SurveyInquiryResponse surveyInquiryResponse = SurveyInquiryResponse.from(survey);
+        QuestionInquiryResponse questionInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
+
+        // then
+        this.mockMvc
+            .perform(
+                post(ROOT_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(surveyCreateRequest))
+            )
+            .andExpectAll(
+                status().isOk(),
+                jsonPath("$.code").value(CustomResponseStatus.SUCCESS.getCode()),
+                jsonPath("$.message").value(CustomResponseStatus.SUCCESS.getMessage()),
+
+                jsonPath("$.data.id").value(surveyInquiryResponse.id()),
+                jsonPath("$.data.name").value(surveyInquiryResponse.name()),
+                jsonPath("$.data.description").value(surveyInquiryResponse.description()),
+
+                jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
+                jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
+                jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
+                jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
+                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
             );
 
         verify(surveyService, times(1)).createSurvey(surveyCreateRequest.toDomain());
