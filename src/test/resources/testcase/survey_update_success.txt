@@ -1,0 +1,27 @@
+{
+  "id": 1,
+  "name": "서비스 만족도 설문조사",
+  "description": "서비스 만족도를 평가하는 설문조사입니다.",
+  "surveyItemDtoList": [
+    {
+      "name": "만족도 평가",
+      "description": "서비스에 대한 전반적인 만족도를 평가해주세요.",
+      "itemType": "SHORT_TEXT",
+      "required": true,
+      "itemContentList": [
+        "매우 만족",
+        "만족",
+        "보통",
+        "불만족",
+        "매우 불만족"
+      ]
+    },
+    {
+      "name": "추가 의견",
+      "description": "추가로 하고 싶은 의견이 있다면 작성해주세요.",
+      "itemType": "LONG_TEXT",
+      "required": false,
+      "itemContentList": []
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "username": "조예지",
+  "phoneNumber": 8201049505032,
+  "surveyId": 1,
+  "surveyItemResponseDtoList": [
+    {
+      "surveyItemId": 1,
+      "answer": ""
+    },
+    {
+      "surveyItemId": 2,
+      "answer": ""
+    }
+  ]
+}
