@@ -1,13 +1,33 @@
 package net.gentledot.survey.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import lombok.Getter;
+import lombok.ToString;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public record SurveyUpdateResponse(
-        String surveyId,
+@ToString
+@Getter
+public final class SurveyUpdateResponse {
+    private final String surveyId;
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private final LocalDateTime updatedAt;
+    private final List<SurveyQuestionResponse> questions;
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime updatedAt
-) {
+    private SurveyUpdateResponse(String surveyId, LocalDateTime updatedAt, List<SurveyQuestionResponse> questions) {
+        this.surveyId = surveyId;
+        this.updatedAt = updatedAt;
+        this.questions = questions;
+    }
+
+    public static SurveyUpdateResponse of(String surveyId, LocalDateTime updatedAt, List<SurveyQuestion> questions) {
+        List<SurveyQuestionResponse> surveyQuestionResponses = questions.stream()
+                .map(SurveyQuestionResponse::from)
+                .collect(Collectors.toList());
+        return new SurveyUpdateResponse(surveyId, updatedAt, surveyQuestionResponses);
+    }
 }

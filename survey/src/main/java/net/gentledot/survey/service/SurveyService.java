@@ -1,6 +1,7 @@
 package net.gentledot.survey.service;
 
 
+import net.gentledot.survey.dto.enums.UpdateType;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
@@ -61,7 +62,7 @@ public class SurveyService {
 
         Survey saved = surveyRepository.save(survey);
 
-        return new SurveyUpdateResponse(saved.getId(), saved.getUpdatedAt());
+        return SurveyUpdateResponse.of(saved.getId(), saved.getUpdatedAt(), saved.getQuestions());
     }
 
 
@@ -82,26 +83,34 @@ public class SurveyService {
 
         Map<Long, Long> questionCountMap = new HashMap<>();
         for (SurveyQuestionRequest question : questions) {
-            List<SurveyQuestionOptionRequest> questionOptions = question.getOptions();
-            if (questionOptions == null || questionOptions.isEmpty()) {
-                throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
-            }
+            if (question.getUpdateType() == null || question.getUpdateType().equals(UpdateType.MODIFY)) {
 
-            Long questionId = question.getQuestionId();
-            if (questionId != null) {
-                questionCountMap.put(
-                        questionId,
-                        questionCountMap.getOrDefault(questionId, 0L) + 1
-                );
+
+                List<SurveyQuestionOptionRequest> questionOptions = question.getOptions();
+                if (questionOptions == null || questionOptions.isEmpty()) {
+                    throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
+                }
+
+                Long questionId = question.getQuestionId();
+                if (questionId != null) {
+                    questionCountMap.put(
+                            questionId,
+                            questionCountMap.getOrDefault(questionId, 0L) + 1
+                    );
+                }
+
+                questionCountMap.entrySet().stream()
+                        .filter(entry -> entry.getValue() > 1)
+                        .findFirst()
+                        .ifPresent(entry -> {
+                            throw new SurveyCreationException(ServiceError.CREATION_DUPLICATE_QUESTIONS);
+                        });
+            } else {
+                if (question.getQuestionId() == null) {
+                    throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
+                }
             }
         }
-
-        questionCountMap.entrySet().stream()
-                .filter(entry -> entry.getValue() > 1)
-                .findFirst()
-                .ifPresent(entry -> {
-                    throw new SurveyCreationException(ServiceError.CREATION_DUPLICATE_QUESTIONS);
-                });
     }
 
 

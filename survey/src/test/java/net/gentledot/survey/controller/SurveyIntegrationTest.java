@@ -3,15 +3,21 @@ package net.gentledot.survey.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.gentledot.survey.config.IntegrationTestDatabaseClearing;
+import net.gentledot.survey.dto.enums.UpdateType;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.dto.request.SurveyUpdateRequest;
+import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
+import net.gentledot.survey.repository.SurveyQuestionRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +28,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
@@ -44,6 +51,9 @@ class SurveyIntegrationTest {
 
     @Autowired
     IntegrationTestDatabaseClearing integrationTestDatabaseClearing;
+
+    @Autowired
+    SurveyQuestionRepository surveyQuestionRepository;
 
     @BeforeEach
     void setUp() {
@@ -127,9 +137,11 @@ class SurveyIntegrationTest {
     void updateSurvey() {
         SurveyCreateRequest createRequest = testCreateRequest();
         String createRequestBody = toJson(createRequest);
-        String surveyId = SurveyIntegrations.surveyCreate(createRequestBody)
-                .extract()
-                .path("data.surveyId");
+        ExtractableResponse<Response> extract = SurveyIntegrations.surveyCreate(createRequestBody)
+                .extract();
+        String surveyId = extract.path("data.surveyId");
+        Integer questionId = extract.path("data.questions[0].questionId");
+        Integer questionId2 = extract.path("data.questions[1].questionId");
 
         SurveyUpdateRequest updateRequest = SurveyUpdateRequest.builder()
                 .id(surveyId)
@@ -137,6 +149,8 @@ class SurveyIntegrationTest {
                 .description("Updated Description 1")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
+                                .questionId(Long.valueOf(questionId))
+                                .updateType(UpdateType.MODIFY)
                                 .question("Updated Question 1")
                                 .description("Updated Description 1")
                                 .type(SurveyItemType.SINGLE_SELECT)
@@ -145,6 +159,10 @@ class SurveyIntegrationTest {
                                         new SurveyQuestionOptionRequest("Updated Option 1"),
                                         new SurveyQuestionOptionRequest("Updated Option 2")
                                 ))
+                                .build(),
+                        SurveyQuestionRequest.builder()
+                                .questionId(Long.valueOf(questionId2))
+                                .updateType(UpdateType.DELETE)
                                 .build()
                 ))
                 .build();
@@ -156,6 +174,9 @@ class SurveyIntegrationTest {
                 .body("data.surveyId", not(emptyString()))
                 .body("data.updatedAt", notNullValue())
                 .body("error", nullValue());
+
+        Optional<SurveyQuestion> byId = surveyQuestionRepository.findById(Long.valueOf(questionId2));
+        Assertions.assertThat(byId).isEmpty();
 
     }
 
@@ -252,6 +273,9 @@ class SurveyIntegrationTest {
                                 .description("당신의 이름은 무엇입니까?")
                                 .type(SurveyItemType.TEXT)
                                 .required(ItemRequired.REQUIRED)
+                                .options(List.of(
+                                        new SurveyQuestionOptionRequest("입력 1")
+                                ))
                                 .build(),
                         SurveyQuestionRequest.builder()
                                 .question("오늘의 기분을 알려주세요")
@@ -279,6 +303,9 @@ class SurveyIntegrationTest {
                                 .description("간단한 의견이라도 좋습니다. :)")
                                 .type(SurveyItemType.PARAGRAPH)
                                 .required(ItemRequired.OPTIONAL)
+                                .options(List.of(
+                                        new SurveyQuestionOptionRequest("입력 2")
+                                ))
                                 .build()
                 ))
                 .build();

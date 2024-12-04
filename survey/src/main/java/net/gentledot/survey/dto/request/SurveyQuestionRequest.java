@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.dto.enums.UpdateType;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SurveyQuestionRequest {
     private Long questionId;
+    private UpdateType updateType;
     private String question;
     private String description;
     private SurveyItemType type;

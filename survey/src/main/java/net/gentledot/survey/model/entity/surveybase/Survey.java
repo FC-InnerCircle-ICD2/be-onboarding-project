@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
+import net.gentledot.survey.exception.ServiceError;
+import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.model.entity.common.BaseEntity;
 
 import java.util.List;
@@ -42,36 +44,45 @@ public class Survey extends BaseEntity {
     public void updateSurvey(String name, String description, List<SurveyQuestionRequest> questionRequests) {
         this.name = name;
         this.description = description;
+        updateQuestions(questionRequests);
+    }
 
+    public void updateQuestions(List<SurveyQuestionRequest> updatedQuestions) {
         Map<Long, SurveyQuestion> existingQuestionsMap = this.getQuestions().stream()
                 .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));
 
-        List<SurveyQuestion> updatedQuestions = questionRequests.stream()
-                .map(questionRequest -> {
-                    SurveyQuestion existingQuestion = existingQuestionsMap.get(questionRequest.getQuestionId());
-                    if (existingQuestion != null) {
-                        existingQuestion.updateFromRequest(questionRequest);
-                        return existingQuestion;
-                    } else {
-                        return SurveyQuestion.from(questionRequest);
-                    }
-                })
-                .collect(Collectors.toList());
-
-        List<SurveyQuestion> questionsToRemove = this.getQuestions().stream()
-                .filter(existingQuestion -> updatedQuestions.stream()
-                        .filter(updatedQuestion -> updatedQuestion.getId() != null)
-                        .noneMatch(updatedQuestion -> updatedQuestion.getId().equals(existingQuestion.getId())))
-                .collect(Collectors.toList());
-        this.getQuestions().removeAll(questionsToRemove);
-        this.updateQuestions(updatedQuestions);
-
+        for (SurveyQuestionRequest questionRequest : updatedQuestions) {
+            switch (questionRequest.getUpdateType()) {
+                case MODIFY:
+                    SurveyQuestion existingQuestion = this.getQuestions().stream()
+                            .filter(question -> question.getId().equals(questionRequest.getQuestionId()))
+                            .findFirst()
+                            .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_QUESTION_NOT_FOUND));
+                    existingQuestion.updateFromRequest(questionRequest);
+                    break;
+                case DELETE:
+                    SurveyQuestion questionToRemove = this.getQuestions().stream()
+                            .filter(q -> q.getId().equals(questionRequest.getQuestionId()))
+                            .findFirst()
+                            .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_QUESTION_NOT_FOUND));
+                    this.removeQuestion(questionToRemove);
+                    break;
+                default:
+                    SurveyQuestion newQuestion = SurveyQuestion.from(questionRequest);
+                    this.addQuestion(newQuestion);
+                    break;
+            }
+        }
     }
 
-    public void updateQuestions(List<SurveyQuestion> updatedQuestions) {
-        this.questions.clear();
-        this.questions.addAll(updatedQuestions);
-        updatedQuestions.forEach(question -> question.setSurvey(this));
+    public void addQuestion(SurveyQuestion question) {
+        this.questions.add(question);
+        question.setSurvey(this);
+    }
+
+    public void removeQuestion(SurveyQuestion question) {
+        this.questions.remove(question);
+        question.setSurvey(null);
     }
 
 

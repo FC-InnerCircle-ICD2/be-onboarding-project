@@ -17,6 +17,7 @@ public enum ServiceError {
 
     // 조회 관련 오류 (200)
     INQUIRY_SURVEY_NOT_FOUND("2001", "요청한 서베이를 찾을 수 없습니다."),
+    INQUIRY_QUESTION_NOT_FOUND("2002", "요청한 질문를 찾을 수 없습니다."),
 
     // 응답 관련 오류 (300)
     SUBMIT_INVALID_QUESTION_ID("3001", "제출한 응답의 질문이 확인되지 않습니다."),

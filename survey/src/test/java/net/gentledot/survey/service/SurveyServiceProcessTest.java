@@ -111,8 +111,8 @@ class SurveyServiceProcessTest {
 
 
         // a
-        Assertions.assertThat(surveyUpdateResponse.surveyId()).isEqualTo(surveyId);
-        Assertions.assertThat(surveyUpdateResponse.updatedAt()).isBefore(LocalDateTime.now());
+        Assertions.assertThat(surveyUpdateResponse.getSurveyId()).isEqualTo(surveyId);
+        Assertions.assertThat(surveyUpdateResponse.getUpdatedAt()).isBefore(LocalDateTime.now());
 
         Assertions.assertThat(updatedQuestions).hasSize(2);
         SurveyQuestion updatedQuestion = updatedQuestions.get(0);
