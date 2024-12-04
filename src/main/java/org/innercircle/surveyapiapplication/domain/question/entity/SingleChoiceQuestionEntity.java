@@ -27,21 +27,16 @@ public class SingleChoiceQuestionEntity extends QuestionEntity {
     @Transient
     private AnswerEntity answerEntity;
 
-    public SingleChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, AnswerEntity answerEntity) {
-        super(name, description, required, surveyId);
-        this.options = options;
-        this.answerEntity = answerEntity;
-    }
-
-    public SingleChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options) {
-        super(name, description, required, surveyId);
+    public SingleChoiceQuestionEntity(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(id, version, name, description, required, surveyId);
         this.options = options;
     }
 
     @Override
     public SingleChoiceQuestion toDomain() {
         return new SingleChoiceQuestion(
-            this.getId(),
+            this.getQuestionId().getId(),
+            this.getQuestionId().getVersion(),
             this.getName(),
             this.getDescription(),
             this.isRequired(),

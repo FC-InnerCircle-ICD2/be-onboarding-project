@@ -3,6 +3,7 @@ package org.innercircle.surveyapiapplication.domain.question.infrastructure;
 import lombok.RequiredArgsConstructor;
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.domain.question.entity.QuestionEntity;
+import org.innercircle.surveyapiapplication.domain.question.entity.id.QuestionId;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
     }
 
     @Override
-    public Question findById(Long questionId) {
+    public Question findByIdAndVersion(Long id, int version) {
+        QuestionId questionId = new QuestionId(id, version);
         return questionJpaRepository.findById(questionId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
             .toDomain();

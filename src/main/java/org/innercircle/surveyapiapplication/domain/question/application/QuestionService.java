@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.domain.question.infrastructure.QuestionRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -12,9 +11,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    @Transactional(readOnly = true)
-    public Question findById(Long questionId) {
-        return questionRepository.findById(questionId);
+    public Question findByIdAndVersion(Long id, int version) {
+        return questionRepository.findByIdAndVersion(id, version);
     }
 
 }

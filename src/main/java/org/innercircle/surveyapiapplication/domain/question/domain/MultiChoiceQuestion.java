@@ -1,6 +1,5 @@
 package org.innercircle.surveyapiapplication.domain.question.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
 import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
@@ -14,28 +13,15 @@ import java.util.List;
 public class MultiChoiceQuestion extends Question {
 
     private List<String> options;
-
-    @Builder.Default
     private List<Answer> answers = new ArrayList<>();
 
-    public MultiChoiceQuestion(Long id, String name, String description, boolean required, Long surveyId, List<String> options, List<Answer> answers) {
-        super(id, name, description, required, surveyId);
-        this.options = options;
-        this.answers = answers;
-    }
-
-    public MultiChoiceQuestion(Long id, String name, String description, boolean required, Long surveyId, List<String> options) {
-        super(id, name, description, required, surveyId);
+    public MultiChoiceQuestion(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(id, version, name, description, required, surveyId);
         this.options = options;
     }
 
     public MultiChoiceQuestion(Long id, String name, String description, boolean required, List<String> options) {
-        super(id, name, description, required);
-        this.options = options;
-    }
-
-    public MultiChoiceQuestion(String name, String description, boolean required, List<String> options) {
-        super(name, description, required);
+        super(id, 1, name, description, required);
         this.options = options;
     }
 

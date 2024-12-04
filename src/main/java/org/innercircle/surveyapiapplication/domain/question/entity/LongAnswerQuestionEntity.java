@@ -18,19 +18,15 @@ public class LongAnswerQuestionEntity extends QuestionEntity {
     @Transient
     private AnswerEntity answerEntity;
 
-    public LongAnswerQuestionEntity(String name, String description, boolean required, Long surveyId, AnswerEntity answerEntity) {
-        super(name, description, required, surveyId);
-        this.answerEntity = answerEntity;
-    }
-
-    public LongAnswerQuestionEntity(String name, String description, boolean required, Long surveyId) {
-        super(name, description, required, surveyId);
+    public LongAnswerQuestionEntity(Long id, int version, String name, String description, boolean required, Long surveyId) {
+        super(id, version, name, description, required, surveyId);
     }
 
     @Override
     public LongAnswerQuestion toDomain() {
         return new LongAnswerQuestion(
-            this.getId(),
+            this.getQuestionId().getId(),
+            this.getQuestionId().getVersion(),
             this.getName(),
             this.getDescription(),
             this.isRequired(),

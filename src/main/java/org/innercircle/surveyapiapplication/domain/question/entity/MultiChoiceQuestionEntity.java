@@ -27,21 +27,16 @@ public class MultiChoiceQuestionEntity extends QuestionEntity {
     @Transient
     private List<AnswerEntity> answerEntities;
 
-    public MultiChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options, List<AnswerEntity> answerEntities) {
-        super(name, description, required, surveyId);
-        this.options = options;
-        this.answerEntities = answerEntities;
-    }
-
-    public MultiChoiceQuestionEntity(String name, String description, boolean required, Long surveyId, List<String> options) {
-        super(name, description, required, surveyId);
+    public MultiChoiceQuestionEntity(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(id, version, name, description, required, surveyId);
         this.options = options;
     }
 
     @Override
     public MultiChoiceQuestion toDomain() {
         return new MultiChoiceQuestion(
-            this.getId(),
+            this.getQuestionId().getId(),
+            this.getQuestionId().getVersion(),
             this.getName(),
             this.getDescription(),
             this.isRequired(),

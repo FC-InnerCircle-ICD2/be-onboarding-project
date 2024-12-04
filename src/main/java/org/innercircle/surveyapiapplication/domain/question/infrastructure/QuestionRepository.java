@@ -10,6 +10,6 @@ public interface QuestionRepository {
 
     List<Question> findBySurveyId(Long surveyId);
 
-    Question findById(Long questionId);
+    Question findByIdAndVersion(Long questionId, int version);
 
 }

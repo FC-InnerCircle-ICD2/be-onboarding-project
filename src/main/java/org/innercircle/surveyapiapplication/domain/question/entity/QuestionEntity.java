@@ -3,8 +3,6 @@ package org.innercircle.surveyapiapplication.domain.question.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -16,6 +14,7 @@ import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQu
 import org.innercircle.surveyapiapplication.domain.question.domain.Question;
 import org.innercircle.surveyapiapplication.domain.question.domain.ShortAnswerQuestion;
 import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
+import org.innercircle.surveyapiapplication.domain.question.entity.id.QuestionId;
 import org.innercircle.surveyapiapplication.global.entity.BaseEntity;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
@@ -28,8 +27,8 @@ import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatu
 @Getter
 public abstract class QuestionEntity extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    private QuestionId questionId;
 
     @Column(length = 255, nullable = false)
     private String name;
@@ -43,7 +42,8 @@ public abstract class QuestionEntity extends BaseEntity {
     @Column(name = "survey_id", nullable = false)
     private Long surveyId;
 
-    public QuestionEntity(String name, String description, boolean required, Long surveyId) {
+    public QuestionEntity(Long questionId, int questionVersion, String name, String description, boolean required, Long surveyId) {
+        this.questionId = new QuestionId(questionId, questionVersion);
         this.name = name;
         this.description = description;
         this.required = required;
@@ -52,16 +52,16 @@ public abstract class QuestionEntity extends BaseEntity {
 
     public static QuestionEntity from(Question question) {
         if (question instanceof ShortAnswerQuestion) {
-            return new ShortAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
+            return new ShortAnswerQuestionEntity(question.getId(), question.getVersion(), question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
         }
         if (question instanceof LongAnswerQuestion) {
-            return new LongAnswerQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
+            return new LongAnswerQuestionEntity(question.getId(), question.getVersion(), question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId());
         }
         if (question instanceof SingleChoiceQuestion) {
-            return new SingleChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((SingleChoiceQuestion) question).getOptions());
+            return new SingleChoiceQuestionEntity(question.getId(), question.getVersion(), question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((SingleChoiceQuestion) question).getOptions());
         }
         if (question instanceof MultiChoiceQuestion) {
-            return new MultiChoiceQuestionEntity(question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((MultiChoiceQuestion) question).getOptions());
+            return new MultiChoiceQuestionEntity(question.getId(), question.getVersion(), question.getName(), question.getDescription(), question.isRequired(), question.getSurveyId(), ((MultiChoiceQuestion) question).getOptions());
         }
         throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
     }

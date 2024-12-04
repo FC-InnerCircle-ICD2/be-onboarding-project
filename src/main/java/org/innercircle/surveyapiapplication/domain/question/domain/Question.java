@@ -10,17 +10,28 @@ import java.util.Objects;
 public abstract class Question {
 
     private Long id;
+    private int version;
+
     private String name;
     private String description;
     private boolean required;
     private Long surveyId;
 
-    public Question(Long id, String name, String description, boolean required, Long surveyId) {
+    public Question(Long id, int version, String name, String description, boolean required, Long surveyId) {
         this.id = id;
+        this.version = version;
         this.name = name;
         this.description = description;
         this.required = required;
         this.surveyId = surveyId;
+    }
+
+    public Question(Long id, int version, String name, String description, boolean required) {
+        this.id = id;
+        this.version = version;
+        this.name = name;
+        this.description = description;
+        this.required = required;
     }
 
     public Question(Long id, String name, String description, boolean required) {
@@ -34,6 +45,11 @@ public abstract class Question {
         this.name = name;
         this.description = description;
         this.required = required;
+    }
+
+
+    public void addVersion() {
+        this.version++;
     }
 
     public void setSurveyId(Long surveyId) {
@@ -51,12 +67,15 @@ public abstract class Question {
 
         Question question = (Question) o;
 
+        if (version != question.version) return false;
         return Objects.equals(id, question.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + version;
+        return result;
     }
 
 }

@@ -36,6 +36,7 @@ public class QuestionFixture {
 
     public static SingleChoiceQuestion createSingleChoiceQuestion(Long questionId) {
         return new SingleChoiceQuestion(
+            questionId,
             "설문항목이름",
             "설문항목설명",
             false,
@@ -53,6 +54,7 @@ public class QuestionFixture {
 
     public static MultiChoiceQuestion createMultiChoiceQuestion(Long questionId) {
         return new MultiChoiceQuestion(
+            questionId,
             "설문항목이름",
             "설문항목설명",
             false,

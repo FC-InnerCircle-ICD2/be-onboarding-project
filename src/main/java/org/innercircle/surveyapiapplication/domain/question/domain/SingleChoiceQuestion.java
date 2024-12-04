@@ -15,24 +15,13 @@ public class SingleChoiceQuestion extends Question {
 
     private Answer answer;
 
-    public SingleChoiceQuestion(Long id, String name, String description, boolean required, Long surveyId, List<String> options, Answer answer) {
-        super(id, name, description, required, surveyId);
-        this.options = options;
-        this.answer = answer;
-    }
-
-    public SingleChoiceQuestion(Long id, String name, String description, boolean required, Long surveyId, List<String> options) {
-        super(id, name, description, required, surveyId);
+    public SingleChoiceQuestion(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
+        super(id, version, name, description, required, surveyId);
         this.options = options;
     }
 
     public SingleChoiceQuestion(Long id, String name, String description, boolean required, List<String> options) {
-        super(id, name, description, required);
-        this.options = options;
-    }
-
-    public SingleChoiceQuestion(String name, String description, boolean required, List<String> options) {
-        super(name, description, required);
+        super(id, 1, name, description, required);
         this.options = options;
     }
 
