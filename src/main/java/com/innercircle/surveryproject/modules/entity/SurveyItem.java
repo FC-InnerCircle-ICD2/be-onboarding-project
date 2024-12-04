@@ -19,8 +19,7 @@ import java.util.List;
 @Entity
 public class SurveyItem {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @Id @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     /**
@@ -46,6 +45,11 @@ public class SurveyItem {
      */
     private Boolean required;
 
+    /**
+     * 활성화여부
+     */
+    private Boolean active;
+
     @Setter
     @ManyToOne
     @JoinColumn(name = "survey_id")
@@ -63,6 +67,7 @@ public class SurveyItem {
         this.itemType = surveyItemDto.getItemType();
         this.required = surveyItemDto.getRequired();
         this.itemContentList = surveyItemDto.getItemContentList();
+        this.active = Boolean.TRUE;
     }
 
     public static SurveyItem from(SurveyItemDto surveyItemDto) {

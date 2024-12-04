@@ -4,7 +4,9 @@ import com.innercircle.surveryproject.infra.exceptions.InvalidInputException;
 import com.innercircle.surveryproject.modules.dto.*;
 import com.innercircle.surveryproject.modules.entity.Survey;
 import com.innercircle.surveryproject.modules.entity.SurveyAnswer;
+import com.innercircle.surveryproject.modules.entity.SurveyAnswerMapValue;
 import com.innercircle.surveryproject.modules.entity.SurveyItem;
+import com.innercircle.surveryproject.modules.repository.SurveyAnswerMapValueRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyAnswerRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyItemRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyRepository;
@@ -13,9 +15,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -28,6 +29,8 @@ public class SurveyAnswerService {
 
     private final SurveyAnswerRepository surveyAnswerRepository;
 
+    private final SurveyAnswerMapValueRepository surveyAnswerMapValueRepository;
+
     /**
      * 설문조사 응답 생성 메소드
      *
@@ -37,12 +40,9 @@ public class SurveyAnswerService {
     @Transactional
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
-        Survey survey = surveyRepository.findById(surveyAnswerCreateDto.getSurveyId()).orElseThrow(() -> new InvalidInputException(
-            "일치하는 설문조사를 찾을 수 없습니다."));
-
         List<SurveyItemResponseDto> surveyItemResponseDtoList = surveyAnswerCreateDto.getSurveyItemResponseDtoList();
 
-        Map<Long, String> surveyAnswerMap = new HashMap<>();
+        List<SurveyAnswerMapValue> surveyAnswerMapValueList = new ArrayList<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyItem =
                 surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
@@ -58,10 +58,12 @@ public class SurveyAnswerService {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
-            surveyAnswerMap.put(surveyItemResponseDto.getSurveyItemId(), surveyItemResponseDto.getAnswer());
+            surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItemResponseDto.getSurveyItemId(),
+                                                                   surveyItemResponseDto.getAnswer()));
         }
 
-        SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto, surveyAnswerMap);
+        SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto);
+        surveyAnswer.getSurveyAnswerDetails().addAll(surveyAnswerMapValueList);
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
@@ -100,16 +102,16 @@ public class SurveyAnswerService {
         }
 
         return surveyAnswerList.stream()
-            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
+            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerDetails().stream()
                 .filter(entry ->
-                            (ObjectUtils.isEmpty(surveyItemId) || entry.getKey().equals(surveyItemId)) &&
-                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getValue().equals(surveyItemAnswer))
+                            (ObjectUtils.isEmpty(surveyItemId) || entry.getSurveyItemId().equals(surveyItemId)) &&
+                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getResponses().contains(surveyItemAnswer))
                 )
                 .map(entry -> SurveyAnswerResponseDto.of(
                     surveyAnswer.getSurveyId(),
                     surveyAnswer.getPhoneNumber(),
-                    entry.getKey(),
-                    entry.getValue()
+                    entry.getSurveyItemId(),
+                    entry.getResponses()
                 ))
             )
             .toList();

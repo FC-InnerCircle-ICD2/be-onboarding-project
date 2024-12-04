@@ -17,8 +17,7 @@ import java.util.List;
 public class Survey {
 
     @JsonIgnore
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
+    @Id @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(nullable = false)

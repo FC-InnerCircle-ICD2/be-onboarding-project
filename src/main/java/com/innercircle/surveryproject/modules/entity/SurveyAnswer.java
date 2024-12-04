@@ -1,12 +1,17 @@
 package com.innercircle.surveryproject.modules.entity;
 
 import com.innercircle.surveryproject.modules.dto.SurveyAnswerCreateDto;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 설문조사 응답
@@ -30,25 +35,17 @@ public class SurveyAnswer extends BaseEntity {
     /**
      * 설문조사 응답 결과
      */
-    @ElementCollection
-    @CollectionTable(
-        name = "survey_answer_survey_answer_map",
-        joinColumns = {
-            @JoinColumn(name = "survey_id", referencedColumnName = "surveyId"),
-            @JoinColumn(name = "phone_number", referencedColumnName = "phoneNumber")
-        }
-    )
-    @MapKeyColumn(name = "survey_answer_map_key") // 맵의 키를 컬럼으로 지정
-    private Map<Long, String> surveyAnswerMap;
+    @Setter
+    @OneToMany(mappedBy = "surveyAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurveyAnswerMapValue> surveyAnswerDetails = new ArrayList<>(); // 설문 항목별 응답 관리
 
-    public SurveyAnswer(SurveyAnswerCreateDto surveyCreateDto, Map<Long, String> surveyAnswerMap) {
+    public SurveyAnswer(SurveyAnswerCreateDto surveyCreateDto) {
         this.surveyAnswerId = SurveyAnswerId.of(surveyCreateDto.getSurveyId(), surveyCreateDto.getPhoneNumber());
         this.username = surveyCreateDto.getUsername();
-        this.surveyAnswerMap = surveyAnswerMap;
     }
 
-    public static SurveyAnswer from(SurveyAnswerCreateDto surveyCreateDto, Map<Long, String> surveyAnswerMap) {
-        return new SurveyAnswer(surveyCreateDto, surveyAnswerMap);
+    public static SurveyAnswer from(SurveyAnswerCreateDto surveyCreateDto) {
+        return new SurveyAnswer(surveyCreateDto);
     }
 
     public Long getSurveyId() {

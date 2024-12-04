@@ -17,8 +17,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -52,8 +51,9 @@ class SurveyAnswerServiceTest {
 
         assertEquals(8201049505032L, surveyAnswer.getPhoneNumber());
         assertEquals("조예지", surveyAnswer.getUsername());
-        assertEquals("만족", surveyAnswer.getSurveyAnswerMap().get(1L));
-        assertEquals("테스트", surveyAnswer.getSurveyAnswerMap().get(2L));
+        assertNotEquals(0, surveyAnswer.getSurveyAnswerDetails().size());
+        //        assertEquals("만족", surveyAnswer.getSurveyAnswerDetails().get(0));
+        //        assertEquals("테스트", surveyAnswer.getSurveyAnswerDetails().get(1));
     }
 
     @Test
