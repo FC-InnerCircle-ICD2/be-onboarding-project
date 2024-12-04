@@ -7,12 +7,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
+@ActiveProfiles(value = "test")
 class SurveyRepositoryTest {
     @Autowired
     private SurveyRepository surveyRepository;
@@ -28,9 +31,26 @@ class SurveyRepositoryTest {
 
         // then
         assertThat(savedSurvey)
-                .extracting("id", "name", "description")
+                .extracting("idx", "name", "description")
                 .containsExactlyInAnyOrder(1L, "설문조사 이름", "설문조사 설명");
 
+    }
+
+    @DisplayName("idx로 저장한 설문조사를 조회한다.")
+    @Test
+    void testFindById() {
+        // given
+        Survey survey = createSurvey();
+        surveyRepository.save(survey);
+
+        // when
+        Survey savedSurvey = surveyRepository.findById(survey.getIdx()).get();
+
+        // then
+        assertThat(savedSurvey.getIdx()).isEqualTo(survey.getIdx());
+        assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
+        assertThat(savedSurvey.getDescription()).isEqualTo(survey.getDescription());
+        assertThat(savedSurvey.getQuestions()).isNotNull();
     }
 
     private Survey createSurvey() {
