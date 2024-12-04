@@ -2,10 +2,12 @@ package com.onboarding.api.web.survey.controller;
 
 import com.onboarding.api.web.survey.dto.create.SurveyCreateReqDto;
 import com.onboarding.api.web.survey.dto.update.SurveyUpdateReqDto;
+import com.onboarding.survey.dto.response.SurveyWithQuestionsDTO;
 import com.onboarding.survey.entity.Survey;
 import com.onboarding.survey.facade.SurveyFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +45,14 @@ public class SurveyController {
     Survey updatedSurvey = surveyFacade.swapQuestionOrder(surveyId, questionId, targetQuestionId);
     return ResponseEntity.ok(updatedSurvey);
   }
+
+
+  @GetMapping("/{surveyId}")
+  public ResponseEntity<SurveyWithQuestionsDTO> getSurveyWithQuestions(@PathVariable Long surveyId) {
+    SurveyWithQuestionsDTO surveyWithQuestions = surveyFacade.getSurveyByIdWithQuestions(surveyId);
+    return ResponseEntity.ok(surveyWithQuestions);
+  }
+
 
 
 }

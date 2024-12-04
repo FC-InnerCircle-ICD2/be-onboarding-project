@@ -24,7 +24,7 @@ public record SurveyCreateReqDto(
             .type(question.type())
             .isRequired(question.isRequired())
             .description(question.description())
-            .orderIndex(question.orderIndex())
+            .isDeleted(question.isDeleted())
             .choices(question.choices())
             .build()).toList();
   }

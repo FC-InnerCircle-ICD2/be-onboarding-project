@@ -31,6 +31,7 @@ public class Survey extends BaseEntity {
   private List<Question> questions = new ArrayList<>();
 
   public Survey() {
+    this.questions = new ArrayList<>(); // 생성자에서 초기화
   }
 
   public Survey(Long id, String name, String description, List<Question> questions) {
@@ -53,29 +54,25 @@ public class Survey extends BaseEntity {
   }
 
   public void addQuestion(Question question) {
+    if (questions == null) {
+      questions = new ArrayList<>();
+    }
+    // 최대 질문 개수 제한
     if (questions.size() >= 10) {
-      throw new IllegalArgumentException("A survey cannot have more than 10 questions.");
+      throw new IllegalArgumentException("Maximum of 10 questions allowed.");
     }
 
-    // orderIndex가 지정되지 않은 경우 마지막에 추가
+    // orderIndex가 지정되지 않은 경우 마지막 순서로 설정
     if (question.getOrderIndex() == null) {
-      int maxOrderIndex = questions.stream()
-          .mapToInt(Question::getOrderIndex)
-          .max()
-          .orElse(0);
-      question.setOrderIndex(maxOrderIndex + 1);
-    } else {
-      // 지정된 orderIndex가 이미 존재하는 경우, 모든 질문의 순서를 한 칸씩 뒤로 밀기
-      int newOrderIndex = question.getOrderIndex();
-      questions.stream()
-          .filter(q -> q.getOrderIndex() >= newOrderIndex)
-          .forEach(q -> q.setOrderIndex(q.getOrderIndex() + 1));
+      question.setOrderIndex(questions.size() + 1);
     }
-
     questions.add(question);
     question.setSurvey(this);
-    reorderQuestions(); // 전체적인 순서 재정렬
+
+    // 정렬하여 순서 유지
+    reorderQuestions();
   }
+
 
 
   // 질문 교환을 위해 재정렬
@@ -97,9 +94,10 @@ public class Survey extends BaseEntity {
   }
 
   public void removeQuestion(Question question) {
-    questions.remove(question);
-    question.setSurvey(null);
-    reorderQuestions();
+    this.questions.remove(question);
+    question.setSurvey(null); // 관계 해제
   }
+
+
 
 }

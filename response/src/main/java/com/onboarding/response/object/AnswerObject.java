@@ -1,7 +1,11 @@
 package com.onboarding.response.object;
 
-public record ResponseDetailObject(
-    Long questionId,
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+public record AnswerObject(
+    String questionTitle,
     String questionType,
     boolean isRequired,
     String answer

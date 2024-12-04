@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Builder
+@AllArgsConstructor
 public class Question extends BaseEntity {
 
   @Id
@@ -38,6 +40,7 @@ public class Question extends BaseEntity {
   private QuestionType type;
 
   private boolean isRequired;
+  private boolean isDeleted;
 
   @Setter
   private Integer orderIndex;
@@ -70,7 +73,8 @@ public class Question extends BaseEntity {
 
     if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
       if (choices == null || choices.isEmpty()) {
-        throw new CustomException(ErrorCode.MUST_BE_CHOICES);
+        throw new CustomException("Required question is missing: " ,
+            ErrorCode.MUST_BE_CHOICES);
       }
       this.choices = new ArrayList<>(choices);
     }
@@ -104,7 +108,8 @@ public class Question extends BaseEntity {
     this.type = type;
     if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
       if (choices == null || choices.isEmpty()) {
-        throw new CustomException(ErrorCode.MUST_BE_CHOICES);
+        throw new CustomException("Required question is missing: ",
+            ErrorCode.MUST_BE_CHOICES);
       }
     }
     this.isRequired = isRequired;
@@ -116,7 +121,8 @@ public class Question extends BaseEntity {
   public void setChoices(List<String> choices) {
     if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
       if (choices == null || choices.isEmpty()) {
-        throw new CustomException(ErrorCode.MUST_BE_CHOICES);
+        throw new CustomException("Required question is missing: ",
+            ErrorCode.MUST_BE_CHOICES);
       }
     }
     this.choices = choices;

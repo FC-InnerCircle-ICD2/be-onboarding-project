@@ -8,7 +8,7 @@ public record QuestionCreateReqDto(
     String description,
     QuestionType type,
     boolean isRequired,
-    Integer orderIndex,
+    boolean isDeleted,
     List<String> choices
 ) {
 
