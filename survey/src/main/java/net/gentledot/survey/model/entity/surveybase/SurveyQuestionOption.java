@@ -22,7 +22,7 @@ public class SurveyQuestionOption {
 
     public static SurveyQuestionOption of(SurveyQuestionOptionRequest option, SurveyItemType questionType) {
         if (SurveyItemType.SINGLE_SELECT.equals(questionType) || SurveyItemType.MULTI_SELECT.equals(questionType)) {
-            return new SurveyQuestionOption(option.getOption(), AnswerType.BOOLEAN);
+            return new SurveyQuestionOption(option.getOption(), AnswerType.SELECTION);
         }
 
         // 다뤄질 타입에 따라 추가

@@ -74,7 +74,7 @@ class SurveyRepositoryTest {
         assertThat(questions.getFirst().getId()).isNotNull();
         List<SurveyQuestionOption> options = questions.getFirst().getOptions();
         assertThat(options).hasSize(2);
-        assertThat(options.getFirst().getAnswerType()).isEqualTo(AnswerType.BOOLEAN);
+        assertThat(options.getFirst().getAnswerType()).isEqualTo(AnswerType.SELECTION);
         assertThat(options.getFirst().getOptionText()).isEqualTo("option1");
     }
 }
