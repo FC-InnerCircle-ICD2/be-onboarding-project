@@ -29,7 +29,7 @@ public class SurveyItemDto {
 
     private boolean isRequired;
 
-    private List<SurveyItemOptionDto> options;
+//    private List<SurveyItemOptionDto> options;
 
     public SurveyItem toEntity(SurveyVersion version) {
         return SurveyItem.builder()
