@@ -1,22 +1,19 @@
 package com.innercicle.application.port.in.v1;
 
-import com.innercicle.advice.exceptions.RequiredFieldException;
 import com.innercicle.domain.v1.InputType;
 import com.innercicle.domain.v1.SurveyItem;
+import com.innercicle.mapper.DomainMapper;
 import com.innercicle.validation.SelfValidating;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
 
-import static com.innercicle.domain.v1.InputType.MULTI_SELECT;
-import static com.innercicle.domain.v1.InputType.SINGLE_SELECT;
-
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyItemCommandV1> {
+public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyItemCommandV1> implements DomainMapper<SurveyItem> {
 
     /**
      * 설문 항목 명
@@ -48,15 +45,7 @@ public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyIt
     @Override
     public void validateSelf() {
         super.validateSelf();
-        if (type == SINGLE_SELECT || type == MULTI_SELECT) {
-            if (options == null || options.isEmpty()) {
-                throw new RequiredFieldException(String.format("%s 일 경우 설문 항목 선택지 목록은 비어있을 수 없습니다.", this.type.getType()));
-            }
-            if (options.size() < 2) {
-                throw new RequiredFieldException(String.format("%s 일 경우 선택지는 2개 이상 입력해 주세요.", this.type.getType()));
-            }
-        }
-
+        type.validateOptions(options);
     }
 
     @Builder(builderClassName = "RegisterSurveyItemCommandV1Builder", builderMethodName = "buildInternal")
@@ -82,6 +71,7 @@ public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyIt
 
     }
 
+    @Override
     public SurveyItem mapToDomain() {
         return SurveyItem.builder()
             .item(item)

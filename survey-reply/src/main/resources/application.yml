@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: survey-response
+
+server:
+  port: 9233
+
+service:
+  survey-maker:
+    url: http://localhost:9232
