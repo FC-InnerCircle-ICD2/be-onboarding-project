@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder(access = AccessLevel.PROTECTED)
-public class ResearchAnswerResearchItemVo {
+public class ResearchAnswerItemVo {
     private Long id;
     private String name;
     private String description;
@@ -20,17 +20,17 @@ public class ResearchAnswerResearchItemVo {
     private List<ResearchItemChoiceVo> itemChoiceList;
     private Object answer;
 
-    public static ResearchAnswerResearchItemVo of(
+    public static ResearchAnswerItemVo of(
             Long id,
             String name,
             String description,
-            Integer itemType,
+            int itemType,
             String itemTypeName,
-            Boolean isRequired,
+            boolean isRequired,
             List<ResearchItemChoiceVo> itemChoiceList,
             Object answer
     ) {
-        return ResearchAnswerResearchItemVo.builder()
+        return ResearchAnswerItemVo.builder()
                 .id(id)
                 .name(name)
                 .description(description)
@@ -41,4 +41,5 @@ public class ResearchAnswerResearchItemVo {
                 .answer(answer)
                 .build();
     }
+
 }

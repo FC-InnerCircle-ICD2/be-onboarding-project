@@ -1,7 +1,7 @@
 package ziwookim.be_onboarding_project.research.dto.response;
 
 import lombok.*;
-import ziwookim.be_onboarding_project.research.model.ResearchItemVo;
+import ziwookim.be_onboarding_project.research.model.ResearchAnswerItemVo;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResearchItemResponse {
+public class ResearchAnswerItemResponse {
     private Long researchItemId;
     private String name;
     private String description;
@@ -18,9 +18,10 @@ public class ResearchItemResponse {
     private String  itemTypeName;
     private Boolean isRequired;
     private List<ResearchItemChoiceResponse> researchItemChoiceResponseList;
+    private Object answer;
 
-    public static ResearchItemResponse of(ResearchItemVo vo) {
-        return ResearchItemResponse.builder()
+    public static ResearchAnswerItemResponse of(ResearchAnswerItemVo vo) {
+        return ResearchAnswerItemResponse.builder()
                 .researchItemId(vo.getId())
                 .name(vo.getName())
                 .description(vo.getDescription())
@@ -28,6 +29,7 @@ public class ResearchItemResponse {
                 .itemTypeName(vo.getItemTypeName())
                 .isRequired(vo.getIsRequired())
                 .researchItemChoiceResponseList(vo.getItemChoiceList().stream().map(ResearchItemChoiceResponse::of).toList())
+                .answer(vo.getAnswer())
                 .build();
     }
 

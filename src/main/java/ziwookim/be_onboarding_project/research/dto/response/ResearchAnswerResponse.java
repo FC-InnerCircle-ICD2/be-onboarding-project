@@ -1,6 +1,8 @@
 package ziwookim.be_onboarding_project.research.dto.response;
 
 import lombok.*;
+import ziwookim.be_onboarding_project.research.entity.ResearchAnswer;
+import ziwookim.be_onboarding_project.research.model.ResearchAnswerVo;
 
 @Getter
 @Setter
@@ -8,5 +10,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResearchAnswerResponse {
-    private Long id;
+    private Long researchAnswerId;
+    private ResearchAnswerDataResponse data;
+
+    public static ResearchAnswerResponse of(ResearchAnswerVo vo) {
+        return ResearchAnswerResponse.builder()
+                .researchAnswerId(vo.getId())
+                .data(ResearchAnswerDataResponse.of(vo.getData()))
+                .build();
+    }
 }

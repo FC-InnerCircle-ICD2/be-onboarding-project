@@ -10,23 +10,23 @@ import java.util.List;
 @Getter
 @Setter
 @Builder(access = AccessLevel.PROTECTED)
-public class ResearchAnswerResearchVo {
+public class ResearchAnswerDataVo {
     private Long id;
     private String title;
     private String description;
-    private List<ResearchAnswerResearchItemVo> itemList;
+    private List<ResearchAnswerItemVo> researchAnswerItemVoList;
 
-    public static ResearchAnswerResearchVo of(
+    public static ResearchAnswerDataVo of (
             Long id,
             String title,
             String description,
-            List<ResearchAnswerResearchItemVo> itemList
+            List<ResearchAnswerItemVo> researchAnswerItemVoList
     ) {
-        return ResearchAnswerResearchVo.builder()
+        return ResearchAnswerDataVo.builder()
                 .id(id)
                 .title(title)
                 .description(description)
-                .itemList(itemList)
+                .researchAnswerItemVoList(researchAnswerItemVoList)
                 .build();
     }
 }

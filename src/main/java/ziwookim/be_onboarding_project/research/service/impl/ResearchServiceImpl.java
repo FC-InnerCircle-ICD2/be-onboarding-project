@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ziwookim.be_onboarding_project.common.web.enums.HttpErrors;
 import ziwookim.be_onboarding_project.common.web.exception.BadRequestException;
-import ziwookim.be_onboarding_project.research.dto.request.ResearchAnswerVo;
 import ziwookim.be_onboarding_project.research.dto.request.*;
-import ziwookim.be_onboarding_project.research.dto.response.ResearchAnswerResponse;
 import ziwookim.be_onboarding_project.research.entity.Research;
 import ziwookim.be_onboarding_project.research.entity.ResearchAnswer;
 import ziwookim.be_onboarding_project.research.entity.ResearchItem;
@@ -163,7 +161,7 @@ public class ResearchServiceImpl implements ResearchService {
 
     @Override
     @Transactional
-    public ResearchAnswerResearchVo submitResearchAnswer(SubmitResearchRequestVo requestVo) throws JsonProcessingException {
+    public ResearchAnswerVo submitResearchAnswer(SubmitResearchRequestVo requestVo) throws JsonProcessingException {
         // validate researchId
         Research research = researchRepository.findById(requestVo.getResearchId())
                 .orElseThrow(() -> {
@@ -171,7 +169,7 @@ public class ResearchServiceImpl implements ResearchService {
                     return BadRequestException.of(HttpErrors.RESEARCH_NOT_FOUND);
                 });
 
-        List<ResearchAnswerVo> answerVoList = requestVo.getAnswerVoList();
+        List<ResearchAnswerRequestVo> answerVoList = requestVo.getAnswerVoList();
 
         if(answerVoList.size() != research.getResearchItems().size()) {
             log.error("mismatched items and answers");
@@ -182,7 +180,7 @@ public class ResearchServiceImpl implements ResearchService {
             log.info("item Order Number: {}", i);
             ResearchItem researchItem = research.getResearchItems().get(i);
             log.info("itemTypeName: {}", ResearchItemType.getResearchItemTypeName(researchItem.getItemType()));
-            ResearchAnswerVo answerVo = answerVoList.get(i);
+            ResearchAnswerRequestVo answerVo = answerVoList.get(i);
             log.info("answer value: {}", answerVo.getAnswer());
 
 //            if(!answerVo.isValidAnswerType()) {
@@ -190,41 +188,55 @@ public class ResearchServiceImpl implements ResearchService {
 //                throw BadRequestException.of(HttpErrors.INVALID_RESEARCH_ANSWER);
 //            }
 
-            if(researchItem.getIsRequired() && answerVo.isEmptyStringAnswerType()) {
+            if(researchItem.getIsRequired() && isEmptyStringAnswerType(answerVo)) {
                 log.error("required item is ignored.");
                 throw BadRequestException.of(HttpErrors.IGNORED_REQUIRED_ITEM);
             }
 
-            if(!answerVo.isEmptyStringAnswerType()) {
+            if(!isEmptyStringAnswerType(answerVo)) {
                 if(!isValidResearchItemTypeAndAnswer(researchItem, answerVo)) {
                     log.error("this itemType and answer data does not matched.");
                     throw BadRequestException.of(HttpErrors.MISMATCH_RESEARCH_ITEM_ANSWER);
                 }
             }
-
         }
 
-        ResearchAnswerResearchVo researchAnswerVo = convertResearchAnswerVo(research, answerVoList);
+        ResearchAnswerDataVo researchAnswerDataVo = convertResearchAnswerDataVo(research, answerVoList);
 
-        String data = objectMapper.writeValueAsString(researchAnswerVo);
+        String data = objectMapper.writeValueAsString(researchAnswerDataVo);
 
         log.info("data: {}", data);
 
-        researchAnswerRepository.save(ResearchAnswer.create(requestVo.getResearchId(), data));
+        ResearchAnswer researchAnswer = researchAnswerRepository.save(ResearchAnswer.create(requestVo.getResearchId(), data));
 
-        return researchAnswerVo;
+        return ResearchAnswerVo.of(researchAnswer.getId(), researchAnswerDataVo);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResearchAnswerResponse getResearchAnswer(Long researchAnswerId) {
+    public ResearchAnswerVo getResearchAnswer(Long researchAnswerId) throws JsonProcessingException {
         ResearchAnswer researchAnswer = researchAnswerRepository.findById(researchAnswerId)
                 .orElseThrow(() -> {
                     log.error("this researchAnswerId is not found.");
                     return BadRequestException.of(HttpErrors.RESEARCH_ANSWER_NOT_FOUND);
                 });
 
-        return null;
+        ResearchAnswerDataVo researchAnswerDataVo = objectMapper.readValue(researchAnswer.getData(), ResearchAnswerDataVo.class);
+
+        return ResearchAnswerVo.of(researchAnswer.getId(), researchAnswerDataVo);
+    }
+
+    @Override
+    public List<ResearchAnswerVo> searchResearchAnswer(String keyword) throws JsonProcessingException {
+        List<ResearchAnswer> researchAnswerList =  researchAnswerRepository.searchResearchAnswer(keyword);
+
+        List<ResearchAnswerVo> researchAnswerVoList = new ArrayList<>();
+        for(ResearchAnswer researchAnswer : researchAnswerList) {
+            ResearchAnswerDataVo researchAnswerDataVo = objectMapper.readValue(researchAnswer.getData(), ResearchAnswerDataVo.class);
+            researchAnswerVoList.add(ResearchAnswerVo.of(researchAnswer.getId(), researchAnswerDataVo));
+        }
+
+        return researchAnswerVoList;
     }
 
     public ResearchVo convertResearchVo(Research research) {
@@ -246,7 +258,7 @@ public class ResearchServiceImpl implements ResearchService {
         return ResearchVo.of(research.getId(), research.getTitle(), research.getDescription(), researchItemVoList);
     }
 
-    public boolean isValidResearchItemTypeAndAnswer(ResearchItem researchItem, ResearchAnswerVo answerVo) {
+    public boolean isValidResearchItemTypeAndAnswer(ResearchItem researchItem, ResearchAnswerRequestVo answerVo) {
         switch (ResearchItemType.getResearchItemTypeName(researchItem.getItemType())) {
             case "SHORT_ANSWER", "LONG_SENTENCE":
                 if(answerVo.getAnswer() instanceof String) {
@@ -304,8 +316,8 @@ public class ResearchServiceImpl implements ResearchService {
         }
     }
 
-    public ResearchAnswerResearchVo convertResearchAnswerVo(Research research, List<ResearchAnswerVo> answerVoList) {
-        List<ResearchAnswerResearchItemVo> researchItemVoList = new ArrayList<>();
+    public ResearchAnswerDataVo convertResearchAnswerDataVo(Research research, List<ResearchAnswerRequestVo> answerVoList) {
+        List<ResearchAnswerItemVo> researchItemVoList = new ArrayList<>();
         List<ResearchItemChoiceVo> researchItemChoiceVoList;
 
         for(int i=0; i<research.getResearchItems().size(); i++) {
@@ -318,9 +330,13 @@ public class ResearchServiceImpl implements ResearchService {
                 }
             }
             log.info("researchItemId: {}, researchItemTypeName: {}", item.getId(), ResearchItemType.getResearchItemTypeName(item.getItemType()));
-            researchItemVoList.add(ResearchAnswerResearchItemVo.of(item.getId(), item.getName(), item.getDescription(), item.getItemType(), ResearchItemType.getResearchItemTypeName(item.getItemType()), item.getIsRequired(), researchItemChoiceVoList, answerVoList.get(i)));
+            researchItemVoList.add(ResearchAnswerItemVo.of(item.getId(), item.getName(), item.getDescription(), item.getItemType(), ResearchItemType.getResearchItemTypeName(item.getItemType()), item.getIsRequired(), researchItemChoiceVoList, answerVoList.get(i).getAnswer()));
         }
 
-        return ResearchAnswerResearchVo.of(research.getId(), research.getTitle(), research.getDescription(), researchItemVoList);
+        return ResearchAnswerDataVo.of(research.getId(), research.getTitle(), research.getDescription(), researchItemVoList);
+    }
+
+    public boolean isEmptyStringAnswerType(ResearchAnswerRequestVo answerVo) {
+        return (answerVo.getAnswer() instanceof String && ((String) answerVo.getAnswer()).isEmpty());
     }
 }

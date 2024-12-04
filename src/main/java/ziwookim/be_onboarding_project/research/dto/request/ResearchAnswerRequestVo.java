@@ -7,10 +7,6 @@ import lombok.*;
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResearchAnswerVo {
+public class ResearchAnswerRequestVo {
     private Object answer;
-
-    public boolean isEmptyStringAnswerType() {
-        return (answer instanceof String && ((String) answer).isEmpty());
-    }
 }

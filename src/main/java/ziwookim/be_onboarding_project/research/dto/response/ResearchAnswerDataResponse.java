@@ -1,8 +1,7 @@
 package ziwookim.be_onboarding_project.research.dto.response;
 
 import lombok.*;
-import ziwookim.be_onboarding_project.research.model.ResearchItemVo;
-import ziwookim.be_onboarding_project.research.model.ResearchVo;
+import ziwookim.be_onboarding_project.research.model.ResearchAnswerDataVo;
 
 import java.util.List;
 
@@ -11,18 +10,18 @@ import java.util.List;
 @Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ResearchResponse {
+public class ResearchAnswerDataResponse {
     private Long researchId;
     private String title;
     private String description;
-    private List<ResearchItemResponse> researchItemResponseList;
+    private List<ResearchAnswerItemResponse> researchAnswerItemResponseList;
 
-    public static ResearchResponse of(ResearchVo vo) {
-        return ResearchResponse.builder()
+    public static ResearchAnswerDataResponse of(ResearchAnswerDataVo vo) {
+        return ResearchAnswerDataResponse.builder()
                 .researchId(vo.getId())
                 .title(vo.getTitle())
                 .description(vo.getDescription())
-                .researchItemResponseList(vo.getResearchItemVoList().stream().map(ResearchItemResponse::of).toList())
+                .researchAnswerItemResponseList(vo.getResearchAnswerItemVoList().stream().map(ResearchAnswerItemResponse::of).toList())
                 .build();
     }
 }

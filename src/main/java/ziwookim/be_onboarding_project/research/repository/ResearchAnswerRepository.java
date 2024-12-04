@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ziwookim.be_onboarding_project.research.entity.ResearchAnswer;
 
 @Repository
-public interface ResearchAnswerRepository extends JpaRepository<ResearchAnswer, Long> {
+public interface ResearchAnswerRepository extends JpaRepository<ResearchAnswer, Long>, ResearchAnswerRepositoryCustom {
 }

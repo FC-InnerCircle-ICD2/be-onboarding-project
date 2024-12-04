@@ -10,12 +10,12 @@ import ziwookim.be_onboarding_project.research.model.ResearchVo;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResearchItemChoiceResponse {
-    private Long id;
+    private Long researchItemChoiceId;
     private String content;
 
     public static ResearchItemChoiceResponse of(ResearchItemChoiceVo vo) {
         return ResearchItemChoiceResponse.builder()
-                .id(vo.getId())
+                .researchItemChoiceId(vo.getId())
                 .content(vo.getContent())
                 .build();
     }

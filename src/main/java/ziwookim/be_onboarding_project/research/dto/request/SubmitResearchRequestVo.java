@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SubmitResearchRequestVo {
     private Long researchId;
-    private List<ResearchAnswerVo> answerVoList;
+    private List<ResearchAnswerRequestVo> answerVoList;
 }
