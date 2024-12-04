@@ -5,4 +5,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class ItemOptionEntity {
 
+    private String option;
+    private boolean checked;
+
 }
