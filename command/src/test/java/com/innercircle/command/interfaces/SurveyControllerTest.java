@@ -32,7 +32,7 @@ class SurveyControllerTest {
 	void surveyCreationSuccessTest() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -85,7 +85,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest1() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -103,7 +103,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest2() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -121,7 +121,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest3() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -140,7 +140,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest4() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -166,7 +166,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest5() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -193,7 +193,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest6() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -219,7 +219,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest7() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
@@ -246,7 +246,7 @@ class SurveyControllerTest {
 	void surveyCreationFailureTest8() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-		mockMvc.perform(post("/c/create-survey")
+		mockMvc.perform(post("/c/surveys")
 						.contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON)
 						.content("""
