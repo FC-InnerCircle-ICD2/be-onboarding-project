@@ -28,9 +28,10 @@ public class AnswerService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<AnswerDTO.ResDTO> getAnswerBySurveyId(Long surveyId) {
-		List<Answer> answerList = answerRepository.findBySurvey_Id(surveyId);
-		return answerList.stream().map(answer -> new AnswerDTO.ResDTO(
+	public List<AnswerDTO.ResDTO> getAnswerBySurveyIdAndCondition(Long surveyId, String questionName, String answerValue) {
+		List<Answer> answerList = answerRepository.searchAnswers(surveyId, questionName, answerValue);
+		return answerList.stream()
+			.map(answer -> new AnswerDTO.ResDTO(
 			answer.getId(),
 			answer.getSurveyVersion().getVersion(),
 			answer.getAnswers().stream().map(AnswerMapper::convertAnswerToDTO).toList())
