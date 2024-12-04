@@ -17,10 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
 
-	private static final int MAX_NAME_SIZE = 20;
-	private static final int MAX_DESCRIPTION_SIZE = 30;
-	private static final int MAX_OPTION_SIZE = 3;
-
 	@Id
 	private String id;
 	private String surveyId;
