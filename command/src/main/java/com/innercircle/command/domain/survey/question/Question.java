@@ -2,14 +2,12 @@ package com.innercircle.command.domain.survey.question;
 
 import com.innercircle.common.domain.survey.question.QuestionSnapshot;
 import com.innercircle.common.domain.survey.question.QuestionType;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
+import com.innercircle.common.infra.persistence.converter.StringListConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -35,8 +33,7 @@ public class Question {
 	private boolean required;
 	@Enumerated(EnumType.STRING)
 	private QuestionType type;
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
+	@Convert(converter = StringListConverter.class)
 	private List<String> options;
 
 	public Question(String id, String surveyId, String name, String description, boolean required, QuestionType type, List<String> options) {
