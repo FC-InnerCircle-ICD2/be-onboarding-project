@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Getter
+@NoArgsConstructor
 public class QuestionRequest {
     private Long idx;
 
