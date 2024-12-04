@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,23 +18,20 @@ import org.hibernate.annotations.CreationTimestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
-public class Response<S> extends BaseTime {
+public class Response extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_id", columnDefinition = "BIGINT")
     private Long responseId;
 
-    @CreationTimestamp
-    @Column(name="submitted_at",nullable = false,updatable = false)
-    private LocalDateTime submittedAt;
+//    @CreationTimestamp
+//    @Column(name="submitted_at",nullable = false,updatable = false)
+//    private LocalDateTime submittedAt;
 
+    @Column(nullable = false)
     private String respondentId;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "version_id", nullable = false)

@@ -1,6 +1,7 @@
 package com.practice.survey.surveyItem.model.entity;
 
 import com.practice.survey.common.model.entity.BaseTime;
+import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionDto;
 import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
 import com.practice.survey.surveyItem.model.enums.InputType;
 import jakarta.persistence.*;
@@ -10,11 +11,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 public class SurveyItem extends BaseTime {
 
@@ -35,11 +37,18 @@ public class SurveyItem extends BaseTime {
     @Column(name = "input_type",nullable = false)
     private InputType inputType;
 
-    @Builder.Default
     @Column(nullable = false)
-    private boolean isRequired = true;
+    private boolean isRequired;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "version_id", nullable = false)
     private SurveyVersion version;
+
+    public boolean getIsRequired() {
+        return isRequired;
+    }
+
+    public List<SurveyItemOptionDto> getOptions() {
+        return null;
+    }
 }
