@@ -90,9 +90,7 @@ public class SurveyService {
 
         List<SurveyItemRequest> itemRequestList = request.getSurveyItemList();
 
-        itemRequestList.forEach(x -> {
-            essentialItemSeqSet.remove(x.getItemSeq());
-        });
+        itemRequestList.forEach(x -> essentialItemSeqSet.remove(x.getItemSeq()));
 
         if (Boolean.FALSE.equals(essentialItemSeqSet.isEmpty())) {
             throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "필수 항목 값을 입력 해 주세요");

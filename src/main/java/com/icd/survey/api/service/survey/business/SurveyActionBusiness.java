@@ -57,8 +57,8 @@ public class SurveyActionBusiness {
         itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
     }
 
-    public void saveSurveyItemList(List<SurveyItemRequest> itemDtoList, Long surveySeq) {
-        itemDtoList.forEach(x -> {
+    public void saveSurveyItemList(List<SurveyItemRequest> itemRequsList, Long surveySeq) {
+        itemRequsList.forEach(x -> {
             x.validationCheck();
 
             SurveyItemDto dto = x.createSurveyItemDtoRequest();
