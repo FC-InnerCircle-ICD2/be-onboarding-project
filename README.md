@@ -88,7 +88,6 @@
   }
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 수정
 [Request]<br>
@@ -166,7 +165,6 @@
   }
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 응답 제출
 [Request]<br>
@@ -214,7 +212,6 @@
   }
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 응답 조회
 [Request]<br>
@@ -253,7 +250,6 @@
   }
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 조회
 [Request]<br>
@@ -312,7 +308,6 @@
   }
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 전체 조회
 [Request]<br>
@@ -340,7 +335,6 @@ No parameters
   ]
 }
 ```
-[Exception & Error]<br>
 
 ### 설문조사 삭제
 [Request]<br>
@@ -373,7 +367,6 @@ No parameters
   }
 }
 ```
-[Exception & Error]<br>
 ---------------------------------------
 # 이너써클 BE 온보딩 프로젝트
 
