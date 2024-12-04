@@ -13,7 +13,6 @@ import net.gentledot.survey.exception.SurveyCreationException;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
-import net.gentledot.survey.model.enums.SurveyItemType;
 import net.gentledot.survey.repository.SurveyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,14 +82,8 @@ public class SurveyService {
 
         Map<Long, Long> questionCountMap = new HashMap<>();
         for (SurveyQuestionRequest question : questions) {
-            if (SurveyItemType.TEXT.equals(question.getType()) || SurveyItemType.PARAGRAPH.equals(question.getType())) {
-                if (question.getOptions() == null || question.getOptions().isEmpty()) {
-                    SurveyQuestionOptionRequest defaultOption = new SurveyQuestionOptionRequest("input");
-                    question.setOptions(List.of(defaultOption));
-                }
-            }
-
-            if (question.getOptions().isEmpty()) {
+            List<SurveyQuestionOptionRequest> questionOptions = question.getOptions();
+            if (questionOptions == null || questionOptions.isEmpty()) {
                 throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
             }
 
@@ -100,11 +93,6 @@ public class SurveyService {
                         questionId,
                         questionCountMap.getOrDefault(questionId, 0L) + 1
                 );
-            }
-
-            if ((question.getType() == SurveyItemType.SINGLE_SELECT || question.getType() == SurveyItemType.MULTI_SELECT)
-                && (question.getOptions() == null || question.getOptions().isEmpty())) {
-                throw new SurveyCreationException(ServiceError.CREATION_INSUFFICIENT_OPTIONS);
             }
         }
 

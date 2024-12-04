@@ -162,6 +162,6 @@ class SurveyServiceTest {
     }
 
     private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest, SurveyItemType questionType) {
-        return SurveyQuestionOption.of(new SurveyQuestionOptionRequest(optionRequest.getOptionText()), questionType);
+        return SurveyQuestionOption.of(new SurveyQuestionOptionRequest(optionRequest.getOption()), questionType);
     }
 }

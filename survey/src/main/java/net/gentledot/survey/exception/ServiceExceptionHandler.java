@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,6 +63,13 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn(MVC_ERROR_FLAG, e);
         ServiceResponse<?> fail = createFail(ServiceError.BAD_REQUEST);
         return createServiceResponse(fail, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        log.warn(MVC_ERROR_FLAG, e);
+        ServiceResponse<?> fail = createFail(ServiceError.BAD_REQUEST);
+        return createServiceResponse(fail, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

@@ -66,7 +66,10 @@ class SurveyIntegrationTest {
                         "question": "이름을 알려주세요",
                         "description": "당신의 이름은 무엇입니까?",
                         "type": "TEXT",
-                        "required": "REQUIRED"
+                        "required": "REQUIRED",
+                        "options": [
+                            {"option" : "입력 1"}
+                        ]
                       },
                       {
                         "question": "오늘의 기분을 알려주세요",
@@ -103,7 +106,10 @@ class SurveyIntegrationTest {
                         "question": "설문이 어떠셨는지 의견을 남겨주세요",
                         "description": "간단한 의견이라도 좋습니다. :)",
                         "type": "PARAGRAPH",
-                        "required": "OPTIONAL"
+                        "required": "OPTIONAL",
+                        "options": [
+                            {"option" : "입력 1"}
+                        ]
                       }
                     ]
                  }
