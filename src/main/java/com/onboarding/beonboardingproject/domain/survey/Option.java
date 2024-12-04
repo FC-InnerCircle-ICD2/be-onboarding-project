@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity(name = "QuestionOption")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,7 +18,6 @@ public class Option {
     @Column(nullable = false)
     private String optionValue; // 옵션 값
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question; // 연결된 질문

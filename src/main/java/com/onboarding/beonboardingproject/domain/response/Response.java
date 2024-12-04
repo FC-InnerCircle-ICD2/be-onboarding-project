@@ -25,6 +25,9 @@ public class Response extends BaseEntity {
     private List<Answer> answers = new ArrayList<>();
 
     public void addAnswer(Answer answer) {
+        if (answers == null) {
+            answers = new ArrayList<>();
+        }
         answers.add(answer);
         answer.setResponse(this);
     }

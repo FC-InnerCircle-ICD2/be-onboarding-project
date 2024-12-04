@@ -42,6 +42,9 @@ public class Survey extends BaseEntity {
     }
 
     public void removeQuestion(Question question) {
+        if (questions == null) {
+            questions = new ArrayList<>();
+        }
         questions.remove(question);
         question.setSurvey(null);  // 질문과 설문 관계 끊기
     }
