@@ -6,7 +6,8 @@ import lombok.ToString;
 @ToString
 @Getter
 public enum UpdateType {
-    MODIFY("수정 또는 추가"),
+    ADD("입력"),
+    MODIFY("수정"),
     DELETE("삭제");
 
     private final String description;

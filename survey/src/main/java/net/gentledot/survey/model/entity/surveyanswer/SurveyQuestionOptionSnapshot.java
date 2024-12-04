@@ -2,8 +2,9 @@ package net.gentledot.survey.model.entity.surveyanswer;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.gentledot.survey.exception.ServiceError;
@@ -17,11 +18,12 @@ import net.gentledot.survey.model.enums.AnswerType;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @ToString
 @Embeddable
 public class SurveyQuestionOptionSnapshot {
     private String optionText;
+
+    @Enumerated(EnumType.STRING)
     private AnswerType answerType;
 
     @Embedded
@@ -60,13 +62,27 @@ public class SurveyQuestionOptionSnapshot {
     }
 
     public static SurveyQuestionOptionSnapshot of(AnswerType answerType, SurveyQuestionOption surveyQuestionOption, String answer) {
+        String targetOptionText = surveyQuestionOption.getOptionText();
         if (AnswerType.TEXT.equals(answerType)) {
-            return newTextInput(surveyQuestionOption.getOptionText(), answer);
+            return newTextInput(targetOptionText, answer);
         } else if (AnswerType.SELECTION.equals(answerType)) {
-            return newSelection(surveyQuestionOption.getOptionText(), answer);
+            return newSelection(targetOptionText, targetOptionText);
         }
 
         throw new SurveySubmitValidationException(ServiceError.SUBMIT_UNSUPPORTED_ATTRIBUTE);
     }
 
+    public String getOptionText() {
+        return optionText;
+    }
+
+    public String getAnswer() {
+        if (AnswerType.TEXT.equals(answerType)) {
+            return textInputAnswer.getText();
+        } else if (AnswerType.SELECTION.equals(answerType)) {
+            return selectionAnswer.getSelectedOption();
+        }
+
+        throw new SurveySubmitValidationException(ServiceError.SUBMIT_UNSUPPORTED_ATTRIBUTE);
+    }
 }

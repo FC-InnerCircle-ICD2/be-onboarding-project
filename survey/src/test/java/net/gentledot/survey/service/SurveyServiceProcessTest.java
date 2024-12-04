@@ -1,6 +1,7 @@
 package net.gentledot.survey.service;
 
 import jakarta.transaction.Transactional;
+import net.gentledot.survey.dto.enums.UpdateType;
 import net.gentledot.survey.dto.request.SurveyCreateRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
@@ -84,6 +85,7 @@ class SurveyServiceProcessTest {
                 .description("changed description")
                 .questions(List.of(
                         SurveyQuestionRequest.builder()
+                                .updateType(UpdateType.MODIFY)
                                 .questionId(beforeQuestion.getId())
                                 .question("changed1")
                                 .description("changed1 description")

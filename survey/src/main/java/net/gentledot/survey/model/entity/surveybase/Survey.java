@@ -9,16 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.dto.enums.UpdateType;
 import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.model.entity.common.BaseEntity;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,11 +47,12 @@ public class Survey extends BaseEntity {
     }
 
     public void updateQuestions(List<SurveyQuestionRequest> updatedQuestions) {
-        Map<Long, SurveyQuestion> existingQuestionsMap = this.getQuestions().stream()
-                .collect(Collectors.toMap(SurveyQuestion::getId, question -> question));
-
         for (SurveyQuestionRequest questionRequest : updatedQuestions) {
-            switch (questionRequest.getUpdateType()) {
+            UpdateType updateType = questionRequest.getUpdateType();
+            if (updateType == null) {
+                updateType = UpdateType.ADD;
+            }
+            switch (updateType) {
                 case MODIFY:
                     SurveyQuestion existingQuestion = this.getQuestions().stream()
                             .filter(question -> question.getId().equals(questionRequest.getQuestionId()))

@@ -19,6 +19,7 @@ import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.model.enums.AnswerType;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
@@ -79,12 +80,12 @@ public class SurveyAnswer {
                         question.getItemType() == SurveyItemType.MULTI_SELECT) {
                         collectedOptionSnapshots = question.getOptions().stream()
                                 .filter(option -> submitAnswers.contains(option.getOptionText()))
-                                .map(option -> SurveyQuestionOptionSnapshot.of(option, true))
+                                .map(option -> SurveyQuestionOptionSnapshot.of(AnswerType.SELECTION, option, "true"))
                                 .collect(Collectors.toList());
                     } else {
                         String answer = submitAnswers.isEmpty() ? null : submitAnswers.getFirst();
                         collectedOptionSnapshots = question.getOptions().stream()
-                                .map(option -> SurveyQuestionOptionSnapshot.of(option, answer))
+                                .map(option -> SurveyQuestionOptionSnapshot.of(AnswerType.TEXT, option, answer))
                                 .collect(Collectors.toList());
                     }
                     return SurveyAnswerSubmission.of(null, questionSnapshot, collectedOptionSnapshots);
