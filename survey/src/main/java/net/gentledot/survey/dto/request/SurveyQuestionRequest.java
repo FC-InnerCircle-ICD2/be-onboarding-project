@@ -1,5 +1,6 @@
 package net.gentledot.survey.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SurveyQuestionRequest {
     private Long questionId;
+    @JsonProperty("updateType")
     private UpdateType updateType;
     private String question;
     private String description;
