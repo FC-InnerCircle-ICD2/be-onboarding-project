@@ -30,6 +30,11 @@ public class ReplySurveyItemEntity {
     @Enumerated(EnumType.STRING)
     private InputType inputType;
 
+    /**
+     * 응답 값
+     */
+    private String replyInput;
+
     private boolean required;
 
     @ElementCollection
