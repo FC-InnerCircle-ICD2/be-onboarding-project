@@ -84,7 +84,8 @@ public class SurveyService {
         // 필수 항목 값 queue
         Set<Long> essentialItemSeqSet = itemList
                 .stream()
-                .filter(SurveyItem::getIsEssential)
+                .filter(x -> (Boolean.TRUE.equals(x.getIsEssential()) && Boolean.FALSE.equals(x.getIsEssential()))
+                )
                 .map(SurveyItem::getItemSeq)
                 .collect(Collectors.toSet());
 
@@ -133,7 +134,7 @@ public class SurveyService {
         return result;
     }
 
-    public Survey checkSurveyBySeq(Long surveySeq){
+    public Survey checkSurveyBySeq(Long surveySeq) {
         return surveyQueryBusiness.findSurveyById(surveySeq)
                 .orElseThrow(() -> new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND));
     }

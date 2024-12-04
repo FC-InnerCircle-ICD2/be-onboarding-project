@@ -48,7 +48,9 @@ public class SurveyItemRequest {
 
     public void validationCheck() {
         if (Boolean.TRUE.equals(isChoiceType()) && (optionList == null || optionList.isEmpty())) {
-            throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "선택 항목의 경우 옵션을 입력해야만 합니다.");
+            throw new ApiException(ExceptionResponseType.VALIDATION_EXCEPTION, "선택 항목의 경우 옵션을 입력해야만 합니다.");
+        } else if(Boolean.FALSE.equals(isChoiceType()) && (optionList != null && Boolean.FALSE.equals(optionList.isEmpty()))) {
+            throw new ApiException(ExceptionResponseType.VALIDATION_EXCEPTION, "응답 옵션은 선택 항목에만 필요합니다.");
         }
     }
 
@@ -73,6 +75,7 @@ public class SurveyItemRequest {
     public SurveyItemDto createSurveyItemDtoRequest() {
         return SurveyItemDto
                 .builder()
+                .surveySeq(surveySeq)
                 .itemName(itemName)
                 .itemDescription(itemDescription)
                 .itemResponseType(itemResponseType)

@@ -63,7 +63,7 @@ public class SurveyActionBusiness {
 
             SurveyItemDto dto = x.createSurveyItemDtoRequest();
             dto.setSurveySeq(surveySeq);
-            Long itemSeq = saveSurveyItem(x.createSurveyItemDtoRequest()).getItemSeq();
+            Long itemSeq = saveSurveyItem(dto).getItemSeq();
 
             if (Boolean.TRUE.equals(x.isChoiceType())) {
                 saveItemOptionList(x.getOptionList(), itemSeq);
@@ -73,7 +73,6 @@ public class SurveyActionBusiness {
 
     public void saveItemOptionList(List<ItemOptionRequest> optionDtoList, Long itemSeq) {
         optionDtoList.forEach(x -> {
-
             ItemAnswerOptionDto dto = x.createItemResponseOptionDto();
             dto.setItemSeq(itemSeq);
             saveAnswerOption(dto);
