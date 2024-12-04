@@ -19,4 +19,6 @@ public @interface SurveyValidationContract {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    String mode();
 }

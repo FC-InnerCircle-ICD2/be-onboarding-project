@@ -26,6 +26,4 @@ public class ConvertUtil {
 			return 0L;
 		}
 	}
-
-
 }

@@ -1,10 +1,7 @@
 package com.survey.api.interceptor;
 
 import com.survey.api.constant.CommonConstant;
-import com.survey.api.entity.SurveyEntity;
-import com.survey.api.entity.SurveyItemEntity;
 import com.survey.api.exception.SurveyApiException;
-import com.survey.api.form.SurveyItemForm;
 import com.survey.api.service.SurveyService;
 import com.survey.api.util.ConvertUtil;
 import org.springframework.stereotype.Component;
@@ -15,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -46,13 +42,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 String surveyId = pathVariables.get("surveyId");
 
                 if (surveyService.existsSurveyById(ConvertUtil.stringToLong(surveyId))) {
-                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사에 대한 수정 요청을 하였습니다.");
-                }
-
-                List<SurveyItemForm> itemForm = (List<SurveyItemForm>)request.getAttribute("items");
-
-                if(surveyService.countBySurveyAndUseYn(new SurveyEntity(ConvertUtil.stringToLong(surveyId)), CommonConstant.Y) != itemForm.size()) {
-                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "설문지와 응답 항목이 일치하지 않습니다.");
+                    throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사에 대해 요청했습니다.");
                 }
             }
         }

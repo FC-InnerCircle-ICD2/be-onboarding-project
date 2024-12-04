@@ -1,10 +1,11 @@
 package com.survey.api.service;
 
 import com.survey.api.constant.CommonConstant;
-import com.survey.api.dto.SurveyResponseDto;
 import com.survey.api.entity.*;
 import com.survey.api.exception.SurveyApiException;
-import com.survey.api.form.*;
+import com.survey.api.form.SurveyForm;
+import com.survey.api.form.SurveyItemForm;
+import com.survey.api.form.SurveyOptionForm;
 import com.survey.api.repository.*;
 import com.survey.api.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,7 @@ public class SurveyService {
         return item;
     }
 
+    @Transactional
     public void save(SurveyForm survey) {
         //DB insert
         SurveyEntity surveyResult = sureveySave(new SurveyEntity(survey.getName(), survey.getDescription(), CommonConstant.Y));
@@ -182,26 +184,32 @@ public class SurveyService {
         }
     }
 
-    public boolean itemValidator(List<SurveyItemForm> itemForm) {
+    public void itemValidator(SurveyForm surveyForm) {
+        List<SurveyItemForm> itemForm = surveyForm.getItems();
+
+        if(countBySurveyAndUseYn(new SurveyEntity(surveyForm.getId()), CommonConstant.Y) != itemForm.size()) {
+            throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "설문지와 응답 항목이 일치하지 않습니다.");
+        }
+
         for(SurveyItemForm item : itemForm) {
-            SurveyItemEntity itemEntity = findItemByIdAndItemTypeAndSurvey(item.getId(), item.getResponseType(), new SurveyEntity(item.getId()));
+            SurveyItemEntity itemEntity = findItemByIdAndItemTypeAndSurvey(item.getId(), item.getResponseType(), new SurveyEntity(surveyForm.getId()));
 
             if (itemEntity == null) {
-                throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목에 대해 응답하였습니다.");
+                throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 설문 조사 항목입니다.");
             }
 
-            if (CommonConstant.SINGLE_ITEM.equals(item.getResponseType())
-                    || CommonConstant.MULTI_ITEM.equals(item.getResponseType())) {
+            if(itemEntity.isRequired() && item.getAnswer() == null) {
+                throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "필수 항목에대한 응답이 없습니다.");
+            }
+
+            if (CommonConstant.SINGLE_ITEM.equals(item.getResponseType()) || CommonConstant.MULTI_ITEM.equals(item.getResponseType())) {
                 String[] optionList = item.getAnswer();
                 for (String optionId : optionList) {
                     if (existsSurveyOptionByIdAndItemId(ConvertUtil.stringToLong(optionId), itemEntity)) {
-                        throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 선택지를 선택하였습니다.");
+                        throw new SurveyApiException(CommonConstant.ERR_DB_DATA_ID_ERROR, "존재 하지 않는 선택지입니다.");
                     }
                 }
             }
         }
-
-
-        return true;
     }
 }

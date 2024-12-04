@@ -3,6 +3,7 @@ package com.survey.api.custom;
 import com.survey.api.constant.CommonConstant;
 import com.survey.api.form.SurveyForm;
 import com.survey.api.form.SurveyItemForm;
+import com.survey.api.form.SurveyOptionForm;
 import io.micrometer.core.instrument.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
@@ -45,6 +46,13 @@ public class SurveyContractValidator implements ConstraintValidator<SurveyValida
                     return false;
                 }
 
+                if (item.getOptionList() != null) {
+                    for (SurveyOptionForm option : item.getOptionList()) {
+                        if (StringUtils.isBlank(option.getOptionName())) {
+                            return false;
+                        }
+                    }
+                }
             }
         }
         return true;
