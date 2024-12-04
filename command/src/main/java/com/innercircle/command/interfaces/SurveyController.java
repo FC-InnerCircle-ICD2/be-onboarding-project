@@ -8,6 +8,7 @@ import com.innercircle.command.domain.Identifier;
 import com.innercircle.command.interfaces.request.CreateSurveyRequest;
 import com.innercircle.command.interfaces.request.CreateSurveyResponseRequest;
 import com.innercircle.command.interfaces.request.UpdateSurveyRequest;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,18 +22,18 @@ public class SurveyController {
 		this.commandGateway = commandGateway;
 	}
 
-	@PostMapping("/create-survey")
+	@PostMapping("/surveys")
 	public Identifier createSurvey(@RequestBody CreateSurveyRequest request) {
 		return commandGateway.publish(new CreateSurveyCommand(request.name(), request.description(), request.questionInputs()));
 	}
 
-	@PostMapping("/update-survey/{id}")
-	public Identifier updateSurvey(@PathVariable String id, @RequestBody UpdateSurveyRequest request) {
-		return commandGateway.publish(new UpdateSurveyCommand(id, request.updateInputs()));
+	@PatchMapping("/surveys/{surveyId}")
+	public Identifier updateSurvey(@PathVariable String surveyId, @RequestBody UpdateSurveyRequest request) {
+		return commandGateway.publish(new UpdateSurveyCommand(surveyId, request.updateInputs()));
 	}
 
-	@PostMapping("/surveys/{id}/responses")
-	public Identifier createSurveyResponse(@PathVariable String id, @RequestBody CreateSurveyResponseRequest request) {
-		return commandGateway.publish(new CreateSurveyResponseCommand(id, request.responseInputs()));
+	@PostMapping("/surveys/{surveyId}/responses")
+	public Identifier createSurveyResponse(@PathVariable String surveyId, @RequestBody CreateSurveyResponseRequest request) {
+		return commandGateway.publish(new CreateSurveyResponseCommand(surveyId, request.responseInputs()));
 	}
 }

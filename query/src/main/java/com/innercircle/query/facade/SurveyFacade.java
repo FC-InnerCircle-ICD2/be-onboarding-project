@@ -8,12 +8,15 @@ import com.innercircle.common.domain.survey.response.SingleChoiceAnswerContent;
 import com.innercircle.query.controller.dto.AnswerContentDto;
 import com.innercircle.query.controller.dto.LongTextAnswerContentDto;
 import com.innercircle.query.controller.dto.MultipleChoiceAnswerContentDto;
+import com.innercircle.query.controller.dto.QuestionDto;
 import com.innercircle.query.controller.dto.ShortTextAnswerContentDto;
 import com.innercircle.query.controller.dto.SingleChoiceAnswerContentDto;
 import com.innercircle.query.controller.dto.SurveyDto;
+import com.innercircle.query.controller.dto.SurveyResponsesDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto.AnswerDto;
 import com.innercircle.query.infra.persistence.jparepository.AnswerJpaRepository;
+import com.innercircle.query.infra.persistence.jparepository.QuestionJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyResponseJpaRepository;
 import com.innercircle.query.infra.persistence.model.survey.response.Answer;
@@ -28,12 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class SurveyFacade {
 
 	private final AnswerJpaRepository answerJpaRepository;
+	private final QuestionJpaRepository questionJpaRepository;
 	private final SurveyJpaRepository surveyJpaRepository;
 	private final SurveyResponseJpaRepository surveyResponseJpaRepository;
 
-	public SurveyFacade(AnswerJpaRepository answerJpaRepository, SurveyJpaRepository surveyJpaRepository,
+	public SurveyFacade(AnswerJpaRepository answerJpaRepository, QuestionJpaRepository questionJpaRepository, SurveyJpaRepository surveyJpaRepository,
 			SurveyResponseJpaRepository surveyResponseJpaRepository) {
 		this.answerJpaRepository = answerJpaRepository;
+		this.questionJpaRepository = questionJpaRepository;
 		this.surveyJpaRepository = surveyJpaRepository;
 		this.surveyResponseJpaRepository = surveyResponseJpaRepository;
 	}
@@ -41,13 +46,24 @@ public class SurveyFacade {
 	@Transactional(readOnly = true)
 	public SurveyDto getSurvey(String surveyId) {
 		var survey = surveyJpaRepository.findById(surveyId).orElseThrow(SurveyNotFoundException::new);
+		var questions = questionJpaRepository.findBySurveyId(survey.getId());
+		var questionDtos = questions.stream()
+				.map(question -> new QuestionDto(question.getId(), question.getName(), question.getDescription(), question.isRequired(),
+						question.getType(), question.getOptions()))
+				.toList();
+		return new SurveyDto(survey.getId(), survey.getName(), survey.getDescription(), questionDtos);
+	}
+
+	@Transactional(readOnly = true)
+	public SurveyResponsesDto getSurveyResponses(String surveyId) {
+		var survey = surveyJpaRepository.findById(surveyId).orElseThrow(SurveyNotFoundException::new);
 		var surveyResponseIds = surveyResponseJpaRepository.findAllBySurveyId(surveyId).stream().map(SurveyResponse::getId).toList();
 		var answers = answerJpaRepository.findBySurveyResponseIdIn(surveyResponseIds);
 
 		var answerDtoMap = getAnswerDtoMap(answers);
 		var surveyResponseDtos = getSurveyResponseDtos(answerDtoMap);
 
-		return new SurveyDto(survey.getId(), survey.getName(), survey.getDescription(), surveyResponseDtos);
+		return new SurveyResponsesDto(survey.getId(), survey.getName(), survey.getDescription(), surveyResponseDtos);
 	}
 
 	private Map<String, List<AnswerDto>> getAnswerDtoMap(List<Answer> answers) {
@@ -65,8 +81,8 @@ public class SurveyFacade {
 				);
 	}
 
-	private AnswerDto.QuestionDto getQuestionDto(QuestionSnapshot questionSnapshot) {
-		return new AnswerDto.QuestionDto(questionSnapshot.getId(), questionSnapshot.getName(),
+	private QuestionDto getQuestionDto(QuestionSnapshot questionSnapshot) {
+		return new QuestionDto(questionSnapshot.getId(), questionSnapshot.getName(),
 				questionSnapshot.getDescription(), questionSnapshot.isRequired(), questionSnapshot.getType(),
 				questionSnapshot.getOptions());
 	}
