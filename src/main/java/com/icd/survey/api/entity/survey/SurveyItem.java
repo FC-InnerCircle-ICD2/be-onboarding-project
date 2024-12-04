@@ -17,7 +17,6 @@ import java.util.List;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "survey_item")
-@ToString
 public class SurveyItem extends BaseEntity {
     @Id
     @Column(name = "item_seq", nullable = false)

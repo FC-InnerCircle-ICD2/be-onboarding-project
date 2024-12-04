@@ -14,7 +14,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "item_answer")
-@ToString
 public class ItemAnswer {
     @Id
     @Column(name = "answer_seq", nullable = false)
