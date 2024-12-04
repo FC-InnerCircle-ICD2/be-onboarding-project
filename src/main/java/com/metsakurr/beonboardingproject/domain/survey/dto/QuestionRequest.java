@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,13 +38,17 @@ public class QuestionRequest {
 
     @AssertTrue(message = "[단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보 값이 필요합니다.")
     public boolean isValidOptions() {
-        QuestionType type = QuestionType.valueOf(questionType);
-        if (QuestionType.SINGLE_CHOICE.equals(type) || QuestionType.MULTI_CHOICE.equals(type)) {
-            if (options == null) {
-                return false;
-            }
+        try {
+            QuestionType type = QuestionType.valueOf(questionType);
+            if (QuestionType.SINGLE_CHOICE.equals(type) || QuestionType.MULTI_CHOICE.equals(type)) {
+                if (options == null) {
+                    return false;
+                }
 
-            return !options.isEmpty();
+                return !options.isEmpty();
+            }
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
         }
         return true;
     }
