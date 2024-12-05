@@ -1,7 +1,6 @@
 package ziwookim.be_onboarding_project.common.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,6 +11,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -25,8 +25,8 @@ import ziwookim.be_onboarding_project.common.web.exception.NotFoundException;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@RestController
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class RestExceptionHandler {
 
     @ExceptionHandler(value = {
@@ -46,7 +46,7 @@ public class RestExceptionHandler {
             BadRequestException.class,
             MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class,
-            IllegalArgumentException.class,
+            IllegalArgumentException.class
     })
     public ResponseEntity<CommonResponse> badRequestException(Exception exception, HttpServletRequest request) {
         log.error("", exception);

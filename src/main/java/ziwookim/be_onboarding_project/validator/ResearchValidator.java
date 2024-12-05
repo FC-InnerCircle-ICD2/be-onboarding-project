@@ -26,7 +26,7 @@ public class ResearchValidator {
 
         if(StringUtil.isNullOrEmpty(requestVo.getDescription())) {
             log.error("description is empty.");
-            throw BadRequestException.of(HttpErrors.EMPTY_TITLE);
+            throw BadRequestException.of(HttpErrors.EMPTY_DESCRIPTION);
         }
 
         if(requestVo.getItemVoList().isEmpty() || requestVo.getItemVoList().size() > MAX_ADDED_RESEARCH_ITEM) {

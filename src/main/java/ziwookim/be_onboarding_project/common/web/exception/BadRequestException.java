@@ -1,8 +1,8 @@
 package ziwookim.be_onboarding_project.common.web.exception;
 
 import lombok.*;
-import ziwookim.be_onboarding_project.common.web.error.HttpError;
 import ziwookim.be_onboarding_project.common.web.enums.HttpErrors;
+import ziwookim.be_onboarding_project.common.web.error.HttpError;
 
 @Getter
 @Setter

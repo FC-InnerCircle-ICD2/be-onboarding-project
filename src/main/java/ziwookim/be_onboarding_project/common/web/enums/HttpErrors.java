@@ -13,7 +13,7 @@ public enum HttpErrors implements HttpError {
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청된 URL 을 찾을 수 없습니다."),
     RESEARCH_NOT_FOUND(HttpStatus.BAD_REQUEST, "설문 데이터를 찾을 수 없습니다."),
     EMPTY_TITLE(HttpStatus.BAD_REQUEST, "설문 제목을 입력해주세요."),
-    EMPTY_DESCRIPTION(HttpStatus.BAD_REQUEST, "설문 제목을 입력해주세요."),
+    EMPTY_DESCRIPTION(HttpStatus.BAD_REQUEST, "설문 설명을 입력해주세요."),
     INVALID_RESEARCH_ITEM_SIZE(HttpStatus.BAD_REQUEST, "설문 항목은 1개에서 10개 입력 가능합니다."),
     MISMATCH_RESEARCH_ITEM_CHOICE(HttpStatus.BAD_REQUEST, "항목 입력 형태와 선택 리스트 데이터가 매칭 되지 않습니다."),
     INVALID_RESEARCH_ITEM_TYPE(HttpStatus.BAD_REQUEST, "항목 입력 형태는 단답형(1), 장문형(2), 단일 선택 리스트(3), 다중 선택 리스트(4) 중에서만 선택이 가능합니다."),
