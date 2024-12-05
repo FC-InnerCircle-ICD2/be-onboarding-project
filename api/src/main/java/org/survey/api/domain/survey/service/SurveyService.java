@@ -123,6 +123,17 @@ public class SurveyService {
                 .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "SurveyReplyEntity Null"));
     }
 
+    public SurveyItemEntity itemFindByName(
+            Long surveyId,
+            String name
+    ){
+        return surveyItemRepository.findFirstBySurveyIdAndNameAndStatusOrderByIdDesc(
+                        surveyId,
+                        name,
+                        BaseStatus.REGISTERED)
+                .orElseThrow(()-> new ApiException(CommonErrorCode.NULL_POINT, "surveyItemEntity not exist"));
+    }
+
     public List<SurveyBaseEntity> baseAllFind(){
         return surveyBaseRepository.findAllByStatusOrderByIdDesc(BaseStatus.REGISTERED);
     }
@@ -148,6 +159,16 @@ public class SurveyService {
     ){
         return surveyReplyRepository.findAllBySurveyIdAndStatusOrderByIdAscItemIdAsc(
                 surveyId,
+                BaseStatus.REGISTERED);
+    }
+
+    public List<SurveyReplyEntity> replyFindByContent(
+            Long surveyId,
+            String content
+    ){
+        return surveyReplyRepository.findAllBySurveyIdAndContentAndStatusOrderByIdAscItemIdAsc(
+                surveyId,
+                content,
                 BaseStatus.REGISTERED);
     }
 

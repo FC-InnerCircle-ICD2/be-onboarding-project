@@ -1,8 +1,8 @@
 package org.survey.api.domain.survey.controller.model;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,16 +11,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SurveyAllRequest {
-
-    private Long id;
-
-    @NotBlank
-    private String title;
-
-    @NotBlank
-    private String description;
+@Builder
+public class SurveySearchRequest {
 
     @NotNull
-    private List<SurveyItemRequest> items;
+    private Long surveyId;
+
+    private String itemName;
+
+    private String replyContent;
 }

@@ -30,6 +30,8 @@ public class SurveyItemResponse {
 
     private List<SelectOptionResponse> selectOptions;
 
+    private List<SurveyReplyResponse> surveyReply;
+
     private BaseStatus status;
 
     private LocalDateTime registeredAt;

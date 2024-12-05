@@ -75,4 +75,13 @@ public class SurveyController {
         var response = surveyBusiness.baseAllFind();
         return Api.OK(response);
     }
+
+    @PostMapping("/find/reply/ByItemOrContent")
+    public Api<SurveyBaseResponse> specialFind(
+            @Valid
+            @RequestBody Api<SurveySearchRequest> surveySearchRequestApi
+    ){
+        var response = surveyBusiness.replyFindByItemAndContent(surveySearchRequestApi.getBody());
+        return Api.OK(response);
+    }
 }

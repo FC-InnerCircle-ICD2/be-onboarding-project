@@ -11,5 +11,11 @@ public interface SurveyItemRepository extends JpaRepository<SurveyItemEntity, Lo
             Long id,
             Long surveyId,
             BaseStatus status);
+
+    Optional<SurveyItemEntity> findFirstBySurveyIdAndNameAndStatusOrderByIdDesc(
+            Long surveyId,
+            String name,
+            BaseStatus status);
+
     List<SurveyItemEntity> findAllBySurveyIdAndStatusOrderByIdAsc(Long surveyId, BaseStatus status);
 }

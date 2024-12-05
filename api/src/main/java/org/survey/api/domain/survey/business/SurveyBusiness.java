@@ -265,4 +265,65 @@ public class SurveyBusiness {
         var baseEntity = surveyService.baseDelete(id);
         return surveyConverter.toResponse(baseEntity);
     }
+
+    /**
+     * 설문조사 응답 조회(항목 이름, 응답 값)
+     */
+    @Transactional
+    public SurveyBaseResponse replyFindByItemAndContent(SurveySearchRequest surveySearchRequest){
+        //설문조사 폼 Select
+        var baseEntity = surveyService.baseFindById(surveySearchRequest.getSurveyId());
+
+        if(surveySearchRequest.getItemName() != null){
+            var surveyItemEntity = surveyService.itemFindByName(
+                    surveySearchRequest.getSurveyId(), surveySearchRequest.getItemName());
+            List<SurveyItemResponse> itemResponseList = new ArrayList<>();
+            List<SelectOptionResponse> selectOptionList = new ArrayList<>();
+            if(surveyItemEntity.getInputType() == ItemInputType.SINGLE_SELECT_LIST
+                    || surveyItemEntity.getInputType() == ItemInputType.MULTI_SELECT_LIST){
+                var selectListEntityList = surveyService.selectListAllFind(
+                        baseEntity.getId(),
+                        surveyItemEntity.getId());
+                for(SelectListEntity selectListEntity : selectListEntityList){
+                    selectOptionList.add(surveyConverter.toResponse(selectListEntity));
+                }
+            }
+            var itemResponse = surveyConverter.toResponse(surveyItemEntity, selectOptionList);
+            var replyEntityList = surveyService.replyMultiFind(
+                    baseEntity.getId(),
+                    surveyItemEntity.getId());
+            itemResponse.setSurveyReply(surveyConverter.toReplyListResponse(replyEntityList));
+            itemResponseList.add(itemResponse);
+            var response = surveyConverter.toResponse(baseEntity, itemResponseList);
+            return response;
+        }
+        else if(surveySearchRequest.getReplyContent() != null) {
+            var surveyReplyList = surveyService.replyFindByContent(
+                    surveySearchRequest.getSurveyId(), surveySearchRequest.getReplyContent());
+            List<SurveyItemResponse> itemResponseList = new ArrayList<>();
+            for(SurveyReplyEntity reply : surveyReplyList){
+                var surveyItemEntity = surveyService.itemFindById(
+                        reply.getItemId(), surveySearchRequest.getSurveyId());
+                List<SelectOptionResponse> selectOptionList = new ArrayList<>();
+                if(surveyItemEntity.getInputType() == ItemInputType.SINGLE_SELECT_LIST
+                        || surveyItemEntity.getInputType() == ItemInputType.MULTI_SELECT_LIST){
+                    var selectListEntityList = surveyService.selectListAllFind(
+                            baseEntity.getId(),
+                            surveyItemEntity.getId());
+                    for(SelectListEntity selectListEntity : selectListEntityList){
+                        selectOptionList.add(surveyConverter.toResponse(selectListEntity));
+                    }
+                }
+                var itemResponse = surveyConverter.toResponse(surveyItemEntity, selectOptionList);
+                List<SurveyReplyEntity> replyEntityList = new ArrayList<>();
+                replyEntityList.add(reply);
+                itemResponse.setSurveyReply(surveyConverter.toReplyListResponse(replyEntityList));
+                itemResponseList.add(itemResponse);
+            }
+            var response = surveyConverter.toResponse(baseEntity, itemResponseList);
+            return response;
+        }
+        var response = this.find(surveySearchRequest.getSurveyId());
+        return response;
+    }
 }

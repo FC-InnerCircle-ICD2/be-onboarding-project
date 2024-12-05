@@ -15,6 +15,12 @@ public interface SurveyReplyRepository extends JpaRepository<SurveyReplyEntity, 
             BaseStatus status
     );
 
+    List<SurveyReplyEntity> findAllBySurveyIdAndContentAndStatusOrderByIdAscItemIdAsc(
+            Long surveyId,
+            String content,
+            BaseStatus status
+    );
+
     List<SurveyReplyEntity> findAllBySurveyIdAndStatusOrderByIdAscItemIdAsc(
             Long surveyId,
             BaseStatus status
