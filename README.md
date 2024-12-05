@@ -1215,10 +1215,66 @@
 
 ### 설문조사 전체 조회
 [Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="6">No parameters</td>
+  </tr>
+</table>
+
 ```
 No parameters
 ```
 [Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -1242,6 +1298,22 @@ No parameters
 
 ### 설문조사 삭제
 [Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -1253,6 +1325,50 @@ No parameters
 }
 ```
 [Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
