@@ -3,6 +3,7 @@ package net.gentledot.survey.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import net.gentledot.survey.dto.common.ServiceResponse;
 import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
 import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
@@ -40,7 +41,7 @@ public class SurveyController {
     @Operation(summary = "설문조사 생성", description = "새로운 설문조사를 생성합니다.")
     @PostMapping
     public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(
-            @RequestBody SurveyCreateRequest surveyRequest) {
+            @Valid @RequestBody SurveyCreateRequest surveyRequest) {
         SurveyCreateResponse createResult = surveyService.createSurvey(surveyRequest);
         return ResponseEntity.ok(ServiceResponse.success(createResult));
     }
@@ -48,7 +49,7 @@ public class SurveyController {
     @Operation(summary = "설문조사 수정", description = "생성된 설문조사의 내용을 수정합니다.")
     @PutMapping
     public ResponseEntity<ServiceResponse<SurveyUpdateResponse>> updateSurvey(
-            @RequestBody SurveyUpdateRequest surveyRequest) {
+            @Valid @RequestBody SurveyUpdateRequest surveyRequest) {
         SurveyUpdateResponse updateResult = surveyService.updateSurvey(surveyRequest);
         return ResponseEntity.ok(ServiceResponse.success(updateResult));
     }
@@ -57,7 +58,7 @@ public class SurveyController {
     @PostMapping("/{surveyId}/answer")
     public ResponseEntity<ServiceResponse<Void>> submitSurveyAnswer(
             @Parameter(description = "설문조사 ID", required = true) @PathVariable("surveyId") String surveyId,
-                                                                    @RequestBody List<SubmitSurveyAnswer> answer) {
+            @RequestBody List<SubmitSurveyAnswer> answer) {
         surveyAnswerService.submitSurveyAnswer(surveyId, answer);
         return ResponseEntity.ok(ServiceResponse.success(null));
     }

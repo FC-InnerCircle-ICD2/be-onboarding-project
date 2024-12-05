@@ -50,7 +50,7 @@ class SurveyAnswerServiceProcessTest {
         options.add(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("Option 2")));
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, options));
-        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("Option 2")))));
+        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, null));
         return Survey.of("Survey 1", "Description 1", questions);
     }
 
@@ -58,7 +58,7 @@ class SurveyAnswerServiceProcessTest {
     void submitSurveyWithValidSurveyIdAndAnswers() {
         List<SubmitSurveyAnswer> answers = new ArrayList<>();
         answers.add(new SubmitSurveyAnswer(
-                survey.getQuestions().get(0).getId(), List.of("Question 1")));
+                survey.getQuestions().get(0).getId(), List.of("Option 1")));
         answers.add(new SubmitSurveyAnswer(survey.getQuestions().get(1).getId(),
                 List.of("Answer 2")));
 

@@ -89,8 +89,26 @@ public class SurveyAnswerService {
                 if (SurveyItemType.SINGLE_SELECT.equals(question.getItemType()) && answer.getAnswer().size() > 1) {
                     throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
                 }
-
             }
+
+            // 3. 응답 값이 Question에서 받을 수 있는지 확인
+            if (!isValidAnswer(question, answer)) {
+                throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
+            }
+
         }
+    }
+
+    private boolean isValidAnswer(SurveyQuestion question, SubmitSurveyAnswer answer) {
+        // 응답 값 검증 로직
+        return switch (question.getItemType()) {
+            case TEXT, PARAGRAPH -> answer.getAnswer().size() == 1;
+            case SINGLE_SELECT -> question.getOptions().stream()
+                    .anyMatch(option -> option.getOptionText().equals(answer.getAnswer().getFirst()));
+            case MULTI_SELECT -> answer.getAnswer().stream()
+                    .allMatch(ans -> question.getOptions().stream()
+                            .anyMatch(option -> option.getOptionText().equals(ans)));
+            default -> false;
+        };
     }
 }
