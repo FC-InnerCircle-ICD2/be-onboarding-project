@@ -29,15 +29,23 @@ public class SurveyService {
 
         List<Question> questions = new ArrayList<>();
         for (QuestionDto question : questionDtos) {
-            Question savedQuestion = questionRepository.save(
-                    Question.builder()
-                            .qName(question.getQName())
-                            .qDescription(question.getQDescription())
-                            .qType(AnsType.fromValue(question.getQType()))
-                            .qMust(Must.fromValue(question.getQMust()))
-                            .build()
+//            Question savedQuestion = questionRepository.save(
+//                    Question.builder()
+//                            .qName(question.getQName())
+//                            .qDescription(question.getQDescription())
+//                            .qType(AnsType.fromValue(question.getQType()))
+//                            .qMust(Must.fromValue(question.getQMust()))
+//                            .build()
+//            );
+//            questions.add(savedQuestion);
+            questions.add(
+                Question.builder()
+                    .qName(question.getQName())
+                    .qDescription(question.getQDescription())
+                    .qType(AnsType.fromValue(question.getQType()))
+                    .qMust(Must.fromValue(question.getQMust()))
+                    .build()
             );
-            questions.add(savedQuestion);
         }
 
         surveyRepository.save(

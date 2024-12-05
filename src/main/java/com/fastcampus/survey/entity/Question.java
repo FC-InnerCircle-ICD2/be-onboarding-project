@@ -27,8 +27,4 @@ public class Question {
 
     @Convert(converter = MustConverter.class)
     private Must qMust;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "survey_id")
-    private Survey survey;
 }
