@@ -44,9 +44,10 @@ class SurveyConsumerControllerTest : BaseControllerTest() {
                     fieldWithPath("uuid").description("설문조사 응답 페이지별 unique ID"),
                     fieldWithPath("items[]").description("설문조사 응답 항목"),
                     fieldWithPath("items[].itemId").description("설문조사 응답 항목 ID"),
-                    fieldWithPath("items[].answer").description("단답형, 장문형 인 경우 필수").optional(),
-                    fieldWithPath("items[].itemOptionId").description("단일 선택 리스트인 경우 필수").optional(),
-                    fieldWithPath("items[].itemOptionIds").description("다중 선택 리스트인 경우 필수").optional(),
+                    fieldWithPath("items[].shortResponse").description("단답형인 경우 필수").optional(),
+                    fieldWithPath("items[].longResponse").description("장문형인 경우 필수").optional(),
+                    fieldWithPath("items[].singleChoiceOptionId").description("단일 선택 리스트인 경우 필수").optional(),
+                    fieldWithPath("items[].multipleChoiceOptionIds").description("다중 선택 리스트인 경우 필수").optional(),
                 ),
                 ExceptionSnippet(
                     listOf(

@@ -58,12 +58,12 @@ class SurveyConsumerServiceTest : BaseUnitTest() {
         val survey = insertSurvey()
         val firstRequest = PostSurveyResponseRequest(
             uuid = "duplicate-uuid",
-            items = listOf(PostSurveyResponseItemRequest(itemId = 1, answer = "응답1"))
+            items = listOf(PostSurveyResponseItemRequest(itemId = 1, shortResponse = "응답1"))
         )
         surveyConsumerService.postSurveyResponse(survey.id, firstRequest)
         val secondRequest = PostSurveyResponseRequest(
             uuid = "duplicate-uuid",
-            items = listOf(PostSurveyResponseItemRequest(itemId = 1, answer = "응답2"))
+            items = listOf(PostSurveyResponseItemRequest(itemId = 1, shortResponse = "응답2"))
         )
 
         assertThrows<DuplicateSurveyResponseException> {
@@ -78,7 +78,7 @@ class SurveyConsumerServiceTest : BaseUnitTest() {
             uuid = "uuid",
             items = listOf(
                 PostSurveyResponseItemRequest(
-                    itemId = survey.items.first().id, answer = "응답1"
+                    itemId = survey.items.first().id, shortResponse = "응답1"
                 )
             )
         )

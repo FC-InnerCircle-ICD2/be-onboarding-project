@@ -29,7 +29,7 @@ class SurveyConsumerService(
 
         val surveyResponse = request.toEntity(survey)
         request.items.extract("items").map {
-            surveyResponse.addItem(it.toEntity(surveyResponse))
+            surveyResponse.addItem(it.toEntity(surveyResponse, survey.getActiveItems()))
         }
 
         applicationEventPublisher.publishEvent(CreateSurveyResponseEvent(surveyResponse))

@@ -8,15 +8,19 @@ fun createPostSurveyResponseRequest() = PostSurveyResponseRequest(
     items = listOf(
         PostSurveyResponseItemRequest(
             itemId = 1,
-            answer = "단답형, 장문형"
+            shortResponse = "단답형"
         ),
         PostSurveyResponseItemRequest(
             itemId = 2,
-            itemOptionId = 1,
+            longResponse = "장문형"
         ),
         PostSurveyResponseItemRequest(
             itemId = 3,
-            itemOptionIds = listOf(1,2,3)
+            singleChoiceOptionId = 1,
+        ),
+        PostSurveyResponseItemRequest(
+            itemId = 4,
+            multipleChoiceOptionIds = listOf(1, 2, 3)
         )
     )
 )

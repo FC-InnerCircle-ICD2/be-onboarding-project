@@ -7,8 +7,8 @@ import org.icd.surveyapi.support.utils.extract
 import org.icd.surveycore.domain.survey.Survey
 import org.icd.surveycore.domain.surveyItem.ItemType
 import org.icd.surveycore.domain.surveyItem.SurveyItem
-import org.icd.surveycore.domain.surveyresponse.SurveyResponse
-import org.icd.surveycore.domain.surveyresponse.SurveyResponseItem
+import org.icd.surveycore.domain.surveyItem.SurveyItemOption
+import org.icd.surveycore.domain.surveyresponse.*
 
 data class PostSurveyResponseRequest(
     val uuid: String?,
@@ -35,30 +35,29 @@ data class PostSurveyResponseRequest(
         items.extract("items").forEach { itemRequest ->
             val surveyItem = surveyItems.firstOrNull { it.id == itemRequest.itemId }
                 ?: throw NotFoundSurveyItemException()
-            val validOptions = surveyItem.getActiveOptions().map { it.id }
 
             when (surveyItem.itemType) {
-                ItemType.SHORT_ANSWER, ItemType.LONG_ANSWER -> {
-                    if (itemRequest.answer.isNullOrBlank()) {
+                ItemType.SHORT_ANSWER -> {
+                    if (itemRequest.shortResponse.isNullOrBlank()) {
+                        throw MissingRequiredSurveyResponseItemException()
+                    }
+                }
+
+                ItemType.LONG_ANSWER -> {
+                    if (itemRequest.longResponse.isNullOrBlank()) {
                         throw MissingRequiredSurveyResponseItemException()
                     }
                 }
 
                 ItemType.SINGLE_CHOICE -> {
-                    if (itemRequest.itemOptionId == null) {
+                    if (itemRequest.singleChoiceOptionId == null) {
                         throw MissingRequiredSurveyResponseItemException()
-                    }
-                    if (itemRequest.itemOptionId !in validOptions) {
-                        throw InvalidSurveyResponseOptionException()
                     }
                 }
 
                 ItemType.MULTIPLE_CHOICE -> {
-                    if (itemRequest.itemOptionIds.isNullOrEmpty()) {
+                    if (itemRequest.multipleChoiceOptionIds.isNullOrEmpty()) {
                         throw MissingRequiredSurveyResponseItemException()
-                    }
-                    if (itemRequest.itemOptionIds.any { it !in validOptions }) {
-                        throw InvalidSurveyResponseOptionException()
                     }
                 }
             }
@@ -68,17 +67,51 @@ data class PostSurveyResponseRequest(
 
 data class PostSurveyResponseItemRequest(
     val itemId: Long,
-    val answer: String? = null,
-    val itemOptionId: Long? = null,
-    val itemOptionIds: List<Long>? = null
+    val shortResponse: String? = null,
+    val longResponse: String? = null,
+    val singleChoiceOptionId: Long? = null,
+    val multipleChoiceOptionIds: List<Long>? = null
 ) {
-    fun toEntity(surveyResponse: SurveyResponse): SurveyResponseItem {
+    fun toEntity(
+        surveyResponse: SurveyResponse,
+        surveyItems: List<SurveyItem>
+    ): SurveyResponseItem {
+        val surveyItem = surveyItems.find { it.id == itemId } ?: throw NotFoundSurveyItemException()
+        val validOptions = surveyItem.getActiveOptions()
         return SurveyResponseItem.of(
-            surveyResponse = surveyResponse,
-            surveyItemId = itemId,
-            answer = answer,
-            itemOptionId = itemOptionId,
-            itemOptionIds = itemOptionIds
+            surveyResponse,
+            surveyItem.sequence,
+            surveyItem.name,
+            surveyItem.description,
+            surveyItem.itemType,
+            shortResponse = shortResponse?.let { ShortResponse(it) },
+            longResponse = longResponse?.let { LongResponse(it) },
+            singleChoiceResponse = singleChoiceOptionId?.let { createSingleChoiceResponse(it, validOptions) },
+            multipleChoiceResponse = multipleChoiceOptionIds?.let { createMultipleChoiceResponse(it, validOptions) }
         )
+    }
+
+    private fun createSingleChoiceResponse(
+        singleChoiceOptionId: Long,
+        validOptions: List<SurveyItemOption>
+    ): SingleChoiceResponse {
+        return SingleChoiceResponse(
+            choiceOptionId = singleChoiceOptionId,
+            choiceOptionName = validOptions.find { option -> option.id == singleChoiceOptionId }?.name
+                ?: throw InvalidSurveyResponseOptionException()
+        )
+    }
+
+    private fun createMultipleChoiceResponse(
+        multipleChoiceOptionIds: List<Long>,
+        validOptions: List<SurveyItemOption>
+    ): MultipleChoiceResponse {
+        return MultipleChoiceResponse(multipleChoiceOptionIds.map {
+            ChoiceOption(
+                choiceOptionId = it,
+                choiceOptionName = validOptions.find { option -> option.id == it }?.name
+                    ?: throw InvalidSurveyResponseOptionException()
+            )
+        })
     }
 }

@@ -1,6 +1,5 @@
 package org.icd.surveyapi.surveyconsumer.application.dto.request
 
-import org.icd.surveyapi.exception.InvalidSurveyResponseOptionException
 import org.icd.surveyapi.exception.MissingRequiredSurveyResponseItemException
 import org.icd.surveycore.domain.survey.Survey
 import org.icd.surveycore.domain.surveyItem.ItemType
@@ -33,18 +32,20 @@ class PostSurveyResponseRequestTest {
 
     private fun createSurveyResponseRequest(
         surveyItem: SurveyItem,
-        itemOptionId: Long? = null,
-        itemOptionIds: List<Long>? = null,
-        answer: String? = null
+        shortResponse: String? = null,
+        longResponse: String? = null,
+        singleChoiceOptionId: Long? = null,
+        multipleChoiceOptionIds: List<Long>? = null,
     ): PostSurveyResponseRequest {
         return PostSurveyResponseRequest(
             uuid = "uuid",
             items = listOf(
                 PostSurveyResponseItemRequest(
                     surveyItem.id,
-                    answer = answer,
-                    itemOptionId = itemOptionId,
-                    itemOptionIds = itemOptionIds
+                    shortResponse = shortResponse,
+                    longResponse = longResponse,
+                    singleChoiceOptionId = singleChoiceOptionId,
+                    multipleChoiceOptionIds = multipleChoiceOptionIds
                 )
             )
         )
@@ -75,7 +76,7 @@ class PostSurveyResponseRequestTest {
             items = listOf(
                 PostSurveyResponseItemRequest(
                     itemId = 1,
-                    answer = "응답1"
+                    shortResponse = "응답"
                 )
             )
         )
@@ -87,9 +88,9 @@ class PostSurveyResponseRequestTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    fun `설문조사 응답 시 itemType SHORT_ANSWER 일때 answer가 null 이면 MissingRequiredSurveyResponseItemException 발생`(answer: String?) {
+    fun `설문조사 응답 시 itemType SHORT_ANSWER 일때 response가 null 이면 MissingRequiredSurveyResponseItemException 발생`(response: String?) {
         val surveyItem = createSurveyWithItem(ItemType.SHORT_ANSWER)
-        val request = createSurveyResponseRequest(surveyItem, answer = answer)
+        val request = createSurveyResponseRequest(surveyItem, shortResponse = response)
 
         assertThrows<MissingRequiredSurveyResponseItemException> {
             request.validateItemResponses(listOf(surveyItem))
@@ -98,50 +99,29 @@ class PostSurveyResponseRequestTest {
 
     @ParameterizedTest
     @NullSource
-    fun `설문조사 응답 시 itemType SINGLE_CHOICE 일때 itemOptionId가 null 이면 MissingRequiredSurveyResponseItemException 발생`(
-        itemOptionId: Long?
+    fun `설문조사 응답 시 itemType SINGLE_CHOICE 일때 singleChoiceOptionId가 null 이면 MissingRequiredSurveyResponseItemException 발생`(
+        singleChoiceOptionId: Long?
     ) {
         val surveyItem = createSurveyWithItem(ItemType.SINGLE_CHOICE)
-        val request = createSurveyResponseRequest(surveyItem, itemOptionId = itemOptionId)
+        val request = createSurveyResponseRequest(surveyItem, singleChoiceOptionId = singleChoiceOptionId)
 
         assertThrows<MissingRequiredSurveyResponseItemException> {
-            request.validateItemResponses(listOf(surveyItem))
-        }
-    }
-
-    @Test
-    fun `설문조사 응답 시 itemType SINGLE_CHOICE 일때 itemOptionId가 유효하지 않으면 InvalidSurveyResponseOptionException 발생`() {
-        val surveyItem = createSurveyWithItem(ItemType.SINGLE_CHOICE)
-        surveyItem.addOptions(listOf(SurveyItemOption.of(surveyItem, "옵션")))
-        val request = createSurveyResponseRequest(surveyItem, itemOptionId = 100)
-
-        assertThrows<InvalidSurveyResponseOptionException> {
             request.validateItemResponses(listOf(surveyItem))
         }
     }
 
     @ParameterizedTest
     @NullSource
-    fun `설문조사 응답 시 itemType MULTIPLE_CHOICE 일때 itemOptionIds가 null 이면 MissingRequiredSurveyResponseItemException 발생`(
-        itemOptionIds: List<Long>?
+    fun `설문조사 응답 시 itemType MULTIPLE_CHOICE 일때 multipleChoiceOptionIds가 null 이면 MissingRequiredSurveyResponseItemException 발생`(
+        multipleChoiceOptionIds: List<Long>?
     ) {
         val surveyItem = createSurveyWithItem(ItemType.MULTIPLE_CHOICE)
         surveyItem.addOptions(listOf(SurveyItemOption.of(surveyItem, "옵션")))
-        val request = createSurveyResponseRequest(surveyItem, itemOptionIds = itemOptionIds)
+        val request = createSurveyResponseRequest(surveyItem, multipleChoiceOptionIds = multipleChoiceOptionIds)
 
         assertThrows<MissingRequiredSurveyResponseItemException> {
             request.validateItemResponses(listOf(surveyItem))
         }
     }
 
-    @Test
-    fun `설문조사 응답 시 itemType MULTIPLE_CHOICE 일때 itemOptionIds가 유효하지 않으면 InvalidSurveyResponseOptionException 발생`() {
-        val surveyItem = createSurveyWithItem(ItemType.MULTIPLE_CHOICE)
-        surveyItem.addOptions(listOf(SurveyItemOption.of(surveyItem, "옵션")))
-        val request = createSurveyResponseRequest(surveyItem, itemOptionIds = listOf(100))
-
-        assertThrows<InvalidSurveyResponseOptionException> {
-            request.validateItemResponses(listOf(surveyItem))
-        }
-    }
 }
