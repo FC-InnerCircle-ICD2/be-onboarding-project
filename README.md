@@ -1,3 +1,6 @@
+# Executable jar
+- https://drive.google.com/file/d/1iXFu0d1SV-Be6iGOxmAPmmJqPJhKOT-H/view?usp=drive_link
+
 # API 명세서
 
 |구분|API 명|HTTP method|API Path|설명|
