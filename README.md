@@ -35,7 +35,7 @@ return type 을 void 로 처리하였습니다. 응답 성공과 실패를 HttpS
 
 
 
-jar 파일 링크 : https://drive.google.com/file/d/12ctcQmYn-ML1Pkidpu6162hgRP6VB1_V/view?usp=drive_link
+jar 파일 링크 : https://drive.google.com/file/d/1iXhGGXtXm4vk9wWNJuwdGKYnzsMaRtiF/view?usp=drive_link
 
 
 api 명세서 및 postman : https://www.postman.com/aviation-geoscientist-88362321/my-workspace/documentation/xbmrsoc/survey?workspaceId=9ec3ee6f-dc14-444d-8807-b812eba77e74
