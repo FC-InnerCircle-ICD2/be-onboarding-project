@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import survey.common.ApiEndpointVersionPrefix
@@ -22,6 +23,7 @@ class SurveyAnswerController(
     private val surveyAnswerService: SurveyAnswerService,
     private val objectMapperUtil: ObjectMapperUtil,
 ) {
+    // TODO : URL Path 들 다시 고민해보자 .... !
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{surveyFormId}/answers")
     fun submitSurveyAnswer(
@@ -34,13 +36,17 @@ class SurveyAnswerController(
     @GetMapping("/{surveyFormId}/answers")
     fun getSurveyAnswers(
         @PathVariable(name = "surveyFormId", required = true) surveyFormId: String,
-    ): List<SurveyFormAnswerResponse> =
+    ): SurveyFormAnswerResponse =
         run { surveyAnswerService.getSurveyAnswerBySurveyFormId(surveyFormId = surveyFormId) }
-            .map { objectMapperUtil.convertClass(value = it, clazz = SurveyFormAnswerResponse::class.java) }
+            .let { objectMapperUtil.convertClass(value = it, clazz = SurveyFormAnswerResponse::class.java) }
 
     // 설문 조사 Title 기반으로 설문 조사를 조회
-    @GetMapping("/surveys/{surveyTitle}")
-    fun getSurveyAnswersByTitle(@PathVariable(name = "surveyTitle", required = true) surveyTitle: String) =
-        let { surveyAnswerService.getSurveyAnswerBySurveyFormId(surveyTitle) }
+    @GetMapping("/answers")
+    fun getSurveyAnswersBySurveyTitle(
+        @RequestParam(name = "surveyTitle", required = true
+    ) surveyTitle: String) =
+        let { surveyAnswerService.getSurveyAnswerByTitle(surveyTitle) }
+
+    // TODO - 응답 항목의 이름과 응답 값을 기반으로 검색 가능하도록 구현 필요
 
 }

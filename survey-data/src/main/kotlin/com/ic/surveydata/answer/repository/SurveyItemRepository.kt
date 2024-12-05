@@ -19,4 +19,13 @@ interface SurveyItemRepository: JpaRepository<SurveyItemEntity, String> {
     """)
     fun findBySurveyFormId(@Param("surveyFormId") surveyFormId: String): List<SurveyFormEntity>
 
+    @Query("""
+        SELECT sf
+          FROM SurveyItemEntity si
+          JOIN si.surveyFormEntity sf
+          JOIN si.surveyAnswers sa
+          JOIN sa.surveyAnswerOptions sao
+     WHERE sf.title = :surveyTitle
+    """)
+    fun findBySurveyTitle(@Param("surveyTitle") surveyTitle: String): List<SurveyFormEntity>
 }

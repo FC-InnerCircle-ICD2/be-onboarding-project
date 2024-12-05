@@ -34,7 +34,9 @@ class SurveyAnswerService(
         )
     }
 
-    fun getSurveyAnswerBySurveyFormId(surveyFormId: String): List<SurveyFormAnswerDto> =
+    fun getSurveyAnswerBySurveyFormId(surveyFormId: String): SurveyFormAnswerDto =
         let { surveyAnswerDataHandler.findSurveyAnswersBySurveyFormId(surveyFormId = surveyFormId) }
 
+    fun getSurveyAnswerByTitle(surveyTitle: String) =
+        let { surveyAnswerDataHandler.findSurveyAnswerBySurveyTitle(surveyTitle = surveyTitle) }
 }

@@ -1,4 +1,4 @@
-INSERT INTO survey_form (id, title, description, version, created_at) VALUES ('test1', 'title-1', 'description-1', 1, CURRENT_TIMESTAMP);
+INSERT INTO survey_form (id, title, description, version, created_at) VALUES ('test1', 'title-1', 'description-1', 0, CURRENT_TIMESTAMP);
 
 INSERT INTO survey_item (id, name, is_required, type, description, survey_form_id, created_at) VALUES ('item-test-1', 'item-name-1', false, 'SINGLE_SELECT', 'item-description-1', 'test1',  CURRENT_TIMESTAMP);
 

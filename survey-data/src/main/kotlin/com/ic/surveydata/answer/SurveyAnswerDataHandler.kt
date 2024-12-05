@@ -24,8 +24,14 @@ class SurveyAnswerDataHandler(
         surveyAnswerRepository.saveAll(surveyAnswerEntities)
     }
 
+    // TODO - 데이터 가져오는 구조를 ... ㅜㅜ ! 다시 고려가 필요 하다 (first 로 가쟈오는 부분 수정이 필요 .. !
     // SurveyFormId 에 해당 하는 Answer 들을 전부 조회 후 Response 를 해 줌 ... !
-    fun findSurveyAnswersBySurveyFormId(surveyFormId: String): List<SurveyFormAnswerDto> {
-        return surveyItemRepository.findBySurveyFormId(surveyFormId).map { it.toDto() }
+    fun findSurveyAnswersBySurveyFormId(surveyFormId: String): SurveyFormAnswerDto {
+        return surveyItemRepository.findBySurveyFormId(surveyFormId).map { it.toDto() }.first()
     }
+
+    fun findSurveyAnswerBySurveyTitle(surveyTitle: String): List<SurveyFormAnswerDto> =
+        surveyItemRepository.findBySurveyTitle(surveyTitle).map { it.toDto() }
+
+
 }
