@@ -31,7 +31,8 @@ public class VoConvertUtil {
                 surveyItemResponse.setId(itemDto.getId());
                 surveyItemResponse.setDescription(itemDto.getItemSnapShotDescription());
                 surveyItemResponse.setItemType(itemDto.getItemSnapShotType());
-                surveyItemResponse.setAnswer(itemDto.getAnswerText());
+                surveyItemResponse.setLongAnswer(itemDto.getLongAnswer());
+                surveyItemResponse.setShortAnswer(itemDto.getShortAnswer());
                 surveyItemResponse.setUseYn(itemDto.getItemSnapShotUseYn());
                 surveyItemResponse.setItemName(itemDto.getItemSnapShotName());
                 surveyItemResponse.setRegDtm(itemDto.getRegDtm().toString());

@@ -1,9 +1,7 @@
 package com.survey.api.custom;
 
 import com.survey.api.constant.CommonConstant;
-import com.survey.api.form.SurveyForm;
-import com.survey.api.form.SurveyItemForm;
-import com.survey.api.form.SurveyOptionForm;
+import com.survey.api.form.*;
 import io.micrometer.core.instrument.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
@@ -13,10 +11,10 @@ import javax.validation.ConstraintValidatorContext;
  * @author Theo
  * @since 2024/11/30
  */
-public class SurveyContractValidator implements ConstraintValidator<SurveyValidationContract, SurveyForm> {
+public class SurveyUpdateContractValidator implements ConstraintValidator<SurveyValidationContract, SurveyUpdateForm> {
 
     @Override
-    public boolean isValid(SurveyForm survey, ConstraintValidatorContext context) {
+    public boolean isValid(SurveyUpdateForm survey, ConstraintValidatorContext context) {
 
         //필수값 체크
         if (StringUtils.isBlank(survey.getName())) {
@@ -28,7 +26,7 @@ public class SurveyContractValidator implements ConstraintValidator<SurveyValida
         }
 
         if (survey.getItems() != null) {
-            for (SurveyItemForm item : survey.getItems()) {
+            for (SurveyUpdateItemForm item : survey.getItems()) {
                 if (StringUtils.isBlank(item.getItemName())) {
                     return false;
                 }
@@ -48,9 +46,29 @@ public class SurveyContractValidator implements ConstraintValidator<SurveyValida
                     return false;
                 }
 
+                if (StringUtils.isBlank(item.getActionType())) {
+                    return false;
+                }
+
+                if (!(CommonConstant.ACTION_TYPE_UPDATE.equals(item.getActionType())
+                        || CommonConstant.ACTION_TYPE_CREATE.equals(item.getActionType())
+                        || CommonConstant.ACTION_TYPE_DELETE.equals(item.getActionType()))) {
+                    return false;
+                }
+
                 if (item.getOptionList() != null) {
-                    for (SurveyOptionForm option : item.getOptionList()) {
+                    for (SurveyUpdateOptionForm option : item.getOptionList()) {
                         if (StringUtils.isBlank(option.getOptionName())) {
+                            return false;
+                        }
+
+                        if (StringUtils.isBlank(option.getActionType())) {
+                            return false;
+                        }
+
+                        if (!(CommonConstant.ACTION_TYPE_UPDATE.equals(option.getActionType())
+                                || CommonConstant.ACTION_TYPE_CREATE.equals(option.getActionType())
+                                || CommonConstant.ACTION_TYPE_DELETE.equals(option.getActionType()))) {
                             return false;
                         }
                     }

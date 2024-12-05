@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 public interface SurveyItemRepository extends JpaRepository<SurveyItemEntity, Long> {
     public long countBySurveyAndUseYn(SurveyEntity survey, String useYn);
-    public SurveyItemEntity findByIdAndItemTypeAndSurvey(long id, String itemType, SurveyEntity survey);
-    public SurveyItemEntity findItemById(long id);
+    public SurveyItemEntity findByIdAndSurvey(long id, SurveyEntity survey);
+    public boolean existsItemByIdAndSurvey(long id, SurveyEntity survey);
+
 
 }

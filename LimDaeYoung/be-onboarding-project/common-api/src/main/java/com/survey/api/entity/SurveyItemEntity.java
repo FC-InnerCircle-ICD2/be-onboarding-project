@@ -38,10 +38,6 @@ public class SurveyItemEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<SurveyOptionEntity> options; // 선택 항목 리스트
 
-    public SurveyItemEntity(Long id) {
-        this.id = id;
-    }
-
     public SurveyItemEntity(String itemName, String description, String itemType, boolean required, String useYn, SurveyEntity survey) {
         this.itemName = itemName;
         this.description = description;

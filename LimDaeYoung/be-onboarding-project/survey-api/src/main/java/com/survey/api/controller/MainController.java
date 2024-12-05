@@ -1,10 +1,13 @@
 package com.survey.api.controller;
 
 import com.survey.api.constant.CommonConstant;
+import com.survey.api.custom.SurveyValidationContract;
 import com.survey.api.entity.SurveyResponseEntity;
 import com.survey.api.entity.SurveyResponseItemEntity;
-import com.survey.api.form.ResponseSelectForm;
+import com.survey.api.form.SurveyResponseForm;
+import com.survey.api.form.SurveySelectForm;
 import com.survey.api.form.SurveyForm;
+import com.survey.api.form.SurveyUpdateForm;
 import com.survey.api.response.SurveyBaseResponse;
 import com.survey.api.response.SurveyResponse;
 import com.survey.api.service.SurveyService;
@@ -28,30 +31,28 @@ public class MainController extends BaseController {
     SurveyService surveyService;
 
     @PostMapping("/save")
-    public ResponseEntity<SurveyBaseResponse> save(@RequestBody @Valid  SurveyForm survey) {
+    public ResponseEntity<SurveyBaseResponse> save(@RequestBody @Valid SurveyForm survey) {
         surveyService.save(survey);
         return new ResponseEntity<SurveyBaseResponse>(new SurveyBaseResponse(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS), HttpStatus.OK);
     }
 
     @PutMapping("/update/{surveyId}")
-    public ResponseEntity<SurveyBaseResponse> update(@PathVariable Long surveyId, @RequestBody @Valid SurveyForm survey, ServletRequest servletRequest) {
+    public ResponseEntity<SurveyBaseResponse> update(@PathVariable Long surveyId, @RequestBody @Valid SurveyUpdateForm survey, ServletRequest servletRequest) {
         survey.setId(surveyId);
-        surveyService.itemValidator(survey);
         surveyService.surveyUpdate(survey);
         return new ResponseEntity<SurveyBaseResponse>(new SurveyBaseResponse(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS), HttpStatus.OK);
     }
 
     @PutMapping("/response/{surveyId}")
-    public ResponseEntity<SurveyBaseResponse> reponseSave(@PathVariable  Long surveyId, @RequestBody SurveyForm survey, ServletRequest servletRequest) {
+    public ResponseEntity<SurveyBaseResponse> reponseSave(@PathVariable  Long surveyId, @RequestBody @Valid SurveyResponseForm survey, ServletRequest servletRequest) {
         survey.setId(surveyId);
-        surveyService.itemValidator(survey);
         surveyService.surveyResponseSave(survey);
         return new ResponseEntity<SurveyBaseResponse>(new SurveyBaseResponse(CommonConstant.ERR_SUCCESS, CommonConstant.ERR_MSG_SUCCESS), HttpStatus.OK);
     }
 
 
     @PutMapping("/response/select/{surveyId}")
-    public ResponseEntity<SurveyBaseResponse<SurveyResponse>> reponseSelect(@PathVariable Long surveyId, @RequestBody ResponseSelectForm selectForm, ServletRequest servletRequest) {
+    public ResponseEntity<SurveyBaseResponse<SurveyResponse>> reponseSelect(@PathVariable Long surveyId, @RequestBody SurveySelectForm selectForm, ServletRequest servletRequest) {
         selectForm.setId(surveyId);
 
         List<SurveyResponseEntity> entityList = surveyService.findResponsesBySurveyIdWithFilters(selectForm.getId(), selectForm.getSearchParam(), selectForm.getPageNumber());

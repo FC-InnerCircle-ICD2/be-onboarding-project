@@ -4,11 +4,9 @@ import com.survey.api.base.SurveyBaseVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ResponseSelectForm extends SurveyBaseVo {
+public class SurveySelectForm extends SurveyBaseVo {
 
     private static final long serialVersionUID = 1258001554806991338L;
     private Long id;

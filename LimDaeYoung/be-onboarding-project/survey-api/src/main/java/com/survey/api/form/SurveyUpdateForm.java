@@ -10,11 +10,12 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @SurveyValidationContract
-public class SurveyForm extends SurveyBaseVo {
-    private static final long serialVersionUID = 7603717296695242967L;
+public class SurveyUpdateForm extends SurveyBaseVo {
+    private static final long serialVersionUID = 1399210097971891604L;
     private String name;
     private String description;
-    List<SurveyItemForm> items;
+    private long id;
+    List<SurveyUpdateItemForm> items;
 }
 
 

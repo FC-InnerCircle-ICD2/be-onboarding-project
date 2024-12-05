@@ -20,7 +20,9 @@ public class SurveyResponseItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String answerText; // 단답형, 장문형의 답변
+    private String longAnswer; // 장문형
+    private String shortAnswer; // 단답형
+
     private String itemSnapShotDescription;
     private String itemSnapShotName;
     private String itemSnapShotType;
@@ -38,8 +40,9 @@ public class SurveyResponseItemEntity {
     @OneToMany(mappedBy = "responseItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SurveyResponseOptionEntity> responseOption; //
 
-    public SurveyResponseItemEntity(String answerText, SurveyResponseEntity response, String itemSnapShotName, String itemSnapShotDescription, String itemSnapShotType, String itemSnapShotUseYn, boolean itemSnapShotRequired) {
-        this.answerText = answerText;
+    public SurveyResponseItemEntity(String longAnswer,String shortAnswer, SurveyResponseEntity response, String itemSnapShotName, String itemSnapShotDescription, String itemSnapShotType, String itemSnapShotUseYn, boolean itemSnapShotRequired) {
+        this.longAnswer = longAnswer;
+        this.shortAnswer = shortAnswer;
         this.response = response;
         this.itemSnapShotDescription = itemSnapShotDescription;
         this.itemSnapShotName = itemSnapShotName;
