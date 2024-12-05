@@ -52,7 +52,7 @@ public class SurveyController {
         return Api.OK(response);
     }
 
-    @PostMapping("/find/survey")
+    @PostMapping("/find")
     public Api<SurveyBaseResponse> allSurveyFind(
             @Valid
             @RequestBody Api<Long> id
