@@ -14,13 +14,83 @@
 
 ### 설문조사 생성
 [Request]<br>
-|Name|Required|Type|Description|
-|---|---|---|---|
-|id| |Long|설문조사 식별자|
-|title|O|String|제목|
-|description|O|String|내용|
-|items|O|List|항목들|
-|id|O|Long|설문조사 항목 식별자|
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td> </td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>O</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td> </td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>O</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td> </td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+</table>
+
+
 ```
 {
   "result": {
