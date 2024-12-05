@@ -2,17 +2,12 @@ package org.icd.surveycore.domain.survey
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.icd.surveycore.domain.support.BaseEntity
 import org.icd.surveycore.domain.surveyItem.SurveyItem
 import org.icd.surveycore.domain.surveyresponse.SurveyResponse
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.domain.AbstractAggregateRoot
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.OffsetDateTime
 
 @Entity
 @Table(name = "survey")
-@EntityListeners(AuditingEntityListener::class)
 class Survey(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +20,7 @@ class Survey(
     val items: MutableList<SurveyItem> = mutableListOf(),
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
     val responses: MutableList<SurveyResponse> = mutableListOf(),
-    @CreatedDate
-    var createdAt: OffsetDateTime? = null,
-    @LastModifiedDate
-    var updatedAt: OffsetDateTime? = null
-) : AbstractAggregateRoot<Survey>() {
+) : BaseEntity() {
     companion object {
         fun of(
             name: String,

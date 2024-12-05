@@ -2,14 +2,11 @@ package org.icd.surveycore.domain.surveyresponse
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.icd.surveycore.domain.support.BaseEntity
 import org.icd.surveycore.domain.survey.Survey
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.OffsetDateTime
 
 @Entity
 @Table(name = "survey_response")
-@EntityListeners(AuditingEntityListener::class)
 class SurveyResponse(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +19,7 @@ class SurveyResponse(
     val uuid: String,
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "surveyResponse", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: MutableList<SurveyResponseItem> = mutableListOf(),
-    @CreatedDate
-    var createdAt: OffsetDateTime? = null,
-) {
+) : BaseEntity() {
     companion object {
         fun of(survey: Survey, uuid: String): SurveyResponse {
             return SurveyResponse(

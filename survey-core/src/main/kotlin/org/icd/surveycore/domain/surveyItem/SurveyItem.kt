@@ -2,11 +2,8 @@ package org.icd.surveycore.domain.surveyItem
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.icd.surveycore.domain.support.BaseEntity
 import org.icd.surveycore.domain.survey.Survey
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.OffsetDateTime
 
 @Entity
 @Table(name = "survey_item")
@@ -35,11 +32,7 @@ class SurveyItem(
     val isActive: Boolean = true,
     @Comment("필수 응답값 여부")
     val isRequired: Boolean = true,
-    @CreatedDate
-    var createdAt: OffsetDateTime? = null,
-    @LastModifiedDate
-    var updatedAt: OffsetDateTime? = null
-) {
+) : BaseEntity() {
     companion object {
         fun of(
             survey: Survey,

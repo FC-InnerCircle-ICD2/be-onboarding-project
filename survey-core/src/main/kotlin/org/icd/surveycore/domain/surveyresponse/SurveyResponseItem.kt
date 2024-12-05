@@ -2,13 +2,10 @@ package org.icd.surveycore.domain.surveyresponse
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.OffsetDateTime
+import org.icd.surveycore.domain.support.BaseEntity
 
 @Entity
 @Table(name = "survey_response_item")
-@EntityListeners(AuditingEntityListener::class)
 class SurveyResponseItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +28,7 @@ class SurveyResponseItem(
     )
     @Column(name = "item_option_id")
     val itemOptionIds: List<Long>? = mutableListOf(),
-    @CreatedDate
-    var createdAt: OffsetDateTime? = null,
-) {
+) : BaseEntity() {
     companion object {
         fun of(
             surveyResponse: SurveyResponse,
