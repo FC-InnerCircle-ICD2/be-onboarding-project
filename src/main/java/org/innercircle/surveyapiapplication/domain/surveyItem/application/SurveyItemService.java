@@ -27,9 +27,11 @@ public class SurveyItemService {
     }
 
     // Todo: 낙관적 락 고민
-    public SurveyItem updateQuestion(Long questionId, SurveyItemUpdateRequest request) {
-        SurveyItem surveyItem = surveyItemRepository.findLatestQuestionById(questionId);
-        return surveyItem.update(request.name(), request.description(), request.type(), request.required(), request.options());
+    public SurveyItem updateQuestion(Long surveyId, Long questionId, SurveyItemUpdateRequest request) {
+        SurveyItem surveyItem = surveyItemRepository.findLatestQuestionBySurveyIdAndSurveyItemId(surveyId, questionId);
+        SurveyItem updatedItem = surveyItem.update(request.name(), request.description(), request.type(), request.required(), request.options());
+        updatedItem = surveyItemRepository.save(updatedItem);
+        return updatedItem;
     }
 
 }

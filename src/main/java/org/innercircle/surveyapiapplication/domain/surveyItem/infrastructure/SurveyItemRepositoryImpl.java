@@ -23,8 +23,8 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
     }
 
     @Override
-    public List<SurveyItem> findBySurveyId(Long surveyId) {
-        return surveyItemJpaRepository.findBySurveyId(surveyId).stream().map(SurveyItemEntity::toDomain).collect(Collectors.toList());
+    public List<SurveyItem> findLatestSurveyItemsBySurveyId(Long surveyId) {
+        return surveyItemJpaRepository.findLatestSurveyItemsBySurveyId(surveyId).stream().map(SurveyItemEntity::toDomain).collect(Collectors.toList());
     }
 
     @Override
@@ -36,8 +36,8 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
     }
 
     @Override
-    public SurveyItem findLatestQuestionById(Long questionId) {
-        return surveyItemJpaRepository.findLatestQuestionById(questionId)
+    public SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId) {
+        return surveyItemJpaRepository.findLatestSurveyItemBySurveyIdAndSurveyItemId(surveyId, questionId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
             .toDomain();
     }

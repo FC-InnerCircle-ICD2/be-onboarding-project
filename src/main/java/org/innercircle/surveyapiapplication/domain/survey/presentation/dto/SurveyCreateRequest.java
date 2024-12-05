@@ -1,10 +1,12 @@
 package org.innercircle.surveyapiapplication.domain.survey.presentation.dto;
 
-import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
+import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
 
 import java.util.List;
 
+@JsonSerialize
 public record SurveyCreateRequest(
     String name,
     String description,

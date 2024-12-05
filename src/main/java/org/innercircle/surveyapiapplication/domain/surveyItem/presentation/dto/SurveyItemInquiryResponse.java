@@ -17,6 +17,7 @@ public record SurveyItemInquiryResponse(
     String description,
     SurveyItemType type,
     boolean required,
+    Long surveyId,
     List<String> options
 ) {
 
@@ -28,6 +29,7 @@ public record SurveyItemInquiryResponse(
                 surveyItem.getDescription(),
                 surveyItem.getType(),
                 surveyItem.isRequired(),
+                surveyItem.getSurveyId(),
                 new ArrayList<>()
             );
             case SINGLE_CHOICE_ANSWER -> new SurveyItemInquiryResponse(surveyItem.getId(),
@@ -36,6 +38,7 @@ public record SurveyItemInquiryResponse(
                 surveyItem.getDescription(),
                 surveyItem.getType(),
                 surveyItem.isRequired(),
+                surveyItem.getSurveyId(),
                 ((SingleChoiceSurveyItem) surveyItem).getOptions()
             );
             case MULTI_CHOICE_ANSWER -> new SurveyItemInquiryResponse(surveyItem.getId(),
@@ -44,6 +47,7 @@ public record SurveyItemInquiryResponse(
                 surveyItem.getDescription(),
                 surveyItem.getType(),
                 surveyItem.isRequired(),
+                surveyItem.getSurveyId(),
                 ((MultiChoiceSurveyItem) surveyItem).getOptions()
             );
             default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);

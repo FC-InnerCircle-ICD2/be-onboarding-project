@@ -35,7 +35,7 @@ public class SurveyRepositoryImpl implements SurveyRepository {
 
     @Override
     public Survey findById(Long surveyId) {
-        List<SurveyItem> surveyItems = surveyItemRepository.findBySurveyId(surveyId);
+        List<SurveyItem> surveyItems = surveyItemRepository.findLatestSurveyItemsBySurveyId(surveyId);
         return surveyJpaRepository.findById(surveyId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY))
             .toDomain(surveyItems);

@@ -8,10 +8,10 @@ public interface SurveyItemRepository {
 
     SurveyItem save(SurveyItem surveyItem);
 
-    List<SurveyItem> findBySurveyId(Long surveyId);
+    List<SurveyItem> findLatestSurveyItemsBySurveyId(Long surveyId);
 
     SurveyItem findByIdAndVersion(Long questionId, int version);
 
-    SurveyItem findLatestQuestionById(Long questionId);
+    SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId);
 
 }

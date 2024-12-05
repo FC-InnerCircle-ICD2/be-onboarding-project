@@ -11,17 +11,30 @@ import java.util.Optional;
 
 public interface SurveyItemJpaRepository extends JpaRepository<SurveyItemEntity, SurveyItemId> {
 
-    List<SurveyItemEntity> findBySurveyId(Long surveyId);
+    @Query(value =
+        "SELECT s.* " +
+        "FROM survey_items s " +
+        "JOIN (SELECT id, MAX(version) as max_version " +
+        "      FROM survey_items " +
+        "      WHERE survey_id = :surveyId " +
+        "      GROUP BY id) latest " +
+        "ON s.id = latest.id AND s.version = latest.max_version",
+        nativeQuery = true)
+    List<SurveyItemEntity> findLatestSurveyItemsBySurveyId(Long surveyId);
 
     @Query(
           "SELECT s FROM SurveyItemEntity s "
-        + "WHERE s.surveyItemId.id = :id "
+        + "WHERE s.surveyItemId.id = :surveyItemId "
+        + "AND s.surveyId = :surveyId "
         + "AND s.surveyItemId.version = ("
               + "SELECT MAX(s2.surveyItemId.version) "
               + "FROM SurveyItemEntity s2 "
-              + "WHERE s2.surveyItemId.id = :id"
-        + ")"
+              + "WHERE s2.surveyId = :surveyId "
+              + "AND   s2.surveyItemId.id = :surveyItemId)"
     )
-    Optional<SurveyItemEntity> findLatestQuestionById(@Param("id") Long id);
+    Optional<SurveyItemEntity> findLatestSurveyItemBySurveyIdAndSurveyItemId(
+        @Param("surveyId") Long surveyId,
+        @Param("surveyItemId") Long surveyItemId
+    );
 
 }

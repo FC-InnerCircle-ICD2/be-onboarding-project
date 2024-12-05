@@ -37,19 +37,6 @@ public abstract class SurveyItem {
         this.required = required;
     }
 
-    public SurveyItem(Long id, String name, String description, boolean required) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.required = required;
-    }
-
-    public SurveyItem(String name, String description, boolean required) {
-        this.name = name;
-        this.description = description;
-        this.required = required;
-    }
-
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
     }

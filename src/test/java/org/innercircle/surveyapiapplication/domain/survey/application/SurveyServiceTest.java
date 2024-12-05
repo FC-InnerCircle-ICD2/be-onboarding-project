@@ -44,7 +44,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단답형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithShortAnswerQuestion() {
         // given
-        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerQuestion();
+        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         // when
@@ -71,7 +71,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 장문형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithLongAnswerQuestion() {
         // given
-        LongAnswerSurveyItem question = SurveyItemFixture.createLongAnswerQuestion();
+        LongAnswerSurveyItem question = SurveyItemFixture.createLongAnswerSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -98,7 +98,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithSingleChoiceQuestion() {
         // given
-        SingleChoiceSurveyItem question = SurveyItemFixture.createSingleChoiceQuestion();
+        SingleChoiceSurveyItem question = SurveyItemFixture.createSingleChoiceSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -126,7 +126,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 다항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithMultiChoiceQuestion() {
         // given
-        MultiChoiceSurveyItem question = SurveyItemFixture.createMultiChoiceQuestion();
+        MultiChoiceSurveyItem question = SurveyItemFixture.createMultiChoiceSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -178,10 +178,10 @@ class SurveyServiceTest {
     }
 
     @Test
-    @DisplayName("[SUCCESS] 설문조사의 이름, 설명, 질문을 수정할 수 있다.")
+    @DisplayName("[SUCCESS] 설문조사의 이름, 설명을 수정할 수 있다.")
     void updateSurveyNameAndDescription() {
         // given
-        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerQuestion();
+        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         Survey savedSurvey = surveyService.createSurvey(survey);
