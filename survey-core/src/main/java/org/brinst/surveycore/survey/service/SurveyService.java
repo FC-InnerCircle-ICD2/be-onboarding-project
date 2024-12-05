@@ -39,7 +39,7 @@ public class SurveyService {
 
 	@Transactional(readOnly = true)
 	public SurveyDTO.ResDTO getSurveyById(Long surveyId) {
-		Survey survey = surveyRepository.findById(surveyId).orElseThrow();
+		Survey survey = surveyRepository.findById(surveyId).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND));
 		//survey 최신 버전 조회
 		int version = survey.getVersion();
 		SurveyVersion surveyVersion = surveyVersionRepository.findByVersionAndSurvey(version, survey);
@@ -51,7 +51,7 @@ public class SurveyService {
 	}
 
 	public SurveyVersion getLatestSurveyVersion(Long surveyId) {
-		Survey survey = surveyRepository.findById(surveyId).orElseThrow();
+		Survey survey = surveyRepository.findById(surveyId).orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND));
 		//survey 최신 버전 조회
 		int version = survey.getVersion();
 		return surveyVersionRepository.findByVersionAndSurvey(version, survey);
