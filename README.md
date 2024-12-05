@@ -1,3 +1,1430 @@
+# Executable jar
+- https://drive.google.com/file/d/1iXFu0d1SV-Be6iGOxmAPmmJqPJhKOT-H/view?usp=drive_link
+
+# API 명세서
+
+|구분|API 명|HTTP method|API Path|설명|
+|------|---|---|---|---|
+|생성|설문조사 생성|Post|/survey/register|설문조사를 생성하는 API|
+|수정|설문조사 수정|Post|/survey/update|설문조사를 수정하는 API|
+|생성|설문조사 응답 제출|Post|/survey/reply|설문조사 응답을 제출하는 API|
+|조회|설문조사 응답 조회|Post|/survey/find/replyAll|설문조사 ID를 기반으로 응답을 조회하는 API|
+|조회|설문조사 조회|Post|/survey/find|설문조사 ID를 기반으로 설문조사를 조회하는 API|
+|조회|설문조사 전체 조회|Get|/survey/find/baseAll|설문조사 전체 목록을 조회하는 API|
+|삭제|설문조사 삭제|Post|/survey/delete|설문조사 ID를 기반으로 설문조사를 삭제하는 API|
+
+## API 상세
+
+### 설문조사 생성
+[Path]<br>
+
+- Post
+- /survey/register
+
+[Request]<br>
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td> </td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>O</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td> </td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>O</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td> </td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td> </td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "content": "string"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:07:38.529Z",
+            "modified_at": "2024-12-03T13:07:38.529Z",
+            "unregistered_at": "2024-12-03T13:07:38.529Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:07:38.529Z",
+        "modified_at": "2024-12-03T13:07:38.529Z",
+        "unregistered_at": "2024-12-03T13:07:38.529Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:07:38.530Z",
+    "modified_at": "2024-12-03T13:07:38.530Z",
+    "unregistered_at": "2024-12-03T13:07:38.530Z"
+  }
+}
+```
+
+### 설문조사 수정
+[Path]<br>
+
+- Post
+- /survey/update
+
+[Request]<br>
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td> </td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>O</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>O</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td> </td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>O</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>O</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td> </td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td> </td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "content": "string"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:23:32.752Z",
+            "modified_at": "2024-12-03T13:23:32.752Z",
+            "unregistered_at": "2024-12-03T13:23:32.752Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:23:32.752Z",
+        "modified_at": "2024-12-03T13:23:32.752Z",
+        "unregistered_at": "2024-12-03T13:23:32.752Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:23:32.752Z",
+    "modified_at": "2024-12-03T13:23:32.752Z",
+    "unregistered_at": "2024-12-03T13:23:32.752Z"
+  }
+}
+```
+
+### 설문조사 응답 제출
+[Path]<br>
+
+- Post
+- /survey/reply
+  
+[Request]<br>
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td> </td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td> </td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "item_id": 0,
+        "content": "string"
+      }
+    ]
+  }
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "item_id": 0,
+        "content": "string",
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:12.117Z",
+        "modified_at": "2024-12-03T13:24:12.117Z",
+        "unregistered_at": "2024-12-03T13:24:12.117Z"
+      }
+    ]
+  }
+}
+```
+
+### 설문조사 응답 조회
+[Path]<br>
+
+- Post
+- /survey/find/replyAll
+
+[Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "reply": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "item_id": 0,
+        "content": "string",
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:40.007Z",
+        "modified_at": "2024-12-03T13:24:40.007Z",
+        "unregistered_at": "2024-12-03T13:24:40.007Z"
+      }
+    ]
+  }
+}
+```
+
+### 설문조사 조회
+[Path]<br>
+
+- Post
+- /survey/find
+
+[Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "items": [
+      {
+        "id": 0,
+        "survey_id": 0,
+        "name": "string",
+        "description": "string",
+        "input_type": "SHORT_ANSWER",
+        "required": true,
+        "select_options": [
+          {
+            "id": 0,
+            "survey_id": 0,
+            "item_id": 0,
+            "content": "string",
+            "status": "REGISTERED",
+            "registered_at": "2024-12-03T13:24:57.892Z",
+            "modified_at": "2024-12-03T13:24:57.893Z",
+            "unregistered_at": "2024-12-03T13:24:57.893Z"
+          }
+        ],
+        "status": "REGISTERED",
+        "registered_at": "2024-12-03T13:24:57.893Z",
+        "modified_at": "2024-12-03T13:24:57.893Z",
+        "unregistered_at": "2024-12-03T13:24:57.893Z"
+      }
+    ],
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:24:57.893Z",
+    "modified_at": "2024-12-03T13:24:57.893Z",
+    "unregistered_at": "2024-12-03T13:24:57.893Z"
+  }
+}
+```
+
+### 설문조사 전체 조회
+[Path]<br>
+
+- Get
+- /survey/find/baseAll
+
+[Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="6">No parameters</td>
+  </tr>
+</table>
+
+```
+No parameters
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": [
+    {
+      "id": 0,
+      "title": "string",
+      "description": "string",
+      "status": "REGISTERED",
+      "registered_at": "2024-12-03T13:25:14.631Z",
+      "modified_at": "2024-12-03T13:25:14.631Z",
+      "unregistered_at": "2024-12-03T13:25:14.631Z"
+    }
+  ]
+}
+```
+
+### 설문조사 삭제
+[Path]<br>
+
+- Post
+- /survey/delete
+
+[Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": 0
+}
+```
+[Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
+```
+{
+  "result": {
+    "result_code": 0,
+    "result_message": "string",
+    "result_description": "string"
+  },
+  "body": {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "status": "REGISTERED",
+    "registered_at": "2024-12-03T13:25:50.301Z",
+    "modified_at": "2024-12-03T13:25:50.301Z",
+    "unregistered_at": "2024-12-03T13:25:50.301Z"
+  }
+}
+```
+---------------------------------------
 # 이너써클 BE 온보딩 프로젝트
 
 ## 온보딩 프로젝트의 목적
