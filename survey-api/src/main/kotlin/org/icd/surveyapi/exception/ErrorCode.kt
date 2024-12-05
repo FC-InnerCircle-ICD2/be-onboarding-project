@@ -10,6 +10,6 @@ enum class ErrorCode(val errorMessage: String) {
 
     NOT_FOUND_SURVEY("해당 설문조사를 찾을 수 없습니다."),
     NOT_FOUND_SURVEY_ITEM("해당 설문조사 항목을 찾을 수 없습니다."),
-
+    NOT_FOUND_SURVEY_ITEM_OPTION("해당 설문조사 항목의 옵션을 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR("알 수 없는 오류가 발생했습니다."),
 }

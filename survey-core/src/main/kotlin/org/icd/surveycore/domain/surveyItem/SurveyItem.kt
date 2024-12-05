@@ -16,21 +16,21 @@ class SurveyItem(
     @JoinColumn(name = "survey_id", nullable = false)
     val survey: Survey,
     @Comment("항목 순서")
-    val sequence: Int,
+    var sequence: Int,
     @Comment("항목 이름")
-    val name: String,
+    var name: String,
     @Comment("항목 설명")
-    val description: String? = null,
+    var description: String? = null,
     @Comment("항목 입력 형태")
     @Enumerated(EnumType.STRING)
-    val itemType: ItemType = ItemType.SHORT_ANSWER,
+    var itemType: ItemType = ItemType.SHORT_ANSWER,
     @Comment("선택 항목 리스트")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "surveyItem", cascade = [CascadeType.ALL], orphanRemoval = true)
     val options: MutableList<SurveyItemOption> = mutableListOf(),
-    @Comment("현재 사용 여부")
-    val isActive: Boolean = true,
     @Comment("필수 응답값 여부")
-    val isRequired: Boolean = true,
+    var isRequired: Boolean = true,
+    @Comment("현재 사용 여부")
+    var isActive: Boolean = true,
 ) : BaseEntity() {
     companion object {
         fun of(
@@ -56,7 +56,20 @@ class SurveyItem(
         surveyItemOptions?.let { this.options.addAll(it) }
     }
 
+    fun delete() {
+        this.isActive = false
+        this.options.forEach { it.delete() }
+    }
+
     fun getActiveOptions(): List<SurveyItemOption> {
         return options.filter { it.isActive }
+    }
+
+    fun update(sequence: Int, name: String, description: String?, itemType: ItemType, isRequired: Boolean) {
+        this.sequence = sequence
+        this.name = name
+        this.description = description
+        this.itemType = itemType
+        this.isRequired = isRequired
     }
 }

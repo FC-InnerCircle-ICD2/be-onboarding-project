@@ -13,7 +13,7 @@ class SurveyItemOption(
     @JoinColumn(name = "survey_item_id")
     val surveyItem: SurveyItem,
     @Comment("선택 후보 이름")
-    val name: String,
+    var name: String,
     @Comment("현재 사용 여부")
     var isActive: Boolean = true
 ) {
@@ -27,5 +27,13 @@ class SurveyItemOption(
                 name = name
             )
         }
+    }
+
+    fun delete() {
+        this.isActive = false
+    }
+
+    fun updateName(name: String) {
+        this.name = name
     }
 }

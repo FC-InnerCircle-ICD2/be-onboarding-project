@@ -13,9 +13,9 @@ class Survey(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @Comment("설문조사 이름")
-    val name: String,
+    var name: String,
     @Comment("설문조사 설명")
-    val description: String? = null,
+    var description: String? = null,
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: MutableList<SurveyItem> = mutableListOf(),
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "survey", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -39,5 +39,10 @@ class Survey(
 
     fun getActiveItems(): List<SurveyItem> {
         return items.filter { it.isActive }
+    }
+
+    fun update(name: String, description: String) {
+        this.name = name
+        this.description = description
     }
 }

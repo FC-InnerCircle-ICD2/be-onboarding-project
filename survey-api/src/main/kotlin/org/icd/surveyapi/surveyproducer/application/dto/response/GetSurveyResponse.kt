@@ -18,7 +18,8 @@ data class GetSurveyResponse(
         id = survey.id,
         name = survey.name,
         description = survey.description,
-        items = survey.items.map { GetSurveyItemResponse(it) }
+        items = survey.items
+            .map { GetSurveyItemResponse(it) }
             .sortedWith(compareBy({ !it.isActive }, { it.sequence })),
         responses = survey.responses.map { GetSurveyResponseResponse(it) }
     )
@@ -41,7 +42,9 @@ data class GetSurveyItemResponse(
         name = surveyItem.name,
         description = surveyItem.description,
         itemType = surveyItem.itemType,
-        options = surveyItem.options.map { GetSurveyItemOptionResponse(it.id, it.name, it.isActive) },
+        options = surveyItem.options
+            .map { GetSurveyItemOptionResponse(it.id, it.name, it.isActive) }
+            .sortedWith(compareBy({ !it.isActive }, { it.id })),
         isRequired = surveyItem.isRequired
     )
 }
