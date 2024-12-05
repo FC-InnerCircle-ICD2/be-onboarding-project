@@ -46,7 +46,7 @@ class SurveyItemServiceTest {
         SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem();
         surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem);
 
-        SurveyItem savedSurveyItem = surveyItemService.findByIdAndVersion(targetSurveyItem.getId(), targetSurveyItem.getVersion());
+        SurveyItem savedSurveyItem = surveyItemService.findByIdAndVersion(survey.getId(), targetSurveyItem.getId(), targetSurveyItem.getVersion());
 
         // then
         assertThat(savedSurveyItem.getId()).isEqualTo(targetSurveyItem.getId());

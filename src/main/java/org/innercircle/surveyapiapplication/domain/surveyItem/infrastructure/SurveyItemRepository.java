@@ -10,7 +10,7 @@ public interface SurveyItemRepository {
 
     List<SurveyItem> findLatestSurveyItemsBySurveyId(Long surveyId);
 
-    SurveyItem findByIdAndVersion(Long questionId, int version);
+    SurveyItem findByIdAndVersion(Long surveyId, Long questionId, int version);
 
     SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId);
 

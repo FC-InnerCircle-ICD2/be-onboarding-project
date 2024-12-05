@@ -37,4 +37,6 @@ public interface SurveyItemJpaRepository extends JpaRepository<SurveyItemEntity,
         @Param("surveyItemId") Long surveyItemId
     );
 
+    Optional<SurveyItemEntity> findBySurveyItemIdAndSurveyId(SurveyItemId surveyItemId, Long surveyId);
+
 }

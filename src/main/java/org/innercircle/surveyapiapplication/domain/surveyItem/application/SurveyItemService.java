@@ -22,8 +22,8 @@ public class SurveyItemService {
         return surveyItem;
     }
 
-    public SurveyItem findByIdAndVersion(Long questionId, int questionVersion) {
-        return surveyItemRepository.findByIdAndVersion(questionId, questionVersion);
+    public SurveyItem findByIdAndVersion(Long surveyId, Long questionId, int questionVersion) {
+        return surveyItemRepository.findByIdAndVersion(surveyId, questionId, questionVersion);
     }
 
     // Todo: 낙관적 락 고민

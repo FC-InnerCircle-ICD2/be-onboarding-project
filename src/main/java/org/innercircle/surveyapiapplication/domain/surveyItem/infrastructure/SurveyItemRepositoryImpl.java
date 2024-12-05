@@ -28,9 +28,9 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
     }
 
     @Override
-    public SurveyItem findByIdAndVersion(Long id, int version) {
-        SurveyItemId surveyItemId = new SurveyItemId(id, version);
-        return surveyItemJpaRepository.findById(surveyItemId)
+    public SurveyItem findByIdAndVersion(Long surveyId, Long questionId, int version) {
+        SurveyItemId surveyItemId = new SurveyItemId(questionId, version);
+        return surveyItemJpaRepository.findBySurveyItemIdAndSurveyId(surveyItemId, surveyId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
             .toDomain();
     }

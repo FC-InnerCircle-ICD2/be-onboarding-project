@@ -53,7 +53,7 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(survey.getId());
-        TextSurveyItem savedQuestion = (TextSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        TextSurveyItem savedQuestion = (TextSurveyItem) surveyItemService.findByIdAndVersion(survey.getId(), question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(survey.getId());
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
@@ -81,7 +81,8 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        ParagraphSurveyItem savedQuestion = (ParagraphSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        ParagraphSurveyItem savedQuestion = (ParagraphSurveyItem) surveyItemService.findByIdAndVersion(
+            survey.getId(), question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
@@ -108,7 +109,8 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        SingleChoiceSurveyItem savedQuestion = (SingleChoiceSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        SingleChoiceSurveyItem savedQuestion = (SingleChoiceSurveyItem) surveyItemService.findByIdAndVersion(
+            survey.getId(), question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
@@ -136,7 +138,8 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        MultiChoiceSurveyItem savedQuestion = (MultiChoiceSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        MultiChoiceSurveyItem savedQuestion = (MultiChoiceSurveyItem) surveyItemService.findByIdAndVersion(
+            survey.getId(), question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
