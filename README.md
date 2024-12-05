@@ -1,3 +1,6 @@
+### [✏️ 설문조사 요구사항 api별 기능 정리와 예외 처리 문구](https://www.notion.so/api-663ae4b40f164b0e8af22c3d6796c4dc?pvs=4)
+å
+
 ## API 명세서
 
 | Method | Uri | Description | 개발 완료 여부 |
@@ -1082,3 +1085,4 @@ MULTIPLE_SELECTION: 다중 선택형 |
     ]
 }
 ```
+

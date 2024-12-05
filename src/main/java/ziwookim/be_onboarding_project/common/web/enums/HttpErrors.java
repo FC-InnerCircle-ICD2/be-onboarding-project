@@ -28,7 +28,7 @@ public enum HttpErrors implements HttpError {
     INVALID_ANSWER_SINGLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "단일 선택 항목은 한가지 값만 선택할 수 있습니다."),
     INVALID_ANSWER_DUPLICATED_ANSWER(HttpStatus.BAD_REQUEST, "다중 선택 항목에 중복된 선택 값이 포함 되어 있습니다."),
     INVALID_ANSWER_SIZE_MULTIPLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "다중 선택 항목의 값의 길이가 부적절합니다."),
-    INVALID_ANSWER_MULTIPLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "다중 선택 항목의 값 중 부적절한 값이 포함 되어 있습니다."),
+    INVALID_ANSWER_MULTIPLE_SELECTION_ITEM(HttpStatus.BAD_REQUEST, "다중 선택 항목의 값 중 부적절한 값이 포함 되어 있습니다.")
     ;
     private final HttpStatus status;
     private final String message;
