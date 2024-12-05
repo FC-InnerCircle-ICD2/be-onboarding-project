@@ -12,4 +12,6 @@ public interface QuestionRepository {
 
     Question findByIdAndVersion(Long questionId, int version);
 
+    Question findLatestQuestionById(Long questionId);
+
 }

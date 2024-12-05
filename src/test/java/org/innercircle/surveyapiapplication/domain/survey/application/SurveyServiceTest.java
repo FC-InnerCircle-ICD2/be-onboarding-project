@@ -10,6 +10,7 @@ import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQ
 import org.innercircle.surveyapiapplication.domain.question.fixture.QuestionFixture;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.fixture.SurveyFixture;
+import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyUpdateRequest;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,6 @@ class SurveyServiceTest {
         // when
         surveyService.createSurvey(survey);
         entityManager.flush();
-
 
         // then
         Survey savedSurvey = surveyService.findById(survey.getId());
@@ -181,31 +181,24 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 설문조사의 이름, 설명, 질문을 수정할 수 있다.")
     void updateSurveyNameAndDescription() {
         // given
-//        ShortAnswerQuestion question = QuestionFixture.createShortAnswerQuestion();
-//        Survey survey = SurveyFixture.createSurvey(List.of(question));
-//
-//        Survey savedSurvey = surveyService.createSurvey(survey);
-//        entityManager.flush();
-//        Long surveyId = savedSurvey.getId();
-//
-//        SurveyUpdateRequest request = new SurveyUpdateRequest(
-//            "변경설문조사이름",
-//            "변경설문조사설명",
-//            List.of(new QuestionUpdateRequest(
-//                question.getId(),
-//                "변경설문항목이름",
-//                "변경설문항목설명",
-//                QuestionType.MULTI_CHOICE_ANSWER,
-//                false,
-//                List.of("설문항목답변1", "설문항목답변2", "설문항목답변3", "설문항목답변4", "설문항목답변5")
-//                )
-//            )
-//        );
-//
-//        // when
-//        Survey updatedSurvey = surveyService.updateSurvey(surveyId, request);
+        ShortAnswerQuestion question = QuestionFixture.createShortAnswerQuestion();
+        Survey survey = SurveyFixture.createSurvey(List.of(question));
+
+        Survey savedSurvey = surveyService.createSurvey(survey);
+        entityManager.flush();
+        Long surveyId = savedSurvey.getId();
+
+        SurveyUpdateRequest request = new SurveyUpdateRequest(
+            "변경설문조사이름",
+            "변경설문조사설명"
+        );
+
+        // when
+        Survey updatedSurvey = surveyService.updateSurvey(surveyId, request);
 
         // then
+        assertThat(updatedSurvey.getName()).isEqualTo(request.name());
+        assertThat(updatedSurvey.getDescription()).isEqualTo(request.description());
     }
 
 }

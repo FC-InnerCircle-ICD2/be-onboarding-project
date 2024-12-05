@@ -3,6 +3,7 @@ package org.innercircle.surveyapiapplication.domain.survey.presentation.dto;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record SurveyInquiryResponse(
     Long id,
@@ -25,7 +26,7 @@ public record SurveyInquiryResponse(
             survey.getId(),
             survey.getName(),
             survey.getDescription(),
-            survey.getQuestions().stream().map(QuestionInquiryResponse::from).toList()
+            survey.getQuestions().stream().map(QuestionInquiryResponse::from).collect(Collectors.toList())
         );
     }
 

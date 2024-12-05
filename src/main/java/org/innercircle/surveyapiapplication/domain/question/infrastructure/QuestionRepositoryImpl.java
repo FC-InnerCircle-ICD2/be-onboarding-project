@@ -9,6 +9,7 @@ import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatu
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,13 +24,20 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
     @Override
     public List<Question> findBySurveyId(Long surveyId) {
-        return questionJpaRepository.findBySurveyId(surveyId).stream().map(QuestionEntity::toDomain).toList();
+        return questionJpaRepository.findBySurveyId(surveyId).stream().map(QuestionEntity::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public Question findByIdAndVersion(Long id, int version) {
         QuestionId questionId = new QuestionId(id, version);
         return questionJpaRepository.findById(questionId)
+            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
+            .toDomain();
+    }
+
+    @Override
+    public Question findLatestQuestionById(Long questionId) {
+        return questionJpaRepository.findLatestQuestionById(questionId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
             .toDomain();
     }

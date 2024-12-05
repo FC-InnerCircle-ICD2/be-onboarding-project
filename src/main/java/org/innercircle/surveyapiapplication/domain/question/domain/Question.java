@@ -3,7 +3,10 @@ package org.innercircle.surveyapiapplication.domain.question.domain;
 import lombok.Getter;
 import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
 import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
+import org.innercircle.surveyapiapplication.global.exception.CustomException;
+import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -47,16 +50,27 @@ public abstract class Question {
         this.required = required;
     }
 
-
-    public void addVersion() {
-        this.version++;
-    }
-
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
     }
 
     public abstract void answer(Answer answer);
+
+    public Question update(String name, String description, QuestionType type, boolean required, List<String> options) {
+        Question updatedQuestion = switch (type) {
+            case SHORT_ANSWER -> new ShortAnswerQuestion(this.id, this.version, name, description, required, this.surveyId);
+            case LONG_ANSWER -> new LongAnswerQuestion(this.id, this.version, name, description, required, this.surveyId);
+            case SINGLE_CHOICE_ANSWER -> new SingleChoiceQuestion(this.id, this.version, name, description, required, this.surveyId, options);
+            case MULTI_CHOICE_ANSWER -> new MultiChoiceQuestion(this.id, this.version, name, description, required, this.surveyId, options);
+            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+        };
+        updatedQuestion.addVersion();
+        return updatedQuestion;
+    }
+
+    private void addVersion() {
+        this.version++;
+    }
 
     public abstract QuestionType getType();
 
@@ -77,5 +91,7 @@ public abstract class Question {
         result = 31 * result + version;
         return result;
     }
+
+
 
 }

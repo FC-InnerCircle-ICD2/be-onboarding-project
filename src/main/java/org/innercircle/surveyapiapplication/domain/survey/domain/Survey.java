@@ -33,7 +33,12 @@ public class Survey {
     public Survey(String name, String description, List<Question> questions) {
         this.name = name;
         this.description = description;
-        this.questions = questions;
+        this.addQuestions(questions);
+    }
+
+    public Survey(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public Survey addQuestions(List<Question> questions) {
@@ -66,6 +71,11 @@ public class Survey {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void update(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
 }
