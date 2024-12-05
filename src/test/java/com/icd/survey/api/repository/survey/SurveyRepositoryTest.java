@@ -83,6 +83,7 @@ class SurveyRepositoryTest {
                         .builder()
                         .answerSeq(answerOption.getOptionSeq())
                         .itemSeq(surveyItem.getItemSeq())
+                        .responseType(surveyItem.getItemResponseType())
                         .isOptionalAnswer(Boolean.TRUE)
                         .build();
         ItemAnswerDto answerDto1 =
@@ -90,6 +91,7 @@ class SurveyRepositoryTest {
                         .builder()
                         .answerSeq(answerOption1.getOptionSeq())
                         .itemSeq(surveyItem.getItemSeq())
+                        .responseType(surveyItem.getItemResponseType())
                         .isOptionalAnswer(Boolean.TRUE)
                         .build();
 
