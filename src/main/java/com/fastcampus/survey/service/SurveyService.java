@@ -31,15 +31,6 @@ public class SurveyService {
 
         List<Question> questions = new ArrayList<>();
         for (QuestionDto question : questionDtos) {
-//            Question savedQuestion = questionRepository.save(
-//                    Question.builder()
-//                            .qName(question.getQName())
-//                            .qDescription(question.getQDescription())
-//                            .qType(AnsType.fromValue(question.getQType()))
-//                            .qMust(Must.fromValue(question.getQMust()))
-//                            .build()
-//            );
-//            questions.add(savedQuestion);
             questions.add(
                 Question.builder()
                     .qName(question.getQName())
@@ -59,5 +50,43 @@ public class SurveyService {
         );
 
         return "Success";
+    }
+
+    @Transactional
+    public String updateSurvey(SurveyDto surveyDto) throws Exception {
+
+        // 이전에 맵핑된 질문들 삭제
+        Survey survey = surveyRepository.findById(surveyDto.getId()).orElseThrow(() -> new Exception("Exception occured"));
+
+        List<Question> oldQuestions = survey.getQuestions();
+        for (Question oldQuestion : oldQuestions) {
+            questionRepository.delete(oldQuestion);
+        }
+
+        // 새로운 질문들 저장
+        List<Question> newQuestions = new ArrayList<>();
+
+        for (QuestionDto question : surveyDto.getQuestions()) {
+            newQuestions.add(
+                Question.builder()
+                        .qName(question.getQName())
+                        .qDescription(question.getQDescription())
+                        .qType(AnsType.fromValue(question.getQType()))
+                        .choices(question.getChoices())
+                        .qMust(Must.fromValue(question.getQMust()))
+                        .build()
+            );
+        }
+
+        surveyRepository.save(
+            Survey.builder()
+                    .id(surveyDto.getId())
+                    .name(surveyDto.getName())
+                    .description(surveyDto.getDescription())
+                    .questions(newQuestions)
+                    .build()
+        );
+
+        return "success";
     }
 }

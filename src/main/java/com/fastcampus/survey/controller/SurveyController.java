@@ -21,8 +21,9 @@ public class SurveyController {
         return surveyService.createSurvey(survey);
     }
 
-    @GetMapping
-    public void getAllSurveys() {
+    @PostMapping(path = "/update")
+    public String updateSurvey(@RequestBody SurveyDto survey) throws Exception {
+        return surveyService.updateSurvey(survey);
     }
 
 }
