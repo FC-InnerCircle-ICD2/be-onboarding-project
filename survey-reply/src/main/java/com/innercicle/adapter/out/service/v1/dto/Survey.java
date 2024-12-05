@@ -1,11 +1,18 @@
 package com.innercicle.adapter.out.service.v1.dto;
 
 import com.innercicle.domain.InputType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Survey {
 
     private Long id;
@@ -17,6 +24,9 @@ public class Survey {
     private List<SurveyItem> items;
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class SurveyItem {
 
         private Long id;
@@ -41,7 +51,7 @@ public class Survey {
          */
         private boolean required;
 
-        private List<String> options;
+        private List<String> options = new ArrayList<>();
 
     }
 

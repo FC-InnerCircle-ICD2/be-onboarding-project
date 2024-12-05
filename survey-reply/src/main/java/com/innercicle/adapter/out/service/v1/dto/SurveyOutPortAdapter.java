@@ -12,7 +12,7 @@ public class SurveyOutPortAdapter implements SearchSurveyOutPortV1 {
 
     @Override
     public Survey getSurvey(Long surveyId) {
-        return surveyMakerService.getSurvey(surveyId).getResponse();
+        return surveyMakerService.getSurvey(surveyId);
     }
 
 }

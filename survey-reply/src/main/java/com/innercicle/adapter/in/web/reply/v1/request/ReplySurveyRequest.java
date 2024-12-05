@@ -4,12 +4,15 @@ import com.innercicle.application.port.in.v1.ItemOptionCommandV1;
 import com.innercicle.application.port.in.v1.ReplySurveyCommandV1;
 import com.innercicle.application.port.in.v1.ReplySurveyItemCommandV1;
 import com.innercicle.domain.InputType;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
+@Builder
 public class ReplySurveyRequest {
 
     /**
@@ -36,13 +39,15 @@ public class ReplySurveyRequest {
             .surveyId(this.surveyId)
             .name(this.surveyName)
             .replierEmail(this.replierEmail)
+            .description(this.description)
             .items(!CollectionUtils.isEmpty(this.items) ? this.items.stream()
                 .map(ReplySurveyItemRequest::mapToCommand)
                 .toList() : null).build();
     }
 
     @Getter
-    static class ReplySurveyItemRequest {
+    @Builder
+    public static class ReplySurveyItemRequest {
 
         private Long id;
 
@@ -54,6 +59,8 @@ public class ReplySurveyRequest {
 
         private boolean required;
 
+        private String replyText;
+
         private List<ItemOptionRequest> options;
 
         public ReplySurveyItemCommandV1 mapToCommand() {
@@ -63,14 +70,16 @@ public class ReplySurveyRequest {
                 .description(this.description)
                 .inputType(this.inputType)
                 .required(this.required)
+                .replyText(this.replyText)
                 .options(!CollectionUtils.isEmpty(this.options) ? this.options.stream()
                     .map(ItemOptionRequest::mapToCommand)
-                    .toList() : null)
+                    .toList() : Collections.emptyList())
                 .build();
         }
 
         @Getter
-        static class ItemOptionRequest {
+        @Builder
+        public static class ItemOptionRequest {
 
             private String option;
 
