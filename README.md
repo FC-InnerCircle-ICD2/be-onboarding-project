@@ -1,102 +1,53 @@
 # 이너써클 BE 온보딩 프로젝트
 
+## 결과물
+
+- survey-0.0.1-snapshot :  [link](https://drive.google.com/file/d/1bApriMoOtBiOqIos_ZoUDWulUqX9LOQ1/view?usp=sharing)
+
 ## 프로젝트 소개
 
-- 설문조사 기능 요구사항이 구현된 Project 입니다.
-- 이 프로젝트는 설문조사 생성, 수정, 응답 제출 및 조회 기능을 제공합니다.
+- 서베이 기능 요구사항이 구현된 Project 입니다.
+- 이 프로젝트는 서베이 생성, 수정, 응답 제출 및 조회 기능을 제공합니다.
 
 ## 프로젝트 구조
 
 ```
--- survey
-|-- SurveyApplication.java
-|-- configuration
-|-- controller
-|   `-- SurveyController.java
-|-- dto
-|   |-- common
-|   |   |-- Error.java
-|   |   `-- ServiceResponse.java
-|   |-- request
-|   |   |-- SearchSurveyAnswerRequest.java
-|   |   |-- SubmitSurveyAnswer.java
-|   |   |-- SurveyCreateRequest.java
-|   |   |-- SurveyQuestionOptionRequest.java
-|   |   |-- SurveyQuestionRequest.java
-|   |   |-- SurveyRequest.java
-|   |   `-- SurveyUpdateRequest.java
-|   `-- response
-|       |-- SearchSurveyAnswerResponse.java
-|       |-- SurveyAnswerValue.java
-|       |-- SurveyAnswerValue.java~
-|       |-- SurveyCreateResponse.java
-|       |-- SurveyCreateResponse.java~
-|       |-- SurveyGenerateResponse.java~
-|       `-- SurveyUpdateResponse.java
-|-- exception
-|   |-- ServiceError.java
-|   |-- ServiceExceptionHandler.java
-|   |-- SurveyCreationException.java
-|   |-- SurveyNotFoundException.java
-|   |-- SurveyServiceException.java
-|   `-- SurveySubmitValidationException.java
-|-- model
-|   |-- entity
-|   |   |-- Survey.java
-|   |   |-- SurveyAnswer.java
-|   |   |-- SurveyAnswerSubmission.java
-|   |   |-- SurveyQuestion.java
-|   |   |-- SurveyQuestionOption.java
-|   |   `-- common
-|   `-- enums
-|       |-- ItemRequired.java
-|       `-- SurveyItemType.java
-|-- repository
-|   |-- SurveyAnswerRepository.java
-|   |-- SurveyQuestionOptionRepository.java
-|   |-- SurveyQuestionRepository.java
-|   `-- SurveyRepository.java
-`-- service
-    |-- SurveyAnswerService.java
-    `-- SurveyService.java
+비지니스 로직의 변경이 외부 로직에 영향이 가지 않도록 패키지 구조를 개선할 예정입니다.
+(survey-0.0.2 로 반영 예정)
 ```
-
-### 주요 패키지 설명
-
-- **controller**: RESTful API 엔드포인트를 정의하는 컨트롤러 클래스가 위치합니다.
-- **dto**: Data Transfer Object 클래스가 위치합니다.
-  - **request**: 클라이언트 요청을 처리하는 DTO 클래스.
-  - **response**: 서버 응답을 처리하는 DTO 클래스.
-- **exception**: 애플리케이션에서 발생하는 예외를 정의하는 클래스가 위치합니다.
-- **model**: entity 및 enum 클래스가 위치합니다.
-  - **entity**: JPA entity 클래스.
-  - **enums**: 프로젝트에 주요 사용되는 상수들이 있는 enum 클래스.
-- **repository**: 데이터베이스와 상호작용하는 JPA repository 인터페이스가 위치합니다.
-- **service**: 비즈니스 로직을 처리하는 서비스 클래스가 위치합니다.
 
 ## API 명세
 
-### Survey API
+- /v1/swagger-ui/index.html 를 통해 명세를 확인하실 수 있습니다.
+  ```html
+  http://localhost:8080/v1/swagger-ui/index.html
+  ```
+
+### Survey API 요약
 
 - **POST /v1/survey**
-  - 설문조사 생성
+  - 서베이 생성
   - 요청 본문: `SurveyCreateRequest`
   - 응답 본문: `SurveyCreateResponse`
 
 - **PUT /v1/survey**
-  - 설문조사 업데이트
+  - 서베이 업데이트
   - 요청 본문: `SurveyUpdateRequest`
   - 응답 본문: `SurveyUpdateResponse`
 
 - **POST /v1/survey/{surveyId}/answer**
-  - 설문조사 응답 제출
+  - 서베이 응답 제출
   - 요청 본문: `List<SubmitSurveyAnswer>`
   - 응답 본문: `ServiceResponse<Void>`
 
 - **GET /v1/survey/{surveyId}/answer/all**
-  - 설문조사 응답 전체 조회
-  - 요청 본문:
-    - Parameter
+  - 서베이 응답 전체 조회
+  - 요청 파라미터
       - questionName (optional) : 질문 이름으로 응답 필터링
       - answerValue (optional) : 답변으로 응답 필터링
   - 응답 본문: `SearchSurveyAnswerResponse`
+
+## 사용한 라이브러리
+
+- commons-lang3 : String 검증 및 처리에 활용하기 위해 사용되었습니다.
+- rest-assured : 통합 테스트 실행을 위해 추가되었습니다.
