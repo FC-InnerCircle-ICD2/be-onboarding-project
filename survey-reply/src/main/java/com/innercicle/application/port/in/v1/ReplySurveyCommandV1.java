@@ -33,4 +33,23 @@ public class ReplySurveyCommandV1 extends SelfValidating<ReplySurveyCommandV1> {
             .build();
     }
 
+    @Builder(builderClassName = "ReplySurveyCommandV1Builder", builderMethodName = "buildInternal")
+    public static ReplySurveyCommandV1 create(Long surveyId,
+                                              String name,
+                                              String replierEmail,
+                                              String description,
+                                              List<ReplySurveyItemCommandV1> items) {
+        return new ReplySurveyCommandV1(surveyId, name, replierEmail, description, items);
+    }
+
+    public static class ReplySurveyCommandV1Builder {
+
+        public ReplySurveyCommandV1 build() {
+            ReplySurveyCommandV1 replySurveyCommandV1 = create(surveyId, name, replierEmail, description, items);
+            replySurveyCommandV1.validateSelf();
+            return replySurveyCommandV1;
+        }
+
+    }
+
 }

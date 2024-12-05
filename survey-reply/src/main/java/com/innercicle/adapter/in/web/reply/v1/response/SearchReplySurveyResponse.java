@@ -9,24 +9,24 @@ import java.util.List;
 
 @Getter
 @Builder
-public class ReplySurveyResponse {
+public class SearchReplySurveyResponse {
 
     private Long id;
     private Long surveyId;
     private String name;
     private String replierEmail;
     private String description;
-    private List<ReplySurveyItemResponse> items;
+    private List<SearchReplySurveyItemResponse> items;
 
-    public static ReplySurveyResponse from(ReplySurvey replySurvey) {
-        return ReplySurveyResponse.builder()
+    public static SearchReplySurveyResponse from(ReplySurvey replySurvey) {
+        return SearchReplySurveyResponse.builder()
             .id(replySurvey.id())
             .surveyId(replySurvey.surveyId())
             .name(replySurvey.name())
             .replierEmail(replySurvey.replierEmail())
             .description(replySurvey.description())
             .items(replySurvey.items().stream()
-                       .map(item -> ReplySurveyItemResponse.builder()
+                       .map(item -> SearchReplySurveyResponse.SearchReplySurveyItemResponse.builder()
                            .id(item.id())
                            .surveyItemId(item.surveyItemId())
                            .item(item.item())
@@ -35,7 +35,7 @@ public class ReplySurveyResponse {
                            .required(item.required())
                            .replyText(item.replyText())
                            .options(item.options().stream()
-                                        .map(option -> ReplySurveyItemResponse.ItemOptionResponse.builder()
+                                        .map(option -> SearchReplySurveyResponse.SearchReplySurveyItemResponse.ItemOptionResponse.builder()
                                             .option(option.option())
                                             .checked(option.checked())
                                             .build())
@@ -47,7 +47,7 @@ public class ReplySurveyResponse {
 
     @Getter
     @Builder
-    private static class ReplySurveyItemResponse {
+    private static class SearchReplySurveyItemResponse {
 
         private Long id;                // 식별자
         private Long surveyItemId;
@@ -56,7 +56,7 @@ public class ReplySurveyResponse {
         private InputType inputType;    // 입력 형태
         private boolean required;       // 필수 여부
         private String replyText;        // 응답 내용
-        private List<ItemOptionResponse> options;    // 선택지 목록
+        private List<SearchReplySurveyItemResponse.ItemOptionResponse> options;    // 선택지 목록
 
         @Getter
         @Builder
@@ -68,5 +68,5 @@ public class ReplySurveyResponse {
         }
 
     }
-
+    
 }

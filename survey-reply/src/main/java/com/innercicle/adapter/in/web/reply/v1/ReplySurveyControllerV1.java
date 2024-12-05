@@ -15,7 +15,7 @@ import static com.innercicle.utils.ApiUtil.success;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/survey/reply")
-public class ReplySurveyController {
+public class ReplySurveyControllerV1 {
 
     private final ReplySurveyUsecaseV1 replySurveyUsecaseV1;
 
