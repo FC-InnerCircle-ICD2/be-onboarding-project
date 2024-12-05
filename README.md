@@ -19,6 +19,7 @@
 - [x]  @OneToMany @ManyToOne 관계 CRUD 처리에 대한 이해
 - [ ]  Swagger로 API 명세서 작성 → 실패…
 - [x]  @CreatedDate, @LastModifiedDate 처리
+- [ ]  테스트 코드 작성
 
 ---
 
