@@ -849,6 +849,22 @@
 
 ### 설문조사 응답 조회
 [Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -860,6 +876,73 @@
 }
 ```
 [Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -887,6 +970,22 @@
 
 ### 설문조사 조회
 [Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -898,6 +997,177 @@
 }
 ```
 [Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">title</td>
+    <td>String</td>
+    <td>설문조사 이름</td>
+  </tr>
+  <tr>
+    <td colspan="4">description</td>
+    <td>String</td>
+    <td>설문조사 설명</td>
+  </tr>
+  <tr>
+    <td colspan="4">items</td>
+    <td>List</td>
+    <td>설문 받을 항목들</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>String</td>
+    <td>항목 이름</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">description</td>
+    <td>String</td>
+    <td>항목 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">inputType</td>
+    <td>String</td>
+    <td>항목 입력 형태<br>(SHORT_ANSWER, LONG_ANSWER, SINGLE_SELECT_LIST, MULTI_SELECT_LIST 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">required</td>
+    <td>Boolean</td>
+    <td>항목 필수 여부</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">selectOptions</td>
+    <td>List</td>
+    <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">content</td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td colspan="4">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td colspan="4">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
