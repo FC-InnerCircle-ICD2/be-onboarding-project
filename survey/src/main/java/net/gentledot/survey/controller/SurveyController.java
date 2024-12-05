@@ -2,6 +2,9 @@ package net.gentledot.survey.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import net.gentledot.survey.dto.common.ServiceResponse;
@@ -41,6 +44,36 @@ public class SurveyController {
     @Operation(summary = "설문조사 생성", description = "새로운 설문조사를 생성합니다.")
     @PostMapping
     public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 생성 요청", required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = SurveyCreateRequest.class),
+                            examples = @ExampleObject(value = """
+                                        {
+                                            "name": "나만의 설문",
+                                            "description": "간단한 설문입니다.",
+                                            "questions": [
+                                                {
+                                                    "question": "이름을 알려주세요",
+                                                    "description": "당신의 이름은 무엇입니까?",
+                                                    "type": "TEXT",
+                                                    "required": "REQUIRED",
+                                                    "options": [
+                                                        {"option" : "입력 1"}
+                                                    ]
+                                                },
+                                                {
+                                                    "question": "오늘의 기분을 알려주세요",
+                                                    "description": "가벼운 질문부터",
+                                                    "type": "SINGLE_SELECT",
+                                                    "required": "REQUIRED",
+                                                    "options": [
+                                                        {"option": "좋아요"},
+                                                        {"option": "안좋아요"}
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    """)))
             @Valid @RequestBody SurveyCreateRequest surveyRequest) {
         SurveyCreateResponse createResult = surveyService.createSurvey(surveyRequest);
         return ResponseEntity.ok(ServiceResponse.success(createResult));
@@ -49,6 +82,33 @@ public class SurveyController {
     @Operation(summary = "설문조사 수정", description = "생성된 설문조사의 내용을 수정합니다.")
     @PutMapping
     public ResponseEntity<ServiceResponse<SurveyUpdateResponse>> updateSurvey(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 수정 요청", required = true, content = @Content(
+                    schema = @Schema(implementation = SurveyUpdateRequest.class),
+                    examples = @ExampleObject(value = """
+                                {
+                                    "id": "123e4567-e89b-12d3-a456-426614174000",
+                                    "name": "Updated Survey",
+                                    "description": "Updated Description",
+                                    "questions": [
+                                        {
+                                            "questionId": 1,
+                                            "updateType": "MODIFY",
+                                            "question": "Updated Question 1",
+                                            "description": "Updated Description 1",
+                                            "type": "SINGLE_SELECT",
+                                            "required": "REQUIRED",
+                                            "options": [
+                                                {"option": "Updated Option 1"},
+                                                {"option": "Updated Option 2"}
+                                            ]
+                                        },
+                                        {
+                                            "questionId": 2,
+                                            "updateType": "DELETE"
+                                        }
+                                    ]
+                                }
+                            """)))
             @Valid @RequestBody SurveyUpdateRequest surveyRequest) {
         SurveyUpdateResponse updateResult = surveyService.updateSurvey(surveyRequest);
         return ResponseEntity.ok(ServiceResponse.success(updateResult));
@@ -58,6 +118,20 @@ public class SurveyController {
     @PostMapping("/{surveyId}/answer")
     public ResponseEntity<ServiceResponse<Void>> submitSurveyAnswer(
             @Parameter(description = "설문조사 ID", required = true) @PathVariable("surveyId") String surveyId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 응답 요청", required = true, content = @Content(
+                    schema = @Schema(implementation = SubmitSurveyAnswer.class),
+                    examples = @ExampleObject(value = """
+                                [
+                                    {
+                                        "questionId": 1,
+                                        "answer": ["홍길동"]
+                                    },
+                                    {
+                                        "questionId": 2,
+                                        "answer": ["좋아요"]
+                                    }
+                                ]
+                            """)))
             @RequestBody List<SubmitSurveyAnswer> answer) {
         surveyAnswerService.submitSurveyAnswer(surveyId, answer);
         return ResponseEntity.ok(ServiceResponse.success(null));
