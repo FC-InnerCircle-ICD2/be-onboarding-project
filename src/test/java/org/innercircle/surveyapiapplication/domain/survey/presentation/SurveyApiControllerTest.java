@@ -61,7 +61,7 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사 단건을 조회한다.")
     void inquireSurvey() throws Exception {
         // given
-        List<SurveyItem> surveyItems = List.of(SurveyItemFixture.createShortAnswerSurveyItem());
+        List<SurveyItem> surveyItems = List.of(SurveyItemFixture.createTextSurveyItem());
         Survey survey = SurveyFixture.createSurvey(surveyItems);
 
         // when
@@ -102,7 +102,7 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사를 생성한다.")
     void createSurvey() throws Exception {
         // given
-        SurveyItem surveyItem = SurveyItemFixture.createShortAnswerSurveyItem();
+        SurveyItem surveyItem = SurveyItemFixture.createTextSurveyItem();
         List<SurveyItem> surveyItems = List.of(surveyItem);
         Survey survey = SurveyFixture.createSurvey(surveyItems);
 
@@ -110,7 +110,7 @@ class SurveyApiControllerTest {
             surveyItem.getName(),
             surveyItem.getDescription(),
             surveyItem.isRequired(),
-            SurveyItemType.SHORT_ANSWER,
+            SurveyItemType.TEXT,
             null
         );
         SurveyCreateRequest surveyCreateRequest = new SurveyCreateRequest(
@@ -167,7 +167,7 @@ class SurveyApiControllerTest {
             question.getName(),
             question.getDescription(),
             question.isRequired(),
-            SurveyItemType.SHORT_ANSWER,
+            SurveyItemType.TEXT,
             question.getOptions()
         );
         SurveyCreateRequest surveyCreateRequest = new SurveyCreateRequest(
@@ -221,7 +221,7 @@ class SurveyApiControllerTest {
             "설문항목",
             "설문항목설명",
             false,
-            SurveyItemType.SHORT_ANSWER,
+            SurveyItemType.TEXT,
             null
         );
 

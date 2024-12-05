@@ -6,25 +6,25 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.answer.entity.AnswerEntity;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ShortAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.entity.SurveySubmissionEntity;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.TextSurveyItem;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DiscriminatorValue("SHORT_ANSWER")
-public class ShortAnswerSurveyItemEntity extends SurveyItemEntity {
+@DiscriminatorValue("TEXT")
+public class TextSurveyItemEntity extends SurveyItemEntity {
 
     @Transient
-    private AnswerEntity answerEntity;
+    private SurveySubmissionEntity surveySubmissionEntity;
 
-    public ShortAnswerSurveyItemEntity(Long questionId, int questionVersion, String name, String description, boolean required, Long surveyId) {
+    public TextSurveyItemEntity(Long questionId, int questionVersion, String name, String description, boolean required, Long surveyId) {
         super(questionId, questionVersion, name, description, required, surveyId);
     }
 
     @Override
-    public ShortAnswerSurveyItem toDomain() {
-        return new ShortAnswerSurveyItem(
+    public TextSurveyItem toDomain() {
+        return new TextSurveyItem(
             this.getSurveyItemId().getId(),
             this.getSurveyItemId().getVersion(),
             this.getName(),

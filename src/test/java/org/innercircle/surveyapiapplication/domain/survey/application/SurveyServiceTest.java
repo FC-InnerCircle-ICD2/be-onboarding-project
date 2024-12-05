@@ -2,10 +2,10 @@ package org.innercircle.surveyapiapplication.domain.survey.application;
 
 import jakarta.persistence.EntityManager;
 import org.innercircle.surveyapiapplication.domain.surveyItem.application.SurveyItemService;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.LongAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ParagraphSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.MultiChoiceSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ShortAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.TextSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.fixture.SurveyItemFixture;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
@@ -44,7 +44,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단답형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithShortAnswerQuestion() {
         // given
-        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerSurveyItem();
+        TextSurveyItem question = SurveyItemFixture.createTextSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         // when
@@ -53,7 +53,7 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(survey.getId());
-        ShortAnswerSurveyItem savedQuestion = (ShortAnswerSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        TextSurveyItem savedQuestion = (TextSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(survey.getId());
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
@@ -71,7 +71,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 장문형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithLongAnswerQuestion() {
         // given
-        LongAnswerSurveyItem question = SurveyItemFixture.createLongAnswerSurveyItem();
+        ParagraphSurveyItem question = SurveyItemFixture.createParagraphSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -81,7 +81,7 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        LongAnswerSurveyItem savedQuestion = (LongAnswerSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
+        ParagraphSurveyItem savedQuestion = (ParagraphSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
@@ -158,17 +158,17 @@ class SurveyServiceTest {
 
         Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
         List<SurveyItem> surveyItems = List.of(
-            new ShortAnswerSurveyItem(1L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(2L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(3L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(4L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(5L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(6L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(7L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(8L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(9L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(10L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerSurveyItem(11L, "설문조사이름", "설문항목설명", false)
+            new TextSurveyItem(1L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(2L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(3L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(4L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(5L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(6L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(7L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(8L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(9L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(10L, "설문조사이름", "설문항목설명", false),
+            new TextSurveyItem(11L, "설문조사이름", "설문항목설명", false)
         );
 
         assertThatThrownBy(() -> survey.addQuestions(surveyItems))
@@ -181,7 +181,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 설문조사의 이름, 설명을 수정할 수 있다.")
     void updateSurveyNameAndDescription() {
         // given
-        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerSurveyItem();
+        TextSurveyItem question = SurveyItemFixture.createTextSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         Survey savedSurvey = surveyService.createSurvey(survey);

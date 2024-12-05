@@ -38,12 +38,12 @@ class SurveyItemServiceTest {
     @DisplayName("[SUCCESS] 설문조사에 설문항목을 등록할 수 있다")
     void createSingleQuestion() {
         // given
-        SurveyItem surveyItem = SurveyItemFixture.createShortAnswerSurveyItem();
+        SurveyItem surveyItem = SurveyItemFixture.createTextSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(surveyItem));
 
         // when
         Survey savedSurvey = surveyRepository.save(survey);
-        SurveyItem targetSurveyItem = SurveyItemFixture.createShortAnswerSurveyItem();
+        SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem();
         surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem);
 
         SurveyItem savedSurveyItem = surveyItemService.findByIdAndVersion(targetSurveyItem.getId(), targetSurveyItem.getVersion());
@@ -62,23 +62,23 @@ class SurveyItemServiceTest {
     void failToCreateSingleQuestionWhenSurveyAlreadyHaveTenQuestions() {
         // given
         List<SurveyItem> surveyItems = List.of(
-            SurveyItemFixture.createShortAnswerSurveyItem(1L),
-            SurveyItemFixture.createShortAnswerSurveyItem(2L),
-            SurveyItemFixture.createShortAnswerSurveyItem(3L),
-            SurveyItemFixture.createShortAnswerSurveyItem(4L),
-            SurveyItemFixture.createShortAnswerSurveyItem(5L),
-            SurveyItemFixture.createShortAnswerSurveyItem(6L),
-            SurveyItemFixture.createShortAnswerSurveyItem(7L),
-            SurveyItemFixture.createShortAnswerSurveyItem(8L),
-            SurveyItemFixture.createShortAnswerSurveyItem(9L),
-            SurveyItemFixture.createShortAnswerSurveyItem(10L)
+            SurveyItemFixture.createTextSurveyItem(1L),
+            SurveyItemFixture.createTextSurveyItem(2L),
+            SurveyItemFixture.createTextSurveyItem(3L),
+            SurveyItemFixture.createTextSurveyItem(4L),
+            SurveyItemFixture.createTextSurveyItem(5L),
+            SurveyItemFixture.createTextSurveyItem(6L),
+            SurveyItemFixture.createTextSurveyItem(7L),
+            SurveyItemFixture.createTextSurveyItem(8L),
+            SurveyItemFixture.createTextSurveyItem(9L),
+            SurveyItemFixture.createTextSurveyItem(10L)
         );
 
         Survey survey = SurveyFixture.createSurvey(surveyItems);
         Survey savedSurvey = surveyRepository.save(survey);
 
         // when & then
-        SurveyItem targetSurveyItem = SurveyItemFixture.createShortAnswerSurveyItem(11L);
+        SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem(11L);
 
         assertThatThrownBy(() -> surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem))
             .isInstanceOf(CustomException.class)
@@ -90,12 +90,12 @@ class SurveyItemServiceTest {
     @DisplayName("[SUCCESS] 설문항목을 수정할 수 있다.")
     void updateQuestion() {
         // given
-        SurveyItem surveyItem = SurveyItemFixture.createShortAnswerSurveyItem();
+        SurveyItem surveyItem = SurveyItemFixture.createTextSurveyItem();
         Survey survey = SurveyFixture.createSurvey(List.of(surveyItem));
 
 
         Survey savedSurvey = surveyRepository.save(survey);
-        SurveyItem targetSurveyItem = SurveyItemFixture.createShortAnswerSurveyItem();
+        SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem();
         surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem);
 
         SurveyItemUpdateRequest request = new SurveyItemUpdateRequest(

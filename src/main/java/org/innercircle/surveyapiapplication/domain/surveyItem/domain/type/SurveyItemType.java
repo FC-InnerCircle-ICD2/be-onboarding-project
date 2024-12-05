@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SurveyItemType {
 
-    SHORT_ANSWER("SHORT_ANSWER"),
-    LONG_ANSWER("LONG_ANSWER"),
+    TEXT("TEXT"),
+    PARAGRAPH("PARAGRAPH"),
     SINGLE_CHOICE_ANSWER("SINGLE_CHOICE_ANSWER"),
     MULTI_CHOICE_ANSWER("MULTI_CHOICE_ANSWER");
 

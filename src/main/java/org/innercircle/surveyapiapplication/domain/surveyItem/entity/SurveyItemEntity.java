@@ -9,10 +9,10 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.LongAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ParagraphSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.MultiChoiceSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ShortAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.TextSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.entity.id.SurveyItemId;
 import org.innercircle.surveyapiapplication.global.entity.BaseEntity;
@@ -51,11 +51,11 @@ public abstract class SurveyItemEntity extends BaseEntity {
     }
 
     public static SurveyItemEntity from(SurveyItem surveyItem) {
-        if (surveyItem instanceof ShortAnswerSurveyItem) {
-            return new ShortAnswerSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId());
+        if (surveyItem instanceof TextSurveyItem) {
+            return new TextSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId());
         }
-        if (surveyItem instanceof LongAnswerSurveyItem) {
-            return new LongAnswerSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId());
+        if (surveyItem instanceof ParagraphSurveyItem) {
+            return new ParagraphSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId());
         }
         if (surveyItem instanceof SingleChoiceSurveyItem) {
             return new SingleChoiceSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId(), ((SingleChoiceSurveyItem) surveyItem).getOptions());

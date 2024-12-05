@@ -23,7 +23,7 @@ public record SurveyItemInquiryResponse(
 
     public static SurveyItemInquiryResponse from(SurveyItem surveyItem) {
         return switch (surveyItem.getType()) {
-            case SHORT_ANSWER, LONG_ANSWER -> new SurveyItemInquiryResponse(surveyItem.getId(),
+            case TEXT, PARAGRAPH -> new SurveyItemInquiryResponse(surveyItem.getId(),
                 surveyItem.getVersion(),
                 surveyItem.getName(),
                 surveyItem.getDescription(),

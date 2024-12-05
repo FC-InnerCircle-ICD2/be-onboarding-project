@@ -1,28 +1,28 @@
 package org.innercircle.surveyapiapplication.domain.surveyItem.fixture;
 
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.LongAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ParagraphSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.MultiChoiceSurveyItem;
-import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ShortAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.TextSurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
 
 import java.util.List;
 
 public class SurveyItemFixture {
 
-    public static ShortAnswerSurveyItem createShortAnswerSurveyItem() {
-        return new ShortAnswerSurveyItem(1L, "설문항목이름", "설문항목설명", false);
+    public static TextSurveyItem createTextSurveyItem() {
+        return new TextSurveyItem(1L, "설문항목이름", "설문항목설명", false);
     }
 
-    public static ShortAnswerSurveyItem createShortAnswerSurveyItem(Long questionId) {
-        return new ShortAnswerSurveyItem(questionId, "설문항목이름", "설문항목설명", false);
+    public static TextSurveyItem createTextSurveyItem(Long questionId) {
+        return new TextSurveyItem(questionId, "설문항목이름", "설문항목설명", false);
     }
 
-    public static LongAnswerSurveyItem createLongAnswerSurveyItem() {
-        return new LongAnswerSurveyItem(1L, "설문항목이름", "설문항목설명", false);
+    public static ParagraphSurveyItem createParagraphSurveyItem() {
+        return new ParagraphSurveyItem(1L, "설문항목이름", "설문항목설명", false);
     }
 
-    public static LongAnswerSurveyItem createLongAnswerSurveyItem(Long questionId) {
-        return new LongAnswerSurveyItem(questionId, "설문항목이름", "설문항목설명", false);
+    public static ParagraphSurveyItem createParagraphSurveyItem(Long questionId) {
+        return new ParagraphSurveyItem(questionId, "설문항목이름", "설문항목설명", false);
     }
 
     public static SingleChoiceSurveyItem createSingleChoiceSurveyItem() {
