@@ -39,7 +39,6 @@ public class RegisterSurveyItemCommandV1 extends SelfValidating<RegisterSurveyIt
     /**
      * 설문 항목 선택지 목록
      */
-    @NotNull(message = "설문 항목 선택지 목록은 필수 입니다.")
     private List<String> options;
 
     @Override

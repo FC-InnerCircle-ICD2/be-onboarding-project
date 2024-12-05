@@ -6,6 +6,7 @@ import com.innercicle.application.port.in.v1.ReplySurveyUsecaseV1;
 import com.innercicle.utils.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class ReplySurveyController {
     private final ReplySurveyUsecaseV1 replySurveyUsecaseV1;
 
     @PostMapping
-    public ApiUtil.ApiResult<ReplySurveyResponse> replySurvey(ReplySurveyRequest request) {
+    public ApiUtil.ApiResult<ReplySurveyResponse> replySurvey(@RequestBody ReplySurveyRequest request) {
         return success(ReplySurveyResponse.from(replySurveyUsecaseV1.replySurvey(request.mapToCommand())));
     }
 
