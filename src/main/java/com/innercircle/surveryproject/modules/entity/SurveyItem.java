@@ -19,7 +19,8 @@ import java.util.List;
 @Entity
 public class SurveyItem {
 
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

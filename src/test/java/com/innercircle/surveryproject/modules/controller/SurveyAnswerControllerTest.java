@@ -31,8 +31,8 @@ class SurveyAnswerControllerTest {
         String request = FileUtils.readFileAsString("testcase/survey_answer_testcase1.txt");
         // when // then
         mockMvc.perform(post("/api/survey-answer").contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(
-                status().isBadRequest())
-            .andExpect(jsonPath("$.message").value("필수 항목을 입력해주세요."));
+                        status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("필수 항목을 입력해주세요."));
     }
 
 }

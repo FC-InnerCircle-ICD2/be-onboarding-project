@@ -17,7 +17,8 @@ import java.util.List;
 public class Survey {
 
     @JsonIgnore
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

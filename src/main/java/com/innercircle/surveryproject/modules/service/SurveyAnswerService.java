@@ -45,8 +45,8 @@ public class SurveyAnswerService {
         List<SurveyAnswerMapValue> surveyAnswerMapValueList = new ArrayList<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyItem =
-                surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
-                                                          surveyItemResponseDto.getSurveyItemId());
+                    surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
+                            surveyItemResponseDto.getSurveyItemId());
 
             if (optionalSurveyItem.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
@@ -54,12 +54,12 @@ public class SurveyAnswerService {
 
             SurveyItem surveyItem = optionalSurveyItem.get();
             if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
-                || surveyItemResponseDto.getAnswer().isEmpty())) {
+                    || surveyItemResponseDto.getAnswer().isEmpty())) {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
             surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItemResponseDto.getSurveyItemId(),
-                                                                   surveyItemResponseDto.getAnswer()));
+                    surveyItemResponseDto.getAnswer()));
         }
 
         SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto);
@@ -92,29 +92,29 @@ public class SurveyAnswerService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
+    public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyId, Long surveyItemId, String surveyItemAnswer) {
 
-        List<SurveyAnswer> surveyAnswerList =
-            surveyAnswerRepository.findBySurveyAnswerIdSurveyId(surveyAnswerId);
+        List<SurveyAnswerMapValue> surveyAnswerMapValueList = surveyAnswerMapValueRepository.findBySurveyAnswerId(surveyId);
 
-        if (surveyAnswerList.isEmpty()) {
+
+        if (surveyAnswerMapValueList.isEmpty()) {
             throw new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다.");
         }
 
-        return surveyAnswerList.stream()
-            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerDetails().stream()
-                .filter(entry ->
-                            (ObjectUtils.isEmpty(surveyItemId) || entry.getSurveyItemId().equals(surveyItemId)) &&
-                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getResponses().contains(surveyItemAnswer))
+        return surveyAnswerMapValueList.stream()
+                .filter(surveyAnswerMapValue ->
+                        (ObjectUtils.isEmpty(surveyItemId) || surveyAnswerMapValue.getSurveyItemId().equals(surveyItemId)) &&
+                                (ObjectUtils.isEmpty(surveyItemAnswer) || surveyAnswerMapValue.getResponses().contains(surveyItemAnswer))
+
                 )
                 .map(entry -> SurveyAnswerResponseDto.of(
-                    surveyAnswer.getSurveyId(),
-                    surveyAnswer.getPhoneNumber(),
-                    entry.getSurveyItemId(),
-                    entry.getResponses()
+                        entry.getSurveyAnswer().getSurveyId(),
+                        entry.getSurveyAnswer().getPhoneNumber(),
+                        entry.getSurveyItemId(),
+                        entry.getResponses()
                 ))
-            )
-            .toList();
+                .toList();
+
     }
 
 }

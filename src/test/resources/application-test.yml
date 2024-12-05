@@ -1,6 +1,8 @@
 spring:
   application:
     name: surveryProject
+  profiles:
+    active: test
   h2:
     console:
       enabled: true
@@ -15,20 +17,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update       # DB 초기화 전략 (none, create, create-drop, update, validate)
+      ddl-auto: update      # DB 초기화 전략 (none, create, create-drop, update, validate)
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true      # 쿼리 로그 포맷 (정렬)
         show_sql: true        # 쿼리 로그 출력
-springdoc:
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
-  swagger-ui:
-    enabled: true
-    path: /swagger
-  override-with-generic-response: false
 logging:
   level:
     org:

@@ -14,18 +14,20 @@ import java.util.List;
 @Table(name = "survey_answer_map_value")
 public class SurveyAnswerMapValue {
 
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     *
+     * 설문조사 항목 식별자
      */
     private Long surveyItemId;
 
-    @Setter @ManyToOne
+    @Setter
+    @ManyToOne
     @JoinColumns({
-        @JoinColumn(name = "SURVEY_ANSWER_SURVEYID", referencedColumnName = "SURVEYID"),
-        @JoinColumn(name = "SURVEY_ANSWER_PHONENUMBER", referencedColumnName = "PHONENUMBER"),
+            @JoinColumn(name = "SURVEY_ANSWER_SURVEYID", referencedColumnName = "SURVEYID"),
+            @JoinColumn(name = "SURVEY_ANSWER_PHONENUMBER", referencedColumnName = "PHONENUMBER"),
     })
     private SurveyAnswer surveyAnswer;
 
