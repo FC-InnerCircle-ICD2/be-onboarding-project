@@ -10,6 +10,7 @@ import com.fastcampus.survey.util.constant.AnsType;
 import com.fastcampus.survey.util.constant.Must;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class SurveyService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Transactional
     public String createSurvey(SurveyDto surveyDto) throws Exception {
 
         List<QuestionDto> questionDtos = surveyDto.getQuestions();

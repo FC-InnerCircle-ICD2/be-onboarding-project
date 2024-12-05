@@ -3,6 +3,7 @@ package com.fastcampus.survey.entity;
 import com.fastcampus.survey.util.constant.AnsType;
 import com.fastcampus.survey.util.constant.Must;
 import com.fastcampus.survey.util.converter.AnsTypeConverter;
+import com.fastcampus.survey.util.converter.ChoiceConverter;
 import com.fastcampus.survey.util.converter.MustConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class Question {
 
     @Convert(converter = AnsTypeConverter.class)
     private AnsType qType;
+
+    @Convert(converter = ChoiceConverter.class)
+    private String choices;
 
     @Convert(converter = MustConverter.class)
     private Must qMust;

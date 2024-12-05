@@ -16,7 +16,7 @@ public class SurveyController {
     @Autowired
     private SurveyService surveyService;
 
-    @PostMapping
+    @PostMapping(path = "/create")
     public String createSurvey(@RequestBody SurveyDto survey) throws Exception {
         return surveyService.createSurvey(survey);
     }
