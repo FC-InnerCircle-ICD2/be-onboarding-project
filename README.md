@@ -32,3 +32,7 @@ return type 을 void 로 처리하였습니다. 응답 성공과 실패를 HttpS
 - service 와 business(query, action) 레이어를 구분하여 메서드의 역할을 구분하고 재사용성을 높여보았습니다.
 - emun에는 실제 db에 저장 될 code(Integer type)와 개발자, 클라이언트 에서 구분을 편리하게 하기 위한 typString(String type) 으로 구성하였습니다.
 - 깔끔한 코드를 작성하는데 집중하다보니, 12.04 단체 리뷰에서 말씀해주신 확장성을 고려한 설계에 대한 고민을 깊게 해보지 못하였습니다.
+
+
+
+jar 파일 링크 : https://drive.google.com/file/d/12ctcQmYn-ML1Pkidpu6162hgRP6VB1_V/view?usp=drive_link
