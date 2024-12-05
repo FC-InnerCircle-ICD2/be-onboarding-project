@@ -15,12 +15,12 @@
 ### 설문조사 생성
 [Request]<br>
 |Name|Required|Type|Description|
-|---|---|---|---|---|
+|---|---|---|---|
 |id| |Long|설문조사 식별자|
 |title|O|String|제목|
 |description|O|String|내용|
 |items|O|List|항목들|
-||id|O|Long|설문조사 항목 식별자|
+|id|O|Long|설문조사 항목 식별자|
 ```
 {
   "result": {
