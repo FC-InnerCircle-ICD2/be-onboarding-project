@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.model.enums.AnswerType;
-import net.gentledot.survey.model.enums.SurveyItemType;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,14 +16,9 @@ import net.gentledot.survey.model.enums.SurveyItemType;
 @Embeddable
 public class SurveyQuestionOption {
     private String optionText;
-    private AnswerType answerType;
 
-    public static SurveyQuestionOption of(SurveyQuestionOptionRequest option, SurveyItemType questionType) {
-        if (SurveyItemType.SINGLE_SELECT.equals(questionType) || SurveyItemType.MULTI_SELECT.equals(questionType)) {
-            return new SurveyQuestionOption(option.getOption(), AnswerType.SELECTION);
-        }
-
+    public static SurveyQuestionOption from(SurveyQuestionOptionRequest option) {
         // 다뤄질 타입에 따라 추가
-        return new SurveyQuestionOption(option.getOption(), AnswerType.TEXT);
+        return new SurveyQuestionOption(option.getOption());
     }
 }

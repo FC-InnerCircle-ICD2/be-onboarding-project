@@ -1,6 +1,5 @@
 package net.gentledot.survey.model.entity.surveyanswer;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,10 +30,9 @@ public class SurveyAnswerSubmission {
 
     private SurveyQuestionSnapshot surveyQuestionSnapshot;
 
-    @ElementCollection
-    private List<SurveyQuestionOptionSnapshot> surveyQuestionOptionSnapshot;
+    private SurveyQuestionAnswerSnapshot surveyQuestionAnswerSnapshot;
 
-    public static SurveyAnswerSubmission of(SurveyAnswer surveyAnswer, SurveyQuestionSnapshot surveyQuestion, List<SurveyQuestionOptionSnapshot> surveyQuestionOptions) {
+    public static SurveyAnswerSubmission of(SurveyAnswer surveyAnswer, SurveyQuestionSnapshot surveyQuestion, SurveyQuestionAnswerSnapshot surveyQuestionOptions) {
         return new SurveyAnswerSubmission(null, surveyAnswer, surveyQuestion, surveyQuestionOptions);
     }
 

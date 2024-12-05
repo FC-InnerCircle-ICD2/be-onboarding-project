@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.gentledot.survey.model.entity.surveyanswer.SurveyAnswerSubmission;
-import net.gentledot.survey.model.entity.surveyanswer.SurveyQuestionOptionSnapshot;
+import net.gentledot.survey.model.entity.surveyanswer.SurveyQuestionAnswerSnapshot;
 import net.gentledot.survey.model.entity.surveyanswer.SurveyQuestionSnapshot;
-import net.gentledot.survey.model.enums.SurveyItemType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -38,17 +37,8 @@ public class SurveyAnswerValue {
 
     private static SurveyAnswerItem generateSurveyAnswerItem(SurveyAnswerSubmission answerSubmission) {
         SurveyQuestionSnapshot surveyQuestionSnapshot = answerSubmission.getSurveyQuestionSnapshot();
-        List<SurveyQuestionOptionSnapshot> surveyQuestionOptionSnapshotList = answerSubmission.getSurveyQuestionOptionSnapshot();
-        String answer;
-        if (SurveyItemType.MULTI_SELECT.equals(surveyQuestionSnapshot.getItemType())
-            || SurveyItemType.SINGLE_SELECT.equals(surveyQuestionSnapshot.getItemType())) {
-            answer = surveyQuestionOptionSnapshotList.stream()
-                    .filter(optionSnapshot -> Boolean.TRUE.equals(optionSnapshot.getAnswer()))
-                    .map(SurveyQuestionOptionSnapshot::getOptionText)
-                    .collect(Collectors.joining(", "));
-        } else {
-            answer = surveyQuestionOptionSnapshotList.getFirst().getAnswer().toString();
-        }
+        SurveyQuestionAnswerSnapshot surveyQuestionAnswerSnapshot = answerSubmission.getSurveyQuestionAnswerSnapshot();
+        String answer = surveyQuestionAnswerSnapshot.getAnswer(surveyQuestionSnapshot.getAnswerType());
         return new SurveyAnswerItem(surveyQuestionSnapshot.getItemName(), answer);
     }
 

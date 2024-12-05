@@ -362,9 +362,6 @@ class SurveyIntegrationTest {
                                 .description("당신의 이름은 무엇입니까?")
                                 .type(SurveyItemType.TEXT)
                                 .required(ItemRequired.REQUIRED)
-                                .options(List.of(
-                                        new SurveyQuestionOptionRequest("입력 1")
-                                ))
                                 .build(),
                         SurveyQuestionRequest.builder()
                                 .question("오늘의 기분을 알려주세요")

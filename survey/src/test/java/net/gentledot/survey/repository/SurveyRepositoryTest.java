@@ -6,7 +6,6 @@ import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.model.enums.AnswerType;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +32,9 @@ class SurveyRepositoryTest {
     void createAndSaveSurveyTest() {
         // option 생성
         SurveyItemType singleSelect = SurveyItemType.SINGLE_SELECT;
-        SurveyQuestionOption option1 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), singleSelect);
-        SurveyQuestionOption option2 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option2"), singleSelect);
-        SurveyQuestionOption option3 = SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option3"), singleSelect);
+        SurveyQuestionOption option1 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1"));
+        SurveyQuestionOption option2 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option2"));
+        SurveyQuestionOption option3 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option3"));
 
         // question 생성
         SurveyQuestion question1 = SurveyQuestion.of(
@@ -74,7 +73,6 @@ class SurveyRepositoryTest {
         assertThat(questions.getFirst().getId()).isNotNull();
         List<SurveyQuestionOption> options = questions.getFirst().getOptions();
         assertThat(options).hasSize(2);
-        assertThat(options.getFirst().getAnswerType()).isEqualTo(AnswerType.SELECTION);
         assertThat(options.getFirst().getOptionText()).isEqualTo("option1");
     }
 }

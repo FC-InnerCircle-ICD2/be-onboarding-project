@@ -21,6 +21,7 @@ import net.gentledot.survey.dto.request.SurveyQuestionRequest;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,9 +56,12 @@ public class SurveyQuestion {
 
     public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {
         List<SurveyQuestionOptionRequest> questionRequestOptions = questionRequest.getOptions();
-        List<SurveyQuestionOption> options = questionRequestOptions.stream()
-                .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
-                .collect(Collectors.toList());
+        List<SurveyQuestionOption> options = Collections.emptyList();
+        if (questionRequestOptions != null) {
+            options = questionRequestOptions.stream()
+                    .map(SurveyQuestionOption::from)
+                    .collect(Collectors.toList());
+        }
 
         return SurveyQuestion.of(
                 questionRequest.getQuestion(),
@@ -74,7 +78,7 @@ public class SurveyQuestion {
         this.itemType = questionRequest.getType();
         this.required = questionRequest.getRequired();
         this.options = questionRequest.getOptions().stream()
-                .map(optionRequest -> SurveyQuestionOption.of(optionRequest, questionRequest.getType()))
+                .map(SurveyQuestionOption::from)
                 .collect(Collectors.toList());
     }
 }

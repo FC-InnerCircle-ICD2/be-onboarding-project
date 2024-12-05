@@ -29,10 +29,10 @@ class SurveyItemTest {
                 List.of(
                         SurveyQuestion.of("question1", "this is question1",
                                 singleSelect, ItemRequired.REQUIRED,
-                                List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), singleSelect), SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option2"), singleSelect))),
+                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1")), SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option2")))),
                         SurveyQuestion.of("question2", "this is question2",
                                 text, ItemRequired.OPTIONAL,
-                                List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("option1"), text))
+                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1")))
                         )));
 
         log.info("created survey : {}", survey);

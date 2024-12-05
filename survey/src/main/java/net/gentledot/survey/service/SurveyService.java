@@ -14,6 +14,7 @@ import net.gentledot.survey.exception.SurveyCreationException;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
+import net.gentledot.survey.model.enums.SurveyItemType;
 import net.gentledot.survey.repository.SurveyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,8 +88,10 @@ public class SurveyService {
 
 
                 List<SurveyQuestionOptionRequest> questionOptions = question.getOptions();
-                if (questionOptions == null || questionOptions.isEmpty()) {
-                    throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
+                if (SurveyItemType.SINGLE_SELECT.equals(question.getType()) || SurveyItemType.MULTI_SELECT.equals(question.getType())) {
+                    if (questionOptions == null || questionOptions.isEmpty()) {
+                        throw new SurveyCreationException(ServiceError.CREATION_REQUIRED_OPTIONS);
+                    }
                 }
 
                 Long questionId = question.getQuestionId();

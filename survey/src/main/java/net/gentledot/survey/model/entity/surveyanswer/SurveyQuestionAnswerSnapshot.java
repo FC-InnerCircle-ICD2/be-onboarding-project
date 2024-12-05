@@ -2,8 +2,6 @@ package net.gentledot.survey.model.entity.surveyanswer;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,15 +14,13 @@ import net.gentledot.survey.model.entity.surveyanswer.variables.TextInput;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.model.enums.AnswerType;
 
+import java.util.List;
+
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @Embeddable
-public class SurveyQuestionOptionSnapshot {
-    private String optionText;
-
-    @Enumerated(EnumType.STRING)
-    private AnswerType answerType;
+public class SurveyQuestionAnswerSnapshot {
 
     @Embedded
     private TextInput textInputAnswer;
@@ -37,46 +33,41 @@ public class SurveyQuestionOptionSnapshot {
 
     private DateTime dateTimeAnswer;
 
-    private SurveyQuestionOptionSnapshot(String optionText, AnswerType answerType, Selection selectionAnswer) {
-        this.optionText = optionText;
-        this.answerType = answerType;
+    private SurveyQuestionAnswerSnapshot(Selection selectionAnswer) {
         this.selectionAnswer = selectionAnswer;
     }
 
-    private SurveyQuestionOptionSnapshot(String optionText, AnswerType answerType, TextInput textInput) {
-        this.optionText = optionText;
-        this.answerType = answerType;
+    private SurveyQuestionAnswerSnapshot(TextInput textInput) {
         this.textInputAnswer = textInput;
     }
 
-    private static SurveyQuestionOptionSnapshot newTextInput(String optionText, String text) {
-        return new SurveyQuestionOptionSnapshot(
-                optionText, AnswerType.TEXT, TextInput.newText(text)
+    private static SurveyQuestionAnswerSnapshot newTextInput(String text) {
+        return new SurveyQuestionAnswerSnapshot(
+                TextInput.newText(text)
         );
     }
 
-    private static SurveyQuestionOptionSnapshot newSelection(String optionText, String selectedOption) {
-        return new SurveyQuestionOptionSnapshot(
-                optionText, AnswerType.SELECTION, Selection.from(selectedOption)
+    private static SurveyQuestionAnswerSnapshot newSelection(String selectedOption, List<SurveyQuestionOption> options) {
+        return new SurveyQuestionAnswerSnapshot(
+                Selection.of(selectedOption, options)
         );
     }
 
-    public static SurveyQuestionOptionSnapshot of(AnswerType answerType, SurveyQuestionOption surveyQuestionOption, String answer) {
-        String targetOptionText = surveyQuestionOption.getOptionText();
+    public static SurveyQuestionAnswerSnapshot of(AnswerType answerType, String answer) {
+        return of(answerType, null, answer);
+    }
+
+    public static SurveyQuestionAnswerSnapshot of(AnswerType answerType, List<SurveyQuestionOption> options, String answer) {
         if (AnswerType.TEXT.equals(answerType)) {
-            return newTextInput(targetOptionText, answer);
+            return newTextInput(answer);
         } else if (AnswerType.SELECTION.equals(answerType)) {
-            return newSelection(targetOptionText, targetOptionText);
+            return newSelection(answer, options);
         }
 
         throw new SurveySubmitValidationException(ServiceError.SUBMIT_UNSUPPORTED_ATTRIBUTE);
     }
 
-    public String getOptionText() {
-        return optionText;
-    }
-
-    public String getAnswer() {
+    public String getAnswer(AnswerType answerType) {
         if (AnswerType.TEXT.equals(answerType)) {
             return textInputAnswer.getText();
         } else if (AnswerType.SELECTION.equals(answerType)) {

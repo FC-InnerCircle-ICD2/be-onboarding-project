@@ -19,7 +19,6 @@ import net.gentledot.survey.exception.SurveySubmitValidationException;
 import net.gentledot.survey.model.entity.surveybase.Survey;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
 import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.model.enums.AnswerType;
 import net.gentledot.survey.model.enums.ItemRequired;
 import net.gentledot.survey.model.enums.SurveyItemType;
 
@@ -69,26 +68,27 @@ public class SurveyAnswer {
                     List<SurveyQuestionOption> questionOptions = question.getOptions();
                     SurveyQuestionSnapshot questionSnapshot = SurveyQuestionSnapshot.from(question);
 
-                    if (ItemRequired.REQUIRED.equals(question.getRequired()) &&
-                        (questionOptions.size() < submitAnswers.size())) {
-                        throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
-                    }
-
-                    List<SurveyQuestionOptionSnapshot> collectedOptionSnapshots = null;
+                    SurveyQuestionAnswerSnapshot collectedOptionSnapshot;
 
                     if (question.getItemType() == SurveyItemType.SINGLE_SELECT ||
                         question.getItemType() == SurveyItemType.MULTI_SELECT) {
-                        collectedOptionSnapshots = question.getOptions().stream()
+                        if (ItemRequired.REQUIRED.equals(question.getRequired()) &&
+                            (questionOptions.size() < submitAnswers.size())) {
+                            throw new SurveySubmitValidationException(ServiceError.SUBMIT_INVALID_QUESTION_OPTION_ID);
+                        }
+
+                        String collectedAnswer = questionOptions.stream()
                                 .filter(option -> submitAnswers.contains(option.getOptionText()))
-                                .map(option -> SurveyQuestionOptionSnapshot.of(AnswerType.SELECTION, option, "true"))
-                                .collect(Collectors.toList());
+                                .map(SurveyQuestionOption::getOptionText)
+                                .collect(Collectors.joining(", "));
+
+                        collectedOptionSnapshot = SurveyQuestionAnswerSnapshot.of(questionSnapshot.getAnswerType(), questionOptions, collectedAnswer);
+
                     } else {
                         String answer = submitAnswers.isEmpty() ? null : submitAnswers.getFirst();
-                        collectedOptionSnapshots = question.getOptions().stream()
-                                .map(option -> SurveyQuestionOptionSnapshot.of(AnswerType.TEXT, option, answer))
-                                .collect(Collectors.toList());
+                        collectedOptionSnapshot = SurveyQuestionAnswerSnapshot.of(questionSnapshot.getAnswerType(), questionOptions, answer);
                     }
-                    return SurveyAnswerSubmission.of(null, questionSnapshot, collectedOptionSnapshots);
+                    return SurveyAnswerSubmission.of(null, questionSnapshot, collectedOptionSnapshot);
                 })
                 .collect(Collectors.toList());
 

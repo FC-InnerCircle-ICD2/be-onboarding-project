@@ -46,11 +46,11 @@ class SurveyAnswerServiceProcessTest {
 
     private Survey createSurvey() {
         List<SurveyQuestionOption> options = new ArrayList<>();
-        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 1"), SurveyItemType.SINGLE_SELECT));
-        options.add(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.SINGLE_SELECT));
+        options.add(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("Option 1")));
+        options.add(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("Option 2")));
         List<SurveyQuestion> questions = new ArrayList<>();
         questions.add(SurveyQuestion.of("Question 1", "Description 1", SurveyItemType.SINGLE_SELECT, ItemRequired.REQUIRED, options));
-        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, List.of(SurveyQuestionOption.of(new SurveyQuestionOptionRequest("Option 2"), SurveyItemType.TEXT))));
+        questions.add(SurveyQuestion.of("Question 2", "Description 2", SurveyItemType.TEXT, ItemRequired.OPTIONAL, List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("Option 2")))));
         return Survey.of("Survey 1", "Description 1", questions);
     }
 
