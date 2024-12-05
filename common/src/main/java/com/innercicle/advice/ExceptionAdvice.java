@@ -23,6 +23,7 @@ public class ExceptionAdvice {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ApiUtil.ApiResult<Void> defaultException(Exception e) {
         log.error("e :: {}, message :: {}", e.getClass().getName(), e.getMessage());
+        e.printStackTrace();
         return fail(e, INTERNAL_SERVER_ERROR);
     }
 

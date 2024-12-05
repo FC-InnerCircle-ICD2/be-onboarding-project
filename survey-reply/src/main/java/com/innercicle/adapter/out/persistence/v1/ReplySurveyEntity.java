@@ -32,6 +32,11 @@ public class ReplySurveyEntity extends CreatedEntity {
      */
     private String description;
 
+    /**
+     * 응답자 이메일
+     */
+    private String replierEmail;
+
     @OneToMany(mappedBy = "replySurvey", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final List<ReplySurveyItemEntity> items = new ArrayList<>();
 
@@ -39,17 +44,20 @@ public class ReplySurveyEntity extends CreatedEntity {
         ReplySurveyEntity entity = new ReplySurveyEntity();
         entity.name = replySurvey.name();
         entity.description = replySurvey.description();
+        entity.replierEmail = replySurvey.replierEmail();
         entity.items.addAll(replySurvey.items().stream()
                                 .map(item -> ReplySurveyItemEntity.from(item, entity)).toList());
         return entity;
     }
 
-    public ReplySurvey mapToDomain() {
+    public ReplySurvey mapToDomain(Long surveyId) {
 
         return ReplySurvey.builder()
             .id(this.id)
+            .surveyId(surveyId)
             .name(this.name)
             .description(this.description)
+            .replierEmail(this.replierEmail)
             .items(this.items.stream()
                        .map(ReplySurveyItemEntity::mapToDomain)
                        .toList())

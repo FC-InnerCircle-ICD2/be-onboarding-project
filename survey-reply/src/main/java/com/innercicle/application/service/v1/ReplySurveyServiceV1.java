@@ -1,4 +1,4 @@
-package com.innercicle.application.service;
+package com.innercicle.application.service.v1;
 
 import com.innercicle.adapter.out.service.v1.dto.Survey;
 import com.innercicle.advice.exceptions.NotMatchedException;
@@ -9,7 +9,7 @@ import com.innercicle.application.port.in.v1.ItemOptionCommandV1;
 import com.innercicle.application.port.in.v1.ReplySurveyCommandV1;
 import com.innercicle.application.port.in.v1.ReplySurveyItemCommandV1;
 import com.innercicle.application.port.in.v1.ReplySurveyUsecaseV1;
-import com.innercicle.application.port.out.ReplySurveyOutPortV1;
+import com.innercicle.application.port.out.v1.ReplySurveyOutPortV1;
 import com.innercicle.application.port.out.v1.SearchSurveyOutPortV1;
 import com.innercicle.domain.ReplySurvey;
 import lombok.RequiredArgsConstructor;

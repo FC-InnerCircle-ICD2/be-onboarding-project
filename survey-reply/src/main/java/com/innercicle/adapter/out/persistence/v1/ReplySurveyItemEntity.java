@@ -35,7 +35,7 @@ public class ReplySurveyItemEntity extends CreatedEntity {
     /**
      * 응답 값
      */
-    private String replyInput;
+    private String replyText;
 
     private boolean required;
 
@@ -50,6 +50,7 @@ public class ReplySurveyItemEntity extends CreatedEntity {
         entity.description = item.description();
         entity.inputType = item.inputType();
         entity.required = item.required();
+        entity.replyText = item.replyText();
         entity.options = item.options().stream()
             .map(ItemOptionEntity::from)
             .toList();
@@ -62,7 +63,7 @@ public class ReplySurveyItemEntity extends CreatedEntity {
             .item(this.item)
             .description(this.description)
             .inputType(this.inputType)
-            .replyText(this.replyInput)
+            .replyText(this.replyText)
             .required(this.required)
             .options(this.options.stream()
                          .map(ItemOptionEntity::mapToDomain)
