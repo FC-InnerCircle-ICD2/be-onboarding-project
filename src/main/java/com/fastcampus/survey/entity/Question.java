@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class Question {
     private AnsType qType;
 
     @Convert(converter = ChoiceConverter.class)
-    private String choices;
+    private List<String> choices;
 
     @Convert(converter = MustConverter.class)
     private Must qMust;
