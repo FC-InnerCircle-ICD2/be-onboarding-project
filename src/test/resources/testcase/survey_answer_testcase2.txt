@@ -5,11 +5,15 @@
   "surveyItemResponseDtoList": [
     {
       "surveyItemId": 1,
-      "answer": "만족"
+      "answer": [
+        "만족"
+      ]
     },
     {
       "surveyItemId": 2,
-      "answer": "테스트"
+      "answer": [
+        "테스트"
+      ]
     }
   ]
 }

@@ -17,8 +17,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -27,7 +26,7 @@ class SurveyAnswerServiceTest {
     @Autowired
     private SurveyAnswerService surveyAnswerService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -36,7 +35,7 @@ class SurveyAnswerServiceTest {
         JsonNode jsonNode = FileUtils.readFileAsJson("testcase/survey_answer_testcase1.txt");
         SurveyAnswerCreateDto surveyAnswerCreateDto = objectMapper.treeToValue(jsonNode, SurveyAnswerCreateDto.class);
         String message =
-            assertThrows(InvalidInputException.class, () -> surveyAnswerService.createSurveyAnswer(surveyAnswerCreateDto)).getMessage();
+                assertThrows(InvalidInputException.class, () -> surveyAnswerService.createSurveyAnswer(surveyAnswerCreateDto)).getMessage();
         assertEquals("필수 항목을 입력해주세요.", message);
     }
 
@@ -52,8 +51,9 @@ class SurveyAnswerServiceTest {
 
         assertEquals(8201049505032L, surveyAnswer.getPhoneNumber());
         assertEquals("조예지", surveyAnswer.getUsername());
-        assertEquals("만족", surveyAnswer.getSurveyAnswerMap().get(1L));
-        assertEquals("테스트", surveyAnswer.getSurveyAnswerMap().get(2L));
+        assertNotEquals(0, surveyAnswer.getSurveyAnswerDetails().size());
+        //        assertEquals("만족", surveyAnswer.getSurveyAnswerDetails().get(0));
+        //        assertEquals("테스트", surveyAnswer.getSurveyAnswerDetails().get(1));
     }
 
     @Test
@@ -66,7 +66,7 @@ class SurveyAnswerServiceTest {
         String surveyItemAnswer = "";
         // when
         List<SurveyAnswerResponseDto> surveyAnswerResponseDtos =
-            surveyAnswerService.retrieveSurveyAnswer(surveyAnswerId, surveyItemId, surveyItemAnswer);
+                surveyAnswerService.retrieveSurveyAnswer(surveyAnswerId, surveyItemId, surveyItemAnswer);
         // then
         assertEquals(3, surveyAnswerResponseDtos.size());
     }

@@ -1,9 +1,10 @@
 package com.innercircle.surveryproject.modules.dto;
 
 import com.innercircle.surveryproject.modules.entity.SurveyAnswer;
+import com.innercircle.surveryproject.modules.entity.SurveyAnswerMapValue;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 설문조사 응답 결과 dto
@@ -24,12 +25,12 @@ public class SurveyAnswerDto {
     /**
      * 설문조사 응답 결과
      */
-    private Map<Long, String> surveyAnswerMap;
+    private List<SurveyAnswerMapValue> surveyAnswerDetails;
 
     public SurveyAnswerDto(SurveyAnswer surveyAnswer) {
         this.phoneNumber = surveyAnswer.getPhoneNumber();
         this.username = surveyAnswer.getUsername();
-        this.surveyAnswerMap = surveyAnswer.getSurveyAnswerMap();
+        this.surveyAnswerDetails = surveyAnswer.getSurveyAnswerDetails();
     }
 
     public static SurveyAnswerDto from(SurveyAnswer surveyAnswer) {

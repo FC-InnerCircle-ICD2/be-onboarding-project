@@ -2,6 +2,8 @@ package com.innercircle.surveryproject.modules.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 설문조사 항목 응답
  */
@@ -16,6 +18,6 @@ public class SurveyItemResponseDto {
     /**
      * 항목 별 응답 결과
      */
-    private String answer;
+    private List<String> answer;
 
 }

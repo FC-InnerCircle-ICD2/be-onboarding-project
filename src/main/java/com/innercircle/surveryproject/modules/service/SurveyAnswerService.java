@@ -4,7 +4,9 @@ import com.innercircle.surveryproject.infra.exceptions.InvalidInputException;
 import com.innercircle.surveryproject.modules.dto.*;
 import com.innercircle.surveryproject.modules.entity.Survey;
 import com.innercircle.surveryproject.modules.entity.SurveyAnswer;
+import com.innercircle.surveryproject.modules.entity.SurveyAnswerMapValue;
 import com.innercircle.surveryproject.modules.entity.SurveyItem;
+import com.innercircle.surveryproject.modules.repository.SurveyAnswerMapValueRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyAnswerRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyItemRepository;
 import com.innercircle.surveryproject.modules.repository.SurveyRepository;
@@ -13,10 +15,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +30,8 @@ public class SurveyAnswerService {
 
     private final SurveyAnswerRepository surveyAnswerRepository;
 
+    private final SurveyAnswerMapValueRepository surveyAnswerMapValueRepository;
+
     /**
      * 설문조사 응답 생성 메소드
      *
@@ -37,16 +41,13 @@ public class SurveyAnswerService {
     @Transactional
     public SurveyAnswerDto createSurveyAnswer(SurveyAnswerCreateDto surveyAnswerCreateDto) {
 
-        Survey survey = surveyRepository.findById(surveyAnswerCreateDto.getSurveyId()).orElseThrow(() -> new InvalidInputException(
-            "일치하는 설문조사를 찾을 수 없습니다."));
-
         List<SurveyItemResponseDto> surveyItemResponseDtoList = surveyAnswerCreateDto.getSurveyItemResponseDtoList();
 
-        Map<Long, String> surveyAnswerMap = new HashMap<>();
+        List<SurveyAnswerMapValue> surveyAnswerMapValueList = new ArrayList<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyItem =
-                surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
-                                                          surveyItemResponseDto.getSurveyItemId());
+                    surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
+                            surveyItemResponseDto.getSurveyItemId());
 
             if (optionalSurveyItem.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
@@ -54,14 +55,16 @@ public class SurveyAnswerService {
 
             SurveyItem surveyItem = optionalSurveyItem.get();
             if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
-                || surveyItemResponseDto.getAnswer().isEmpty())) {
+                    || surveyItemResponseDto.getAnswer().isEmpty())) {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
-            surveyAnswerMap.put(surveyItemResponseDto.getSurveyItemId(), surveyItemResponseDto.getAnswer());
+            surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItemResponseDto.getSurveyItemId(),
+                    surveyItemResponseDto.getAnswer()));
         }
 
-        SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto, surveyAnswerMap);
+        SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto);
+        surveyAnswer.getSurveyAnswerDetails().addAll(surveyAnswerMapValueList);
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
@@ -84,35 +87,37 @@ public class SurveyAnswerService {
     /**
      * 설문조사 응답 조회 메소드
      *
-     * @param surveyAnswerId
+     * @param surveyId
      * @param surveyItemId
      * @param surveyItemAnswer
      * @return
      */
     @Transactional(readOnly = true)
-    public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyAnswerId, Long surveyItemId, String surveyItemAnswer) {
+    public List<SurveyAnswerResponseDto> retrieveSurveyAnswer(Long surveyId, Long surveyItemId, String surveyItemAnswer) {
 
-        List<SurveyAnswer> surveyAnswerList =
-            surveyAnswerRepository.findBySurveyAnswerIdSurveyId(surveyAnswerId);
+        List<SurveyAnswerMapValue> surveyAnswerMapValueList = surveyAnswerMapValueRepository.findBySurveyAnswerId(surveyId);
 
-        if (surveyAnswerList.isEmpty()) {
+        if (surveyAnswerMapValueList.isEmpty()) {
             throw new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다.");
         }
 
-        return surveyAnswerList.stream()
-            .flatMap(surveyAnswer -> surveyAnswer.getSurveyAnswerMap().entrySet().stream()
-                .filter(entry ->
-                            (ObjectUtils.isEmpty(surveyItemId) || entry.getKey().equals(surveyItemId)) &&
-                                (ObjectUtils.isEmpty(surveyItemAnswer) || entry.getValue().equals(surveyItemAnswer))
-                )
-                .map(entry -> SurveyAnswerResponseDto.of(
-                    surveyAnswer.getSurveyId(),
-                    surveyAnswer.getPhoneNumber(),
-                    entry.getKey(),
-                    entry.getValue()
-                ))
-            )
-            .toList();
+        return surveyAnswerMapValueList.stream()
+                .flatMap(surveyAnswerMapValue -> {
+                    if (!ObjectUtils.isEmpty(surveyItemId) && !surveyItemId.equals(surveyAnswerMapValue.getSurveyItemId())) {
+                        return Stream.empty();
+                    }
+
+                    return surveyAnswerMapValue.getResponses().stream()
+                            .filter(response -> ObjectUtils.isEmpty(surveyItemAnswer) || response.equals(surveyItemAnswer))
+                            .map(response -> SurveyAnswerResponseDto.of(
+                                    surveyAnswerMapValue.getSurveyAnswer().getSurveyId(),
+                                    surveyAnswerMapValue.getSurveyAnswer().getPhoneNumber(),
+                                    surveyAnswerMapValue.getSurveyItemId(),
+                                    response
+                            ));
+                })
+                .toList();
     }
+
 
 }
