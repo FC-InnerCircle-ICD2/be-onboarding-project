@@ -3,6 +3,7 @@ package org.icd.surveycore.domain.surveyresponse
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.icd.surveycore.domain.support.BaseEntity
+import org.icd.surveycore.domain.surveyItem.ItemType
 
 @Entity
 @Table(name = "survey_response_item")
@@ -14,36 +15,79 @@ class SurveyResponseItem(
     @ManyToOne
     @JoinColumn(name = "survey_response_id", nullable = false)
     val surveyResponse: SurveyResponse,
-    @Comment("설문조사 항목 아이디")
-    val surveyItemId: Long,
-    @Comment("텍스트 응답인 경우 응답값")
-    val answer: String? = null,
-    @Comment("단건 선택인 경우 응답값")
-    val itemOptionId: Long? = null,
-    @Comment("다건 선택인 경우 응답값")
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-        name = "survey_response_item_option",
-        joinColumns = [JoinColumn(name = "survey_response_item_id")]
-    )
-    @Column(name = "item_option_id")
-    val itemOptionIds: List<Long>? = mutableListOf(),
+    @Comment("항목 순서")
+    val sequence: Int,
+    @Comment("항목 이름")
+    val name: String,
+    @Comment("항목 설명")
+    val description: String? = null,
+    @Comment("항목 입력 형태")
+    @Enumerated(EnumType.STRING)
+    val itemType: ItemType,
+    @Embedded
+    val shortResponse: ShortResponse?,
+    @Embedded
+    val longResponse: LongResponse?,
+    @Embedded
+    val singleChoiceResponse: SingleChoiceResponse?,
+    @Embedded
+    val multipleChoiceResponse: MultipleChoiceResponse?,
 ) : BaseEntity() {
     companion object {
         fun of(
             surveyResponse: SurveyResponse,
-            surveyItemId: Long,
-            answer: String?,
-            itemOptionId: Long?,
-            itemOptionIds: List<Long>? = mutableListOf()
+            sequence: Int,
+            name: String,
+            description: String? = null,
+            itemType: ItemType,
+            shortResponse: ShortResponse? = null,
+            longResponse: LongResponse? = null,
+            singleChoiceResponse: SingleChoiceResponse? = null,
+            multipleChoiceResponse: MultipleChoiceResponse? = null
         ): SurveyResponseItem {
             return SurveyResponseItem(
                 surveyResponse = surveyResponse,
-                surveyItemId = surveyItemId,
-                answer = answer,
-                itemOptionId = itemOptionId,
-                itemOptionIds = itemOptionIds
+                sequence = sequence,
+                name = name,
+                description = description,
+                itemType = itemType,
+                shortResponse = shortResponse,
+                longResponse = longResponse,
+                singleChoiceResponse = singleChoiceResponse,
+                multipleChoiceResponse = multipleChoiceResponse
             )
         }
     }
 }
+
+@Embeddable
+class ShortResponse(
+    val shortResponse: String
+)
+
+@Embeddable
+class LongResponse(
+    val longResponse: String
+)
+
+@Embeddable
+class SingleChoiceResponse(
+    val choiceOptionId: Long,
+    val choiceOptionName: String,
+)
+
+@Embeddable
+class ChoiceOption(
+    val choiceOptionId: Long,
+    val choiceOptionName: String
+)
+
+@Embeddable
+class MultipleChoiceResponse(
+    @ElementCollection
+    @CollectionTable(
+        name = "multiple_choice_response_options",
+        joinColumns = [JoinColumn(name = "survey_response_item_id")]
+    )
+    val choiceOptions: List<ChoiceOption>
+)

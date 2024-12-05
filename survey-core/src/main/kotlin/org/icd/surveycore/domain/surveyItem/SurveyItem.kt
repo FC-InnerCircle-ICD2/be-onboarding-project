@@ -7,7 +7,6 @@ import org.icd.surveycore.domain.survey.Survey
 
 @Entity
 @Table(name = "survey_item")
-@EntityListeners(AuditingEntityListener::class)
 class SurveyItem(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
