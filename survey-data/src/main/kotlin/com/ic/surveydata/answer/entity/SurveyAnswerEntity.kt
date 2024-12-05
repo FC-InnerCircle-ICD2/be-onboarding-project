@@ -13,13 +13,21 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "survey_answer")
-data class SurveyAnswerEntity(
+class SurveyAnswerEntity(
     @Id
     val id: String,
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_item_id", referencedColumnName = "id", unique = false)
-    val survenItemEntity: SurveyItemEntity? = null,
+    val surveyItemEntity: SurveyItemEntity? = null,
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_option_id", referencedColumnName = "id")
+    @JoinColumn(name = "survey_answer_option_id", referencedColumnName = "id")
     val surveyAnswerOptions: MutableList<SurveyAnswerOptionEntity> = mutableListOf(),
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+    override fun toString(): String {
+        return "SurveyAnswerEntity(" +
+                "id='$id', " +
+                "surveyItemEntityId=${surveyItemEntity?.id}, " + // surveyItemEntity의 ID만 출력
+                "surveyAnswerOptions=${surveyAnswerOptions.map { it.id }}" + // surveyAnswerOptions의 ID 목록만 출력
+                ")"
+    }
+}

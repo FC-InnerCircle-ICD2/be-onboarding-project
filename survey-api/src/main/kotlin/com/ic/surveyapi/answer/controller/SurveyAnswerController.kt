@@ -1,6 +1,7 @@
 package com.ic.surveyapi.answer.controller
 
 import com.ic.surveyapi.answer.controller.dto.SurveyAnswerRequest
+import com.ic.surveyapi.answer.controller.dto.SurveyFormAnswerResponse
 import com.ic.surveyapi.answer.service.SurveyAnswerService
 import com.ic.surveyapi.answer.service.dto.SurveyAnswerDto
 import com.ic.surveyapi.util.ObjectMapperUtil
@@ -29,10 +30,17 @@ class SurveyAnswerController(
     ) = run { objectMapperUtil.convertClass(value = surveyAnswerRequest, clazz = SurveyAnswerDto::class.java) }
         .let { surveyAnswerService.submitSurveyAnswer(surveyFormId = surveyFormId, surveyAnswer = it) }
 
-    // 해당 설문 조사를 조회
+    // 해당 특정 설문 조사를 조회
     @GetMapping("/{surveyFormId}/answers")
     fun getSurveyAnswers(
         @PathVariable(name = "surveyFormId", required = true) surveyFormId: String,
-    ) {
-    }
+    ): List<SurveyFormAnswerResponse> =
+        run { surveyAnswerService.getSurveyAnswerBySurveyFormId(surveyFormId = surveyFormId) }
+            .map { objectMapperUtil.convertClass(value = it, clazz = SurveyFormAnswerResponse::class.java) }
+
+    // 설문 조사 Title 기반으로 설문 조사를 조회
+    @GetMapping("/surveys/{surveyTitle}")
+    fun getSurveyAnswersByTitle(@PathVariable(name = "surveyTitle", required = true) surveyTitle: String) =
+        let { surveyAnswerService.getSurveyAnswerBySurveyFormId(surveyTitle) }
+
 }

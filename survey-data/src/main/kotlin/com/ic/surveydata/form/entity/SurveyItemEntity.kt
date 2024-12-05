@@ -1,6 +1,7 @@
 package com.ic.surveydata.form.entity
 
 import com.ic.surveydata.BaseTimeEntity
+import com.ic.surveydata.answer.entity.SurveyAnswerEntity
 import com.ic.surveydata.form.dto.SurveyFormCreateRequestDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -25,8 +26,10 @@ class SurveyItemEntity(
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "survey_form_id", referencedColumnName = "id", nullable = false)
     var surveyFormEntity: SurveyFormEntity? = null,
-    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     val surveyOptions: MutableSet<SurveyOptionEntity> = mutableSetOf(),
+    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    val surveyAnswers: MutableList<SurveyAnswerEntity> = mutableListOf(),
     @Column(name = "name", nullable = false, unique = false)
     val name: String,
     @Column(name = "is_required", nullable = false, unique = false)
@@ -50,7 +53,8 @@ class SurveyItemEntity(
                 "description='$description', " +
                 "type=$type, " +
                 "surveyFormEntityId=${surveyFormEntity?.id}, " + // surveyFormEntity의 ID만 출력
-                "surveyOptions=${surveyOptions.map { it.id }}" + // surveyOptions의 ID 목록만 출력
+                "surveyOptions=${surveyOptions.map { it.toString() }}, " + // surveyOptions의 ID 목록만 출력
+                "surveyAnswers=${surveyAnswers.map { it.toString() }}" + // surveyAnswers의 ID 목록만 출력
                 ")"
     }
 

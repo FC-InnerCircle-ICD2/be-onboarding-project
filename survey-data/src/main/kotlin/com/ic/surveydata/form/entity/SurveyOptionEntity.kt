@@ -23,6 +23,14 @@ class SurveyOptionEntity(
     @JoinColumn(name = "survey_item_id", referencedColumnName = "id")
     var surveyItemEntity: SurveyItemEntity? = null,
 ) : BaseTimeEntity() {
+    override fun toString(): String {
+        return "SurveyOptionEntity(" +
+                "id='$id', " +
+                "name='$name', " +
+                "surveyItemId=${surveyItemEntity?.id}" +
+                ")"
+    }
+
     companion object {
         fun of(dto: SurveyFormCreateRequestDto.SurveyOption): SurveyOptionEntity =
             SurveyOptionEntity(
