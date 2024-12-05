@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -41,6 +43,7 @@ public class SurveyRequest {
         Survey survey = Survey.builder()
                 .name(name)
                 .description(description)
+                .questions(new ArrayList<>())
                 .build();
 
         questions.stream().map(QuestionRequest::toEntity).toList()

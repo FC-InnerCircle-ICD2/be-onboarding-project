@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -64,6 +65,7 @@ public class QuestionRequest {
                 .description(description)
                 .questionType(QuestionType.valueOf(questionType))
                 .isRequired(isRequired)
+                .options(new ArrayList<>())
                 .build();
         Optional.ofNullable(options)
                 .orElseGet(Collections::emptyList).stream()

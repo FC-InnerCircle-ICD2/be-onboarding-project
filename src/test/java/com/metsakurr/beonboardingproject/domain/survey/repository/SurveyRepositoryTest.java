@@ -1,5 +1,6 @@
 package com.metsakurr.beonboardingproject.domain.survey.repository;
 
+import com.metsakurr.beonboardingproject.domain.survey.entity.Option;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QuestionType;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
@@ -62,8 +63,14 @@ class SurveyRepositoryTest {
                                 Question.builder()
                                         .name("항문 이름")
                                         .description("항문 설명")
-                                        .questionType(QuestionType.LONG_SENTENCE)
+                                        .questionType(QuestionType.SINGLE_CHOICE)
                                         .isRequired(true)
+                                        .options(
+                                                List.of(
+                                                        Option.builder().name("옵션1").build(),
+                                                        Option.builder().name("옵션2").build()
+                                                )
+                                        )
                                         .build()
                         )
                 )

@@ -78,7 +78,6 @@ public class Survey extends BaseEntity {
                 .map(QuestionRequest::toEntity)
                 .forEach(this::addQuestion);
 
-        System.out.println(this);
     }
 
     @Builder

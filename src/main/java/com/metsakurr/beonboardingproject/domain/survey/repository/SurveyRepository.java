@@ -31,8 +31,8 @@ public class SurveyRepository {
         return Optional.ofNullable(
                 queryFactory.select(survey)
                         .from(survey)
-                        .leftJoin(question).on(question.survey.eq(survey))
-                        .leftJoin(option).on(option.question.eq(question))
+                        .leftJoin(survey.questions, question).fetchJoin()
+                        .leftJoin(question.options, option)
                         .where(survey.idx.eq(idx))
                         .fetchOne()
         );
