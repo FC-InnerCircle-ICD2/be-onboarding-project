@@ -20,7 +20,7 @@
 |title|O|String|제목|
 |description|O|String|내용|
 |items|O|List|항목들|
-
+||id|O|Long|설문조사 항목 식별자|
 ```
 {
   "result": {
