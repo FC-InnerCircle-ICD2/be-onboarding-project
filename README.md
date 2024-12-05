@@ -1,17 +1,24 @@
-# 테이블 설계
-<img width="1157" alt="image" src="https://github.com/user-attachments/assets/777dcc16-da18-4541-9917-d60379a92781">
-
+- DB 접속(로컬실행)
 - H2 Console
   - http://localhost:8080/h2-console
   - JDBC URL: jdbc:h2:mem:test
   - User Name: sa
 
-# API 문서
-- http://localhost:8080/swagger-ui/index.html - 로컬 실행
-- [웹으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17963716/survey_ksb.json)
+- API 문서
+  - http://localhost:8080/swagger-ui/index.html (로컬실행)
+  - [온라인으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17963716/survey_ksb.json)
 
-# jar 다운로드
-- https://drive.google.com/file/d/1x9nDZWO0-Y9sz7rOxAwe-Ec2lDbwwGkN/view?usp=sharing
+- jar 다운로드
+  - https://drive.google.com/file/d/15vBMIY7dVEULLbzPP0A2vp1sUdMuEgdf/view?usp=sharing
+    - java -jar survey-0.0.1-SNAPSHOT.jar
+
+### 질문
+
+- 설계 관련
+  1. 설문조사 정보와 제출 정보는 유연하게 JSON 으로 저장하면서 "이름=답변" 조회 요구사항을 위해 검색용 테이블에 각각의 응답을 분리하여 쌓아두는 방식으로 하였습니다.
+      - 저는 우선 (설문 식별자, 질문 이름) 복합 인덱스를 사용했는데, 길이가 긴 "답변 내용" 컬럼까지 인덱스로 두어도 괜찮을까요?
+  2. BizException 이라는 공통 예외 1개에 세부적인 메세지 구분은 ErrorCode를 정의하여 사용하였는데, 보통 서비스 기업에서는 어떤 방식으로 사용하나요?
+      - 예외 원인에 대해 모두 개별 Exception을 정의한다면 테스트하기엔 좋아도 관리할 파일이 많이 늘어날 것 같습니다. 평소 선호하는 방식이 있으신가요?
 
 ---
 

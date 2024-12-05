@@ -1,14 +1,17 @@
 package ic2.onboarding.survey.api;
 
-import ic2.onboarding.survey.dto.SurveyUpdateRequest;
-import ic2.onboarding.survey.dto.SurveyUpdateResponse;
+import ic2.onboarding.survey.dto.SurveyCreation;
+import ic2.onboarding.survey.dto.SurveyInfo;
 import ic2.onboarding.survey.global.ApiResult;
-import ic2.onboarding.survey.dto.SurveyCreationRequest;
-import ic2.onboarding.survey.dto.SurveyCreationResponse;
 import ic2.onboarding.survey.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,19 +23,19 @@ public class SurveyController implements SurveyControllerDoc {
 
     @Override
     @PostMapping
-    public ResponseEntity<ApiResult<SurveyCreationResponse>> createSurvey(@RequestBody SurveyCreationRequest request) {
+    public ResponseEntity<ApiResult<SurveyCreation>> createSurvey(@RequestBody SurveyCreation request) {
 
-        SurveyCreationResponse response = surveyService.createSurvey(request);
+        SurveyCreation response = surveyService.createSurvey(request);
         return ResponseEntity.ok(new ApiResult<>(response));
     }
 
 
     @Override
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<SurveyUpdateResponse>> updateSurvey(@PathVariable(name = "id") Long id,
-                                                                        @RequestBody SurveyUpdateRequest request) {
+    @PutMapping("/{uuid}")
+    public ResponseEntity<ApiResult<SurveyInfo>> updateSurvey(@PathVariable(name = "uuid") String uuid,
+                                                              @RequestBody SurveyInfo request) {
 
-        SurveyUpdateResponse response = surveyService.updateSurvey(id, request);
+        SurveyInfo response = surveyService.updateSurvey(uuid, request);
         return ResponseEntity.ok(new ApiResult<>(response));
     }
 

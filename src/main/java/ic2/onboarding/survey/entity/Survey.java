@@ -1,174 +1,24 @@
 package ic2.onboarding.survey.entity;
 
-import ic2.onboarding.survey.global.BizException;
-import ic2.onboarding.survey.global.ErrorCode;
+import ic2.onboarding.survey.dto.SurveyInfo;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-
-@Getter
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Survey extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String uuid;
 
-    @Column(nullable = false)
-    private String name;
+    @Setter
+    @JdbcTypeCode(SqlTypes.JSON)
+    private SurveyInfo surveyInfo;
 
-    @Column(length = 500)
-    private String description;
-
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyItem> items = new ArrayList<>();
-
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.PERSIST)
-    private List<SurveySubmissionItem> submittedItems = new ArrayList<>();
-
-
-    public Survey(String name, String description) {
-
-        this.name = name;
-        this.description = description;
-    }
-
-
-    public void update(String name,
-                       String description,
-                       List<SurveyItem> surveyItemsToBeReplaced) {
-
-        this.name = name;
-        this.description = description;
-
-        // 교체할 항목에 기존 항목이 없다면 기존 항목 DELETE
-        this.removeItemIfNotContained(surveyItemsToBeReplaced);
-
-        // 신규 항목 추가 또는 수정
-        surveyItemsToBeReplaced.forEach(item -> Optional.ofNullable(item.getId())
-                .ifPresentOrElse(
-                        // 변경 할 ID 존재 -> UPDATE
-                        targetId -> this.updateItemInfo(targetId, item),
-
-                        // 없다면 INSERT
-                        () -> this.addItem(item)
-                )
-        );
-    }
-
-
-    public void addItem(SurveyItem newItem) {
-
-        this.items.add(newItem);
-        newItem.setSurvey(this);
-    }
-
-
-    public void addAllItems(List<SurveyItem> newItems) {
-
-        if (this.items.addAll(newItems)) {
-            newItems.forEach(item -> item.setSurvey(this));
-        }
-    }
-
-
-    public void submitForm(List<SurveySubmissionItem> submissionItems) {
-
-        // 다중선택 항목을 제외한 항목을 2개 이상 제출했는지 검사
-        submissionItems.stream()
-                .filter(not(submissionItem -> submissionItem.getSurveyItem().isMultipleChoice())) // 다중선택 항목 제외
-                .collect(groupingBy(
-                        // 제출 항목에 해당하는 항목 ID
-                        submissionItem -> submissionItem.getSurveyItem().getId(),
-                        // 항목 ID 카운팅
-                        counting()))
-                .forEach((itemId, count) -> {
-                    if (count >= 2) {
-                        throw new BizException(ErrorCode.NOT_VALIDATED);
-                    }
-                });
-
-        // 항목별 검사
-        submissionItems.forEach(submissionItem -> {
-            SurveyItem surveyItem = submissionItem.getSurveyItem();
-
-            // 항목 답변 길이 체크
-            String answer = submissionItem.getAnswer();
-            if (!surveyItem.validAnswerLength(answer)) {
-                throw new BizException(ErrorCode.NOT_VALIDATED);
-            }
-
-            /* 선택형 항목 추가 검사 */
-            if (!surveyItem.isChoiceType()) {
-                return;
-            }
-
-            // 선택 가능한 옵션 중 하나에 포함되는 답변인가?
-            if (!surveyItem.containsChoice(answer)) {
-                throw new BizException(ErrorCode.NOT_VALIDATED);
-            }
-        });
-
-        /* 필수값 중 제출되지 않은 것이 있는지 확인 */
-        // (1). 필수 ITEM ID Set
-        Set<Long> requiredItemIds = this.items.stream()
-                .filter(SurveyItem::getRequired)
-                .map(SurveyItem::getId)
-                .collect(Collectors.toSet());
-
-        // (2). 제출한 ITEM ID Set
-        Set<Long> submissionIds = submissionItems.stream()
-                .map(submitted -> submitted.getSurveyItem().getId())
-                .collect(Collectors.toSet());
-
-        requiredItemIds.removeAll(submissionIds);
-        // (1) - (2) 이후 (1)이 비어있지 않다면 필수값 미제출 항목 존재
-        if (!requiredItemIds.isEmpty()) {
-            throw new BizException(ErrorCode.NOT_VALIDATED);
-        }
-
-        // 저장
-        if (this.submittedItems.addAll(submissionItems)) {
-            submissionItems.forEach(item -> item.setSurvey(this));
-        }
-    }
-
-
-    private void removeItemIfNotContained(List<SurveyItem> surveyItemsToBeReplaced) {
-
-        // (1). 기존 항목 ID 집합
-        Set<Long> storedItemIds = this.items.stream()
-                .map(SurveyItem::getId)
-                .collect(Collectors.toSet());
-
-        // (2). 교체 항목 ID 집합
-        Set<Long> requestIds = surveyItemsToBeReplaced.stream()
-                .map(SurveyItem::getId)
-                .collect(Collectors.toSet());
-
-        // (1) - (2) = 지워질 ID 집합
-        storedItemIds.removeAll(requestIds);
-        Set<Long> toBeDeletedItemIds = new HashSet<>(storedItemIds);
-
-        // DELETE
-        this.items.removeIf(storedItem -> toBeDeletedItemIds.contains(storedItem.getId()));
-    }
-
-
-    private void updateItemInfo(Long targetId, SurveyItem newItem) {
-
-        this.items.stream()
-                .filter(storedItem -> storedItem.getId().equals(targetId))
-                .findAny()
-                .ifPresent(storedItem -> storedItem.update(newItem));
-    }
 }
