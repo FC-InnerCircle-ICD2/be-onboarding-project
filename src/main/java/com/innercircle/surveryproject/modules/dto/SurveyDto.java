@@ -39,7 +39,7 @@ public class SurveyDto {
         this.id = survey.getId();
         this.name = survey.getName();
         this.description = survey.getDescription();
-        this.surveyItemDtoList = SurveyItem.convertToDto(survey.getSurveyItemList());
+        this.surveyItemDtoList = SurveyItem.convert(survey.getSurveyItemList());
     }
 
 }

@@ -49,7 +49,7 @@ public class SurveyItem {
     /**
      * 활성화여부
      */
-    private Boolean active;
+    private Boolean active = Boolean.TRUE;
 
     @Setter
     @ManyToOne
@@ -68,7 +68,7 @@ public class SurveyItem {
         this.itemType = surveyItemDto.getItemType();
         this.required = surveyItemDto.getRequired();
         this.itemContentList = surveyItemDto.getItemContentList();
-        this.active = Boolean.TRUE;
+        this.active = surveyItemDto.getActive();
     }
 
     public static SurveyItem from(SurveyItemDto surveyItemDto) {
@@ -77,6 +77,10 @@ public class SurveyItem {
 
     public static List<SurveyItemDto> convertToDto(List<SurveyItem> surveyItemList) {
         return surveyItemList.stream().map(SurveyItemDto::toDto).toList();
+    }
+
+    public static List<SurveyItemDto> convert(List<SurveyItem> surveyItemList) {
+        return surveyItemList.stream().filter(surveyItem -> !surveyItem.getActive()).map(SurveyItemDto::toDto).toList();
     }
 
     public static List<SurveyItem> convertToEntity(@NotNull List<SurveyItemDto> surveyItemDtoList) {
