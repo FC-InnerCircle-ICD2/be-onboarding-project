@@ -30,7 +30,7 @@ public class SurveyQueryRepository {
                 .execute();
     }
 
-    public SurveyDto getSurveyById(Long surveySeq) {
+    /*public SurveyDto getSurveyById(Long surveySeq) {
         BooleanBuilder condition = new BooleanBuilder();
         condition.and(survey.surveySeq.eq(surveySeq));
         return queryFactory
@@ -68,7 +68,7 @@ public class SurveyQueryRepository {
                                         ).as("surveyItemList")
                                 )
                         )).get(0);
-    }
+    }*/
 
 
 }

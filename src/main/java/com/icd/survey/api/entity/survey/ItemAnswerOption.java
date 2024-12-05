@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "item_response_option")
+@Table(name = "item_answer_option")
 public class ItemAnswerOption {
     @Id
     @Column(name = "option_seq", nullable = false)

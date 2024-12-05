@@ -96,6 +96,7 @@ public class SurveyActionBusiness {
 
                 saveAnswer(ItemAnswerDto
                         .builder()
+                        .responseType(item.getItemResponseType())
                         .itemSeq(item.getItemSeq())
                         .isOptionalAnswer(Boolean.TRUE)
                         .optionSeq(itemRequest.getSurveyAnswerRequest().getOptionalAnswer())
@@ -110,6 +111,7 @@ public class SurveyActionBusiness {
                             ItemAnswerDto answerDto =
                                     ItemAnswerDto
                                             .builder()
+                                            .responseType(item.getItemResponseType())
                                             .itemSeq(item.getItemSeq())
                                             .isOptionalAnswer(Boolean.TRUE)
                                             .optionSeq(x.getOptionalAnswer())
@@ -122,6 +124,7 @@ public class SurveyActionBusiness {
             SurveyAnswerRequest answerRequest = itemRequest.getSurveyAnswerRequest();
             saveAnswer(ItemAnswerDto
                     .builder()
+                    .responseType(item.getItemResponseType())
                     .itemSeq(item.getItemSeq())
                     .isOptionalAnswer(Boolean.FALSE)
                     .answer(answerRequest.getAnswer())
