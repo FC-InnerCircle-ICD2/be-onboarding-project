@@ -52,7 +52,6 @@
     <td>Long</td>
     <td>설문조사 항목 식별자</td>
   </tr>
-
   <tr>
     <td> </td>
     <td colspan="3">name</td>
@@ -87,6 +86,22 @@
     <td> </td>
     <td>List</td>
     <td>선택 리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>선택 옵션 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td colspan="2">id</td>
+    <td> </td>
+    <td>String</td>
+    <td>선택 옵션 설명</td>
   </tr>
 </table>
 
