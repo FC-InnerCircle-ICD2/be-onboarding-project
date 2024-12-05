@@ -3,10 +3,13 @@ package com.practice.survey.surveymngt.controller;
 import com.practice.survey.common.response.ApiResponse;
 import com.practice.survey.common.response.StatusEnum;
 import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
+import com.practice.survey.surveymngt.model.dto.SurveyResponseDto;
 import com.practice.survey.surveymngt.service.SurveyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value="/api/v1/survey")
@@ -23,5 +26,10 @@ public class SurveyController {
     @PutMapping("/updateSurvey")
     public ApiResponse<StatusEnum> updateSurvey(@Valid @RequestBody SurveyRequestDto surveyRequestDto) {
         return surveyService.updateSurvey(surveyRequestDto);
+    }
+
+    @GetMapping("/getSurveyResponse/{surveyId}")
+    public ApiResponse<List<SurveyResponseDto>> getSurveyResponse(@PathVariable Long surveyId) {
+        return surveyService.getSurveyResponse(surveyId);
     }
 }

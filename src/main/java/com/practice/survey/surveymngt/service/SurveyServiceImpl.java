@@ -12,8 +12,10 @@ import com.practice.survey.surveyVersion.model.dto.SurveyVersionSaveRequestDto;
 import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
 import com.practice.survey.surveyVersion.repository.SurveyVersionRepository;
 import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
+import com.practice.survey.surveymngt.model.dto.SurveyResponseDto;
 import com.practice.survey.surveymngt.model.entity.Survey;
 import com.practice.survey.surveymngt.repository.SurveyRepository;
+import com.practice.survey.surveymngt.repository.wrapper.SurveyRespositoryWrapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class SurveyServiceImpl implements SurveyService{
     private final SurveyItemRepository surveyItemRepository;
     private final SurveyItemOptionRepository surveyItemOptionRepository;
     private final SurveyVersionRepository surveyVersionRepository;
+    private final SurveyRespositoryWrapper surveyRespositoryWrapper;
 
     @Override
     public ApiResponse<StatusEnum> createSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException {
@@ -94,6 +97,14 @@ public class SurveyServiceImpl implements SurveyService{
         saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
 
         return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+    }
+
+    @Override
+    public ApiResponse<List<SurveyResponseDto>> getSurveyResponse(Long surveyId) {
+
+        List<SurveyResponseDto> SurveyResponseDtos = surveyRespositoryWrapper.getSurveyResponse(surveyId);
+
+        return new ApiResponse<List<SurveyResponseDto>>().responseOk(SurveyResponseDtos);
     }
 
     private SurveyVersion saveSurveyVersion(Survey survey, int surveyVersionNumber){
