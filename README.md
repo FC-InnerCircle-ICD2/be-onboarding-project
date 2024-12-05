@@ -98,7 +98,7 @@
   <tr>
     <td> </td>
     <td> </td>
-    <td colspan="2">id</td>
+    <td colspan="2">content</td>
     <td> </td>
     <td>String</td>
     <td>선택 옵션 설명</td>
