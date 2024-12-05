@@ -102,14 +102,21 @@ class SurveyProducerControllerTest : BaseControllerTest() {
                     fieldWithPath("items[].isRequired").description("항목 필수 응답 여부").type(JsonFieldType.BOOLEAN),
                     fieldWithPath("responses[]").description("응답 목록").optional().type(JsonFieldType.ARRAY),
                     fieldWithPath("responses[].id").description("응답의 ID").type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].createdAt").description("응답 제출 시간").type(OffsetDateTime::class.simpleName),
-                    fieldWithPath("responses[].items[].itemId").description("응답 항목의 ID").type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].items[].answer").description("항목에 대한 응답").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("responses[].items[].itemOption").description("선택된 아이템 옵션").optional().type(JsonFieldType.OBJECT),
-                    fieldWithPath("responses[].items[].itemOptions[]").description("선택된 아이템 옵션 목록").optional().type(JsonFieldType.ARRAY),
-                    fieldWithPath("responses[].items[].itemOptions[].itemOptionId").description("선택된 아이템 옵션의 ID").type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].items[].itemOptions[].itemOptionName").description("선택된 아이템 옵션의 이름").type(JsonFieldType.STRING)
-                ),
+                    fieldWithPath("responses[].createdAt").description("응답 제출 일시").type(OffsetDateTime::class.simpleName),
+                    fieldWithPath("responses[].items[].sequence").description("항목 순서"),
+                    fieldWithPath("responses[].items[].name").description("항목 이름"),
+                    fieldWithPath("responses[].items[].description").description("항목 설명"),
+                    fieldWithPath("responses[].items[].itemType").description("항목 유형"),
+                    fieldWithPath("responses[].items[].shortResponse").description("단답형 응답").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("responses[].items[].longResponse").description("장문형 응답").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("responses[].items[].singleChoiceResponse").description("단일 선택형 응답").optional(),
+                    fieldWithPath("responses[].items[].singleChoiceResponse.itemOptionId").description("옵션 ID").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("responses[].items[].singleChoiceResponse.itemOptionName").description("옵션 이름").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("responses[].items[].multipleChoiceResponse").description("다중 선택형 응답").optional(),
+                    fieldWithPath("responses[].items[].multipleChoiceResponse[].itemOptionId").description("옵션 ID").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("responses[].items[].multipleChoiceResponse[].itemOptionName").description("옵션 이름").optional().type(JsonFieldType.STRING),
+
+                    ),
                 ExceptionSnippet(
                     listOf(
                         NotFoundSurveyException()

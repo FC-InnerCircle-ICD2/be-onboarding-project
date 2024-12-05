@@ -91,10 +91,14 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             createdAt = OffsetDateTime.now(),
             items = listOf(
                 GetSurveyResponseItemResponse(
-                    itemId = 1,
-                    answer = null,
-                    itemOption = null,
-                    itemOptions = listOf(
+                    sequence = 1,
+                    name = "응답",
+                    description = "응답",
+                    itemType = ItemType.MULTIPLE_CHOICE,
+                    shortResponse = null,
+                    longResponse = null,
+                    singleChoiceResponse = null,
+                    multipleChoiceResponse = listOf(
                         GetSurveyResponseItemOptionResponse(
                             itemOptionId = 1,
                             itemOptionName = "가"

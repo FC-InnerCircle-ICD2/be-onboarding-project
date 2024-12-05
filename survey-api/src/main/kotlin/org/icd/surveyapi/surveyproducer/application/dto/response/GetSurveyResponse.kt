@@ -65,26 +65,36 @@ data class GetSurveyResponseResponse(
 }
 
 data class GetSurveyResponseItemResponse(
-    val itemId: Long,
-    val answer: String?,
-    val itemOption: GetSurveyResponseItemOptionResponse?,
-    val itemOptions: List<GetSurveyResponseItemOptionResponse>
+    val sequence: Int,
+    val name: String,
+    val description: String?,
+    val itemType: ItemType,
+    val shortResponse: String?,
+    val longResponse: String?,
+    val singleChoiceResponse: GetSurveyResponseItemOptionResponse?,
+    val multipleChoiceResponse: List<GetSurveyResponseItemOptionResponse>?
 ) {
     constructor(surveyResponseItem: SurveyResponseItem) : this(
-        itemId = surveyResponseItem.surveyItemId,
-        answer = surveyResponseItem.answer,
-        itemOption = surveyResponseItem.itemOptionId?.let { itemOptionId ->
+        sequence = surveyResponseItem.sequence,
+        name = surveyResponseItem.name,
+        description = surveyResponseItem.description,
+        itemType = surveyResponseItem.itemType,
+        shortResponse = surveyResponseItem.shortResponse?.shortResponse,
+        longResponse = surveyResponseItem.longResponse?.longResponse,
+        singleChoiceResponse = surveyResponseItem.singleChoiceResponse?.let {
             GetSurveyResponseItemOptionResponse(
-                itemOptionId = itemOptionId,
-                itemOptionName = surveyResponseItem.surveyResponse.survey.getOptionNameById(itemOptionId)
+                it.itemOptionId,
+                it.itemOptionName
             )
         },
-        itemOptions = surveyResponseItem.itemOptionIds?.map { itemOptionId ->
-            GetSurveyResponseItemOptionResponse(
-                itemOptionId = itemOptionId,
-                itemOptionName = surveyResponseItem.surveyResponse.survey.getOptionNameById(itemOptionId)
-            )
-        } ?: listOf()
+        multipleChoiceResponse = surveyResponseItem.multipleChoiceResponse?.let {
+            it.choiceOptions.map { option ->
+                GetSurveyResponseItemOptionResponse(
+                    option.itemOptionId,
+                    option.itemOptionName
+                )
+            }
+        }
     )
 }
 
@@ -92,10 +102,3 @@ data class GetSurveyResponseItemOptionResponse(
     val itemOptionId: Long?,
     val itemOptionName: String?
 )
-
-fun Survey.getOptionNameById(optionId: Long): String? {
-    return this.items
-        .flatMap { it.options }
-        .firstOrNull { option -> option.id == optionId }
-        ?.name
-}

@@ -72,14 +72,14 @@ class LongResponse(
 
 @Embeddable
 class SingleChoiceResponse(
-    val choiceOptionId: Long,
-    val choiceOptionName: String,
+    val itemOptionId: Long,
+    val itemOptionName: String,
 )
 
 @Embeddable
 class ChoiceOption(
-    val choiceOptionId: Long,
-    val choiceOptionName: String
+    val itemOptionId: Long,
+    val itemOptionName: String
 )
 
 @Embeddable

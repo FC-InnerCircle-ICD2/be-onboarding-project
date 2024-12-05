@@ -96,8 +96,8 @@ data class PostSurveyResponseItemRequest(
         validOptions: List<SurveyItemOption>
     ): SingleChoiceResponse {
         return SingleChoiceResponse(
-            choiceOptionId = singleChoiceOptionId,
-            choiceOptionName = validOptions.find { option -> option.id == singleChoiceOptionId }?.name
+            itemOptionId = singleChoiceOptionId,
+            itemOptionName = validOptions.find { option -> option.id == singleChoiceOptionId }?.name
                 ?: throw InvalidSurveyResponseOptionException()
         )
     }
@@ -108,8 +108,8 @@ data class PostSurveyResponseItemRequest(
     ): MultipleChoiceResponse {
         return MultipleChoiceResponse(multipleChoiceOptionIds.map {
             ChoiceOption(
-                choiceOptionId = it,
-                choiceOptionName = validOptions.find { option -> option.id == it }?.name
+                itemOptionId = it,
+                itemOptionName = validOptions.find { option -> option.id == it }?.name
                     ?: throw InvalidSurveyResponseOptionException()
             )
         })
