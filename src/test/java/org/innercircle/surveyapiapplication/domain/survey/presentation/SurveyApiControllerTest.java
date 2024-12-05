@@ -1,15 +1,15 @@
 package org.innercircle.surveyapiapplication.domain.survey.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQuestion;
-import org.innercircle.surveyapiapplication.domain.question.domain.Question;
-import org.innercircle.surveyapiapplication.domain.question.domain.type.QuestionType;
-import org.innercircle.surveyapiapplication.domain.question.fixture.QuestionFixture;
-import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.QuestionInquiryResponse;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.MultiChoiceSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.type.SurveyItemType;
+import org.innercircle.surveyapiapplication.domain.surveyItem.fixture.SurveyItemFixture;
+import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.survey.application.SurveyService;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.fixture.SurveyFixture;
-import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.QuestionCreateRequest;
+import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
 import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyCreateRequest;
 import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyInquiryResponse;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
@@ -53,8 +53,8 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사 단건을 조회한다.")
     void inquireSurvey() throws Exception {
         // given
-        List<Question> questions = List.of(QuestionFixture.createShortAnswerQuestion());
-        Survey survey = SurveyFixture.createSurvey(questions);
+        List<SurveyItem> surveyItems = List.of(SurveyItemFixture.createShortAnswerQuestion());
+        Survey survey = SurveyFixture.createSurvey(surveyItems);
 
         // when
         when(
@@ -62,7 +62,7 @@ class SurveyApiControllerTest {
         ).thenReturn(survey);
 
         SurveyInquiryResponse surveyInquiryResponse = SurveyInquiryResponse.from(survey);
-        QuestionInquiryResponse questionInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
+        SurveyItemInquiryResponse surveyItemInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
 
         // then
         this.mockMvc
@@ -78,13 +78,13 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.name").value(surveyInquiryResponse.name()),
                 jsonPath("$.data.description").value(surveyInquiryResponse.description()),
 
-                jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
-                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
-                jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
-                jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
-                jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
-                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
+                jsonPath("$.data.questionResponses[0].id").value(surveyItemInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(surveyItemInquiryResponse.version()),
+                jsonPath("$.data.questionResponses[0].name").value(surveyItemInquiryResponse.name()),
+                jsonPath("$.data.questionResponses[0].description").value(surveyItemInquiryResponse.description()),
+                jsonPath("$.data.questionResponses[0].type").value(surveyItemInquiryResponse.type().name()),
+                jsonPath("$.data.questionResponses[0].required").value(surveyItemInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(surveyItemInquiryResponse.options())
             );
 
         verify(surveyService, times(1)).findById(survey.getId());
@@ -94,21 +94,21 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문조사를 생성한다.")
     void createSurvey() throws Exception {
         // given
-        Question question = QuestionFixture.createShortAnswerQuestion();
-        List<Question> questions = List.of(question);
-        Survey survey = SurveyFixture.createSurvey(questions);
+        SurveyItem surveyItem = SurveyItemFixture.createShortAnswerQuestion();
+        List<SurveyItem> surveyItems = List.of(surveyItem);
+        Survey survey = SurveyFixture.createSurvey(surveyItems);
 
-        QuestionCreateRequest questionCreateRequest = new QuestionCreateRequest(
-            question.getName(),
-            question.getDescription(),
-            question.isRequired(),
-            QuestionType.SHORT_ANSWER,
+        SurveyItemCreateRequest surveyItemCreateRequest = new SurveyItemCreateRequest(
+            surveyItem.getName(),
+            surveyItem.getDescription(),
+            surveyItem.isRequired(),
+            SurveyItemType.SHORT_ANSWER,
             null
         );
         SurveyCreateRequest surveyCreateRequest = new SurveyCreateRequest(
             survey.getName(),
             survey.getDescription(),
-            List.of(questionCreateRequest)
+            List.of(surveyItemCreateRequest)
         );
 
         // when
@@ -117,7 +117,7 @@ class SurveyApiControllerTest {
         ).thenReturn(survey);
 
         SurveyInquiryResponse surveyInquiryResponse = SurveyInquiryResponse.from(survey);
-        QuestionInquiryResponse questionInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
+        SurveyItemInquiryResponse surveyItemInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
 
         // then
         this.mockMvc
@@ -135,13 +135,13 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.name").value(surveyInquiryResponse.name()),
                 jsonPath("$.data.description").value(surveyInquiryResponse.description()),
 
-                jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
-                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
-                jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
-                jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
-                jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
-                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
+                jsonPath("$.data.questionResponses[0].id").value(surveyItemInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(surveyItemInquiryResponse.version()),
+                jsonPath("$.data.questionResponses[0].name").value(surveyItemInquiryResponse.name()),
+                jsonPath("$.data.questionResponses[0].description").value(surveyItemInquiryResponse.description()),
+                jsonPath("$.data.questionResponses[0].type").value(surveyItemInquiryResponse.type().name()),
+                jsonPath("$.data.questionResponses[0].required").value(surveyItemInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(surveyItemInquiryResponse.options())
             );
 
         verify(surveyService, times(1)).createSurvey(surveyCreateRequest.toDomain());
@@ -151,21 +151,21 @@ class SurveyApiControllerTest {
     @DisplayName("[SUCCESS] 설문항목 내 선택지가 있는 설문조사를 생성한다.")
     void createSurveyWithOptions() throws Exception {
         // given
-        MultiChoiceQuestion question = QuestionFixture.createMultiChoiceQuestion();
-        List<Question> questions = List.of(question);
-        Survey survey = SurveyFixture.createSurvey(questions);
+        MultiChoiceSurveyItem question = SurveyItemFixture.createMultiChoiceQuestion();
+        List<SurveyItem> surveyItems = List.of(question);
+        Survey survey = SurveyFixture.createSurvey(surveyItems);
 
-        QuestionCreateRequest questionCreateRequest = new QuestionCreateRequest(
+        SurveyItemCreateRequest surveyItemCreateRequest = new SurveyItemCreateRequest(
             question.getName(),
             question.getDescription(),
             question.isRequired(),
-            QuestionType.SHORT_ANSWER,
+            SurveyItemType.SHORT_ANSWER,
             question.getOptions()
         );
         SurveyCreateRequest surveyCreateRequest = new SurveyCreateRequest(
             survey.getName(),
             survey.getDescription(),
-            List.of(questionCreateRequest)
+            List.of(surveyItemCreateRequest)
         );
 
         // when
@@ -174,7 +174,7 @@ class SurveyApiControllerTest {
         ).thenReturn(survey);
 
         SurveyInquiryResponse surveyInquiryResponse = SurveyInquiryResponse.from(survey);
-        QuestionInquiryResponse questionInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
+        SurveyItemInquiryResponse surveyItemInquiryResponse = surveyInquiryResponse.questionResponses().get(0);
 
         // then
         this.mockMvc
@@ -192,13 +192,13 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.name").value(surveyInquiryResponse.name()),
                 jsonPath("$.data.description").value(surveyInquiryResponse.description()),
 
-                jsonPath("$.data.questionResponses[0].id").value(questionInquiryResponse.id()),
-                jsonPath("$.data.questionResponses[0].version").value(questionInquiryResponse.version()),
-                jsonPath("$.data.questionResponses[0].name").value(questionInquiryResponse.name()),
-                jsonPath("$.data.questionResponses[0].description").value(questionInquiryResponse.description()),
-                jsonPath("$.data.questionResponses[0].type").value(questionInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(questionInquiryResponse.required()),
-                jsonPath("$.data.questionResponses[0].options").value(questionInquiryResponse.options())
+                jsonPath("$.data.questionResponses[0].id").value(surveyItemInquiryResponse.id()),
+                jsonPath("$.data.questionResponses[0].version").value(surveyItemInquiryResponse.version()),
+                jsonPath("$.data.questionResponses[0].name").value(surveyItemInquiryResponse.name()),
+                jsonPath("$.data.questionResponses[0].description").value(surveyItemInquiryResponse.description()),
+                jsonPath("$.data.questionResponses[0].type").value(surveyItemInquiryResponse.type().name()),
+                jsonPath("$.data.questionResponses[0].required").value(surveyItemInquiryResponse.required()),
+                jsonPath("$.data.questionResponses[0].options").value(surveyItemInquiryResponse.options())
             );
 
         verify(surveyService, times(1)).createSurvey(surveyCreateRequest.toDomain());

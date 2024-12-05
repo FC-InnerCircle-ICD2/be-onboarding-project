@@ -1,5 +1,6 @@
 package org.innercircle.surveyapiapplication.domain.survey.presentation.dto;
 
+import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 
 import java.util.List;
@@ -9,10 +10,10 @@ public record SurveyInquiryResponse(
     Long id,
     String name,
     String description,
-    List<QuestionInquiryResponse> questionResponses
+    List<SurveyItemInquiryResponse> questionResponses
 ) {
 
-    public static SurveyInquiryResponse of(Long id, String name, String description, List<QuestionInquiryResponse> questionResponses) {
+    public static SurveyInquiryResponse of(Long id, String name, String description, List<SurveyItemInquiryResponse> questionResponses) {
         return new SurveyInquiryResponse(
             id,
             name,
@@ -26,7 +27,7 @@ public record SurveyInquiryResponse(
             survey.getId(),
             survey.getName(),
             survey.getDescription(),
-            survey.getQuestions().stream().map(QuestionInquiryResponse::from).collect(Collectors.toList())
+            survey.getSurveyItems().stream().map(SurveyItemInquiryResponse::from).collect(Collectors.toList())
         );
     }
 

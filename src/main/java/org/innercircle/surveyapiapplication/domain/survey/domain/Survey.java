@@ -1,7 +1,7 @@
 package org.innercircle.surveyapiapplication.domain.survey.domain;
 
 import lombok.Getter;
-import org.innercircle.surveyapiapplication.domain.question.domain.Question;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
@@ -15,13 +15,13 @@ public class Survey {
     private Long id;
     private String name;
     private String description;
-    private List<Question> questions = new ArrayList<>();
+    private List<SurveyItem> surveyItems = new ArrayList<>();
 
-    public Survey(Long id, String name, String description, List<Question> questions) {
+    public Survey(Long id, String name, String description, List<SurveyItem> surveyItems) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.questions = questions;
+        this.surveyItems = surveyItems;
     }
 
     public Survey(Long id, String name, String description) {
@@ -30,10 +30,10 @@ public class Survey {
         this.description = description;
     }
 
-    public Survey(String name, String description, List<Question> questions) {
+    public Survey(String name, String description, List<SurveyItem> surveyItems) {
         this.name = name;
         this.description = description;
-        this.addQuestions(questions);
+        this.addQuestions(surveyItems);
     }
 
     public Survey(String name, String description) {
@@ -41,20 +41,20 @@ public class Survey {
         this.description = description;
     }
 
-    public Survey addQuestions(List<Question> questions) {
-        if (this.questions.size() + questions.size() > 10) {
+    public Survey addQuestions(List<SurveyItem> surveyItems) {
+        if (this.surveyItems.size() + surveyItems.size() > 10) {
             throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
         }
-        questions.forEach(this::addQuestion);
+        surveyItems.forEach(this::addQuestion);
         return this;
     }
 
-    public Survey addQuestion(Question question) {
-        if (this.questions.size() >= 10) {
+    public Survey addQuestion(SurveyItem surveyItem) {
+        if (this.surveyItems.size() >= 10) {
             throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
         }
-        questions.add(question);
-        question.setSurveyId(this.getId());
+        surveyItems.add(surveyItem);
+        surveyItem.setSurveyId(this.getId());
         return this;
     }
 

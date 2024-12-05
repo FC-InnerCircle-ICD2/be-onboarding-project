@@ -1,13 +1,13 @@
 package org.innercircle.surveyapiapplication.domain.survey.application;
 
 import jakarta.persistence.EntityManager;
-import org.innercircle.surveyapiapplication.domain.question.application.QuestionService;
-import org.innercircle.surveyapiapplication.domain.question.domain.LongAnswerQuestion;
-import org.innercircle.surveyapiapplication.domain.question.domain.MultiChoiceQuestion;
-import org.innercircle.surveyapiapplication.domain.question.domain.Question;
-import org.innercircle.surveyapiapplication.domain.question.domain.ShortAnswerQuestion;
-import org.innercircle.surveyapiapplication.domain.question.domain.SingleChoiceQuestion;
-import org.innercircle.surveyapiapplication.domain.question.fixture.QuestionFixture;
+import org.innercircle.surveyapiapplication.domain.surveyItem.application.SurveyItemService;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.LongAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.MultiChoiceSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.ShortAnswerSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.fixture.SurveyItemFixture;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.fixture.SurveyFixture;
 import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyUpdateRequest;
@@ -35,7 +35,7 @@ class SurveyServiceTest {
     private SurveyService surveyService;
 
     @Autowired
-    private QuestionService questionService;
+    private SurveyItemService surveyItemService;
 
     @Autowired
     private EntityManager entityManager;
@@ -44,7 +44,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단답형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithShortAnswerQuestion() {
         // given
-        ShortAnswerQuestion question = QuestionFixture.createShortAnswerQuestion();
+        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerQuestion();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         // when
@@ -53,12 +53,12 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(survey.getId());
-        ShortAnswerQuestion savedQuestion = (ShortAnswerQuestion) questionService.findByIdAndVersion(question.getId(), question.getVersion());
+        ShortAnswerSurveyItem savedQuestion = (ShortAnswerSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(survey.getId());
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
         assertThat(savedSurvey.getDescription()).isEqualTo(survey.getDescription());
-        assertThat(savedSurvey.getQuestions()).containsAll(survey.getQuestions());
+        assertThat(savedSurvey.getSurveyItems()).containsAll(survey.getSurveyItems());
 
         assertThat(savedQuestion.getId()).isEqualTo(question.getId());
         assertThat(savedQuestion.getVersion()).isEqualTo(question.getVersion());
@@ -71,7 +71,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 장문형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithLongAnswerQuestion() {
         // given
-        LongAnswerQuestion question = QuestionFixture.createLongAnswerQuestion();
+        LongAnswerSurveyItem question = SurveyItemFixture.createLongAnswerQuestion();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -81,12 +81,12 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        LongAnswerQuestion savedQuestion = (LongAnswerQuestion) questionService.findByIdAndVersion(question.getId(), question.getVersion());
+        LongAnswerSurveyItem savedQuestion = (LongAnswerSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
         assertThat(savedSurvey.getDescription()).isEqualTo(survey.getDescription());
-        assertThat(savedSurvey.getQuestions()).containsAll(survey.getQuestions());
+        assertThat(savedSurvey.getSurveyItems()).containsAll(survey.getSurveyItems());
 
         assertThat(savedQuestion.getId()).isEqualTo(questionId);
         assertThat(savedQuestion.getName()).isEqualTo(question.getName());
@@ -98,7 +98,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 단항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithSingleChoiceQuestion() {
         // given
-        SingleChoiceQuestion question = QuestionFixture.createSingleChoiceQuestion();
+        SingleChoiceSurveyItem question = SurveyItemFixture.createSingleChoiceQuestion();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -108,12 +108,12 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        SingleChoiceQuestion savedQuestion = (SingleChoiceQuestion) questionService.findByIdAndVersion(question.getId(), question.getVersion());
+        SingleChoiceSurveyItem savedQuestion = (SingleChoiceSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
         assertThat(savedSurvey.getDescription()).isEqualTo(survey.getDescription());
-        assertThat(savedSurvey.getQuestions()).containsAll(survey.getQuestions());
+        assertThat(savedSurvey.getSurveyItems()).containsAll(survey.getSurveyItems());
 
         assertThat(savedQuestion.getId()).isEqualTo(questionId);
         assertThat(savedQuestion.getName()).isEqualTo(question.getName());
@@ -126,7 +126,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 다항선택형 설문항목을 가진 설문조사를 생성할 수 있다.")
     void createSurveyWithMultiChoiceQuestion() {
         // given
-        MultiChoiceQuestion question = QuestionFixture.createMultiChoiceQuestion();
+        MultiChoiceSurveyItem question = SurveyItemFixture.createMultiChoiceQuestion();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
         final Long surveyId = survey.getId();
         final Long questionId = question.getId();
@@ -136,12 +136,12 @@ class SurveyServiceTest {
 
         // then
         Survey savedSurvey = surveyService.findById(surveyId);
-        MultiChoiceQuestion savedQuestion = (MultiChoiceQuestion) questionService.findByIdAndVersion(question.getId(), question.getVersion());
+        MultiChoiceSurveyItem savedQuestion = (MultiChoiceSurveyItem) surveyItemService.findByIdAndVersion(question.getId(), question.getVersion());
 
         assertThat(savedSurvey.getId()).isEqualTo(surveyId);
         assertThat(savedSurvey.getName()).isEqualTo(survey.getName());
         assertThat(savedSurvey.getDescription()).isEqualTo(survey.getDescription());
-        assertThat(savedSurvey.getQuestions()).containsAll(survey.getQuestions());
+        assertThat(savedSurvey.getSurveyItems()).containsAll(survey.getSurveyItems());
 
         assertThat(savedQuestion.getId()).isEqualTo(questionId);
         assertThat(savedQuestion.getName()).isEqualTo(question.getName());
@@ -157,21 +157,21 @@ class SurveyServiceTest {
         final Long surveyId = 1L;
 
         Survey survey = new Survey(surveyId, "설문조사이름", "설문조사설명");
-        List<Question> questions = List.of(
-            new ShortAnswerQuestion(1L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(2L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(3L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(4L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(5L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(6L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(7L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(8L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(9L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(10L, "설문조사이름", "설문항목설명", false),
-            new ShortAnswerQuestion(11L, "설문조사이름", "설문항목설명", false)
+        List<SurveyItem> surveyItems = List.of(
+            new ShortAnswerSurveyItem(1L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(2L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(3L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(4L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(5L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(6L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(7L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(8L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(9L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(10L, "설문조사이름", "설문항목설명", false),
+            new ShortAnswerSurveyItem(11L, "설문조사이름", "설문항목설명", false)
         );
 
-        assertThatThrownBy(() -> survey.addQuestions(questions))
+        assertThatThrownBy(() -> survey.addQuestions(surveyItems))
             .isInstanceOf(CustomException.class)
             .extracting(e -> ((CustomException) e).getStatus())
             .isEqualTo(CustomResponseStatus.QUESTION_SIZE_FULL);
@@ -181,7 +181,7 @@ class SurveyServiceTest {
     @DisplayName("[SUCCESS] 설문조사의 이름, 설명, 질문을 수정할 수 있다.")
     void updateSurveyNameAndDescription() {
         // given
-        ShortAnswerQuestion question = QuestionFixture.createShortAnswerQuestion();
+        ShortAnswerSurveyItem question = SurveyItemFixture.createShortAnswerQuestion();
         Survey survey = SurveyFixture.createSurvey(List.of(question));
 
         Survey savedSurvey = surveyService.createSurvey(survey);

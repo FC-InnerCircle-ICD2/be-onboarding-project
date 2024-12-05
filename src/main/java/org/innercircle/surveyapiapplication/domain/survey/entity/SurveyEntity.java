@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.question.domain.Question;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.global.entity.BaseEntity;
 
@@ -42,8 +42,8 @@ public class SurveyEntity extends BaseEntity {
         );
     }
 
-    public Survey toDomain(List<Question> questions) {
-        return new Survey(this.id, this.name, this.description, questions);
+    public Survey toDomain(List<SurveyItem> surveyItems) {
+        return new Survey(this.id, this.name, this.description, surveyItems);
     }
 
 }

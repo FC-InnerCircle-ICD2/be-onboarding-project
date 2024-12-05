@@ -1,8 +1,8 @@
 package org.innercircle.surveyapiapplication.domain.survey.infrastructure;
 
 import lombok.RequiredArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.question.domain.Question;
-import org.innercircle.surveyapiapplication.domain.question.infrastructure.QuestionRepository;
+import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveyItem.infrastructure.SurveyItemRepository;
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.entity.SurveyEntity;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
@@ -18,27 +18,27 @@ import java.util.List;
 public class SurveyRepositoryImpl implements SurveyRepository {
 
     private final SurveyJpaRepository surveyJpaRepository;
-    private final QuestionRepository questionRepository;
+    private final SurveyItemRepository surveyItemRepository;
 
     @Override
     @Transactional
     public Survey save(Survey survey) {
         SurveyEntity savedSurveyEntity = surveyJpaRepository.save(SurveyEntity.from(survey));
-        List<Question> questions = new ArrayList<>();
-        for (Question question: survey.getQuestions()) {
-            question.setSurveyId(savedSurveyEntity.getId());
-            Question savedQuestion = questionRepository.save(question);
-            questions.add(savedQuestion);
+        List<SurveyItem> surveyItems = new ArrayList<>();
+        for (SurveyItem surveyItem : survey.getSurveyItems()) {
+            surveyItem.setSurveyId(savedSurveyEntity.getId());
+            SurveyItem savedSurveyItem = surveyItemRepository.save(surveyItem);
+            surveyItems.add(savedSurveyItem);
         }
-        return savedSurveyEntity.toDomain(questions);
+        return savedSurveyEntity.toDomain(surveyItems);
     }
 
     @Override
     public Survey findById(Long surveyId) {
-        List<Question> questions = questionRepository.findBySurveyId(surveyId);
+        List<SurveyItem> surveyItems = surveyItemRepository.findBySurveyId(surveyId);
         return surveyJpaRepository.findById(surveyId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY))
-            .toDomain(questions);
+            .toDomain(surveyItems);
     }
 
 }
