@@ -15,3 +15,17 @@ Content-Type: application/json
 }
 
 ### 설문 조사 조회
+POST localhost:8080/api/v1/surveys/test1/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "surveyItems": [
+    {
+      "name": "item-name-1",
+      "answer": "",
+      "selectedOptions": ["치킨"],
+      "type": "SINGLE_SELECT"
+    }
+  ]
+}

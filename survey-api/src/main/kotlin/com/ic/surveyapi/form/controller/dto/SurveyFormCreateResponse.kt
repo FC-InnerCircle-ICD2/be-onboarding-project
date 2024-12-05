@@ -9,7 +9,7 @@ data class SurveyFormCreateResponse(
     // TODO - Response 타임 포맷 정하기 !
     val createdDateTime: String,
 ) {
-   companion object {
+    companion object {
         fun of(dto: SurveyFormEntity): SurveyFormCreateResponse {
             return SurveyFormCreateResponse(
                 id = dto.id,
@@ -17,5 +17,5 @@ data class SurveyFormCreateResponse(
                 createdDateTime = dto.createdAt.toResponseDateTimeFormat(),
             )
         }
-   }
+    }
 }

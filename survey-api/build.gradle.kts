@@ -7,6 +7,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework:spring-tx")
 
     implementation("io.swagger.core.v3:swagger-annotations:$swaggerVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonDateTimeVersion")

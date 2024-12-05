@@ -34,6 +34,5 @@ class SurveyAnswerController(
     fun getSurveyAnswers(
         @PathVariable(name = "surveyFormId", required = true) surveyFormId: String,
     ) {
-
     }
 }

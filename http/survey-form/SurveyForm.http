@@ -9,7 +9,7 @@ Content-Type: application/json
   "surveyItems": [
     {
       "name": "아이템 1",
-      "type": "SHORT_ANSWER",
+      "type": "MULTIPLE_SELECT",
       "description": "디스크립션 1",
       "isRequired": false,
       "options": [

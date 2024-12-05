@@ -2,6 +2,7 @@ package com.ic.surveyapi.form.controller
 
 import com.ic.surveyapi.form.controller.dto.SurveyFormCreateRequest
 import com.ic.surveyapi.form.controller.dto.SurveyFormCreateResponse
+import com.ic.surveyapi.form.controller.dto.SurveyFormResponse
 import com.ic.surveyapi.form.service.SurveyFormService
 import com.ic.surveyapi.form.service.dto.SurveyFormCreateRequestDto
 import com.ic.surveyapi.util.ObjectMapperUtil
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import survey.common.ApiEndpointVersionPrefix
-import survey.extension.LocalDateTimeExtension.toResponseDateTimeFormat
 
 @RestController
 @RequestMapping(ApiEndpointVersionPrefix.V1_API_SURVEY_PREFIX)
@@ -28,9 +28,9 @@ class SurveyFormController(
             .let { surveyFormService.createSurveyForm(surveyForm = it) }
             .let { SurveyFormCreateResponse.of(it) }
 
-    @GetMapping("/{surveyTitle}")
+    @GetMapping("/{surveyFormId}")
     fun getSurveyFormHistories(
-        @PathVariable(value = "surveyTitle", required = true) surveyTitle: String,
-    ) {
-    }
+        @PathVariable(value = "surveyFormId", required = true) surveyFormId: String,
+    ): SurveyFormResponse = run { surveyFormService.getSurveyFormBySurveyFormId(surveyFormId = surveyFormId) }
+        .let { objectMapperUtil.convertClass(value = it, clazz = SurveyFormResponse::class.java) }
 }

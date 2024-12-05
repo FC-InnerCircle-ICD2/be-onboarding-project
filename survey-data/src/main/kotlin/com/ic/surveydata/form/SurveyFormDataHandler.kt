@@ -1,18 +1,19 @@
 package com.ic.surveydata.form
 
 import com.ic.surveydata.form.dto.SurveyFormCreateRequestDto
+import com.ic.surveydata.form.dto.SurveyFormDto
 import com.ic.surveydata.form.dto.toEntity
 import com.ic.surveydata.form.entity.SurveyFormEntity
 import com.ic.surveydata.form.repositry.SurveyFormRepository
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SurveyFormDataHandler(
-    internal val surveyFormRepository: SurveyFormRepository,
+    private val surveyFormRepository: SurveyFormRepository,
 ) {
-    // TODO - 로직 정리 및 트랜잭션 처리가 필요하다
+    // TODO - DTO Response 통일 필요
     fun insertSurveyForm(surveyForm: SurveyFormCreateRequestDto): SurveyFormEntity {
         val newestVersionFormOrDefault =
             surveyFormRepository.findLatestVersionFormBy(title = surveyForm.title)?.plus(1) ?: ZERO_SURVEY_FORM_VERSION
@@ -20,7 +21,11 @@ class SurveyFormDataHandler(
         return surveyFormRepository.save(surveyForm.toEntity(version = newestVersionFormOrDefault))
     }
 
-    fun findSurveyFormByIdOrNull(id: String): SurveyFormEntity? = surveyFormRepository.findByIdOrNull(id)
+    fun findSurveyFormById(id: String): SurveyFormDto =
+        SurveyFormDto.of(surveyFormRepository.findById(id).orElseThrow())
+
+    fun findSurveyFormByIdOrNull(id: String): SurveyFormEntity =
+        surveyFormRepository.findById(id).orElseThrow()
 
     companion object {
         val logger = LoggerFactory.getLogger(SurveyFormDataHandler::class.java)
