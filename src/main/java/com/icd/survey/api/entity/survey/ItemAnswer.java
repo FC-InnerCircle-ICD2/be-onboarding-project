@@ -89,8 +89,10 @@ public class ItemAnswer {
             result.setLongAnswer(this.longAnswer.getLongAnswer());
         } else if (responseType.equals(ResponseType.SINGLE_CHOICE.getType())) {
             result.setSingleChoiceOptionSeq(this.singleChoice.getOptionSeq());
+            result.setAnswer(this.optionAnswer);
         } else if (responseType.equals(ResponseType.MULTI_CHOICE.getType())) {
             result.setMultiChoiceOptionSeq(this.multiChoice.getMultiOptionSeq());
+            result.setAnswer(this.optionAnswer);
         }
 
         /*if (Boolean.TRUE.equals(isOptionalAnswer)) {
