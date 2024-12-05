@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Survey", description = "설문조사 서비스 API")
+@Tag(name = "Survey", description = "서베이 서비스 API")
 @RequestMapping("v1/survey")
 @RestController
 public class SurveyController {
@@ -41,10 +41,10 @@ public class SurveyController {
         this.surveyAnswerService = surveyAnswerService;
     }
 
-    @Operation(summary = "설문조사 생성", description = "새로운 설문조사를 생성합니다.")
+    @Operation(summary = "서베이 생성", description = "새로운 서베이를 생성합니다.")
     @PostMapping
     public ResponseEntity<ServiceResponse<SurveyCreateResponse>> createSurvey(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 생성 요청", required = true,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "서베이 생성 요청", required = true,
                     content = @Content(
                             schema = @Schema(implementation = SurveyCreateRequest.class),
                             examples = @ExampleObject(value = """
@@ -79,10 +79,10 @@ public class SurveyController {
         return ResponseEntity.ok(ServiceResponse.success(createResult));
     }
 
-    @Operation(summary = "설문조사 수정", description = "생성된 설문조사의 내용을 수정합니다.")
+    @Operation(summary = "서베이 수정", description = "생성된 서베이의 내용을 수정합니다.")
     @PutMapping
     public ResponseEntity<ServiceResponse<SurveyUpdateResponse>> updateSurvey(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 수정 요청", required = true, content = @Content(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "서베이 수정 요청", required = true, content = @Content(
                     schema = @Schema(implementation = SurveyUpdateRequest.class),
                     examples = @ExampleObject(value = """
                                 {
@@ -114,11 +114,11 @@ public class SurveyController {
         return ResponseEntity.ok(ServiceResponse.success(updateResult));
     }
 
-    @Operation(summary = "설문조사 응답 제출", description = "대상 설문조사에 응답을 제출합니다.")
+    @Operation(summary = "서베이 응답 제출", description = "대상 서베이에 응답을 제출합니다.")
     @PostMapping("/{surveyId}/answer")
     public ResponseEntity<ServiceResponse<Void>> submitSurveyAnswer(
-            @Parameter(description = "설문조사 ID", required = true) @PathVariable("surveyId") String surveyId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "설문조사 응답 요청", required = true, content = @Content(
+            @Parameter(description = "서베이 ID", required = true) @PathVariable("surveyId") String surveyId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "서베이 응답 요청", required = true, content = @Content(
                     schema = @Schema(implementation = SubmitSurveyAnswer.class),
                     examples = @ExampleObject(value = """
                                 [
@@ -138,10 +138,10 @@ public class SurveyController {
     }
 
 
-    @Operation(summary = "설문조사 응답 조회", description = "대상 설문조사에 제출된 응답을 조회합니다.")
+    @Operation(summary = "서베이 응답 조회", description = "대상 서베이에 제출된 응답을 조회합니다.")
     @GetMapping("/{surveyId}/answer/all")
     public ResponseEntity<ServiceResponse<SearchSurveyAnswerResponse>> getAllSurveyAnswersWithQuery(
-            @Parameter(description = "설문조사 ID", required = true) @PathVariable("surveyId") String surveyId,
+            @Parameter(description = "서베이 ID", required = true) @PathVariable("surveyId") String surveyId,
             @Parameter(description = "질문 이름", required = false) @RequestParam(value = "questionName", required = false) String questionName,
             @Parameter(description = "응답 값", required = false) @RequestParam(value = "answer", required = false) String answerValue) {
         SearchSurveyAnswerRequest request = SearchSurveyAnswerRequest.fromRequest(surveyId, questionName, answerValue);
