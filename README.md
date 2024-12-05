@@ -692,6 +692,49 @@
 
 ### 설문조사 응답 제출
 [Request]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Required</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td> </td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>O</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td> </td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
@@ -712,6 +755,73 @@
 }
 ```
 [Response]<br>
+
+<table>
+  <tr>
+    <th colspan="4">Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td colspan="4">id</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td colspan="4">reply</td>
+    <td>List</td>
+    <td>설문조사 응답리스트</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">id</td>
+    <td>Long</td>
+    <td>설문조사 응답 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">surveyId</td>
+    <td>Long</td>
+    <td>설문조사 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">itemId</td>
+    <td>Long</td>
+    <td>설문조사 항목 식별자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">name</td>
+    <td>content</td>
+    <td>응답 내용</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">status</td>
+    <td>String</td>
+    <td>등록 상태<br>(REGISTERED, UNREGISTERED 중 택 1)</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">registeredAt</td>
+    <td>LocalDateTime</td>
+    <td>최초생성일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">modifiedAt</td>
+    <td>LocalDateTime</td>
+    <td>수정일자</td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td colspan="3">unregisteredAt</td>
+    <td>LocalDateTime</td>
+    <td>삭제일자</td>
+  </tr>
+</table>
+
 ```
 {
   "result": {
