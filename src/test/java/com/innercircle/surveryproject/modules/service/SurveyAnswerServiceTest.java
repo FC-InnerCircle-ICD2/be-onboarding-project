@@ -26,7 +26,7 @@ class SurveyAnswerServiceTest {
     @Autowired
     private SurveyAnswerService surveyAnswerService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @Sql(scripts = "/database/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -68,7 +68,7 @@ class SurveyAnswerServiceTest {
         List<SurveyAnswerResponseDto> surveyAnswerResponseDtos =
                 surveyAnswerService.retrieveSurveyAnswer(surveyAnswerId, surveyItemId, surveyItemAnswer);
         // then
-//        assertEquals(3, surveyAnswerResponseDtos.size());
+        assertEquals(3, surveyAnswerResponseDtos.size());
     }
 
 }

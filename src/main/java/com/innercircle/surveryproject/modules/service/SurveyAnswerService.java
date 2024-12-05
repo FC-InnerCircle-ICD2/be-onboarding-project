@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -86,7 +87,7 @@ public class SurveyAnswerService {
     /**
      * 설문조사 응답 조회 메소드
      *
-     * @param surveyAnswerId
+     * @param surveyId
      * @param surveyItemId
      * @param surveyItemAnswer
      * @return
@@ -96,25 +97,27 @@ public class SurveyAnswerService {
 
         List<SurveyAnswerMapValue> surveyAnswerMapValueList = surveyAnswerMapValueRepository.findBySurveyAnswerId(surveyId);
 
-
         if (surveyAnswerMapValueList.isEmpty()) {
             throw new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다.");
         }
 
         return surveyAnswerMapValueList.stream()
-                .filter(surveyAnswerMapValue ->
-                        (ObjectUtils.isEmpty(surveyItemId) || surveyAnswerMapValue.getSurveyItemId().equals(surveyItemId)) &&
-                                (ObjectUtils.isEmpty(surveyItemAnswer) || surveyAnswerMapValue.getResponses().contains(surveyItemAnswer))
+                .flatMap(surveyAnswerMapValue -> {
+                    if (!ObjectUtils.isEmpty(surveyItemId) && !surveyItemId.equals(surveyAnswerMapValue.getSurveyItemId())) {
+                        return Stream.empty();
+                    }
 
-                )
-                .map(entry -> SurveyAnswerResponseDto.of(
-                        entry.getSurveyAnswer().getSurveyId(),
-                        entry.getSurveyAnswer().getPhoneNumber(),
-                        entry.getSurveyItemId(),
-                        entry.getResponses()
-                ))
+                    return surveyAnswerMapValue.getResponses().stream()
+                            .filter(response -> ObjectUtils.isEmpty(surveyItemAnswer) || response.equals(surveyItemAnswer))
+                            .map(response -> SurveyAnswerResponseDto.of(
+                                    surveyAnswerMapValue.getSurveyAnswer().getSurveyId(),
+                                    surveyAnswerMapValue.getSurveyAnswer().getPhoneNumber(),
+                                    surveyAnswerMapValue.getSurveyItemId(),
+                                    response
+                            ));
+                })
                 .toList();
-
     }
+
 
 }
