@@ -22,7 +22,7 @@ public class ResponseItem extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_item_id", columnDefinition = "BIGINT")
-    private Long resposeItemId;
+    private Long responseItemId;
 
     @Column(columnDefinition = "TEXT")
     private String responseValue ;
