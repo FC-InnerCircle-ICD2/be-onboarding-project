@@ -54,10 +54,12 @@ public class SurveyRequest {
 
     @Builder
     protected SurveyRequest(
+            long idx,
             String name,
             String description,
             List<QuestionRequest> questions
     ) {
+        this.idx = idx;
         this.name = name;
         this.description = description;
         this.questions = questions;

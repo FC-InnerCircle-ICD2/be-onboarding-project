@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,12 +76,14 @@ public class QuestionRequest {
 
     @Builder
     protected QuestionRequest(
+            Long idx,
             String name,
             String description,
             String questionType,
             Boolean isRequired,
             List<String> options
     ) {
+        this.idx = idx;
         this.name = name;
         this.description = description;
         this.questionType = questionType;
