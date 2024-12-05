@@ -5,13 +5,15 @@ import com.onboarding.core.global.exception.enums.ErrorCode;
 import com.onboarding.response.dto.response.AnswerDTO;
 import com.onboarding.response.dto.response.ResponseDTO;
 import com.onboarding.response.entity.Answer;
-import com.onboarding.response.entity.Answer.QuestionSnapshot;
+import com.onboarding.response.entity.QuestionSnapshot;
 import com.onboarding.response.entity.Response;
+import com.onboarding.response.entity.ResponseValue;
 import com.onboarding.response.object.AnswerObject;
 import com.onboarding.response.object.ResponseObject;
 import com.onboarding.response.service.ResponseService;
 import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.entity.Survey;
+import com.onboarding.survey.enums.QuestionType;
 import com.onboarding.survey.service.QuestionService;
 import com.onboarding.survey.service.SurveyService;
 import java.util.List;
@@ -30,31 +32,37 @@ public class ResponseFacade {
   private final ResponseService responseService;
 
   @Transactional
-  public Response submitResponse(Long surveyId, ResponseObject responseObject) {
-    // 1. Survey 존재 여부 확인
+  public void submitResponse(Long surveyId, ResponseObject responseObject) {
     Survey survey = surveyService.findSurveyById(surveyId)
         .orElseThrow(() -> new CustomException("Survey not found", ErrorCode.SURVEY_NOT_FOUND));
 
-    // 2. Question 유효성 검증
     List<Question> surveyQuestions = questionService.findQuestionsBySurveyId(surveyId);
 
-    // 2-1. 필수 질문 응답 여부 검증
     validateRequiredQuestions(surveyQuestions, responseObject.answerObjects());
+    responseObject.answerObjects().forEach(this::validateAnswerObject);
 
-    // 2-2. QuestionSnapshot 생성
     List<Answer> answers = responseObject.answerObjects().stream()
         .map(request -> {
           Question question = findMatchingQuestion(surveyQuestions, request.questionTitle());
           if (question == null) {
             throw new CustomException("Invalid question: " + request.questionTitle(), ErrorCode.QUESTION_NOT_FOUND);
           }
-
           return createAnswerFromRequest(question, request);
-        })
-        .toList();
+        }).toList();
 
-    // 3. 응답 저장
-    return responseService.saveResponse(survey, responseObject.email(), answers);
+    responseService.saveResponse(survey, responseObject.email(), answers);
+  }
+
+  private void validateAnswerObject(AnswerObject answer) {
+    if ((answer.questionType().equals("SINGLE_CHOICE") || answer.questionType().equals("MULTIPLE_CHOICE")) &&
+        (answer.choices() == null || answer.choices().isEmpty())) {
+      throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE", ErrorCode.INVALID_INPUT_VALUE);
+    }
+
+    if ((answer.questionType().equals("SHORT_ANSWER") || answer.questionType().equals("LONG_ANSWER")) &&
+        (answer.choices() != null && !answer.choices().isEmpty())) {
+      throw new CustomException("Choices must be empty for SHORT_ANSWER or LONG_ANSWER", ErrorCode.INVALID_INPUT_VALUE);
+    }
   }
 
   public List<ResponseDTO> getAllResponses(Long surveyId) {
@@ -90,10 +98,33 @@ public class ResponseFacade {
         response.getEmail(),
         response.getAnswers().stream()
             .map(answer -> new AnswerDTO(
-                answer.getQuestionSnapshot().title(),
+                answer.getQuestionSnapshot().getTitle(),
                 answer.getResponseValue()))
             .toList()
     );
+  }
+
+
+  private Answer createAnswerFromRequest(Question question, AnswerObject request) {
+    QuestionSnapshot snapshot = new QuestionSnapshot(
+        question.getTitle(),
+        question.getDescription(),
+        question.getType(),
+        question.getChoices(),
+        question.isRequired()
+    );
+
+    ResponseValue responseValue = question.getType() == QuestionType.SHORT_ANSWER || question.getType() == QuestionType.LONG_ANSWER
+        ? ResponseValue.forText(request.answer())
+        : ResponseValue.forChoices(request.choices());
+
+    Answer answer = Answer.builder()
+        .questionSnapshot(snapshot)
+        .responseValue(responseValue)
+        .build();
+
+    answer.validate();
+    return answer;
   }
 
   private void validateRequiredQuestions(List<Question> surveyQuestions, List<AnswerObject> answerRequests) {
@@ -115,23 +146,6 @@ public class ResponseFacade {
         .filter(question -> question.getTitle().equals(title))
         .findFirst()
         .orElse(null);
-  }
-
-  private Answer createAnswerFromRequest(Question question, AnswerObject request) {
-    // QuestionSnapshot 생성
-    QuestionSnapshot snapshot = QuestionSnapshot.builder()
-        .title(question.getTitle())
-        .description(question.getDescription())
-        .type(question.getType())
-        .choices(question.getChoices())
-        .isRequired(question.isRequired())
-        .build();
-
-    // Answer 생성
-    return Answer.builder()
-        .questionSnapshot(snapshot)
-        .responseValue(request.answer())
-        .build();
   }
 
 }

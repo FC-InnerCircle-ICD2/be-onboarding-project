@@ -38,6 +38,9 @@ public class Response {
   private String email; // 응답자 식별자 (예: 사용자 ID)
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "response_id")
   private List<Answer> answers = new ArrayList<>();
+
+  public void addAnswer(Answer answer) {
+    this.answers.add(answer);
+  }
 }

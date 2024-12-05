@@ -1,4 +1,4 @@
-package com.onboarding.survey.dto;
+package com.onboarding.survey.object;
 
 import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.entity.Survey;
@@ -8,7 +8,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Builder
 @AllArgsConstructor
@@ -22,16 +24,10 @@ public class QuestionObject {
   private List<String> choices;
   private boolean isDeleted;
 
-  public QuestionObject(String description, String title, QuestionType questionType, boolean isRequired, List<String> choices, boolean isDeleted) {
-    this.title = title;
-    this.description = description;
-    this.type = questionType;
-    this.isDeleted = isDeleted;
-    this.choices = choices;
-    this.isRequired = isRequired;
-  }
 
   public Question of(Survey survey) {
+    log.info("isRequired: {}", isRequired);
+    log.info("isDeleted: {}", isDeleted);
     return Question.builder()
         .title(title)
         .description(description)

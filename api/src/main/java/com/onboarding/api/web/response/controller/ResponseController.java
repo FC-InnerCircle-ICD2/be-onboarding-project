@@ -1,10 +1,9 @@
 package com.onboarding.api.web.response.controller;
 
+import com.onboarding.api.web.response.dto.request.AnswerRequest;
 import com.onboarding.api.web.response.dto.request.SubmitResponseRequest;
 import com.onboarding.response.dto.response.ResponseDTO;
 import com.onboarding.response.facade.ResponseFacade;
-import com.onboarding.survey.entity.Survey;
-import com.onboarding.survey.facade.SurveyFacade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,8 @@ public class ResponseController {
       @PathVariable Long surveyId,
       @RequestBody SubmitResponseRequest request
   ) {
-    return ResponseEntity.ok().body(responseFacade.submitResponse(surveyId, request.of()));
+    responseFacade.submitResponse(surveyId, request.of());
+    return ResponseEntity.ok().build();
   }
 
   @GetMapping("/{surveyId}")

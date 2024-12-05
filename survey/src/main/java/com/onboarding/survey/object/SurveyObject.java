@@ -1,16 +1,18 @@
-package com.onboarding.survey.dto;
+package com.onboarding.survey.object;
 
 import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.entity.Survey;
 import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
-public record SurveyObject(
-    String surveyName,
-    String surveyDescription,
-    List<QuestionObject> questions
-) {
+@Getter
+public class SurveyObject {
+  private String surveyName;
+  private String surveyDescription;
+  private List<QuestionObject> questions;
+
   public Survey of(List<Question> questions) {
     return Survey.builder()
         .name(surveyName)

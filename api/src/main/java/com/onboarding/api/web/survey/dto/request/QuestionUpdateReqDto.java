@@ -1,4 +1,4 @@
-package com.onboarding.api.web.survey.dto.update;
+package com.onboarding.api.web.survey.dto.request;
 
 import com.onboarding.survey.enums.Operation;
 import com.onboarding.survey.enums.QuestionType;

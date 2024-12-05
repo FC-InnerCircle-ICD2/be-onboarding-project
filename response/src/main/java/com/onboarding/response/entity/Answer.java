@@ -1,5 +1,7 @@
 package com.onboarding.response.entity;
 
+import com.onboarding.core.global.exception.CustomException;
+import com.onboarding.core.global.exception.enums.ErrorCode;
 import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.enums.QuestionType;
 import jakarta.persistence.Column;
@@ -36,29 +38,20 @@ public class Answer  {
   @Embedded
   private QuestionSnapshot questionSnapshot; // 질문의 스냅샷
 
-  @Column(nullable = false)
-  private String responseValue; // 응답 값
+  @Embedded
+  private ResponseValue responseValue; // 응답 값
 
-  @Embeddable
-  @Builder
-  public static record QuestionSnapshot(
-      @Column(nullable = false)
-      String title,
-
-      @Column(nullable = false)
-      String description,
-
-      @Enumerated(EnumType.STRING)
-      @Column(nullable = false)
-      QuestionType type,
-
-      @ElementCollection
-      List<String> choices,
-
-      @Column(nullable = false)
-      Boolean isRequired
-
-  ) {
-
+  public void validate() {
+    if ((questionSnapshot.getType() == QuestionType.SINGLE_CHOICE || questionSnapshot.getType() == QuestionType.MULTIPLE_CHOICE) &&
+        (responseValue.getChoiceResponses() == null || responseValue.getChoiceResponses().isEmpty())) {
+      throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE",
+          ErrorCode.INVALID_INPUT_VALUE);
+    }
+    if ((questionSnapshot.getType() == QuestionType.SHORT_ANSWER || questionSnapshot.getType() == QuestionType.LONG_ANSWER) &&
+        (responseValue.getTextResponse() == null || responseValue.getTextResponse().isEmpty())) {
+      throw new CustomException("Text answer must not be empty for SHORT_ANSWER or LONG_ANSWER", ErrorCode.INVALID_INPUT_VALUE);
+    }
   }
+
+
 }

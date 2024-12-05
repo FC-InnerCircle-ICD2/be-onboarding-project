@@ -1,5 +1,6 @@
 package com.onboarding.response.dto.response;
 
+import com.onboarding.response.entity.ResponseValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AnswerDTO {
   private String questionTitle;
-  private String responseValue;
+  private ResponseValue responseValue;
 
 
 }

@@ -1,7 +1,7 @@
 package com.onboarding.api.web.survey.controller;
 
-import com.onboarding.api.web.survey.dto.create.SurveyCreateReqDto;
-import com.onboarding.api.web.survey.dto.update.SurveyUpdateReqDto;
+import com.onboarding.api.web.survey.dto.request.SurveyCreateReqDto;
+import com.onboarding.api.web.survey.dto.request.SurveyUpdateReqDto;
 import com.onboarding.survey.dto.response.SurveyWithQuestionsDTO;
 import com.onboarding.survey.entity.Survey;
 import com.onboarding.survey.facade.SurveyFacade;

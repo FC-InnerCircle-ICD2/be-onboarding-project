@@ -13,20 +13,15 @@ public class SubmitResponseRequest {
   private List<AnswerRequest> answers;
 
   public ResponseObject of() {
+    // ResponseObject로 변환
     return ResponseObject.builder()
         .email(email)
-        .answerObjects(answerObjects())
+        .answerObjects(
+            answers.stream()
+                .map(AnswerRequest::toAnswerObject) // AnswerObject로 변환
+                .toList()
+        )
         .build();
   }
 
-  private List<AnswerObject> answerObjects() {
-    return answers.stream()
-        .map(answerRequest -> AnswerObject.builder()
-            .answer(answerRequest.getAnswer())
-            .isRequired(answerRequest.isRequired())
-            .questionType(answerRequest.getQuestionType())
-            .questionTitle(answerRequest.getQuestionTitle())
-            .build())
-        .toList();
-  }
 }

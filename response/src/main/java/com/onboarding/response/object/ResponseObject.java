@@ -14,11 +14,4 @@ public record ResponseObject(
     List<AnswerObject> answerObjects
 ) {
 
-  public Response of(Survey survey) {
-    return Response.builder()
-        .email(email)
-        .survey(survey)
-        .build();
-  }
-
 }

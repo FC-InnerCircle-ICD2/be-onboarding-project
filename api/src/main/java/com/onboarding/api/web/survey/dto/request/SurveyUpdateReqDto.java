@@ -1,14 +1,19 @@
-package com.onboarding.api.web.survey.dto.create;
+package com.onboarding.api.web.survey.dto.request;
 
-import com.onboarding.survey.dto.QuestionObject;
-import com.onboarding.survey.dto.SurveyObject;
+import com.onboarding.survey.object.QuestionObject;
+import com.onboarding.survey.object.SurveyObject;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public record SurveyCreateReqDto(
-    String name,
-    String description,
-    List<QuestionCreateReqDto> questions
-) {
+@Getter
+@AllArgsConstructor
+public class SurveyUpdateReqDto{
+
+  private String name;
+  private String description;
+  private List<QuestionUpdateReqDto> questions;
+
   public SurveyObject surveyObjectOf() {
     return SurveyObject.builder()
         .surveyName(name)
@@ -20,11 +25,12 @@ public record SurveyCreateReqDto(
   public List<QuestionObject> questionOf() {
     return questions.stream()
         .map(question -> QuestionObject.builder()
+            .id(question.id())
             .title(question.title())
             .type(question.type())
             .isRequired(question.isRequired())
             .description(question.description())
-            .isDeleted(question.isDeleted())
+            .operation(question.operation())
             .choices(question.choices())
             .build()).toList();
   }

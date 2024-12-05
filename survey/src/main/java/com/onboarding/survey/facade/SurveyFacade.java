@@ -2,8 +2,8 @@ package com.onboarding.survey.facade;
 
 import com.onboarding.core.global.exception.CustomException;
 import com.onboarding.core.global.exception.enums.ErrorCode;
-import com.onboarding.survey.dto.QuestionObject;
-import com.onboarding.survey.dto.SurveyObject;
+import com.onboarding.survey.object.QuestionObject;
+import com.onboarding.survey.object.SurveyObject;
 import com.onboarding.survey.dto.response.QuestionDTO;
 import com.onboarding.survey.dto.response.SurveyWithQuestionsDTO;
 import com.onboarding.survey.entity.Question;
@@ -30,7 +30,11 @@ public class SurveyFacade {
 
   public void createSurvey(SurveyObject surveyObject) {
     Survey survey = surveyObject.of(
-        surveyObject.questions().stream().map(questionDto -> questionDto.of(null)).toList()
+        surveyObject.getQuestions().stream().map(questionDto -> {
+          log.info("questionDto isRequired: {}", questionDto.isRequired());
+          log.info("questionDto isDeleted: {}", questionDto.isDeleted());
+          return questionDto.of(null);
+        }).toList()
     );
     survey.getQuestions().forEach(question -> question.setSurvey(survey));
     surveyService.createSurvey(survey);
@@ -40,11 +44,11 @@ public class SurveyFacade {
     Survey existingSurvey = surveyService.getSurveyById(surveyId);
 
     // 설문 이름과 설명 업데이트
-    existingSurvey.updateName(surveyObject.surveyName());
-    existingSurvey.updateDescription(surveyObject.surveyDescription());
+    existingSurvey.updateName(surveyObject.getSurveyName());
+    existingSurvey.updateDescription(surveyObject.getSurveyDescription());
 
     List<Question> existingQuestions = new ArrayList<>(existingSurvey.getQuestions());
-    List<QuestionObject> newQuestions = surveyObject.questions();
+    List<QuestionObject> newQuestions = surveyObject.getQuestions();
 
     // 기존 질문 중 새 질문 리스트에 없는 항목 삭제
     for (Question existing : new ArrayList<>(existingQuestions)) {
