@@ -84,7 +84,10 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             isRequired = true
         )
     ),
-    responses = listOf(
+)
+
+fun createGetSurveyResponseResponse(): List<GetSurveyResponseResponse> =
+    listOf(
         GetSurveyResponseResponse(
             id = 1,
             createdAt = OffsetDateTime.now(),
@@ -107,7 +110,6 @@ fun createGetSurveyResponse() = GetSurveyResponse(
             )
         )
     )
-)
 
 fun createPatchSurveyRequest(): PatchSurveyRequest {
     return PatchSurveyRequest(

@@ -6,6 +6,7 @@ import org.icd.surveyapi.support.docs.ExceptionSnippet
 import org.icd.surveyapi.surveyproducer.application.SurveyProducerService
 import org.icd.surveyapi.surveyproducer.application.dto.response.PostSurveyResponse
 import org.icd.surveyapi.surveyproducer.fixture.createGetSurveyResponse
+import org.icd.surveyapi.surveyproducer.fixture.createGetSurveyResponseResponse
 import org.icd.surveyapi.surveyproducer.fixture.createPatchSurveyRequest
 import org.icd.surveyapi.surveyproducer.fixture.createPostSurveyRequest
 import org.icd.surveycore.domain.surveyItem.ItemType
@@ -71,7 +72,7 @@ class SurveyProducerControllerTest : BaseControllerTest() {
     @Test
     fun getSurvey() {
         val response = createGetSurveyResponse()
-        given { surveyProducerService.getSurvey(any()) }.willReturn(response)
+        given { surveyProducerService.getSurvey( any()) }.willReturn(response)
 
         mockMvc.perform(
             get("/v1/survey/{surveyId}", 1L)
@@ -102,27 +103,53 @@ class SurveyProducerControllerTest : BaseControllerTest() {
                         .type(JsonFieldType.STRING),
                     fieldWithPath("items[].options[].isActive").description("옵션 활성화 여부").type(JsonFieldType.BOOLEAN),
                     fieldWithPath("items[].isRequired").description("항목 필수 응답 여부").type(JsonFieldType.BOOLEAN),
-                    fieldWithPath("responses[]").description("응답 목록").optional().type(JsonFieldType.ARRAY),
-                    fieldWithPath("responses[].id").description("응답의 ID").type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].createdAt").description("응답 제출 일시")
+                ),
+                ExceptionSnippet(
+                    listOf(
+                        NotFoundSurveyException()
+                    )
+                )
+            ),
+        ).andExpect(status().isOk)
+    }
+
+    @Test
+    fun getSurveyResponse() {
+        val response = createGetSurveyResponseResponse()
+        given { surveyProducerService.getSurveyResponse( any()) }.willReturn(response)
+
+        mockMvc.perform(
+            get("/v1/survey/{surveyId}/responses", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andDo(
+            document(
+                "getSurveyResponse",
+                pathParameters(
+                    parameterWithName("surveyId").description("설문조사 ID")
+                ),
+                responseFields(
+                    fieldWithPath("[]").description("응답 목록").optional().type(JsonFieldType.ARRAY),
+                    fieldWithPath("[].id").description("응답의 ID").type(JsonFieldType.NUMBER),
+                    fieldWithPath("[].createdAt").description("응답 제출 일시")
                         .type(OffsetDateTime::class.simpleName),
-                    fieldWithPath("responses[].items[].sequence").description("항목 순서"),
-                    fieldWithPath("responses[].items[].name").description("항목 이름"),
-                    fieldWithPath("responses[].items[].description").description("항목 설명"),
-                    fieldWithPath("responses[].items[].itemType").description("항목 유형"),
-                    fieldWithPath("responses[].items[].shortResponse").description("단답형 응답").optional()
+                    fieldWithPath("[].items[].sequence").description("항목 순서"),
+                    fieldWithPath("[].items[].name").description("항목 이름"),
+                    fieldWithPath("[].items[].description").description("항목 설명"),
+                    fieldWithPath("[].items[].itemType").description("항목 유형"),
+                    fieldWithPath("[].items[].shortResponse").description("단답형 응답").optional()
                         .type(JsonFieldType.STRING),
-                    fieldWithPath("responses[].items[].longResponse").description("장문형 응답").optional()
+                    fieldWithPath("[].items[].longResponse").description("장문형 응답").optional()
                         .type(JsonFieldType.STRING),
-                    fieldWithPath("responses[].items[].singleChoiceResponse").description("단일 선택형 응답").optional(),
-                    fieldWithPath("responses[].items[].singleChoiceResponse.itemOptionId").description("옵션 ID")
+                    fieldWithPath("[].items[].singleChoiceResponse").description("단일 선택형 응답").optional(),
+                    fieldWithPath("[].items[].singleChoiceResponse.itemOptionId").description("옵션 ID")
                         .optional().type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].items[].singleChoiceResponse.itemOptionName").description("옵션 이름")
+                    fieldWithPath("[].items[].singleChoiceResponse.itemOptionName").description("옵션 이름")
                         .optional().type(JsonFieldType.STRING),
-                    fieldWithPath("responses[].items[].multipleChoiceResponse").description("다중 선택형 응답").optional(),
-                    fieldWithPath("responses[].items[].multipleChoiceResponse[].itemOptionId").description("옵션 ID")
+                    fieldWithPath("[].items[].multipleChoiceResponse").description("다중 선택형 응답").optional(),
+                    fieldWithPath("[].items[].multipleChoiceResponse[].itemOptionId").description("옵션 ID")
                         .optional().type(JsonFieldType.NUMBER),
-                    fieldWithPath("responses[].items[].multipleChoiceResponse[].itemOptionName").description("옵션 이름")
+                    fieldWithPath("[].items[].multipleChoiceResponse[].itemOptionName").description("옵션 이름")
                         .optional().type(JsonFieldType.STRING),
                 ),
                 ExceptionSnippet(

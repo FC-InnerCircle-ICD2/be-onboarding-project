@@ -7,6 +7,7 @@ import org.icd.surveyapi.surveyproducer.application.dto.request.PatchSurveyReque
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.UpdateSurveyItemRequest
 import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponse
+import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponseResponse
 import org.icd.surveyapi.surveyproducer.application.dto.response.PostSurveyResponse
 import org.icd.surveycore.domain.survey.Survey
 import org.icd.surveycore.domain.survey.SurveyRepository
@@ -49,6 +50,11 @@ class SurveyProducerService(
     fun getSurvey(surveyId: Long): GetSurveyResponse {
         val survey = surveyRepository.findByIdOrNull(surveyId) ?: throw NotFoundSurveyException()
         return GetSurveyResponse(survey)
+    }
+
+    fun getSurveyResponse(surveyId: Long/*, request: GetSurveyRequest*/): List<GetSurveyResponseResponse> {
+        val survey = surveyRepository.findByIdOrNull(surveyId) ?: throw NotFoundSurveyException()
+        return survey.responses.map { GetSurveyResponseResponse(it) }
     }
 
     @Transactional
