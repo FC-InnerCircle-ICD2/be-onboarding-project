@@ -1,5 +1,6 @@
 package com.innercircle.surveryproject.modules.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,9 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyAnswerId implements Serializable {
 
+    @Column(name = "survey_id")
     private Long surveyId;
+    @Column(name = "phone_number")
     private Long phoneNumber;
 
     public SurveyAnswerId(Long surveyId, Long phoneNumber) {

@@ -24,10 +24,10 @@ public class SurveyAnswerMapValue {
     private Long surveyItemId;
 
     @Setter
-    @ManyToOne
+    @ManyToOne()
     @JoinColumns({
-            @JoinColumn(name = "SURVEY_ANSWER_SURVEYID", referencedColumnName = "SURVEYID"),
-            @JoinColumn(name = "SURVEY_ANSWER_PHONENUMBER", referencedColumnName = "PHONENUMBER"),
+        @JoinColumn(name = "survey_answer_survey_id", referencedColumnName = "survey_id"), // SurveyAnswer의 실제 컬럼명 확인
+        @JoinColumn(name = "SURVEY_ANSWER_PHONE_NUMBER", referencedColumnName = "phone_number") // SurveyAnswer의 실제 컬럼명 확인
     })
     private SurveyAnswer surveyAnswer;
 

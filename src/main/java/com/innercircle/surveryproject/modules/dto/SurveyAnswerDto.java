@@ -1,7 +1,6 @@
 package com.innercircle.surveryproject.modules.dto;
 
 import com.innercircle.surveryproject.modules.entity.SurveyAnswer;
-import com.innercircle.surveryproject.modules.entity.SurveyAnswerMapValue;
 import lombok.Data;
 
 import java.util.List;
@@ -25,12 +24,12 @@ public class SurveyAnswerDto {
     /**
      * 설문조사 응답 결과
      */
-    private List<SurveyAnswerMapValue> surveyAnswerDetails;
+    private List<SurveyAnswerValueDto> surveyAnswerDetails;
 
     public SurveyAnswerDto(SurveyAnswer surveyAnswer) {
         this.phoneNumber = surveyAnswer.getPhoneNumber();
         this.username = surveyAnswer.getUsername();
-        this.surveyAnswerDetails = surveyAnswer.getSurveyAnswerDetails();
+        this.surveyAnswerDetails = SurveyAnswerValueDto.from(surveyAnswer.getSurveyAnswerDetails());
     }
 
     public static SurveyAnswerDto from(SurveyAnswer surveyAnswer) {

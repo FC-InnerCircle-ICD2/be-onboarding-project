@@ -46,7 +46,7 @@ class SurveyServiceTest {
         JsonNode jsonNode1 = FileUtils.readFileAsJson("testcase/survey_update_success.txt");
         SurveyUpdateDto surveyUpdateDto = objectMapper.treeToValue(jsonNode1, SurveyUpdateDto.class);
         SurveyDto surveyDto = surveyService.updateSurvey(surveyUpdateDto);
-        assertEquals("서비스 만족도 설문조사", surveyDto.getName());
+        assertEquals("설문조사 저장 테스트", surveyDto.getName());
     }
 
 }
