@@ -28,7 +28,7 @@ http://localhost:8080/swagger-ui/index.html
 ```
 
 ### Jar 파일
-1. [Executable JAR 파일 다운로드](https://drive.google.com/file/d/1cp6uzi5TbAHRu_ywFrX_YFjeEGFOQNKr/view?usp=drive_link)
+1. [Executable JAR 파일 다운로드](https://drive.google.com/file/d/1D34wUnZLji0hrk8ktxXPUshOkroYsd1G/view?usp=sharing)
 2. Jar 파일 실행:
   ```BASH
     java -jar api-1.0.0.jar

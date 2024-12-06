@@ -20,8 +20,8 @@ public class SurveyService {
   private final SurveyRepository surveyRepository;
   private final QuestionRepository questionRepository;
 
-  public Survey createSurvey(Survey survey) {
-    return surveyRepository.save(survey);
+  public void createSurvey(Survey survey) {
+    surveyRepository.save(survey);
   }
 
   public Survey getSurveyById(Long surveyId) {

@@ -9,6 +9,7 @@ import com.onboarding.survey.object.QuestionObject;
 import com.onboarding.survey.object.SurveyObject;
 import com.onboarding.survey.service.QuestionService;
 import com.onboarding.survey.service.SurveyService;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,9 @@ public class SurveyFacadeTest {
 
   @Mock
   private QuestionService questionService;
+
+  @Mock
+  private EntityManager entityManager;
 
   @Test
   void createSurvey_ShouldSaveSurveyWithQuestions() {
@@ -98,14 +102,16 @@ public class SurveyFacadeTest {
         ))
         .build();
 
+    // Mock 설정
     Mockito.when(surveyService.getSurveyById(surveyId)).thenReturn(existingSurvey);
+    Mockito.doNothing().when(entityManager).flush(); // 추가: flush 호출 시 동작 설정
 
     // When
     surveyFacade.updateSurvey(surveyId, updatedSurveyObject);
 
     // Then
     Mockito.verify(surveyService, Mockito.times(1)).getSurveyById(surveyId);
-    Mockito.verify(surveyService, Mockito.times(1)).createSurvey(Mockito.any(Survey.class));
+    Mockito.verify(entityManager, Mockito.times(1)).flush(); // flush 호출 여부 확인
   }
 
   @Test
