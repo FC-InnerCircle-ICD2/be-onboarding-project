@@ -1,5 +1,6 @@
 val kotlinJacksonDateTimeVersion by properties
-val swaggerVersion by properties
+val swaggerOpenApiVersion by properties
+val swaggerAnnotationVersion by properties
 
 dependencies {
     implementation(project(":survey-data"))
@@ -9,7 +10,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework:spring-tx")
 
-    implementation("io.swagger.core.v3:swagger-annotations:$swaggerVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerOpenApiVersion")
+    implementation("io.swagger.core.v3:swagger-annotations:$swaggerAnnotationVersion")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonDateTimeVersion")
 }
 

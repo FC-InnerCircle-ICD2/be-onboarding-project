@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
+// TODO survey_answer_historu 같은 혹시 네이밍은 어떨까 .. ?!
 @Entity
 @Table(name = "survey_answer_option")
 class SurveyAnswerOptionEntity(
@@ -22,9 +23,9 @@ class SurveyAnswerOptionEntity(
 ) : BaseTimeEntity() {
     override fun toString(): String {
         return "SurveyAnswerOptionEntity(" +
-                "id='$id', " +
-                "answer='$answer', " +
-                "surveyAnswerId=${surveyAnswerEntity?.id}" + // SurveyAnswerEntity의 ID만 출력
-                ")"
+            "id='$id', " +
+            "answer='$answer', " +
+            "surveyAnswerId=${surveyAnswerEntity?.id}" + // SurveyAnswerEntity의 ID만 출력
+            ")"
     }
 }

@@ -4,91 +4,280 @@ Host: localhost:8080
 Content-Type: application/json
 
 {
-  "title": "음식 선호도 조사 1",
-  "description": "음식 선호도 조사를 하기 위한 설문 조사 입니다.",
-  "surveyItems": [
-    {
-      "name": "아이템 1",
-      "type": "MULTIPLE_SELECT",
-      "description": "디스크립션 1",
-      "isRequired": false,
-      "options": [
-        {
-          "name": "떡볶이"
-        },
-        {
-          "name": "피자"
-        },
-        {
-          "name": "치킨"
-        }
-      ]
-    }
-  ]
-}
-
-###
-POST localhost:8080/api/v1/surveys HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-
-{
-  "title": "음식 선호도 조사 2",
-  "description": "음식 선호도 조사를 하기 위한 설문 조사 입니다.",
-  "surveyItems": [
-    {
-      "name": "음식 1",
-      "type": "SHORT_ANSWER",
-      "description": "디스크립션 1",
-      "isRequired": true,
-      "options": []
-    }
-  ]
-}
-
-
-###
-POST localhost:8080/api/v1/surveys HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-
-{
-  "title": "음식 선호도 조사 3",
-  "description": "음식 선호도 조사를 하기 위한 설문 조사 입니다.",
+  "title": "여행 선호도 조사",
+  "description": "여행 선호도를 조사합니다.",
   "surveyItems": [
     {
       "name": "아이템 1",
       "type": "SINGLE_SELECT",
-      "description": "아이템 1 입니다.",
+      "description": "가장 좋아하는 여행지는 어디인가요?",
       "isRequired": true,
       "options": [
-        {
-          "name": "고기"
-        },
-        {
-          "name": "파스타"
-        },
-        {
-          "name": "국밥"
-        }
+        { "name": "제주도" },
+        { "name": "부산" },
+        { "name": "서울" },
+        { "name": "강원도" }
       ]
     },
     {
       "name": "아이템 2",
       "type": "MULTIPLE_SELECT",
-      "description": "아이템 2 입니다.",
+      "description": "여행 시 중요하게 생각하는 요소를 선택해주세요.",
       "isRequired": true,
       "options": [
-        {
-          "name": "국수"
-        },
-        {
-          "name": "스테이크"
-        },
-        {
-          "name": "감자튀김"
-        }
+        { "name": "숙소" },
+        { "name": "음식" },
+        { "name": "관광지" },
+        { "name": "액티비티" },
+        { "name": "교통편" }
       ]
+    },
+    {
+      "name": "아이템 3",
+      "type": "SHORT_ANSWER",
+      "description": "가장 기억에 남는 여행은 무엇인가요?",
+      "isRequired": false,
+      "options": []
+    },
+    {
+      "name": "아이템 4",
+      "type": "LONG_ANSWER",
+      "description": "여행 중 겪었던 재미있는 경험을 공유해주세요.",
+      "isRequired": false,
+      "options": []
+    }
+  ]
+}
+
+### 운동  습관 조사 설문조사 양식
+POST localhost:8080/api/v1/surveys HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "운동 습관 조사",
+  "description": "운동 습관에 대해 알아보는 설문조사입니다.",
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "type": "SINGLE_SELECT",
+      "description": "주로 어떤 시간대에 운동하시나요?",
+      "isRequired": true,
+      "options": [
+        { "name": "아침" },
+        { "name": "점심" },
+        { "name": "저녁" },
+        { "name": "밤" }
+      ]
+    },
+    {
+      "name": "아이템 2",
+      "type": "MULTIPLE_SELECT",
+      "description": "선호하는 운동 종류를 선택해주세요.",
+      "isRequired": true,
+      "options": [
+        { "name": "러닝" },
+        { "name": "요가" },
+        { "name": "헬스" },
+        { "name": "수영" },
+        { "name": "등산" }
+      ]
+    },
+    {
+      "name": "아이템 3",
+      "type": "SHORT_ANSWER",
+      "description": "운동을 시작하게 된 계기는 무엇인가요?",
+      "isRequired": false,
+      "options": []
+    }
+  ]
+}
+
+### 독서 습관 조사 설문지 양식
+POST http://localhost:8080/api/v1/surveys HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "독서 습관 조사",
+  "description": "독서 습관에 대한 설문조사입니다.",
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "type": "SINGLE_SELECT",
+      "description": "한 달에 책을 몇 권 읽으시나요?",
+      "isRequired": true,
+      "options": [
+        { "name": "1권 이하" },
+        { "name": "2~3권" },
+        { "name": "4권 이상" }
+      ]
+    },
+    {
+      "name": "아이템 2",
+      "type": "MULTIPLE_SELECT",
+      "description": "선호하는 도서 장르를 선택해주세요.",
+      "isRequired": true,
+      "options": [
+        { "name": "소설" },
+        { "name": "자기계발" },
+        { "name": "경제" },
+        { "name": "역사" },
+        { "name": "기타" }
+      ]
+    },
+    {
+      "name": "아이템 3",
+      "type": "SHORT_ANSWER",
+      "description": "최근 읽은 책 중 가장 인상 깊었던 책은 무엇인가요?",
+      "isRequired": false,
+      "options": []
+    }
+  ]
+}
+
+### 영화 선호도 조사 설문조사 양식
+POST localhost:8080/api/v1/surveys HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "영화 선호도 조사",
+  "description": "영화 관람 습관 및 선호 장르를 알아봅니다.",
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "type": "MULTIPLE_SELECT",
+      "description": "선호하는 영화 장르를 선택해주세요.",
+      "isRequired": true,
+      "options": [
+        { "name": "액션" },
+        { "name": "코미디" },
+        { "name": "드라마" },
+        { "name": "SF" },
+        { "name": "공포" },
+        { "name": "애니메이션" }
+      ]
+    },
+    {
+      "name": "아이템 2",
+      "type": "SHORT_ANSWER",
+      "description": "가장 좋아하는 영화는 무엇인가요?",
+      "isRequired": false,
+      "options": []
+    },
+    {
+      "name": "아이템 3",
+      "type": "SINGLE_SELECT",
+      "description": "주로 어떤 플랫폼에서 영화를 보시나요?",
+      "isRequired": true,
+      "options": [
+        { "name": "극장" },
+        { "name": "OTT 서비스 (넷플릭스, 디즈니+ 등)" },
+        { "name": "TV" },
+        { "name": "기타" }
+      ]
+    }
+  ]
+}
+
+### 학습 스타일 조사 설문 조사 양식
+POST localhost:8080/api/v1/surveys HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "학습 스타일 조사",
+  "description": "효율적인 학습 스타일을 조사합니다.",
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "type": "SINGLE_SELECT",
+      "description": "주로 어떤 시간대에 학습하시나요?",
+      "isRequired": true,
+      "options": [
+        { "name": "아침" },
+        { "name": "점심" },
+        { "name": "저녁" },
+        { "name": "밤" }
+      ]
+    },
+    {
+      "name": "아이템 2",
+      "type": "MULTIPLE_SELECT",
+      "description": "선호하는 학습 방법을 선택해주세요.",
+      "isRequired": true,
+      "options": [
+        { "name": "혼자 공부" },
+        { "name": "그룹 스터디" },
+        { "name": "온라인 강의" },
+        { "name": "오프라인 강의" }
+      ]
+    },
+    {
+      "name": "아이템 3",
+      "type": "SHORT_ANSWER",
+      "description": "최근 배운 내용 중 가장 기억에 남는 것은 무엇인가요?",
+      "isRequired": false,
+      "options": []
+    },
+    {
+      "name": "아이템 4",
+      "type": "LONG_ANSWER",
+      "description": "학습할 때 어려움을 느꼈던 순간에 대해 자세히 작성해주세요.",
+      "isRequired": false,
+      "options": []
+    }
+  ]
+}
+
+### 음악 선호도 조사 설문 조사 양식
+POST localhost:8080/api/v1/surveys HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "음악 선호도 조사",
+  "description": "음악 취향과 청취 습관을 알아봅니다.",
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "type": "SINGLE_SELECT",
+      "description": "주로 언제 음악을 듣나요?",
+      "isRequired": true,
+      "options": [
+        { "name": "아침" },
+        { "name": "운동 중" },
+        { "name": "집중할 때" },
+        { "name": "휴식 시간" }
+      ]
+    },
+    {
+      "name": "아이템 2",
+      "type": "MULTIPLE_SELECT",
+      "description": "선호하는 음악 장르를 선택해주세요.",
+      "isRequired": true,
+      "options": [
+        { "name": "팝" },
+        { "name": "록" },
+        { "name": "발라드" },
+        { "name": "힙합" },
+        { "name": "재즈" }
+      ]
+    },
+    {
+      "name": "아이템 3",
+      "type": "SHORT_ANSWER",
+      "description": "가장 좋아하는 가수는 누구인가요?",
+      "isRequired": false,
+      "options": []
+    },
+    {
+      "name": "아이템 4",
+      "type": "LONG_ANSWER",
+      "description": "음악이 당신의 삶에 어떤 영향을 주는지 자유롭게 적어주세요.",
+      "isRequired": false,
+      "options": []
     }
   ]
 }

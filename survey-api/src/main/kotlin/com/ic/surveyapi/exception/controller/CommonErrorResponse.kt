@@ -23,7 +23,7 @@ class CommonErrorResponse(
         fun of(errorCode: CustomErrorException): CommonErrorResponse {
             return CommonErrorResponse(
                 errorCode = errorCode.errorCode.code,
-                message = errorCode.message
+                message = errorCode.message,
             )
         }
     }

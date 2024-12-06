@@ -31,16 +31,15 @@ fun SurveyFormCreateRequestDto.toEntity(version: Int): SurveyFormEntity {
     val surveyItemEntities =
         this.surveyItems.map { requestSurveyItem ->
             SurveyItemEntity.of(dto = requestSurveyItem)
-        .apply {
-                requestSurveyItem.options.map { requestOption ->
-                    SurveyOptionEntity.of(dto = requestOption)
-                }.let { option ->
-                    this.addSurveyOption(option)
+                .apply {
+                    requestSurveyItem.options.map { requestOption ->
+                        SurveyOptionEntity.of(dto = requestOption)
+                    }.let { option ->
+                        this.addSurveyOption(option)
+                    }
                 }
-            }
         }
 
     surveyFormEntity.addSurveyItems(surveyItemEntities)
     return surveyFormEntity
 }
-

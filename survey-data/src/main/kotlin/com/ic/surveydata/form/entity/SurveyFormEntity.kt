@@ -23,7 +23,7 @@ class SurveyFormEntity(
     val title: String,
     @Column(name = "description")
     val description: String,
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "surveyFormEntity", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "surveyFormEntity", cascade = [CascadeType.ALL])
     var surveyItems: MutableList<SurveyItemEntity> = mutableListOf(),
     @Column(name = "version", nullable = false, unique = false)
     val version: Int,
@@ -39,7 +39,10 @@ class SurveyFormEntity(
     }
 
     companion object {
-        fun of(dto: SurveyFormCreateRequestDto, version: Int): SurveyFormEntity {
+        fun of(
+            dto: SurveyFormCreateRequestDto,
+            version: Int,
+        ): SurveyFormEntity {
             return SurveyFormEntity(
                 id = UuidGeneratorUtil.generateUuid(),
                 title = dto.title,

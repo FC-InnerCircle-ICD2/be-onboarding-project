@@ -1,6 +1,5 @@
 package com.ic.surveyapi.answer.controller.dto
 
-import com.ic.surveyapi.util.InputParameterValidator.validateOrThrow
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import survey.type.ItemType
@@ -19,9 +18,5 @@ data class SurveyAnswerRequest(
         val answer: String? = null,
         // TODO - Set 으로 변경하기 !
         val selectedOptions: Set<String> = emptySet(),
-    ) {
-        init {
-            this.validateOrThrow()
-        }
-    }
+    )
 }

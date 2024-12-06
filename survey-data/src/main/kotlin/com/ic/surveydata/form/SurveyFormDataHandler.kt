@@ -7,7 +7,6 @@ import com.ic.surveydata.form.entity.SurveyFormEntity
 import com.ic.surveydata.form.repositry.SurveyFormRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SurveyFormDataHandler(
@@ -21,11 +20,9 @@ class SurveyFormDataHandler(
         return surveyFormRepository.save(surveyForm.toEntity(version = newestVersionFormOrDefault))
     }
 
-    fun findSurveyFormById(id: String): SurveyFormDto =
-        SurveyFormDto.of(surveyFormRepository.findById(id).orElseThrow())
+    fun findSurveyFormById(id: String): SurveyFormDto = SurveyFormDto.of(surveyFormRepository.findById(id).orElseThrow())
 
-    fun findSurveyFormByIdOrNull(id: String): SurveyFormEntity =
-        surveyFormRepository.findById(id).orElseThrow()
+    fun findSurveyFormByIdOrNull(id: String): SurveyFormEntity = surveyFormRepository.findById(id).orElseThrow()
 
     companion object {
         val logger = LoggerFactory.getLogger(SurveyFormDataHandler::class.java)

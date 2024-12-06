@@ -10,7 +10,6 @@ import survey.exception.CustomErrorException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
-
     private val logger: Logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
 
     @ExceptionHandler(Exception::class)
@@ -19,7 +18,7 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
             CommonErrorResponse.of(
                 exception = exception,
-            )
+            ),
         )
     }
 
@@ -29,7 +28,7 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             CommonErrorResponse.of(
                 exception = exception,
-            )
+            ),
         )
     }
 
@@ -39,7 +38,8 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(
                 CommonErrorResponse.of(
-                errorCode = exception
-            ))
+                    errorCode = exception,
+                ),
+            )
     }
 }

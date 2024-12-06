@@ -1,9 +1,12 @@
 package com.ic.surveydata.answer
 
 import com.ic.surveydata.answer.dto.SurveyAnswerDto
+import com.ic.surveydata.answer.dto.SurveyAnswerSearchDto
 import com.ic.surveydata.answer.dto.SurveyFormAnswerDto
 import com.ic.surveydata.answer.dto.toDto
+import com.ic.surveydata.answer.dto.toDtoSurveyAnswerDto
 import com.ic.surveydata.answer.dto.toEntity
+import com.ic.surveydata.answer.entity.SurveyAnswerEntity
 import com.ic.surveydata.answer.repository.SurveyAnswerRepository
 import com.ic.surveydata.answer.repository.SurveyItemRepository
 import com.ic.surveydata.form.repositry.SurveyFormRepository
@@ -33,5 +36,11 @@ class SurveyAnswerDataHandler(
     fun findSurveyAnswerBySurveyTitle(surveyTitle: String): List<SurveyFormAnswerDto> =
         surveyItemRepository.findBySurveyTitle(surveyTitle).map { it.toDto() }
 
+    fun findSurveyAnswerBy(
+        surveyItemName: String?,
+        surveyItemAnswer: String?,
+    ): List<SurveyAnswerSearchDto> =
+        surveyItemRepository.findBySurveyItemNameAndAnswer(surveyItemName, surveyItemAnswer)
+            .let { it.map { entity -> entity.toDtoSurveyAnswerDto() } }
 
 }

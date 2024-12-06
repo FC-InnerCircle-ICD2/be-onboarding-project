@@ -36,7 +36,7 @@ fun SurveyAnswerDto.toEntity(surveyFormEntity: SurveyFormEntity): List<SurveyAns
                         SurveyAnswerOptionEntity(
                             id = UuidGeneratorUtil.generateUuid(),
                             answer = surveyItem.answer!!,
-                            surveyAnswerEntity = surveyAnswerEntity, // 연관 설정 추가
+                            surveyAnswerEntity = surveyAnswerEntity,
                         ),
                     )
 
@@ -45,7 +45,7 @@ fun SurveyAnswerDto.toEntity(surveyFormEntity: SurveyFormEntity): List<SurveyAns
                         SurveyAnswerOptionEntity(
                             id = UuidGeneratorUtil.generateUuid(),
                             answer = answer,
-                            surveyAnswerEntity = surveyAnswerEntity, // 연관 설정 추가
+                            surveyAnswerEntity = surveyAnswerEntity,
                         )
                     }
             }

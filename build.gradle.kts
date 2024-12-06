@@ -20,6 +20,9 @@ repositories {
     mavenCentral()
 }
 
+val swaggerAnnotationVersion by properties
+val swaggerOpenApiDocVersion by properties
+
 subprojects {
     group = "com.ic"
     version = "0.0.1-SNAPSHOT"
@@ -47,9 +50,14 @@ subprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+        testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
         testImplementation("io.kotest:kotest-runner-junit5:5.5.0")
         testImplementation("io.kotest:kotest-assertions-core:5.5.0")
         testImplementation("io.kotest:kotest-property:5.5.0")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 }
 
@@ -61,8 +69,4 @@ kotlin {
 
 tasks.withType<BootJar> {
     enabled = false
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

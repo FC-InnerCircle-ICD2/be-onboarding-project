@@ -25,10 +25,10 @@ class SurveyOptionEntity(
 ) : BaseTimeEntity() {
     override fun toString(): String {
         return "SurveyOptionEntity(" +
-                "id='$id', " +
-                "name='$name', " +
-                "surveyItemId=${surveyItemEntity?.id}" +
-                ")"
+            "id='$id', " +
+            "name='$name', " +
+            "surveyItemId=${surveyItemEntity?.id}" +
+            ")"
     }
 
     companion object {

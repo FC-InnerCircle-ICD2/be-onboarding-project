@@ -26,9 +26,9 @@ class SurveyItemEntity(
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "survey_form_id", referencedColumnName = "id", nullable = false)
     var surveyFormEntity: SurveyFormEntity? = null,
-    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
     val surveyOptions: MutableSet<SurveyOptionEntity> = mutableSetOf(),
-    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "surveyItemEntity", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
     val surveyAnswers: MutableList<SurveyAnswerEntity> = mutableListOf(),
     @Column(name = "name", nullable = false, unique = false)
     val name: String,
@@ -47,15 +47,15 @@ class SurveyItemEntity(
 
     override fun toString(): String {
         return "SurveyItemEntity(" +
-                "id='$id', " +
-                "name='$name', " +
-                "isRequired=$isRequired, " +
-                "description='$description', " +
-                "type=$type, " +
-                "surveyFormEntityId=${surveyFormEntity?.id}, " + // surveyFormEntity의 ID만 출력
-                "surveyOptions=${surveyOptions.map { it.toString() }}, " + // surveyOptions의 ID 목록만 출력
-                "surveyAnswers=${surveyAnswers.map { it.toString() }}" + // surveyAnswers의 ID 목록만 출력
-                ")"
+            "id='$id', " +
+            "name='$name', " +
+            "isRequired=$isRequired, " +
+            "description='$description', " +
+            "type=$type, " +
+            "surveyFormEntityId=${surveyFormEntity?.id}, " + // surveyFormEntity의 ID만 출력
+            "surveyOptions=${surveyOptions.map { it.toString() }}, " + // surveyOptions의 ID 목록만 출력
+            "surveyAnswers=${surveyAnswers.map { it.toString() }}" + // surveyAnswers의 ID 목록만 출력
+            ")"
     }
 
     companion object {

@@ -71,7 +71,7 @@ enum class CustomHttpStatusCode(val code: Int, val message: String) {
     INSUFFICIENT_STORAGE(507, "Insufficient Storage"),
     LOOP_DETECTED(508, "Loop Detected"),
     NOT_EXTENDED(510, "Not Extended"),
-    NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required")
+    NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required"),
     ;
 
     companion object {

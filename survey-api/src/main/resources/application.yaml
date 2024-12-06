@@ -1,5 +1,6 @@
-# TODO : 우선 제일 상위 모듈에 application 설정을 합니다. 모듈 마다 효율적으로 관리할 수 있는 방안 고민 필요
 spring:
+  mvc:
+    static-path-pattern: /static/**
   application:
     name: survey-api
   datasource:
@@ -20,3 +21,9 @@ spring:
   sql:
     init:
       mode: always
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
+

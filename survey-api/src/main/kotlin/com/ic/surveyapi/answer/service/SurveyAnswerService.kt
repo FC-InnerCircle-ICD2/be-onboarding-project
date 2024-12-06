@@ -4,6 +4,7 @@ import com.ic.surveyapi.answer.service.dto.SurveyAnswerDto
 import com.ic.surveyapi.util.InputParameterValidator.validateOrThrow
 import com.ic.surveyapi.util.ObjectMapperUtil
 import com.ic.surveydata.answer.SurveyAnswerDataHandler
+import com.ic.surveydata.answer.dto.SurveyAnswerSearchDto
 import com.ic.surveydata.answer.dto.SurveyFormAnswerDto
 import com.ic.surveydata.form.SurveyFormDataHandler
 import org.springframework.stereotype.Service
@@ -39,4 +40,11 @@ class SurveyAnswerService(
 
     fun getSurveyAnswerByTitle(surveyTitle: String) =
         let { surveyAnswerDataHandler.findSurveyAnswerBySurveyTitle(surveyTitle = surveyTitle) }
+
+    fun getSurveyAnswerSearchBy(
+        surveyItemName: String?,
+        surveyItemAnswer: String?,
+    ): List<SurveyAnswerSearchDto> {
+        return surveyAnswerDataHandler.findSurveyAnswerBy(surveyItemName, surveyItemAnswer)
+    }
 }
