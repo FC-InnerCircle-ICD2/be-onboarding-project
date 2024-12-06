@@ -4,6 +4,7 @@ import com.fastcampus.survey.dto.SurveyAnswerDetailDto;
 import com.fastcampus.survey.dto.SurveyAnswerDto;
 import com.fastcampus.survey.dto.SurveyDto;
 import com.fastcampus.survey.service.SurveyService;
+import com.fastcampus.survey.util.validator.SurveyVal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +19,13 @@ public class SurveyController {
 
     @PostMapping(path = "/create")
     public String createSurvey(@RequestBody SurveyDto survey) throws Exception {
+        SurveyVal.validateSurvey(survey);  // 입력값 검증
         return surveyService.createSurvey(survey);
     }
 
     @PostMapping(path = "/update")
     public String updateSurvey(@RequestBody SurveyDto survey) throws Exception {
+        SurveyVal.validateSurvey(survey);  // 입력값 검증
         return surveyService.updateSurvey(survey);
     }
 
