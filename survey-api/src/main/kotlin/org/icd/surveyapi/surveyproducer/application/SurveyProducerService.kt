@@ -52,7 +52,7 @@ class SurveyProducerService(
         return GetSurveyResponse(survey)
     }
 
-    fun getSurveyResponse(surveyId: Long/*, request: GetSurveyRequest*/): List<GetSurveyResponseResponse> {
+    fun getSurveyResponse(surveyId: Long): List<GetSurveyResponseResponse> {
         val survey = surveyRepository.findByIdOrNull(surveyId) ?: throw NotFoundSurveyException()
         return survey.responses.map { GetSurveyResponseResponse(it) }
     }

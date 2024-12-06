@@ -1,7 +1,6 @@
 package org.icd.surveyapi.surveyproducer.presentation
 
 import org.icd.surveyapi.surveyproducer.application.SurveyProducerService
-import org.icd.surveyapi.surveyproducer.application.dto.request.GetSurveyRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PatchSurveyRequest
 import org.icd.surveyapi.surveyproducer.application.dto.request.PostSurveyRequest
 import org.icd.surveyapi.surveyproducer.application.dto.response.GetSurveyResponse
@@ -25,7 +24,7 @@ class SurveyProducerController(
     }
 
     @GetMapping("/{surveyId}/responses")
-    fun getSurveyResponse(@PathVariable surveyId: Long, request: GetSurveyRequest): List<GetSurveyResponseResponse> {
+    fun getSurveyResponse(@PathVariable surveyId: Long): List<GetSurveyResponseResponse> {
         return surveyProducerService.getSurveyResponse(surveyId)
     }
 
