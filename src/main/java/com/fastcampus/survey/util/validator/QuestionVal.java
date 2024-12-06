@@ -10,7 +10,7 @@ public class QuestionVal {
 
     public static void validateQuestion(QuestionDto questionDto) {
         validQType(questionDto.getQType());
-        validChoices(AnsType.valueOf(questionDto.getQType()), questionDto.getChoices());
+        validChoices(questionDto.getQType(), questionDto.getChoices());
         validQMust(questionDto.getQMust());
     }
 
@@ -22,7 +22,13 @@ public class QuestionVal {
         }
     }
 
-    private static void validChoices(AnsType ansType, List<String> value) {
+    private static void validChoices(String ansTypeValue, List<String> value) {
+        AnsType ansType = null;
+        try {
+            ansType = AnsType.fromValue(ansTypeValue);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if ( (AnsType.LIST_CHOOSE_ONE.equals(ansType) || AnsType.LIST_CHOOSE_MULTI.equals(ansType)) &&  // 항목 입력 형태가 리스트 단일 선택 or 리스트 복수 선택일때
              (value.size() == 0 || value.isEmpty())) { // 선택지가 없을 때
             throw new RuntimeException(new Exception());
