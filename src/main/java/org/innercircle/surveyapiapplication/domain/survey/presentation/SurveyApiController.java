@@ -10,6 +10,8 @@ import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemUpdateRequest;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.application.SurveySubmissionService;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.presentation.dto.SurveySubmissionCreateRequest;
 import org.innercircle.surveyapiapplication.global.handler.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ public class SurveyApiController {
 
     private final SurveyService surveyService;
     private final SurveyItemService surveyItemService;
+    private final SurveySubmissionService surveySubmissionService;
 
     @GetMapping("/{surveyId}")
     public ResponseEntity<ApiResponse<SurveyInquiryResponse>> getSurvey(
@@ -69,6 +72,18 @@ public class SurveyApiController {
         SurveyItemInquiryResponse response = SurveyItemInquiryResponse.from(surveyItem);
         return ResponseEntity.ok()
             .body(ApiResponse.onSuccess(response));
+    }
+
+    @PostMapping("/{surveyId}/survey-item/{surveyItemId}/{surveyItemVersion}/survey-submission")
+    public ResponseEntity<ApiResponse<Void>> createSurveySubmission(
+        @PathVariable(value = "surveyId") Long surveyId,
+        @PathVariable(value = "surveyItemId") Long surveyItemId,
+        @PathVariable(value = "surveyItemVersion") int surveyItemVersion,
+        @RequestBody SurveySubmissionCreateRequest request
+    ) {
+       surveySubmissionService.createSurveySubmission(surveyId, surveyItemId, surveyItemVersion, request);
+       return ResponseEntity.ok()
+           .body(ApiResponse.onSuccess());
     }
 
 }

@@ -14,6 +14,11 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
+    public static <T> ApiResponse<T> onSuccess() {
+        CustomResponseStatus success = CustomResponseStatus.SUCCESS;
+        return new ApiResponse<>(success.getCode(), success.getMessage(), null);
+    }
+
     public static <T> ApiResponse<T> onSuccess(T data) {
         CustomResponseStatus success = CustomResponseStatus.SUCCESS;
         return new ApiResponse<>(success.getCode(), success.getMessage(), data);
