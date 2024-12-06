@@ -1,18 +1,18 @@
 package net.gentledot.survey.service;
 
-import net.gentledot.survey.dto.request.SearchSurveyAnswerRequest;
-import net.gentledot.survey.dto.request.SubmitSurveyAnswer;
-import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.dto.response.SearchSurveyAnswerResponse;
+import net.gentledot.survey.domain.enums.ItemRequired;
+import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.surveybase.Survey;
+import net.gentledot.survey.domain.surveybase.SurveyQuestion;
+import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.exception.SurveyNotFoundException;
 import net.gentledot.survey.exception.SurveySubmitValidationException;
-import net.gentledot.survey.model.entity.surveybase.Survey;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.model.enums.ItemRequired;
-import net.gentledot.survey.model.enums.SurveyItemType;
-import net.gentledot.survey.repository.SurveyAnswerRepository;
-import net.gentledot.survey.repository.SurveyRepository;
+import net.gentledot.survey.repository.jpa.SurveyAnswerJpaRepository;
+import net.gentledot.survey.repository.jpa.SurveyJpaRepository;
+import net.gentledot.survey.service.in.model.request.SearchSurveyAnswerRequest;
+import net.gentledot.survey.service.in.model.request.SubmitSurveyAnswer;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.service.in.model.response.SearchSurveyAnswerResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static net.gentledot.survey.service.util.SurveyVaildator.validateSurveyAnswers;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -32,16 +33,16 @@ class SurveyAnswerServiceProcessTest {
     SurveyAnswerService surveyAnswerService;
 
     @Autowired
-    SurveyRepository surveyRepository;
+    SurveyJpaRepository surveyJpaRepository;
 
     @Autowired
-    SurveyAnswerRepository surveyAnswerRepository;
+    SurveyAnswerJpaRepository surveyAnswerJpaRepository;
 
     private Survey survey;
 
     @BeforeEach
     void setUp() {
-        survey = surveyRepository.save(createSurvey());
+        survey = surveyJpaRepository.save(createSurvey());
     }
 
     private Survey createSurvey() {
@@ -64,7 +65,7 @@ class SurveyAnswerServiceProcessTest {
 
         surveyAnswerService.submitSurveyAnswer(survey.getId(), answers);
 
-        Assertions.assertThat(surveyAnswerRepository.findAll()).isNotEmpty();
+        Assertions.assertThat(surveyAnswerJpaRepository.findAll()).isNotEmpty();
     }
 
     @Test
@@ -92,7 +93,7 @@ class SurveyAnswerServiceProcessTest {
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
-            surveyAnswerService.validateSurveyAnswers(survey, answers);
+            validateSurveyAnswers(survey, answers);
         });
     }
 
@@ -104,7 +105,7 @@ class SurveyAnswerServiceProcessTest {
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
-            surveyAnswerService.validateSurveyAnswers(survey, answers);
+            validateSurveyAnswers(survey, answers);
         });
     }
 
@@ -116,7 +117,7 @@ class SurveyAnswerServiceProcessTest {
 
         // Act & Assert
         assertThrows(SurveySubmitValidationException.class, () -> {
-            surveyAnswerService.validateSurveyAnswers(survey, answers);
+            validateSurveyAnswers(survey, answers);
         });
     }
 
