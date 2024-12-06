@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class ReplySurveyRequest {
+public class ReplySurveyRequestV1 {
 
     /**
      * 설문 ID

@@ -1,6 +1,6 @@
 package com.innercicle.adapter.in.web.reply.v1;
 
-import com.innercicle.adapter.in.web.reply.v1.request.ReplySurveyRequest;
+import com.innercicle.adapter.in.web.reply.v1.request.ReplySurveyRequestV1;
 import com.innercicle.adapter.in.web.reply.v1.response.ReplySurveyResponse;
 import com.innercicle.application.port.in.v1.ReplySurveyUsecaseV1;
 import com.innercicle.utils.ApiUtil;
@@ -20,7 +20,7 @@ public class ReplySurveyControllerV1 {
     private final ReplySurveyUsecaseV1 replySurveyUsecaseV1;
 
     @PostMapping
-    public ApiUtil.ApiResult<ReplySurveyResponse> replySurvey(@RequestBody ReplySurveyRequest request) {
+    public ApiUtil.ApiResult<ReplySurveyResponse> replySurvey(@RequestBody ReplySurveyRequestV1 request) {
         return success(ReplySurveyResponse.from(replySurveyUsecaseV1.replySurvey(request.mapToCommand())));
     }
 
