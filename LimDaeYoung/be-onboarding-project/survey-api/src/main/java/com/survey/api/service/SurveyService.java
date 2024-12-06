@@ -58,8 +58,8 @@ public class SurveyService {
         return surveyOptionRepository.findOptionById(id);
     }
 
-    public List<SurveyResponseOptionEntity> findResponseOptionById(Long id) {
-        return surveyResponseOptionRepository.findByresponseItemId(id);
+    public List<SurveyResponseOptionEntity> findByResponseItemIdAndOptionNameLike(Long id, String searchParam) {
+        return surveyResponseOptionRepository.findByResponseItemIdAndOptionNameLike(id, searchParam);
     }
 
     public boolean existsSurveyById(Long id) {
@@ -106,14 +106,15 @@ public class SurveyService {
     public void save(SurveyForm survey) {
         //DB insert
         SurveyEntity surveyResult = sureveySave(new SurveyEntity(survey.getName(), survey.getDescription(), CommonConstant.Y));
+        if(survey.getItems() != null) {
+            for(SurveyItemForm itemForm : survey.getItems()){
+                SurveyItemEntity itemEntity = itemSave(new SurveyItemEntity( itemForm.getItemName(), itemForm.getDescription(), itemForm.getItemType(), itemForm.isRequired(), CommonConstant.Y, surveyResult));
 
-        for(SurveyItemForm itemForm : survey.getItems()){
-            SurveyItemEntity itemEntity = itemSave(new SurveyItemEntity( itemForm.getItemName(), itemForm.getDescription(), itemForm.getItemType(), itemForm.isRequired(), CommonConstant.Y, surveyResult));
-
-            if(CommonConstant.SINGLE_ITEM.equals(itemForm.getItemType()) || CommonConstant.MULTI_ITEM.equals(itemForm.getItemType())) {
-                if(itemForm.getOptionList() != null) {
-                    for (SurveyOptionForm optionForm : itemForm.getOptionList()) {
-                        optionSave(new SurveyOptionEntity(optionForm.getOptionName(), optionForm.getOptionOrder(), CommonConstant.Y, itemEntity));
+                if(CommonConstant.SINGLE_ITEM.equals(itemForm.getItemType()) || CommonConstant.MULTI_ITEM.equals(itemForm.getItemType())) {
+                    if(itemForm.getOptionList() != null) {
+                        for (SurveyOptionForm optionForm : itemForm.getOptionList()) {
+                            optionSave(new SurveyOptionEntity(optionForm.getOptionName(), optionForm.getOptionOrder(), CommonConstant.Y, itemEntity));
+                        }
                     }
                 }
             }
@@ -165,7 +166,7 @@ public class SurveyService {
 
     public List<SurveyResponseEntity> findResponsesBySurveyIdWithFilters(long id, String searchParam, int pageNumber) {
         Pageable pageable = (Pageable) PageRequest.of(pageNumber, 10, Sort.by("id").descending());
-        return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, pageable);
+        return surveyResponseRepository.findResponsesBySurveyIdWithFilters(id, searchParam, pageable);
     }
 
     @Transactional

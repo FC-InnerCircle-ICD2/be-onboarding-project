@@ -14,7 +14,6 @@ public class SurveyResponse implements Serializable {
     private String name;
     private String description;
     private String regDtm;
-    private String useYn;
 
     private List<SurveyItemResponse> itemList;
 }

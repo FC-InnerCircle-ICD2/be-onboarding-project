@@ -16,10 +16,11 @@ public interface SurveyResponseRepository extends JpaRepository<SurveyResponseEn
     @Query(value = "SELECT r " +
             "FROM surveyResponse r " +
             "join fetch r.responseItems s " +
-            "WHERE r.surveyId = :id",
+            "WHERE r.surveyId = :id and (s.longAnswer like %:searchParam% or s.shortAnswer like %:searchParam%)",
         countQuery = "SELECT COUNT(r) FROM surveyResponse r WHERE r.surveyId = :id")
     List<SurveyResponseEntity> findResponsesBySurveyIdWithFilters(
         @Param("id") Long id
-            , Pageable pageable
+        , @Param("searchParam") String searchParam
+        , Pageable pageable
     );
 }

@@ -65,7 +65,7 @@ public class MainController extends BaseController {
             List<SurveyResponseItemEntity> responseItemList = responseDto.getResponseItems();
             for(SurveyResponseItemEntity itemDto : responseItemList) {
                 if (CommonConstant.SINGLE_ITEM.equals(itemDto.getItemSnapShotType()) || CommonConstant.MULTI_ITEM.equals(itemDto.getItemSnapShotType())) {
-                    itemDto.setResponseOption(surveyService.findResponseOptionById(itemDto.getId()));
+                    itemDto.setResponseOption(surveyService.findByResponseItemIdAndOptionNameLike(itemDto.getId(), selectForm.getSearchParam()));
                 }
             }
         }

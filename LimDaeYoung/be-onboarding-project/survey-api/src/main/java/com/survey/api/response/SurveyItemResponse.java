@@ -18,7 +18,6 @@ public class SurveyItemResponse implements Serializable {
     private String itemType;
     private boolean required;
     private String regDtm;
-    private String useYn;
 
     List<SurveyOptionResponse> selectOptions;
 }

@@ -42,11 +42,10 @@ responseTime	String	  	O	  		응답 시간
 
 2. 설문조사 수정
 
-POST /survey/update
+PUT  /survey/update/{surveyId}
 
 파라미터	  	타입	 	필수	  		설명
 ------------------------------------------------------------------------------------
-id	 	long	  	O	  		수정 하려는 설문조사 아이디(DB 시퀀스)
 name	 	String	  	O	  		수정 하려는 설문조사 이름
 description	String	  	O	  		수정 하려는 설문조사 설명
 items		List		O	  		수정 하려는 설문조사 항목
@@ -67,6 +66,7 @@ optionList 항목
 
 파라미터	  	타입	 	필수	  		설명
 ------------------------------------------------------------------------------------
+id		long	  	O	  		수정 하려는 설문조사 선택지 아이디(DB 시퀀스)
 actionType	String	  	O	  		수행하려는 작업이 무엇인지 (UPDATE, DELETE, CREATE)
 optionName	String	  	O	  		수정 하려는 설문조사 항목 선택지 이름
 optionOrder	String	  	O	  		수정 하려는 설문조사 항목 정렬순서
@@ -90,12 +90,11 @@ responseTime	String	  	O	  		응답 시간
 
 3. 설문조사 응답 생성
 
-POST /survey/response/save
+PUT /survey/response/{surveyId}
 
 
 파라미터	  	타입	 	필수	  		설명
 ------------------------------------------------------------------------------------
-id	 	long	  	O	  		응답 하려는 설문조사 아이디(DB 시퀀스)
 items		List		O	  		응답 하려는 설문조사 항목
 
 
@@ -104,10 +103,11 @@ items 항목
 파라미터	  	타입	 	필수	  		설명
 ------------------------------------------------------------------------------------
 id	 	long	  	O	  		응답 하려는 설문조사 항목 아이디(DB 시퀀스)
-reponseType	String		O	  		응답 하려는 설문조사 항목 타입(MULTI, SINGLE, SHORT, LONG)
-answer		String[]		O			대답지 (SHORT,  LONG 경우 String 배열 하나 MULTI, SINGLE 인 경우 선택한 선택지의 아이디값 -> DB 시퀀스) 
-							ex) SHORT,  LONG -> ["설문지에 대한 대답입니다."]
-							      MULTI, SINGLE -> ["1", "2"]
+itemType		String		O	  		응답 하려는 설문조사 항목 타입(MULTI, SINGLE, SHORT, LONG)
+longAnswer	String		X			itemType이 long 인경우 들어오는 선택지(장문형 답변)
+shortAnswer	String		X			itemType이 short 인경우 들어오는 선택지(단문형 답변)							
+selectOptions	String[]		X			multi 나 single 인경우 선택한 선택지 아이디(DB 시퀀스)
+
 
 
 
@@ -131,7 +131,7 @@ responseTime	String	  	O	  		응답 시간
 
 4. 설문조사 응답 조회
 
-POST /survey/response/select
+POST /survey/response/select/{surveyId}
 
 
 파라미터	  	타입	 	필수	  		설명
@@ -161,7 +161,6 @@ id	 	long	  	O	  		조회한 설문조사 아이디(DB 시퀀스)
 name		String		O	  		조회한 설문조사 이름
 description	String		O	  		조회 한 설문조사 설명
 regDtm		String		O	  		조회한 설문조사 응답 생성 날짜
-useYn		String		O	  		조회한 설문조사의 삭제 여부
 itemList		List		O	  		조회한 설문조사의 항목 응답 리스트
 
 itemList 항목
@@ -171,14 +170,19 @@ itemList 항목
 id	 	long	  	O	  		조회한 설문조사 항목 응답 아이디(DB 시퀀스)
 itemName	String		O	  		조회한 설문조사 항목 이름
 description	String		O	  		조회한 설문조사 항목 설명
-answer		String		O	  		조회한 설문조사 항목 응답 내용 ( MULTI, SINGLE 인경우 선택한 선택지가 String으로 표시 ex) "장난감, 과자, 아이스크림")
 itemType		String		O	  		조회한 설문조사 항목의 타입(MULTI, SINGLE, SHORT, LONG)
 required		String		O	  		조회한 설문조사 항목의 필수 여부
-useYn		String		O	  		조회한 설문조사 항목의 삭제 여부
 regDtm		List		O	  		조회한 설문조사 항목 응답 시간
+longanswer	String		X	  		조회한 설문조사 항목 응답 내용 (ITEMTYPE이 LONG 인경우만 세팅)
+shortanswer	String		X	  		조회한 설문조사 항목 응답 내용 (ITEMTYPE이 SHORT 인경우만 세팅)
+selectOptions	List		X	  		조회한 설문조사 항목 응답 내용 (ITEMTYPE이 MULTI, SINGLE 인경우만 세팅)
 
+selectOptions 항목
 
-
+파라미터	  	타입	 	필수	  		설명
+------------------------------------------------------------------------------------
+id	 	long	  	O	  		조회한 설문조사응답 선택지 아이디(DB 시퀀스)
+optionName	String		O	  		선택한 응답 선택지 이름
 
 
 
