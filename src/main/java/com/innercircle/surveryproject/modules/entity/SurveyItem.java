@@ -52,7 +52,7 @@ public class SurveyItem {
     private Boolean active = Boolean.TRUE;
 
     @Setter
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "survey_id")
     private Survey survey;
 

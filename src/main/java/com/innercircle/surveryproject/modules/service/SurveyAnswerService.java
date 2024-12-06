@@ -46,8 +46,8 @@ public class SurveyAnswerService {
         List<SurveyAnswerMapValue> surveyAnswerMapValueList = new ArrayList<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
             Optional<SurveyItem> optionalSurveyItem =
-                    surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
-                            surveyItemResponseDto.getSurveyItemId());
+                surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
+                                                          surveyItemResponseDto.getSurveyItemId());
 
             if (optionalSurveyItem.isEmpty()) {
                 throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
@@ -55,16 +55,18 @@ public class SurveyAnswerService {
 
             SurveyItem surveyItem = optionalSurveyItem.get();
             if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
-                    || surveyItemResponseDto.getAnswer().isEmpty())) {
+                || surveyItemResponseDto.getAnswer().isEmpty())) {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
             surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItemResponseDto.getSurveyItemId(),
-                    surveyItemResponseDto.getAnswer()));
+                                                                   surveyItemResponseDto.getAnswer()));
         }
 
         SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto);
+        surveyAnswerMapValueList.forEach(surveyAnswerMapValue -> surveyAnswerMapValue.setSurveyAnswer(surveyAnswer));
         surveyAnswer.getSurveyAnswerDetails().addAll(surveyAnswerMapValueList);
+
         surveyAnswerRepository.save(surveyAnswer);
 
         return SurveyAnswerDto.from(surveyAnswer);
@@ -102,22 +104,21 @@ public class SurveyAnswerService {
         }
 
         return surveyAnswerMapValueList.stream()
-                .flatMap(surveyAnswerMapValue -> {
-                    if (!ObjectUtils.isEmpty(surveyItemId) && !surveyItemId.equals(surveyAnswerMapValue.getSurveyItemId())) {
-                        return Stream.empty();
-                    }
+            .flatMap(surveyAnswerMapValue -> {
+                if (!ObjectUtils.isEmpty(surveyItemId) && !surveyItemId.equals(surveyAnswerMapValue.getSurveyItemId())) {
+                    return Stream.empty();
+                }
 
-                    return surveyAnswerMapValue.getResponses().stream()
-                            .filter(response -> ObjectUtils.isEmpty(surveyItemAnswer) || response.equals(surveyItemAnswer))
-                            .map(response -> SurveyAnswerResponseDto.of(
-                                    surveyAnswerMapValue.getSurveyAnswer().getSurveyId(),
-                                    surveyAnswerMapValue.getSurveyAnswer().getPhoneNumber(),
-                                    surveyAnswerMapValue.getSurveyItemId(),
-                                    response
-                            ));
-                })
-                .toList();
+                return surveyAnswerMapValue.getResponses().stream()
+                    .filter(response -> ObjectUtils.isEmpty(surveyItemAnswer) || response.equals(surveyItemAnswer))
+                    .map(response -> SurveyAnswerResponseDto.of(
+                        surveyAnswerMapValue.getSurveyAnswer().getSurveyId(),
+                        surveyAnswerMapValue.getSurveyAnswer().getPhoneNumber(),
+                        surveyAnswerMapValue.getSurveyItemId(),
+                        response
+                    ));
+            })
+            .toList();
     }
-
 
 }
