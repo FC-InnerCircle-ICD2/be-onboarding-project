@@ -112,6 +112,5 @@ class SurveyAnswerController(
         @RequestParam(name = "surveyItemAnswer", required = false) surveyItemAnswer: String?,
     ): List<SurveyAnswerSearchResponse> =
         run { surveyAnswerService.getSurveyAnswerSearchBy(surveyItemName, surveyItemAnswer) }
-        .map {  objectMapperUtil.convertClass(value = it, clazz = SurveyAnswerSearchResponse::class.java)  }
-
+            .map { objectMapperUtil.convertClass(value = it, clazz = SurveyAnswerSearchResponse::class.java) }
 }

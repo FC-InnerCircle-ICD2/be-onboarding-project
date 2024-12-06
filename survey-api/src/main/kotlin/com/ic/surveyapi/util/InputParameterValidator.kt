@@ -9,7 +9,6 @@ import survey.exception.CustomHttpStatusCode
 import survey.type.ItemType
 
 object InputParameterValidator {
-
     fun SurveyAnswerDto.validateOrThrow(surveyFormEntity: SurveyFormEntity) {
         val entitySurveyItemNames = surveyFormEntity.surveyItems.map { it.name }.toSet()
         val inputSurveyItemNames = this.surveyItems.map { it.name }.toSet()

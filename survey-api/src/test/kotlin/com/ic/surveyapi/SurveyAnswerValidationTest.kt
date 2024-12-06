@@ -48,13 +48,11 @@ class SurveyAnswerValidationTest : StringSpec({
                     ),
             )
 
-        // Act & Assert
         val exception =
             shouldThrow<CustomErrorException.InvalidAnswerFormat> {
                 InputParameterValidator.validateSingleSelect(invalidSurveyItem, surveyItemEntity)
             }
 
-        // Assert Exception Details
         exception.message shouldBe "SINGLE_SELECT 항목은 answer가 비어 있어야 합니다."
         exception.errorCode shouldBe CustomHttpStatusCode.BAD_REQUEST
     }
@@ -66,7 +64,7 @@ class SurveyAnswerValidationTest : StringSpec({
                 name = "아이템 1",
                 type = ItemType.SINGLE_SELECT,
                 answer = "",
-                selectedOptions = listOf("2~3권", "1권 이하"), // 여러 개 선택
+                selectedOptions = listOf("2~3권", "1권 이하"),
             )
         val surveyItemEntity =
             SurveyItemEntity(
@@ -92,13 +90,11 @@ class SurveyAnswerValidationTest : StringSpec({
                     ),
             )
 
-        // Act & Assert
         val exception =
             shouldThrow<CustomErrorException.InvalidAnswerFormat> {
                 InputParameterValidator.validateSingleSelect(invalidSurveyItem, surveyItemEntity)
             }
 
-        // Assert Exception Details
         exception.message shouldBe "SINGLE_SELECT 항목은 옵션이 1개만 선택되어야 합니다."
         exception.errorCode shouldBe CustomHttpStatusCode.BAD_REQUEST
     }
@@ -127,7 +123,6 @@ class SurveyAnswerValidationTest : StringSpec({
                     ),
             )
 
-        // Act & Assert
-        InputParameterValidator.validateSingleSelect(validSurveyItem, surveyItemEntity) // No exception should be thrown
+        InputParameterValidator.validateSingleSelect(validSurveyItem, surveyItemEntity)
     }
 })

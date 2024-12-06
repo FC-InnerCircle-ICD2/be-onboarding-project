@@ -6,7 +6,6 @@ import com.ic.surveydata.answer.dto.SurveyFormAnswerDto
 import com.ic.surveydata.answer.dto.toDto
 import com.ic.surveydata.answer.dto.toDtoSurveyAnswerDto
 import com.ic.surveydata.answer.dto.toEntity
-import com.ic.surveydata.answer.entity.SurveyAnswerEntity
 import com.ic.surveydata.answer.repository.SurveyAnswerRepository
 import com.ic.surveydata.answer.repository.SurveyItemRepository
 import com.ic.surveydata.form.repositry.SurveyFormRepository
@@ -42,5 +41,4 @@ class SurveyAnswerDataHandler(
     ): List<SurveyAnswerSearchDto> =
         surveyItemRepository.findBySurveyItemNameAndAnswer(surveyItemName, surveyItemAnswer)
             .let { it.map { entity -> entity.toDtoSurveyAnswerDto() } }
-
 }

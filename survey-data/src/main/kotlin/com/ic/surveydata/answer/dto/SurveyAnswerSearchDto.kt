@@ -6,9 +6,8 @@ data class SurveyAnswerSearchDto(
     val id: String,
     val surveyItemName: String?,
     val surveyItemDescription: String?,
-    val selectedAnswers: List<String>
+    val selectedAnswers: List<String>,
 )
-
 
 fun SurveyAnswerEntity.toDtoSurveyAnswerDto(): SurveyAnswerSearchDto {
     return SurveyAnswerSearchDto(
