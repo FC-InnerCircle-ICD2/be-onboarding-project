@@ -1,5 +1,5 @@
 - 테이블 설계
-  ![image](https://github.com/user-attachments/assets/be427305-96fa-484e-ab3c-461527be94d2)
+  ![image](https://github.com/user-attachments/assets/a72cfbbf-697c-4991-b12e-1221db709dce)
 - DB 접속(로컬실행)
   - H2 Console
     - http://localhost:8080/h2-console
