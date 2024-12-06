@@ -1,0 +1,107 @@
+<script>
+    function ready(callbackFunc) {
+        if (document.readyState !== 'loading') {
+            callbackFunc();
+        } else if (document.addEventListener) {
+            document.addEventListener('DOMContentLoaded', callbackFunc);
+        } else {
+            // Old IE browsers
+            document.attachEvent('onreadystatechange', function () {
+                if (document.readyState === 'complete') {
+                    callbackFunc();
+                }
+            });
+        }
+    }
+
+    function openPopup(event) {
+
+        const target = event.target;
+        if (target.className !== "popup") {
+            return;
+        }
+
+        event.preventDefault();
+        const screenX = event.screenX;
+        const screenY = event.screenY;
+        window.open(target.href, target.text, `left=${screenX}, top=${screenY}, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no`);
+    }
+
+    ready(function () {
+        const el = document.getElementById("content");
+        el.addEventListener("click", event => openPopup(event), false);
+    });
+</script>
+<style>
+    h2 {
+        font-size: 1.8em;
+    }
+
+    h3 {
+        font-size: 1.5em;
+    }
+
+    h2 > a {
+        font-weight: 600;
+        display: flex;
+        justify-content: left;
+        align-content: center;
+    }
+
+    h2 > a > span {
+        margin-right: 10px;
+    }
+
+    .sect1 > h2 > a:link {
+        color: black;
+        text-decoration: none;
+    }
+
+
+    .sect1 > h2 > a:visited {
+        color: black;
+        text-decoration: none;
+    }
+
+    .sect2 > h3 > a:link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .sect2 > h3 > a:visited {
+        color: black;
+        text-decoration: none;
+    }
+
+    .sect4 > h5 > a:link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .sect4 > h5 > a:visited {
+        color: black;
+        text-decoration: none;
+    }
+
+    .tableblock {
+        white-space: pre-line;
+    }
+
+    .http {
+        color: #fff;
+        background-color: beige;
+        padding: .1em .6em;
+        font-size: .75em;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: .25em;
+    }
+
+    .http.get  {background-color: #61affe;}
+    .http.post {background-color: #49cc90;}
+    .http.put  {background-color: #fca130;}
+    .http.delete {background-color: #f93e3e;}
+    .http.head {background-color: #9012fe;}
+    .http.options {background-color: #0d5aa7;}
+    .http.patch {background-color: #50e3c2;}
+</style>

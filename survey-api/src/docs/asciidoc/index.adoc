@@ -1,0 +1,30 @@
+= SURVEY-API
+:doctype: book
+:icon: font
+:source-highlighter: highlighjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:docinfo: shared
+:http-get: pass:quotes[[.http.get]#GET#]
+:http-patch: pass:quotes[[.http.patch]#PATCH#]
+:http-post: pass:quotes[[.http.post]#POST#]
+:http-put: pass:quotes[[.http.put]#PUT#]
+:http-delete: pass:quotes[[.http.delete]#DELETE#]
+
+== 설문조사 생성자용
+=== {http-POST} 설문조사 생성 API
+operation::postSurvey[snippets='exception,http-request,request-fields,response-body,response-fields']
+
+=== {http-GET} 설문조사 조회 API
+operation::getSurvey[snippets='exception,http-request,path-parameters,response-body,response-fields']
+
+=== {http-GET} 설문조사 응답 조회 API
+operation::getSurveyResponse[snippets='exception,http-request,path-parameters,response-body,response-fields']
+
+=== {http-PATCH} 설문조사 수정 API
+operation::patchSurvey[snippets='exception,http-request,path-parameters,request-fields,response-body,response-fields']
+
+== 설문조사 응답자용
+=== {http-POST} 설문조사 응답 API
+operation::postSurveyResponse[snippets='exception,http-request,path-parameters,request-fields,response-body']
