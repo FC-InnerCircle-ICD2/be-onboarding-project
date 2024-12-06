@@ -46,7 +46,7 @@ public abstract class SurveyItem {
             case PARAGRAPH -> new ParagraphSurveyItem(this.id, this.version, name, description, required, this.surveyId);
             case SINGLE_CHOICE_ANSWER -> new SingleChoiceSurveyItem(this.id, this.version, name, description, required, this.surveyId, options);
             case MULTI_CHOICE_ANSWER -> new MultiChoiceSurveyItem(this.id, this.version, name, description, required, this.surveyId, options);
-            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM_FORMAT);
         };
         updatedSurveyItem.addVersion();
         return updatedSurveyItem;

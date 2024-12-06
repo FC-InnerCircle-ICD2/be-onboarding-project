@@ -26,7 +26,7 @@ public class MultiChoiceSurveySubmission extends SurveySubmission<List<String>> 
             throw new CustomException(CustomResponseStatus.NOT_MATCH_SURVEY_ITEM_SUBMISSION_TYPE);
         }
         if (!((MultiChoiceSurveyItem) surveyItem).getOptions().containsAll(this.getResponse())) {
-            throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_OPTION);
+            throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_SUBMISSION_IN_ITEM_OPTION);
         }
         this.surveyItemId = surveyItem.getId();
         this.surveyItemVersion = surveyItem.getVersion();

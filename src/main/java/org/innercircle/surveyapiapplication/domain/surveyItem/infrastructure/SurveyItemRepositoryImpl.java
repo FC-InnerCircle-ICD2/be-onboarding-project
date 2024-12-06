@@ -31,14 +31,14 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
     public SurveyItem findByIdAndVersion(Long surveyId, Long questionId, int version) {
         SurveyItemId surveyItemId = new SurveyItemId(questionId, version);
         return surveyItemJpaRepository.findBySurveyItemIdAndSurveyId(surveyItemId, surveyId)
-            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
+            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM))
             .toDomain();
     }
 
     @Override
     public SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId) {
         return surveyItemJpaRepository.findLatestSurveyItemBySurveyIdAndSurveyItemId(surveyId, questionId)
-            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION))
+            .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM))
             .toDomain();
     }
 

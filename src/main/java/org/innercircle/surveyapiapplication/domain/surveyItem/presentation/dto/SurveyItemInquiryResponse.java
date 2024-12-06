@@ -50,7 +50,7 @@ public record SurveyItemInquiryResponse(
                 surveyItem.getSurveyId(),
                 ((MultiChoiceSurveyItem) surveyItem).getOptions()
             );
-            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM_FORMAT);
         };
     }
 }

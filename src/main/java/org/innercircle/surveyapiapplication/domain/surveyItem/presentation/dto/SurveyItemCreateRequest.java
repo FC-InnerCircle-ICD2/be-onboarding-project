@@ -28,7 +28,7 @@ public record SurveyItemCreateRequest(
             case PARAGRAPH -> new ParagraphSurveyItem(surveyItemId, name, description, required);
             case SINGLE_CHOICE_ANSWER -> new SingleChoiceSurveyItem(surveyItemId, name, description, required, options);
             case MULTI_CHOICE_ANSWER -> new MultiChoiceSurveyItem(surveyItemId, name, description, required, options);
-            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+            default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM_FORMAT);
         };
     }
 

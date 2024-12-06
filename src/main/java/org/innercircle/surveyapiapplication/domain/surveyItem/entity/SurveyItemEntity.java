@@ -63,7 +63,7 @@ public abstract class SurveyItemEntity extends BaseEntity {
         if (surveyItem instanceof MultiChoiceSurveyItem) {
             return new MultiChoiceSurveyItemEntity(surveyItem.getId(), surveyItem.getVersion(), surveyItem.getName(), surveyItem.getDescription(), surveyItem.isRequired(), surveyItem.getSurveyId(), ((MultiChoiceSurveyItem) surveyItem).getOptions());
         }
-        throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+        throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM_FORMAT);
     }
 
     public abstract SurveyItem toDomain();

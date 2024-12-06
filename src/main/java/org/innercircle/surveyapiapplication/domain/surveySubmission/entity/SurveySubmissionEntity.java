@@ -77,7 +77,7 @@ public abstract class SurveySubmissionEntity extends BaseEntity {
                 multiChoiceSurveySubmission.getResponse()
             );
         }
-        throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);
+        throw new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM_FORMAT);
     }
 
     public abstract SurveySubmission<?> toDomain();
