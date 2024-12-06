@@ -14,4 +14,6 @@ public interface SurveyItemRepository {
 
     SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId);
 
+    List<SurveyItem> findBySurveyId(Long surveyId);
+
 }

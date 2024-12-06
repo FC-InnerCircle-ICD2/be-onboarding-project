@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.List;
 public class MultiChoiceSurveySubmissionEntity extends SurveySubmissionEntity {
 
     @Column(name = "multi_choice")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "survey_submission_multi_choice", joinColumns = @JoinColumn(name = "submission_id"))
     private List<String> response;
 

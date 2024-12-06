@@ -9,8 +9,8 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.surveySubmission.entity.SurveySubmissionEntity;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.entity.SurveySubmissionEntity;
 
 import java.util.List;
 

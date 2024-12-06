@@ -5,6 +5,7 @@ import org.innercircle.surveyapiapplication.domain.survey.application.SurveyServ
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyCreateRequest;
 import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyInquiryResponse;
+import org.innercircle.surveyapiapplication.domain.survey.presentation.dto.SurveyItemAndSubmissionInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.surveyItem.application.SurveyItemService;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SurveyItem;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/survey")
 @RequiredArgsConstructor
@@ -30,16 +33,6 @@ public class SurveyApiController {
     private final SurveyService surveyService;
     private final SurveyItemService surveyItemService;
     private final SurveySubmissionService surveySubmissionService;
-
-    @GetMapping("/{surveyId}")
-    public ResponseEntity<ApiResponse<SurveyInquiryResponse>> getSurvey(
-        @PathVariable(value = "surveyId") Long surveyId
-    ) {
-        Survey survey = surveyService.findById(surveyId);
-        SurveyInquiryResponse response = SurveyInquiryResponse.from(survey);
-        return ResponseEntity.ok()
-            .body(ApiResponse.onSuccess(response));
-    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<SurveyInquiryResponse>> createSurvey(
@@ -84,6 +77,15 @@ public class SurveyApiController {
        surveySubmissionService.createSurveySubmission(surveyId, surveyItemId, surveyItemVersion, request);
        return ResponseEntity.ok()
            .body(ApiResponse.onSuccess());
+    }
+
+    @GetMapping("/{surveyId}")
+    public ResponseEntity<ApiResponse<List<SurveyItemAndSubmissionInquiryResponse>>> getAllSurveyItemAndSubmissionOfSurvey(
+        @PathVariable(value = "surveyId") Long surveyId
+    ) {
+        List<SurveyItemAndSubmissionInquiryResponse> response = surveyService.findAllSurveyItemAndSubmission(surveyId);
+        return ResponseEntity.ok()
+            .body(ApiResponse.onSuccess(response));
     }
 
 }

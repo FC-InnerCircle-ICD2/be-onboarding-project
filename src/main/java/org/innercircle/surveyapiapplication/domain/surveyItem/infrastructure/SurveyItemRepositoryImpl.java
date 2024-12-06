@@ -42,4 +42,10 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
             .toDomain();
     }
 
+    @Override
+    public List<SurveyItem> findBySurveyId(Long surveyId) {
+        return surveyItemJpaRepository.findBySurveyId(surveyId)
+            .stream().map(SurveyItemEntity::toDomain).collect(Collectors.toList());
+    }
+
 }
