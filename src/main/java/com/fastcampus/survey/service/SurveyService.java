@@ -10,6 +10,7 @@ import com.fastcampus.survey.repository.SurveyRepository;
 import com.fastcampus.survey.util.constant.AnsType;
 import com.fastcampus.survey.util.constant.Must;
 import com.fastcampus.survey.util.json.JsonUtil;
+import com.fastcampus.survey.util.mapper.SurveyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,29 +30,7 @@ public class SurveyService {
 
     @Transactional
     public String createSurvey(SurveyDto surveyDto) throws Exception {
-
-        List<QuestionDto> questionDtos = surveyDto.getQuestions();
-
-        List<Question> questions = new ArrayList<>();
-        for (QuestionDto question : questionDtos) {
-            questions.add(
-                Question.builder()
-                    .qName(question.getQName())
-                    .qDescription(question.getQDescription())
-                    .qType(AnsType.fromValue(question.getQType()))
-                    .qMust(Must.fromValue(question.getQMust()))
-                    .build()
-            );
-        }
-
-        surveyRepository.save(
-            Survey.builder()
-                    .name(surveyDto.getName())
-                    .description(surveyDto.getDescription())
-                    .questions(questions)
-                    .build()
-        );
-
+        surveyRepository.save(SurveyMapper.toEntity(surveyDto));
         return "Success";
     }
 
@@ -66,29 +45,7 @@ public class SurveyService {
             questionRepository.delete(oldQuestion);
         }
 
-        // 새로운 질문들 저장
-        List<Question> newQuestions = new ArrayList<>();
-
-        for (QuestionDto question : surveyDto.getQuestions()) {
-            newQuestions.add(
-                Question.builder()
-                        .qName(question.getQName())
-                        .qDescription(question.getQDescription())
-                        .qType(AnsType.fromValue(question.getQType()))
-                        .choices(question.getChoices())
-                        .qMust(Must.fromValue(question.getQMust()))
-                        .build()
-            );
-        }
-
-        surveyRepository.save(
-            Survey.builder()
-                    .id(surveyDto.getId())
-                    .name(surveyDto.getName())
-                    .description(surveyDto.getDescription())
-                    .questions(newQuestions)
-                    .build()
-        );
+        surveyRepository.save(SurveyMapper.toEntity(surveyDto));
 
         return "success";
     }
