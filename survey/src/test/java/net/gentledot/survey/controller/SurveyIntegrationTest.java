@@ -8,15 +8,15 @@ import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.gentledot.survey.config.IntegrationTestDatabaseClearing;
-import net.gentledot.survey.dto.enums.UpdateType;
-import net.gentledot.survey.dto.request.SurveyCreateRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionRequest;
-import net.gentledot.survey.dto.request.SurveyUpdateRequest;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
-import net.gentledot.survey.model.enums.ItemRequired;
-import net.gentledot.survey.model.enums.SurveyItemType;
-import net.gentledot.survey.repository.SurveyQuestionRepository;
+import net.gentledot.survey.domain.enums.ItemRequired;
+import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.enums.UpdateType;
+import net.gentledot.survey.domain.surveybase.SurveyQuestion;
+import net.gentledot.survey.repository.jpa.SurveyJpaQuestionRepository;
+import net.gentledot.survey.service.in.model.request.SurveyCreateRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionRequest;
+import net.gentledot.survey.service.in.model.request.SurveyUpdateRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ class SurveyIntegrationTest {
     IntegrationTestDatabaseClearing integrationTestDatabaseClearing;
 
     @Autowired
-    SurveyQuestionRepository surveyQuestionRepository;
+    SurveyJpaQuestionRepository surveyQuestionRepository;
 
     @BeforeEach
     void setUp() {

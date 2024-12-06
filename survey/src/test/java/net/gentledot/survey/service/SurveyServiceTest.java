@@ -1,15 +1,15 @@
 package net.gentledot.survey.service;
 
-import net.gentledot.survey.dto.request.SurveyCreateRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionRequest;
+import net.gentledot.survey.domain.enums.ItemRequired;
+import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.surveybase.Survey;
+import net.gentledot.survey.domain.surveybase.SurveyQuestion;
+import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyCreationException;
-import net.gentledot.survey.model.entity.surveybase.Survey;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.model.enums.ItemRequired;
-import net.gentledot.survey.model.enums.SurveyItemType;
+import net.gentledot.survey.service.in.model.request.SurveyCreateRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

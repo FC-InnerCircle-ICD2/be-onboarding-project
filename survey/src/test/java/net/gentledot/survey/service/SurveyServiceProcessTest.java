@@ -1,21 +1,21 @@
 package net.gentledot.survey.service;
 
 import jakarta.transaction.Transactional;
-import net.gentledot.survey.dto.enums.UpdateType;
-import net.gentledot.survey.dto.request.SurveyCreateRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.dto.request.SurveyQuestionRequest;
-import net.gentledot.survey.dto.request.SurveyUpdateRequest;
-import net.gentledot.survey.dto.response.SurveyCreateResponse;
-import net.gentledot.survey.dto.response.SurveyUpdateResponse;
+import net.gentledot.survey.domain.enums.ItemRequired;
+import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.enums.UpdateType;
+import net.gentledot.survey.domain.surveybase.Survey;
+import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.exception.ServiceError;
 import net.gentledot.survey.exception.SurveyCreationException;
-import net.gentledot.survey.model.entity.surveybase.Survey;
-import net.gentledot.survey.model.entity.surveybase.SurveyQuestion;
-import net.gentledot.survey.model.enums.ItemRequired;
-import net.gentledot.survey.model.enums.SurveyItemType;
-import net.gentledot.survey.repository.SurveyQuestionRepository;
-import net.gentledot.survey.repository.SurveyRepository;
+import net.gentledot.survey.repository.jpa.SurveyJpaQuestionRepository;
+import net.gentledot.survey.repository.jpa.SurveyJpaRepository;
+import net.gentledot.survey.service.in.model.request.SurveyCreateRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.service.in.model.request.SurveyQuestionRequest;
+import net.gentledot.survey.service.in.model.request.SurveyUpdateRequest;
+import net.gentledot.survey.service.in.model.response.SurveyCreateResponse;
+import net.gentledot.survey.service.in.model.response.SurveyUpdateResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,13 +34,13 @@ class SurveyServiceProcessTest {
     SurveyService surveyService;
 
     @Autowired
-    SurveyRepository surveyRepository;
+    SurveyJpaRepository surveyJpaRepository;
 
     @Autowired
-    SurveyQuestionRepository questionRepository;
+    SurveyJpaQuestionRepository questionRepository;
 
     @Autowired
-    private SurveyQuestionRepository surveyQuestionRepository;
+    private SurveyJpaQuestionRepository surveyQuestionRepository;
 
     @BeforeEach
     void setUp() {
@@ -75,7 +75,7 @@ class SurveyServiceProcessTest {
         SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
         String surveyId = createdSurvey.getSurveyId();
 
-        Survey survey = surveyRepository.findById(surveyId).get();
+        Survey survey = surveyJpaRepository.findById(surveyId).get();
         List<SurveyQuestion> questions = survey.getQuestions();
         SurveyQuestion beforeQuestion = surveyQuestionRepository.findById(questions.get(0).getId()).get();
 
@@ -108,7 +108,7 @@ class SurveyServiceProcessTest {
         // a
         SurveyUpdateResponse surveyUpdateResponse = surveyService.updateSurvey(updateRequest);
 
-        Survey updatedSurvey = surveyRepository.findById(surveyId).get();
+        Survey updatedSurvey = surveyJpaRepository.findById(surveyId).get();
         List<SurveyQuestion> updatedQuestions = updatedSurvey.getQuestions();
 
 
@@ -136,7 +136,7 @@ class SurveyServiceProcessTest {
         SurveyCreateResponse createdSurvey = surveyService.createSurvey(surveyRequest);
         String surveyId = createdSurvey.getSurveyId();
 
-        Survey survey = surveyRepository.findById(surveyId).get();
+        Survey survey = surveyJpaRepository.findById(surveyId).get();
         List<SurveyQuestion> questions = survey.getQuestions();
         SurveyQuestion beforeQuestion = surveyQuestionRepository.findById(questions.get(0).getId()).get();
 
