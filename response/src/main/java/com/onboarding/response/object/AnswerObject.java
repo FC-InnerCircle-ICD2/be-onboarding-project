@@ -2,7 +2,6 @@ package com.onboarding.response.object;
 
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record AnswerObject(
@@ -10,7 +9,7 @@ public record AnswerObject(
     String questionType,
     boolean isRequired,
     String answer,
-    List<String> choices
+    List<String> choices// 선택지 (옵션)
 ) {
 
 }

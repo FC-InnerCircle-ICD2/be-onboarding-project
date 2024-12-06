@@ -2,6 +2,7 @@ package com.onboarding.survey.facade;
 
 import com.onboarding.core.global.exception.CustomException;
 import com.onboarding.core.global.exception.enums.ErrorCode;
+import com.onboarding.survey.enums.QuestionType;
 import com.onboarding.survey.object.QuestionObject;
 import com.onboarding.survey.object.SurveyObject;
 import com.onboarding.survey.dto.response.QuestionDTO;
@@ -33,6 +34,8 @@ public class SurveyFacade {
         surveyObject.getQuestions().stream().map(questionDto -> {
           log.info("questionDto isRequired: {}", questionDto.isRequired());
           log.info("questionDto isDeleted: {}", questionDto.isDeleted());
+
+          validateQuestionInput(questionDto.of(null));
           return questionDto.of(null);
         }).toList()
     );
@@ -75,6 +78,9 @@ public class SurveyFacade {
             questionObject.isRequired(),
             questionObject.getChoices()
         );
+
+        // 검증 호출
+        validateQuestionInput(matchingQuestion);
       } else {
         // 새 질문 추가
         Question newQuestion = Question.builder()
@@ -84,12 +90,13 @@ public class SurveyFacade {
             .isRequired(questionObject.isRequired())
             .choices(questionObject.getChoices())
             .build();
+
+        // 검증 호출
+        validateQuestionInput(newQuestion);
+
         existingSurvey.addQuestion(newQuestion);
       }
     }
-
-    // 디버깅용 로그
-    System.out.println("Final Questions in Survey: " + existingSurvey.getQuestions().size());
 
     surveyService.createSurvey(existingSurvey);
 
@@ -145,4 +152,21 @@ public class SurveyFacade {
             .toList()
     );
   }
+
+  private void validateQuestionInput(Question question) {
+    if ((question.getType() == QuestionType.SINGLE_CHOICE || question.getType() == QuestionType.MULTIPLE_CHOICE) &&
+        (question.getChoices() == null || question.getChoices().isEmpty())) {
+      throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE", ErrorCode.INVALID_INPUT_VALUE);
+    }
+
+    if ((question.getType() == QuestionType.SHORT_ANSWER || question.getType() == QuestionType.LONG_ANSWER) &&
+        (question.getChoices() != null && !question.getChoices().isEmpty())) {
+      throw new CustomException("Choices must be empty for SHORT_ANSWER or LONG_ANSWER", ErrorCode.INVALID_INPUT_VALUE);
+    }
+
+    if (question.getChoices() != null && question.getChoices().size() != question.getChoices().stream().distinct().count()) {
+      throw new CustomException("Choices must not contain duplicates for question: " + question.getTitle(), ErrorCode.INVALID_INPUT_VALUE);
+    }
+  }
+
 }

@@ -2,6 +2,7 @@ package com.onboarding.api.web.survey.controller;
 
 import com.onboarding.api.web.survey.dto.request.SurveyCreateReqDto;
 import com.onboarding.api.web.survey.dto.request.SurveyUpdateReqDto;
+import com.onboarding.core.global.dto.GlobalResponse;
 import com.onboarding.survey.dto.response.SurveyWithQuestionsDTO;
 import com.onboarding.survey.entity.Survey;
 import com.onboarding.survey.facade.SurveyFacade;
@@ -26,31 +27,31 @@ public class SurveyController {
   @PostMapping
   public ResponseEntity<?> createSurvey(@RequestBody SurveyCreateReqDto req) {
     surveyFacade.createSurvey(req.surveyObjectOf());
-    return ResponseEntity.ok().body("success");
+    return ResponseEntity.ok(GlobalResponse.success());
   }
 
   @PatchMapping("/{surveyId}")
   public ResponseEntity<?> updateSurvey(@PathVariable Long surveyId, @RequestBody
       SurveyUpdateReqDto req) {
     surveyFacade.updateSurvey(surveyId, req.surveyObjectOf());
-    return ResponseEntity.ok("Success");
+    return ResponseEntity.ok(GlobalResponse.success());
   }
 
   @PatchMapping("/{surveyId}/questions/{questionId}/swap")
-  public ResponseEntity<?> swapQuestionOrder(
+  public ResponseEntity<GlobalResponse<Survey>> swapQuestionOrder(
       @PathVariable Long surveyId,
       @PathVariable Long questionId,
       @RequestParam("targetQuestionId") Long targetQuestionId
   ) {
     Survey updatedSurvey = surveyFacade.swapQuestionOrder(surveyId, questionId, targetQuestionId);
-    return ResponseEntity.ok(updatedSurvey);
+    return ResponseEntity.ok(GlobalResponse.success(updatedSurvey));
   }
 
 
   @GetMapping("/{surveyId}")
-  public ResponseEntity<SurveyWithQuestionsDTO> getSurveyWithQuestions(@PathVariable Long surveyId) {
+  public ResponseEntity<GlobalResponse<SurveyWithQuestionsDTO>> getSurveyWithQuestions(@PathVariable Long surveyId) {
     SurveyWithQuestionsDTO surveyWithQuestions = surveyFacade.getSurveyByIdWithQuestions(surveyId);
-    return ResponseEntity.ok(surveyWithQuestions);
+    return ResponseEntity.ok(GlobalResponse.success(surveyWithQuestions));
   }
 
 

@@ -2,6 +2,7 @@ package com.onboarding.response.facade;
 
 import com.onboarding.core.global.exception.CustomException;
 import com.onboarding.core.global.exception.enums.ErrorCode;
+import com.onboarding.core.global.utils.RedisLock;
 import com.onboarding.response.dto.response.AnswerDTO;
 import com.onboarding.response.dto.response.ResponseDTO;
 import com.onboarding.response.entity.Answer;
@@ -30,39 +31,103 @@ public class ResponseFacade {
   private final SurveyService surveyService;
   private final QuestionService questionService;
   private final ResponseService responseService;
+  private final RedisLock redisLock;
 
   @Transactional
   public void submitResponse(Long surveyId, ResponseObject responseObject) {
-    Survey survey = surveyService.findSurveyById(surveyId)
-        .orElseThrow(() -> new CustomException("Survey not found", ErrorCode.SURVEY_NOT_FOUND));
+    String lockKey = "survey:lock:" + surveyId;
+    if (!redisLock.lock(lockKey, 10)) {
+      log.error("Failed to acquire lock for surveyId: {}", surveyId);
+      throw new CustomException("Failed to acquire lock", ErrorCode.CONCURRENT_MODIFICATION);
+    }
 
-    List<Question> surveyQuestions = questionService.findQuestionsBySurveyId(surveyId);
+    try {
+      log.info("Acquired lock for surveyId: {}", surveyId);
 
-    validateRequiredQuestions(surveyQuestions, responseObject.answerObjects());
-    responseObject.answerObjects().forEach(this::validateAnswerObject);
+      // 설문 존재 여부 확인
+      Survey survey = surveyService.findSurveyById(surveyId)
+          .orElseThrow(() -> new CustomException("Survey not found", ErrorCode.SURVEY_NOT_FOUND));
+      log.info("Survey found: {}", survey.getName());
 
-    List<Answer> answers = responseObject.answerObjects().stream()
-        .map(request -> {
-          Question question = findMatchingQuestion(surveyQuestions, request.questionTitle());
-          if (question == null) {
-            throw new CustomException("Invalid question: " + request.questionTitle(), ErrorCode.QUESTION_NOT_FOUND);
-          }
-          return createAnswerFromRequest(question, request);
-        }).toList();
+      // 사용자 중복 응답 확인
+      if (responseService.existsBySurveyIdAndEmail(surveyId, responseObject.email())) {
+        throw new CustomException("User has already submitted the survey", ErrorCode.ENTITY_ALREADY_EXISTS);
+      }
 
-    responseService.saveResponse(survey, responseObject.email(), answers);
+      List<Question> surveyQuestions = questionService.findQuestionsBySurveyId(surveyId);
+      log.info("Questions loaded: {}", surveyQuestions.size());
+
+      validateRequiredQuestions(surveyQuestions, responseObject.answerObjects());
+      log.info("Required questions validated");
+
+      List<Answer> answers = responseObject.answerObjects().stream()
+          .map(request -> {
+            // 중복 응답 확인
+            if (responseService.hasUserAlreadyAnsweredQuestion(surveyId, request.questionTitle(), responseObject.email())) {
+              throw new CustomException("User has already answered this question: " + request.questionTitle(), ErrorCode.ENTITY_ALREADY_EXISTS);
+            }
+
+            validateAnswerObject(request, surveyId);
+            Question question = findMatchingQuestion(surveyQuestions, request.questionTitle());
+
+            if (question == null) {
+              log.error("Invalid question: {}", request.questionTitle());
+              throw new CustomException("Invalid question", ErrorCode.QUESTION_NOT_FOUND);
+            }
+            return createAnswerFromRequest(question, request);
+          }).toList();
+
+      log.info("Answers created: {}", answers.size());
+      responseService.saveResponse(survey, responseObject.email(), answers);
+      log.info("Response saved successfully");
+    } finally {
+      redisLock.unlock(lockKey);
+      log.info("Lock released for surveyId: {}", surveyId);
+    }
   }
 
-  private void validateAnswerObject(AnswerObject answer) {
-    if ((answer.questionType().equals("SINGLE_CHOICE") || answer.questionType().equals("MULTIPLE_CHOICE")) &&
-        (answer.choices() == null || answer.choices().isEmpty())) {
-      throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE", ErrorCode.INVALID_INPUT_VALUE);
+
+
+
+  private void validateAnswerObject(AnswerObject answer, Long surveyId) {
+    // Question을 조회하여 선택지를 검증
+    Question question = findMatchingQuestionForAnswer(answer, surveyId);
+    if (question == null) {
+      throw new CustomException("Question not found: " + answer.questionTitle(), ErrorCode.QUESTION_NOT_FOUND);
     }
 
-    if ((answer.questionType().equals("SHORT_ANSWER") || answer.questionType().equals("LONG_ANSWER")) &&
-        (answer.choices() != null && !answer.choices().isEmpty())) {
-      throw new CustomException("Choices must be empty for SHORT_ANSWER or LONG_ANSWER", ErrorCode.INVALID_INPUT_VALUE);
+    // Single Choice 또는 Multiple Choice의 선택지 검증
+    if (question.getType() == QuestionType.SINGLE_CHOICE || question.getType() == QuestionType.MULTIPLE_CHOICE) {
+      List<String> validChoices = question.getChoices(); // 설문에 등록된 선택지
+      List<String> submittedChoices = answer.choices(); // 응답자가 제출한 선택지
+
+      // Single Choice: 하나의 값만 제출되며, 그것이 유효한지 확인
+      if (question.getType() == QuestionType.SINGLE_CHOICE) {
+        if (submittedChoices.size() != 1 || !validChoices.contains(submittedChoices.get(0))) {
+          throw new CustomException("Invalid choice for question: " + question.getTitle(), ErrorCode.INVALID_INPUT_VALUE);
+        }
+      }
+
+      // Multiple Choice: 모든 제출된 값이 유효한지 확인
+      if (question.getType() == QuestionType.MULTIPLE_CHOICE) {
+        List<String> invalidChoices = submittedChoices.stream()
+            .filter(choice -> !validChoices.contains(choice))
+            .toList();
+        if (!invalidChoices.isEmpty()) {
+          throw new CustomException("Invalid choices: " + invalidChoices + " for question: " + question.getTitle(), ErrorCode.INVALID_INPUT_VALUE);
+        }
+      }
     }
+
+    // SHORT_ANSWER, LONG_ANSWER에 대한 추가 검증 로직 필요 시 여기에 추가
+  }
+
+
+  private Question findMatchingQuestionForAnswer(AnswerObject answer, Long surveyId) {
+    return questionService.findQuestionsBySurveyId(surveyId).stream()
+        .filter(question -> question.getTitle().equals(answer.questionTitle()))
+        .findFirst()
+        .orElse(null);
   }
 
   public List<ResponseDTO> getAllResponses(Long surveyId) {

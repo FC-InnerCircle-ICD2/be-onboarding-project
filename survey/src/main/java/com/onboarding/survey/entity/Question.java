@@ -59,6 +59,25 @@ public class Question extends BaseEntity {
   public Question() {
   }
 
+  public Question(String title, String description, QuestionType type, boolean isRequired,
+      Integer orderIndex, Survey survey, List<String> choices) {
+    this.title = title;
+    this.description = description;
+    this.type = type;
+    this.isRequired = isRequired;
+    this.orderIndex = orderIndex;
+    this.survey = survey;
+    this.choices = choices;
+  }
+
+  public Question(String title, String description, QuestionType questionType, boolean isRequired, List<String> choices) {
+    this.title = title;
+    this.description = description;
+    this.type = questionType;
+    this.isRequired = isRequired;
+    this.choices = choices;
+  }
+
   public void updateDetails(String title, String description, QuestionType type, boolean isRequired, List<String> choices) {
     if (title != null && !title.isBlank()) {
       this.title = title;

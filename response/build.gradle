@@ -12,7 +12,10 @@ dependencies {
 }
 
 test {
-    exclude '**/*'
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 bootJar {

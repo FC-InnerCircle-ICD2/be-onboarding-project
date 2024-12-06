@@ -34,6 +34,11 @@ public class Survey extends BaseEntity {
     this.questions = new ArrayList<>(); // 생성자에서 초기화
   }
 
+  public Survey(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
+
   public Survey(Long id, String name, String description, List<Question> questions) {
     this.id = id;
     this.name = name;

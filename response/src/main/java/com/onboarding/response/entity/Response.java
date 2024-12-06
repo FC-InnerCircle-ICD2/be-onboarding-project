@@ -40,6 +40,11 @@ public class Response {
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Answer> answers = new ArrayList<>();
 
+  public <E> Response(String mail, List<E> desc) {
+    this.email = mail;
+    this.answers = new ArrayList<>();
+  }
+
   public void addAnswer(Answer answer) {
     this.answers.add(answer);
   }

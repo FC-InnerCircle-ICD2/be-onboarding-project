@@ -2,6 +2,7 @@ package com.onboarding.api.web.response.controller;
 
 import com.onboarding.api.web.response.dto.request.AnswerRequest;
 import com.onboarding.api.web.response.dto.request.SubmitResponseRequest;
+import com.onboarding.core.global.dto.GlobalResponse;
 import com.onboarding.response.dto.response.ResponseDTO;
 import com.onboarding.response.facade.ResponseFacade;
 import java.util.List;
@@ -27,20 +28,20 @@ public class ResponseController {
       @RequestBody SubmitResponseRequest request
   ) {
     responseFacade.submitResponse(surveyId, request.of());
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(GlobalResponse.success());
   }
 
   @GetMapping("/{surveyId}")
-  public ResponseEntity<List<ResponseDTO>> getAllResponses(@PathVariable Long surveyId) {
+  public ResponseEntity<GlobalResponse<List<ResponseDTO>>> getAllResponses(@PathVariable Long surveyId) {
     List<ResponseDTO> responses = responseFacade.getAllResponses(surveyId);
-    return ResponseEntity.ok(responses);
+    return ResponseEntity.ok(GlobalResponse.success(responses));
   }
 
   @GetMapping("/{surveyId}/search")
-  public ResponseEntity<List<ResponseDTO>> searchResponses(@PathVariable Long surveyId,
-      @RequestParam String questionTitle,
-      @RequestParam String responseValue) {
+  public ResponseEntity<GlobalResponse<List<ResponseDTO>>> searchResponses(@PathVariable Long surveyId,
+      @RequestParam(required = false) String questionTitle,
+      @RequestParam(required = false) String responseValue) {
     List<ResponseDTO> responses = responseFacade.searchResponses(surveyId, questionTitle, responseValue);
-    return ResponseEntity.ok(responses);
+    return ResponseEntity.ok(GlobalResponse.success(responses));
   }
 }
