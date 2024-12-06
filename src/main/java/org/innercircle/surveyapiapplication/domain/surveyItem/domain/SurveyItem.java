@@ -1,7 +1,6 @@
 package org.innercircle.surveyapiapplication.domain.surveyItem.domain;
 
 import lombok.Getter;
-import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.type.SurveyItemType;
 import org.innercircle.surveyapiapplication.global.exception.CustomException;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
@@ -41,12 +40,10 @@ public abstract class SurveyItem {
         this.surveyId = surveyId;
     }
 
-    public abstract void answer(Answer answer);
-
     public SurveyItem update(String name, String description, SurveyItemType type, boolean required, List<String> options) {
         SurveyItem updatedSurveyItem = switch (type) {
-            case SHORT_ANSWER -> new ShortAnswerSurveyItem(this.id, this.version, name, description, required, this.surveyId);
-            case LONG_ANSWER -> new LongAnswerSurveyItem(this.id, this.version, name, description, required, this.surveyId);
+            case TEXT -> new TextSurveyItem(this.id, this.version, name, description, required, this.surveyId);
+            case PARAGRAPH -> new ParagraphSurveyItem(this.id, this.version, name, description, required, this.surveyId);
             case SINGLE_CHOICE_ANSWER -> new SingleChoiceSurveyItem(this.id, this.version, name, description, required, this.surveyId, options);
             case MULTI_CHOICE_ANSWER -> new MultiChoiceSurveyItem(this.id, this.version, name, description, required, this.surveyId, options);
             default -> throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_FORMAT);

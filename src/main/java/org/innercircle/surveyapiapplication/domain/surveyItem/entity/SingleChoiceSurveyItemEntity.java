@@ -9,7 +9,7 @@ import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.innercircle.surveyapiapplication.domain.answer.entity.AnswerEntity;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.entity.SurveySubmissionEntity;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.SingleChoiceSurveyItem;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class SingleChoiceSurveyItemEntity extends SurveyItemEntity {
     private List<String> options;
 
     @Transient
-    private AnswerEntity answerEntity;
+    private SurveySubmissionEntity surveySubmissionEntity;
 
     public SingleChoiceSurveyItemEntity(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
         super(id, version, name, description, required, surveyId);

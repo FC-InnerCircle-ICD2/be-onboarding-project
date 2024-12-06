@@ -1,10 +1,7 @@
 package org.innercircle.surveyapiapplication.domain.surveyItem.domain;
 
 import lombok.Getter;
-import org.innercircle.surveyapiapplication.domain.answer.domain.Answer;
 import org.innercircle.surveyapiapplication.domain.surveyItem.domain.type.SurveyItemType;
-import org.innercircle.surveyapiapplication.global.exception.CustomException;
-import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 
 import java.util.List;
 
@@ -12,8 +9,6 @@ import java.util.List;
 public class SingleChoiceSurveyItem extends SurveyItem {
 
     private List<String> options;
-
-    private Answer answer;
 
     public SingleChoiceSurveyItem(Long id, int version, String name, String description, boolean required, Long surveyId, List<String> options) {
         super(id, version, name, description, required, surveyId);
@@ -23,15 +18,6 @@ public class SingleChoiceSurveyItem extends SurveyItem {
     public SingleChoiceSurveyItem(Long id, String name, String description, boolean required, List<String> options) {
         super(id, 1, name, description, required);
         this.options = options;
-    }
-
-    @Override
-    public void answer(Answer answer) {
-        if (!options.contains(answer.getResponse())) {
-            throw new CustomException(CustomResponseStatus.NOT_FOUND_QUESTION_OPTION);
-        }
-        this.answer = answer;
-        answer.setQuestionId(this.getId());
     }
 
     @Override
