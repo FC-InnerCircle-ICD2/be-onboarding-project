@@ -1,22 +1,37 @@
+- 테이블 설계
+  ![image](https://github.com/user-attachments/assets/be427305-96fa-484e-ab3c-461527be94d2)
 - DB 접속(로컬실행)
-- H2 Console
-  - http://localhost:8080/h2-console
-  - JDBC URL: jdbc:h2:mem:test
-  - User Name: sa
-
+  - H2 Console
+    - http://localhost:8080/h2-console
+    - JDBC URL: jdbc:h2:mem:test
+    - User Name: sa
 - API 문서
   - http://localhost:8080/swagger-ui/index.html (로컬실행)
   - [온라인으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/18027424/survey_ksb.json)
-
 - jar 다운로드
   - https://drive.google.com/file/d/15vBMIY7dVEULLbzPP0A2vp1sUdMuEgdf/view?usp=sharing
     - java -jar survey-0.0.1-SNAPSHOT.jar
+
+### 고민
+
+- (초기구현) 모든 정보를 RDB 컬럼으로 관리
+  - 요구사항을 구현하기 위한 코드가 복잡해졌음
+  - 기능이 추가된다면 데이터 관리가 매우 힘들어지고 많은 양의 코드를 작성해야 할 것 같았음
+  - 결국 JSON 형태를 저장하지만 검색을 고려한 구현으로 바꾸어야 함을 느낌
+- (현재) 설문 정보와 질문 정보를 JSON 형태로 저장
+  - 코드의 양을 많이 줄일 수 있었고, 단순해짐
+  - 질문이름=답변내용 검색을 위해 조회용 "답변이력" 테이블을 이용
+    - 설문조사 제출시 해당 시점의 질문정보와 답변내용을 쪼개어 저장
+    - 컬럼 인덱스를 활용해 질문 조회를 고려하고, 응답은 JSON
+      - (설문식별자 + 질문이름)[현재선택] or (설문식별자 + 질문이름 + 답변내용) 고민
+      - 답변 내용은 내용이 길거나 부분 검색을 해야하면 인덱스 생성이 적절하지 않을 것 같았음
 
 ### 질문
 
 - 설계 관련
   1. 설문조사 정보와 제출 정보는 유연하게 JSON 으로 저장하면서 "이름=답변" 조회 요구사항을 위해 검색용 테이블에 각각의 응답을 분리하여 쌓아두는 방식으로 하였습니다.
       - 저는 우선 (설문 식별자, 질문 이름) 복합 인덱스를 사용했는데, 길이가 긴 "답변 내용" 컬럼까지 인덱스로 두어도 괜찮을까요?
+        - "답변" 내용은 자바에서 필터링
   2. BizException 이라는 공통 예외 1개에 세부적인 메세지 구분은 ErrorCode를 정의하여 사용하였는데, 보통 서비스 기업에서는 어떤 방식으로 사용하나요?
       - 예외 원인에 대해 모두 개별 Exception을 정의한다면 테스트하기엔 좋아도 관리할 파일이 많이 늘어날 것 같습니다. 평소 선호하는 방식이 있으신가요?
 
