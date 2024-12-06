@@ -43,9 +43,6 @@ public class Question extends BaseEntity {
   private boolean isDeleted;
 
   @Setter
-  private Integer orderIndex;
-
-  @Setter
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "survey_id")
   private Survey survey;
@@ -60,12 +57,11 @@ public class Question extends BaseEntity {
   }
 
   public Question(String title, String description, QuestionType type, boolean isRequired,
-      Integer orderIndex, Survey survey, List<String> choices) {
+     Survey survey, List<String> choices) {
     this.title = title;
     this.description = description;
     this.type = type;
     this.isRequired = isRequired;
-    this.orderIndex = orderIndex;
     this.survey = survey;
     this.choices = choices;
   }
@@ -98,23 +94,6 @@ public class Question extends BaseEntity {
       this.choices = new ArrayList<>(choices);
     }
 
-    // orderIndex가 변경될 경우 처리
-    if (orderIndex != null && !orderIndex.equals(this.orderIndex)) {
-      int oldOrderIndex = this.orderIndex;
-      int newOrderIndex = orderIndex;
-
-      // 기존 질문의 orderIndex를 업데이트하고, 변경된 순서를 재조정
-      survey.getQuestions().stream()
-          .filter(q -> q.getOrderIndex() >= newOrderIndex && !q.getId().equals(this.id))
-          .forEach(q -> q.setOrderIndex(q.getOrderIndex() + 1));
-
-      this.orderIndex = newOrderIndex;
-
-      // 기존 위치에 있던 질문들의 순서를 조정하여 중복 제거
-      survey.getQuestions().stream()
-          .filter(q -> q.getOrderIndex() > oldOrderIndex)
-          .forEach(q -> q.setOrderIndex(q.getOrderIndex() - 1));
-    }
   }
 
 
@@ -132,7 +111,6 @@ public class Question extends BaseEntity {
       }
     }
     this.isRequired = isRequired;
-    this.orderIndex = orderIndex;
     this.survey = survey;
     this.choices = choices;
   }

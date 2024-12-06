@@ -51,23 +51,26 @@ public class SurveyFacadeTest {
         ))
         .build();
 
-    Survey survey = Survey.builder()
-        .id(1L)
-        .name("Customer Feedback")
-        .description("A survey to gather feedback")
-        .questions(new ArrayList<>())
+    Question mockQuestion = Question.builder()
+        .title("How satisfied are you?")
+        .description("Rate from 1 to 5")
+        .type(QuestionType.SINGLE_CHOICE)
+        .isRequired(true)
+        .choices(List.of("1", "2", "3", "4", "5"))
         .build();
 
-    // Mock surveyService.createSurvey() 호출을 검증하기 위한 상태 설정
+    // Mock 설정
+    Mockito.when(questionService.validateAndCreateQuestion(Mockito.any(Question.class))).thenReturn(mockQuestion);
     Mockito.doNothing().when(surveyService).createSurvey(Mockito.any(Survey.class));
 
     // When
     surveyFacade.createSurvey(surveyObject);
 
     // Then
-    // surveyService.createSurvey() 메서드가 한 번 호출되었는지 검증
     Mockito.verify(surveyService, Mockito.times(1)).createSurvey(Mockito.any(Survey.class));
+    Mockito.verify(questionService, Mockito.times(1)).validateAndCreateQuestion(Mockito.any(Question.class));
   }
+
 
 
   @Test

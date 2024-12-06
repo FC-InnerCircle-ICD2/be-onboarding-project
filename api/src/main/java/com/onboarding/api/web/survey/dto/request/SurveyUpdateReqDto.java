@@ -25,12 +25,10 @@ public class SurveyUpdateReqDto{
   public List<QuestionObject> questionOf() {
     return questions.stream()
         .map(question -> QuestionObject.builder()
-            .id(question.id())
             .title(question.title())
             .type(question.type())
             .isRequired(question.isRequired())
             .description(question.description())
-            .operation(question.operation())
             .choices(question.choices())
             .build()).toList();
   }

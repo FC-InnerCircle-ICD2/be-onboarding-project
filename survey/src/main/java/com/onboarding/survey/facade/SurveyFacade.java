@@ -35,13 +35,19 @@ public class SurveyFacade {
           log.info("questionDto isRequired: {}", questionDto.isRequired());
           log.info("questionDto isDeleted: {}", questionDto.isDeleted());
 
-          validateQuestionInput(questionDto.of(null));
-          return questionDto.of(null);
+          // 검증 후 생성된 Question 반환
+          Question question = questionService.validateAndCreateQuestion(questionDto.of(null));
+          if (question == null) {
+            throw new CustomException("Failed to create question", ErrorCode.INVALID_INPUT_VALUE);
+          }
+          return question;
         }).toList()
     );
+
     survey.getQuestions().forEach(question -> question.setSurvey(survey));
     surveyService.createSurvey(survey);
   }
+
 
   public void updateSurvey(Long surveyId, SurveyObject surveyObject) {
     Survey existingSurvey = surveyService.getSurveyById(surveyId);
@@ -102,30 +108,30 @@ public class SurveyFacade {
 
   }
 
-  // 설문 저장
-  public Survey swapQuestionOrder(Long surveyId, Long questionId, Long targetQuestionId) {
-    Survey survey = surveyService.getSurveyById(surveyId);
-
-    Question question = survey.getQuestions().stream()
-        .filter(q -> q.getId().equals(questionId))
-        .findFirst()
-        .orElseThrow(() -> new CustomException(
-            "Required question is missing: " , ErrorCode.QUESTION_NOT_FOUND));
-
-    Question targetQuestion = survey.getQuestions().stream()
-        .filter(q -> q.getId().equals(targetQuestionId))
-        .findFirst()
-        .orElseThrow(() -> new CustomException(
-            "Required question is missing: ", ErrorCode.QUESTION_NOT_FOUND));
-
-    int tempOrderIndex = question.getOrderIndex();
-    question.setOrderIndex(targetQuestion.getOrderIndex());
-    targetQuestion.setOrderIndex(tempOrderIndex);
-
-    survey.getQuestions().sort(Comparator.comparingInt(Question::getOrderIndex)); // 정렬
-
-    return survey;
-  }
+//  // 설문 저장
+//  public Survey swapQuestionOrder(Long surveyId, Long questionId, Long targetQuestionId) {
+//    Survey survey = surveyService.getSurveyById(surveyId);
+//
+//    Question question = survey.getQuestions().stream()
+//        .filter(q -> q.getId().equals(questionId))
+//        .findFirst()
+//        .orElseThrow(() -> new CustomException(
+//            "Required question is missing: " , ErrorCode.QUESTION_NOT_FOUND));
+//
+//    Question targetQuestion = survey.getQuestions().stream()
+//        .filter(q -> q.getId().equals(targetQuestionId))
+//        .findFirst()
+//        .orElseThrow(() -> new CustomException(
+//            "Required question is missing: ", ErrorCode.QUESTION_NOT_FOUND));
+//
+//    int tempOrderIndex = question.getOrderIndex();
+//    question.setOrderIndex(targetQuestion.getOrderIndex());
+//    targetQuestion.setOrderIndex(tempOrderIndex);
+//
+//    survey.getQuestions().sort(Comparator.comparingInt(Question::getOrderIndex)); // 정렬
+//
+//    return survey;
+//  }
 
   public Survey findById(Long id) {
     return surveyService.getSurveyById(id);
@@ -154,6 +160,8 @@ public class SurveyFacade {
   }
 
   private void validateQuestionInput(Question question) {
+
+
     if ((question.getType() == QuestionType.SINGLE_CHOICE || question.getType() == QuestionType.MULTIPLE_CHOICE) &&
         (question.getChoices() == null || question.getChoices().isEmpty())) {
       throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE", ErrorCode.INVALID_INPUT_VALUE);

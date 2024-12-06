@@ -17,15 +17,14 @@ public class SubmitResponseRequest {
   private String email;
 
   @Schema(description = "질문 응답 리스트", example = """
-        [
-          {
-            "questionTitle": "질문1",
-            "responseValue": {
-              "textResponse": null,
-              "choiceResponses": ["선택1"]
-            }
-          }
-        ]
+         [
+             {
+               "questionTitle": "질문1",
+               "questionType": "SHORT_ANSWER",
+               "answer": "test",
+               "choices": []
+             }
+         ]
     """)
   private List<AnswerRequest> answers;
 

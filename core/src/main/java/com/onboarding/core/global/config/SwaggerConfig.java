@@ -16,6 +16,6 @@ public class SwaggerConfig {
                 .title("Onboarding API")
                 .version("v1")
                 .description("설문 응답 API 문서")
-                .contact(new Contact().name("Onboarding Team").email("support@onboarding.com")));
+                .contact(new Contact().name("Onboarding Team").email("https://github.com/hyuk12/be-onboarding-project")));
     }
 }

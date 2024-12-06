@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
 	group = 'com.onboarding'
-	version = '0.0.1-SNAPSHOT'
+	version = '1.0.0'
 
 	repositories {
 		// 외부 라이브러리를 다운로드할 저장소 추가

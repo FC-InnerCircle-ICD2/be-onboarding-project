@@ -2,6 +2,7 @@ package com.onboarding.api.web.survey.dto.request;
 
 import com.onboarding.survey.object.QuestionObject;
 import com.onboarding.survey.object.SurveyObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

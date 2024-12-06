@@ -27,7 +27,6 @@ public class Survey extends BaseEntity {
 
   @Builder.Default
   @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("orderIndex ASC")
   private List<Question> questions = new ArrayList<>();
 
   public Survey() {
@@ -67,36 +66,13 @@ public class Survey extends BaseEntity {
       throw new IllegalArgumentException("Maximum of 10 questions allowed.");
     }
 
-    // orderIndex가 지정되지 않은 경우 마지막 순서로 설정
-    if (question.getOrderIndex() == null) {
-      question.setOrderIndex(questions.size() + 1);
-    }
     questions.add(question);
     question.setSurvey(this);
 
-    // 정렬하여 순서 유지
-    reorderQuestions();
   }
 
 
 
-  // 질문 교환을 위해 재정렬
-  public static void reorderQuestionsForNew(Question newQuestion, Question existingQuestion) {
-    int newOrderIndex = newQuestion.getOrderIndex();
-    int existingOrderIndex = existingQuestion.getOrderIndex();
-
-    // 기존 질문의 순서를 새로운 질문의 다음 위치로 이동
-    existingQuestion.setOrderIndex(existingOrderIndex + 1);
-
-    // 새로운 질문의 orderIndex를 할당
-    newQuestion.setOrderIndex(newOrderIndex);
-  }
-
-  private void reorderQuestions() {
-    for (int i = 0; i < questions.size(); i++) {
-      questions.get(i).setOrderIndex(i + 1);
-    }
-  }
 
   public void removeQuestion(Question question) {
     this.questions.remove(question);

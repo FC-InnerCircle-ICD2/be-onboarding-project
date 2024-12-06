@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onboarding.api.web.response.dto.request.AnswerRequest;
 import com.onboarding.api.web.response.dto.request.SubmitResponseRequest;
+import com.onboarding.response.dto.response.AnswerDTO;
+import com.onboarding.response.dto.response.ResponseDTO;
 import com.onboarding.response.entity.Answer;
 import com.onboarding.response.entity.QuestionSnapshot;
 import com.onboarding.response.entity.Response;
@@ -84,31 +86,33 @@ class ResponseControllerTest {
     // Given
     Long surveyId = 1L;
 
-    Response mockResponse = Response.builder()
-        .email("test@example.com")
-        .answers(List.of(
-            Answer.builder()
-                .questionSnapshot(mockSnapshot)
-                .responseValue(ResponseValue.forChoices(List.of("5")))
-                .build()
-        ))
-        .build();
+    // Mock 데이터를 JSON 구조에 맞게 설정
+    List<ResponseDTO> mockResponses = List.of(
+        new ResponseDTO(
+            "test@gmail.com",
+            List.of(
+                new AnswerDTO(
+                    "질문1",
+                    ResponseValue.forText("test") // SHORT_ANSWER의 경우 textResponse 설정
+                )
+            )
+        )
+    );
 
-    Mockito.when(surveyService.findSurveyById(1L))
-        .thenReturn(Optional.of(mockSurvey));
-
-    Mockito.when(responseService.findResponsesBySurvey(mockSurvey))
-        .thenReturn(List.of(mockResponse));
-
+    // Mock 객체 반환값 설정
+    Mockito.when(responseFacade.getAllResponses(surveyId)).thenReturn(mockResponses);
 
     // When & Then
     mockMvc.perform(get("/api/v1/{surveyId}", surveyId)
             .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print()) // JSON 응답 출력
+        .andDo(print()) // 응답 JSON 출력
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data[0].email").value("test@example.com"));
-
+        .andExpect(jsonPath("$.data[0].email").value("test@gmail.com"))
+        .andExpect(jsonPath("$.data[0].answers[0].questionTitle").value("질문1"))
+        .andExpect(jsonPath("$.data[0].answers[0].responseValue.textResponse").value("test"))
+        .andExpect(jsonPath("$.data[0].answers[0].responseValue.choiceResponses").isEmpty());
   }
+
 
   @Test
   void submitResponse_ShouldReturn200() throws Exception {
