@@ -1,0 +1,9 @@
+### 설문 조사 조회 (SurveyForm ID 로 조회)
+GET localhost:8080/api/v1/surveys/test1/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+### 설문 조사 조회 (SurveyForm Title 로 조회)
+GET localhost:8080/api/v1/surveys/answers?surveyTitle=title-1 HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json

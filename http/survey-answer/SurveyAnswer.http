@@ -1,0 +1,152 @@
+### 독서 습관 조사 설문 조사 답변
+POST localhost:8080/api/v1/surveys/{}/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "answer": "",
+      "selectedOptions": ["2~3권"],
+      "type": "SINGLE_SELECT"
+    },
+    {
+      "name": "아이템 2",
+      "answer": "",
+      "selectedOptions": ["소설", "경제"],
+      "type": "MULTIPLE_SELECT"
+    },
+    {
+      "name": "아이템 3",
+      "answer": "자바의 정석",
+      "selectedOptions": [],
+      "type": "SHORT_ANSWER"
+    }
+  ]
+}
+
+### 여행 선호도 조사 설문 조사 답변
+POST localhost:8080/api/v1/surveys/0a105ffd-31c4-458f-8d6d-f54355864d53/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "answer": "",
+      "selectedOptions": ["제주도"],
+      "type": "SINGLE_SELECT"
+    },
+    {
+      "name": "아이템 2",
+      "answer": "",
+      "selectedOptions": ["음식", "관광지"],
+      "type": "MULTIPLE_SELECT"
+    },
+    {
+      "name": "아이템 3",
+      "answer": "제주도의 아름다운 해변",
+      "selectedOptions": [],
+      "type": "SHORT_ANSWER"
+    },
+    {
+      "name": "아이템 4",
+      "answer": "제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.제주도에서 해녀분들과의 인터뷰가 인상 깊었습니다.",
+      "selectedOptions": [],
+      "type": "LONG_ANSWER"
+    }
+  ]
+}
+
+### 운동 습관 조사 설문 조사 답변
+POST localhost:8080/api/v1/surveys/{}/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "answer": "",
+      "selectedOptions": ["아침"],
+      "type": "SINGLE_SELECT"
+    },
+    {
+      "name": "아이템 2",
+      "answer": "",
+      "selectedOptions": ["러닝", "요가"],
+      "type": "MULTIPLE_SELECT"
+    },
+    {
+      "name": "아이템 3",
+      "answer": "체력을 키우고 건강을 유지하기 위해 시작했습니다.",
+      "selectedOptions": [],
+      "type": "SHORT_ANSWER"
+    }
+  ]
+}
+
+### 영화 선호도 조사 설문 조사 답변
+POST localhost:8080/api/v1/surveys/{}/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+
+{
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "answer": "",
+      "selectedOptions": ["SF", "코미디"],
+      "type": "MULTIPLE_SELECT"
+    },
+    {
+      "name": "아이템 2",
+      "answer": "인터스텔라",
+      "selectedOptions": [],
+      "type": "SHORT_ANSWER"
+    },
+    {
+      "name": "아이템 3",
+      "answer": "",
+      "selectedOptions": ["OTT 서비스 (넷플릭스, 디즈니+ 등)"],
+      "type": "SINGLE_SELECT"
+    }
+  ]
+}
+
+### 음악 선호도 조사 설문 조사 답변
+POST localhost:8080/api/v1/surveys/{}/answers HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "surveyItems": [
+    {
+      "name": "아이템 1",
+      "answer": "",
+      "selectedOptions": ["휴식 시간"],
+      "type": "SINGLE_SELECT"
+    },
+    {
+      "name": "아이템 2",
+      "answer": "",
+      "selectedOptions": ["팝", "재즈"],
+      "type": "MULTIPLE_SELECT"
+    },
+    {
+      "name": "아이템 3",
+      "answer": "BTS",
+      "selectedOptions": [],
+      "type": "SHORT_ANSWER"
+    },
+    {
+      "name": "아이템 4",
+      "answer": "음악은 스트레스를 해소하고 삶의 질을 높여줍니다.",
+      "selectedOptions": [],
+      "type": "LONG_ANSWER"
+    }
+  ]
+}
