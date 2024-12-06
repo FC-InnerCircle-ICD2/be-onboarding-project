@@ -6,6 +6,8 @@ public enum ErrorCode {
   MUST_BE_CHOICES("E400", "Choices must be provided for single or multiple choice questions."),
   INVALID_TYPE_VALUE("E400", "Invalid type value"),
   INVALID_REQUEST("E400", "Invalid request"),
+  INVALID_CHOICES("E400", "Invalid Choices" ),
+
 
   // 404 Not Found
   ENTITY_NOT_FOUND("E404", "Entity not found"),
@@ -26,7 +28,6 @@ public enum ErrorCode {
 
   // 500 Internal Server Error
   INTERNAL_SERVER_ERROR("E500", "Internal server error");
-
 
   private final String code;
   private final String message;

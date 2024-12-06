@@ -63,6 +63,7 @@ public class SurveyController {
   @PatchMapping("/{surveyId}")
   public ResponseEntity<?> updateSurvey(@PathVariable Long surveyId, @RequestBody
       SurveyUpdateReqDto req) {
+
     surveyFacade.updateSurvey(surveyId, req.surveyObjectOf());
     return ResponseEntity.ok(GlobalResponse.success());
   }

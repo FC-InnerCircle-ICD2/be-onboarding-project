@@ -1,6 +1,7 @@
 package com.onboarding.survey.entity;
 
 import com.onboarding.core.global.entity.BaseEntity;
+import com.onboarding.survey.enums.QuestionType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,19 +59,39 @@ public class Survey extends BaseEntity {
   }
 
   public void addQuestion(Question question) {
-    if (questions == null) {
-      questions = new ArrayList<>();
-    }
-    // 최대 질문 개수 제한
-    if (questions.size() >= 10) {
-      throw new IllegalArgumentException("Maximum of 10 questions allowed.");
+    if (this.questions.stream().anyMatch(q -> q.getTitle().equals(question.getTitle()) && !q.isDeleted())) {
+      throw new IllegalArgumentException("Duplicate question title is not allowed: " + question.getTitle());
     }
 
-    questions.add(question);
+    this.questions.add(question);
     question.setSurvey(this);
-
   }
 
+
+
+
+
+  public void updateQuestion(Long questionId, String title, String description, QuestionType type, boolean isRequired, List<String> choices) {
+    Question existingQuestion = this.questions.stream()
+        .filter(q -> q.getId().equals(questionId))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Question not found"));
+
+    // 기존 질문을 삭제 처리
+    existingQuestion.setDeleted(true);
+
+    // 새로운 질문 생성 및 추가
+    Question newQuestion = Question.builder()
+        .title(title)
+        .description(description)
+        .type(type)
+        .isRequired(isRequired)
+        .survey(this)
+        .choices(choices)
+        .build();
+
+    this.addQuestion(newQuestion);
+  }
 
 
 

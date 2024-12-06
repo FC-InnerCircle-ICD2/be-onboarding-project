@@ -11,12 +11,16 @@ import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.entity.Survey;
 import com.onboarding.survey.service.QuestionService;
 import com.onboarding.survey.service.SurveyService;
+import com.onboarding.survey.util.QuestionValidator;
 import com.onboarding.survey.util.SurveyUpdateHandler;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class SurveyFacade {
   private final SurveyService surveyService;
   private final QuestionService questionService;
-  private final SurveyUpdateHandler surveyUpdateHandler;
+  private final QuestionValidator questionValidator;
+  private final EntityManager entityManager;
 
   public void createSurvey(SurveyObject surveyObject) {
     Survey survey = surveyObject.of(
@@ -48,65 +53,60 @@ public class SurveyFacade {
     surveyService.createSurvey(survey);
   }
 
-
   public void updateSurvey(Long surveyId, SurveyObject surveyObject) {
     Survey existingSurvey = surveyService.getSurveyById(surveyId);
 
-    // 설문 이름과 설명 업데이트
+    // Survey 이름 및 설명 업데이트
     existingSurvey.updateName(surveyObject.getSurveyName());
     existingSurvey.updateDescription(surveyObject.getSurveyDescription());
 
-    List<Question> existingQuestions = new ArrayList<>(existingSurvey.getQuestions());
-    List<QuestionObject> newQuestions = surveyObject.getQuestions();
+    // 질문 업데이트
+    questionService.updateQuestions(existingSurvey, surveyObject.getQuestions());
 
-    // 기존 질문 중 새 질문 리스트에 없는 항목 삭제
-    for (Question existing : new ArrayList<>(existingQuestions)) {
-      boolean isPresentInNew = newQuestions.stream()
-          .anyMatch(newQ -> newQ.getTitle().equals(existing.getTitle()));
-      if (!isPresentInNew) {
-        existingSurvey.removeQuestion(existing);
-      }
-    }
+    entityManager.flush(); // 변경 사항 강제 반영
 
-    // 새 질문 추가 또는 업데이트
-    for (QuestionObject questionObject : newQuestions) {
-      Question matchingQuestion = existingSurvey.getQuestions().stream()
-          .filter(existing -> existing.getTitle().equals(questionObject.getTitle()))
-          .findFirst()
-          .orElse(null);
-
-      if (matchingQuestion != null) {
-        // 기존 질문 업데이트
-        matchingQuestion.updateDetails(
-            questionObject.getTitle(),
-            questionObject.getDescription(),
-            questionObject.getType(),
-            questionObject.isRequired(),
-            questionObject.getChoices()
-        );
-
-        // 검증 호출
-        validateQuestionInput(matchingQuestion);
-      } else {
-        // 새 질문 추가
-        Question newQuestion = Question.builder()
-            .title(questionObject.getTitle())
-            .description(questionObject.getDescription())
-            .type(questionObject.getType())
-            .isRequired(questionObject.isRequired())
-            .choices(questionObject.getChoices())
-            .build();
-
-        // 검증 호출
-        validateQuestionInput(newQuestion);
-
-        existingSurvey.addQuestion(newQuestion);
-      }
-    }
-
-    surveyService.createSurvey(existingSurvey);
-
+    validateSurvey(existingSurvey);
   }
+
+
+
+  // 트랜잭션 종료 후 검증 실행
+  public void validateAfterTransaction(Survey survey) {
+    survey.getQuestions().forEach(question -> questionValidator.validate(question));
+  }
+
+  public void validateSurvey(Survey survey) {
+    for (Question question : survey.getQuestions()) {
+      // choices 강제 초기화
+      Hibernate.initialize(question.getChoices());
+      log.info("Validating question: {}, choices: {}", question.getTitle(), question.getChoices());
+      questionValidator.validate(question);
+    }
+  }
+
+  private void handleTypeChange(Question existingQuestion, QuestionObject questionObject) {
+    if (isTypeChangedToShortOrLongAnswer(existingQuestion, questionObject)) {
+      // SHORT_ANSWER 또는 LONG_ANSWER로 변경 시 choices 초기화
+      existingQuestion.setChoices(null);
+    }
+  }
+
+  private boolean isTypeChangedToShortOrLongAnswer(Question existingQuestion, QuestionObject questionObject) {
+    return (questionObject.getType() == QuestionType.SHORT_ANSWER || questionObject.getType() == QuestionType.LONG_ANSWER) &&
+        existingQuestion.getType() != questionObject.getType();
+  }
+
+  private List<String> sanitizeChoices(QuestionObject questionObject) {
+    // SINGLE_CHOICE와 MULTIPLE_CHOICE만 choices를 사용
+    if (questionObject.getType() == QuestionType.SINGLE_CHOICE || questionObject.getType() == QuestionType.MULTIPLE_CHOICE) {
+      return (questionObject.getChoices() == null || questionObject.getChoices().isEmpty())
+          ? null
+          : questionObject.getChoices();
+    }
+    return null;
+  }
+
+
 
 //  // 설문 저장
 //  public Survey swapQuestionOrder(Long surveyId, Long questionId, Long targetQuestionId) {
@@ -158,23 +158,4 @@ public class SurveyFacade {
             .toList()
     );
   }
-
-  private void validateQuestionInput(Question question) {
-
-
-    if ((question.getType() == QuestionType.SINGLE_CHOICE || question.getType() == QuestionType.MULTIPLE_CHOICE) &&
-        (question.getChoices() == null || question.getChoices().isEmpty())) {
-      throw new CustomException("Choices must not be empty for SINGLE_CHOICE or MULTIPLE_CHOICE", ErrorCode.INVALID_INPUT_VALUE);
-    }
-
-    if ((question.getType() == QuestionType.SHORT_ANSWER || question.getType() == QuestionType.LONG_ANSWER) &&
-        (question.getChoices() != null && !question.getChoices().isEmpty())) {
-      throw new CustomException("Choices must be empty for SHORT_ANSWER or LONG_ANSWER", ErrorCode.INVALID_INPUT_VALUE);
-    }
-
-    if (question.getChoices() != null && question.getChoices().size() != question.getChoices().stream().distinct().count()) {
-      throw new CustomException("Choices must not contain duplicates for question: " + question.getTitle(), ErrorCode.INVALID_INPUT_VALUE);
-    }
-  }
-
 }

@@ -20,18 +20,17 @@ public class SurveyService {
   private final SurveyRepository surveyRepository;
   private final QuestionRepository questionRepository;
 
-  public void createSurvey(Survey survey) {
-    surveyRepository.save(survey);
-    log.info("Creating survey");
+  public Survey createSurvey(Survey survey) {
+    return surveyRepository.save(survey);
   }
 
   public Survey getSurveyById(Long surveyId) {
-    return surveyRepository.findById(surveyId).orElseThrow(() -> new CustomException(
+    return surveyRepository.findByIdWithActiveQuestions(surveyId).orElseThrow(() -> new CustomException(
         "Required question is missing: ", ErrorCode.ENTITY_NOT_FOUND));
   }
 
   public Optional<Survey> findSurveyById(Long surveyId) {
-    return surveyRepository.findById(surveyId);
+    return surveyRepository.findByIdWithActiveQuestions(surveyId);
   }
 
   public List<Question> findQuestionsBySurveyId(Long surveyId) {

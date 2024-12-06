@@ -31,6 +31,7 @@ public class Question extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Setter
   private Long id;
 
   private String title;
@@ -40,12 +41,14 @@ public class Question extends BaseEntity {
   private QuestionType type;
 
   private boolean isRequired;
-  private boolean isDeleted;
+  private boolean isDeleted = false;
 
   @Setter
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "survey_id")
   private Survey survey;
+
+
 
   @ElementCollection
   @CollectionTable(name = "question_choices", joinColumns = @JoinColumn(name = "question_id"))
@@ -53,25 +56,28 @@ public class Question extends BaseEntity {
   @Builder.Default
   private List<String> choices = new ArrayList<>();
 
-  public Question() {
-  }
+  public Question() {}
 
-  public Question(String title, String description, QuestionType type, boolean isRequired,
-     Survey survey, List<String> choices) {
+  public Question(String title, String description, QuestionType type, boolean isRequired, Survey survey, List<String> choices) {
     this.title = title;
     this.description = description;
     this.type = type;
     this.isRequired = isRequired;
     this.survey = survey;
-    this.choices = choices;
+    validateChoices(type, choices);
+    this.choices = choices == null ? new ArrayList<>() : new ArrayList<>(choices);
   }
 
-  public Question(String title, String description, QuestionType questionType, boolean isRequired, List<String> choices) {
-    this.title = title;
-    this.description = description;
-    this.type = questionType;
-    this.isRequired = isRequired;
-    this.choices = choices;
+  private void validateChoices(QuestionType type, List<String> choices) {
+    if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
+      if (choices == null || choices.isEmpty()) {
+        throw new CustomException("Choices must be provided for single or multiple choice questions.", ErrorCode.MUST_BE_CHOICES);
+      }
+    } else if (type == QuestionType.SHORT_ANSWER || type == QuestionType.LONG_ANSWER) {
+      if (choices != null && !choices.isEmpty()) {
+        throw new CustomException("Choices are not allowed for short or long answer questions.", ErrorCode.INVALID_CHOICES);
+      }
+    }
   }
 
   public void updateDetails(String title, String description, QuestionType type, boolean isRequired, List<String> choices) {
@@ -86,42 +92,20 @@ public class Question extends BaseEntity {
     }
     this.isRequired = isRequired;
 
-    if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
-      if (choices == null || choices.isEmpty()) {
-        throw new CustomException("Required question is missing: " ,
-            ErrorCode.MUST_BE_CHOICES);
-      }
-      this.choices = new ArrayList<>(choices);
+    if (choices != null) {
+      this.choices = new ArrayList<>(choices); // 깊은 복사로 데이터 안전성 보장
+    } else {
+      this.choices.clear(); // 비어 있는 경우 기존 데이터를 초기화
     }
-
   }
 
-
-
-  public Question(Long id, String title, String description, QuestionType type, boolean isRequired,
-      Integer orderIndex, Survey survey, List<String> choices) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.type = type;
-    if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
-      if (choices == null || choices.isEmpty()) {
-        throw new CustomException("Required question is missing: ",
-            ErrorCode.MUST_BE_CHOICES);
-      }
-    }
-    this.isRequired = isRequired;
-    this.survey = survey;
-    this.choices = choices;
-  }
 
   public void setChoices(List<String> choices) {
-    if (type == QuestionType.SINGLE_CHOICE || type == QuestionType.MULTIPLE_CHOICE) {
-      if (choices == null || choices.isEmpty()) {
-        throw new CustomException("Required question is missing: ",
-            ErrorCode.MUST_BE_CHOICES);
-      }
-    }
-    this.choices = choices;
+    validateChoices(this.type, choices);
+    this.choices = choices == null ? new ArrayList<>() : new ArrayList<>(choices);
+  }
+
+  public void setDeleted(boolean deleted) {
+    isDeleted = deleted;
   }
 }
