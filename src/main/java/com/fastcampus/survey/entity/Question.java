@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE question SET is_deleted = true WHERE id = ?")
 public class Question {
     @Id
     @GeneratedValue
@@ -33,4 +35,6 @@ public class Question {
 
     @Convert(converter = MustConverter.class)
     private Must qMust;
+
+    private boolean is_deleted = false;
 }
