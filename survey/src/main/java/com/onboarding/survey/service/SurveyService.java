@@ -2,9 +2,11 @@ package com.onboarding.survey.service;
 
 import com.onboarding.core.global.exception.CustomException;
 import com.onboarding.core.global.exception.enums.ErrorCode;
+import com.onboarding.survey.entity.Question;
 import com.onboarding.survey.entity.Survey;
 import com.onboarding.survey.repository.QuestionRepository;
 import com.onboarding.survey.repository.SurveyRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +32,9 @@ public class SurveyService {
 
   public Optional<Survey> findSurveyById(Long surveyId) {
     return surveyRepository.findById(surveyId);
+  }
+
+  public List<Question> findQuestionsBySurveyId(Long surveyId) {
+    return questionRepository.findBySurveyId(surveyId);
   }
 }

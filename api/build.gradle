@@ -20,10 +20,6 @@ jar {
     enabled = false // 일반 JAR 파일은 생성하지 않음
 }
 
-test {
-    exclude '**/*'
-}
-
 springBoot {
     mainClass.set("com.onboarding.ApiApplication") // API 애플리케이션 메인 클래스 설정
 }

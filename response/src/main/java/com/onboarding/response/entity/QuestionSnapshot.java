@@ -11,10 +11,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 
 @Getter
 @Embeddable
+@Builder
 public class QuestionSnapshot {
 
   @Column(nullable = false)
@@ -30,6 +33,7 @@ public class QuestionSnapshot {
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "question_snapshot_choices", joinColumns = @JoinColumn(name = "snapshot_id"))
   @Column(name = "choice")
+  @Builder.Default
   private List<String> choices = new ArrayList<>(); // 선택지
 
   @Column(nullable = false)

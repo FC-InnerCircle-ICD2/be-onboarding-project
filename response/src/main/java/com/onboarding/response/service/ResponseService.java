@@ -22,14 +22,14 @@ public class ResponseService {
     return responseRepository.existsBySurveyIdAndEmail(surveyId, email);
   }
 
-  public Response saveResponse(Survey survey, String email, List<Answer> answers) {
+  public void saveResponse(Survey survey, String email, List<Answer> answers) {
     Response response = Response.builder()
         .survey(survey)
         .email(email)
         .answers(answers)
         .build();
 
-    return responseRepository.save(response);
+    responseRepository.save(response);
   }
 
   public List<Response> findResponsesBySurvey(Survey survey) {

@@ -38,6 +38,7 @@ public class Response {
   private String email; // 응답자 식별자 (예: 사용자 ID)
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private List<Answer> answers = new ArrayList<>();
 
   public <E> Response(String mail, List<E> desc) {
