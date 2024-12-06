@@ -80,7 +80,7 @@ public class SurveyItem {
     }
 
     public static List<SurveyItemDto> convert(List<SurveyItem> surveyItemList) {
-        return surveyItemList.stream().filter(surveyItem -> !surveyItem.getActive()).map(SurveyItemDto::toDto).toList();
+        return surveyItemList.stream().filter(SurveyItem::getActive).map(SurveyItemDto::toDto).toList();
     }
 
     public static List<SurveyItem> convertToEntity(@NotNull List<SurveyItemDto> surveyItemDtoList) {
