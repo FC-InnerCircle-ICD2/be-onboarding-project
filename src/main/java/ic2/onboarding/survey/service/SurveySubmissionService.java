@@ -1,7 +1,6 @@
 package ic2.onboarding.survey.service;
 
 import ic2.onboarding.survey.dto.AnswerInfo;
-import ic2.onboarding.survey.validator.SubmissionValidator;
 import ic2.onboarding.survey.dto.SurveyAnswer;
 import ic2.onboarding.survey.dto.SurveyInfo;
 import ic2.onboarding.survey.entity.AnswerHistory;
@@ -11,15 +10,17 @@ import ic2.onboarding.survey.global.BizException;
 import ic2.onboarding.survey.global.ErrorCode;
 import ic2.onboarding.survey.global.InputType;
 import ic2.onboarding.survey.service.out.SurveyStorage;
+import ic2.onboarding.survey.validator.SubmissionValidator;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -46,37 +47,12 @@ public class SurveySubmissionService {
         var answerByQuestionName = answers.stream()
                 .collect(Collectors.toMap(AnswerInfo::getQuestionName, answer -> answer));
 
-        // 입력 답변과 설문조사 양식 검증
-        SubmissionValidator.validate(surveyQuestionByName, answerByQuestionName);
+        // 검증 및 저장
+        SurveySubmission submission = saveSubmissionWithValidation(surveyAnswer, surveyQuestionByName, answerByQuestionName, survey);
 
-        // 제출내용 저장
-        SurveySubmission submission = surveyStorage.save(SurveySubmission.builder()
-                .surveyUuid(survey.getUuid())
-                .surveyData(surveyData)
-                .answerData(surveyAnswer.getAnswers())
-                .build()
-        );
+        // 검색용 테이블에 개별 답변 추가 저장
+        saveAnswerHistories(surveyQuestionByName, answers, submission);
 
-        List<AnswerHistory> answerHistories = new ArrayList<>();
-        // 검색용 테이블에 개별 답변 저장
-        answers.forEach(answer -> {
-            SurveyInfo.Question question = surveyQuestionByName.get(answer.getQuestionName());
-
-            // 다중선택 답변이었다면 분리
-            if (question.getInputType() == InputType.MULTIPLE_CHOICE) {
-                answerHistories.addAll(
-                        answer.getMultipleTextAnswer()
-                                .stream()
-                                .map(textAnswer -> createAnswerHistory(answer, textAnswer, submission, question))
-                                .toList()
-                );
-            } else {
-                answerHistories.add(createAnswerHistory(answer, answer.getSingleTextAnswer(), submission, question));
-            }
-        });
-
-        // 답변 개별항목 저장
-        surveyStorage.saveAll(answerHistories);
         surveyAnswer.setSubmissionId(submission.getId());
         return surveyAnswer;
     }
@@ -84,13 +60,11 @@ public class SurveySubmissionService {
 
     public List<AnswerInfo> retrieveSurveySubmissions(String uuid, String questionName, String answer) {
 
-        // 검색 조건 없다면 전체조회
-        boolean all = StringUtils.isBlank(questionName) || StringUtils.isBlank(answer);
-
-        if (all) {
+        // 검색 조건 온전하지 않으면 전체조회
+        if (StringUtils.isBlank(questionName) || StringUtils.isBlank(answer)) {
             return surveyStorage.findAllBySurveyUuid(uuid)
                     .stream()
-                    .flatMap(surveySubmission -> surveySubmission.getAnswerData().stream())
+                    .flatMap(surveySubmission -> surveySubmission.getAnswerInfos().stream())
                     .toList();
         }
 
@@ -102,6 +76,47 @@ public class SurveySubmissionService {
                 // 응답했던 내용
                 .map(AnswerHistory::getAnswerInfo)
                 .toList();
+    }
+
+    /* PRIVATE */
+
+    private void saveAnswerHistories(Map<String, SurveyInfo.Question> surveyQuestionByName, List<AnswerInfo> answers, SurveySubmission submission) {
+
+        List<AnswerHistory> answerHistories = answers.stream().flatMap(answer -> {
+                    SurveyInfo.Question question = surveyQuestionByName.get(answer.getQuestionName());
+
+                    // 다중선택 답변이었다면 분리
+                    if (question.getInputType() == InputType.MULTIPLE_CHOICE) {
+                        return answer.getMultipleTextAnswer()
+                                .stream()
+                                .map(textAnswer -> createAnswerHistory(answer, textAnswer, submission, question))
+                                .toList()
+                                .stream();
+                    }
+
+                    return Stream.of(createAnswerHistory(answer, answer.getSingleTextAnswer(), submission, question));
+                })
+                .toList();
+
+        // 답변 개별항목 저장
+        surveyStorage.saveAll(answerHistories);
+    }
+
+
+    private SurveySubmission saveSubmissionWithValidation(SurveyAnswer surveyAnswer,
+                                                          Map<String, SurveyInfo.Question> surveyQuestionByName,
+                                                          Map<String, AnswerInfo> answerByQuestionName,
+                                                          Survey survey) {
+        // 입력 답변과 설문조사 양식 검증
+        SubmissionValidator.validate(surveyQuestionByName, answerByQuestionName);
+
+        // 제출내용 저장
+        return surveyStorage.save(SurveySubmission.builder()
+                .surveyUuid(survey.getUuid())
+                .surveyInfo(survey.getSurveyInfo())
+                .answerInfos(surveyAnswer.getAnswers())
+                .build()
+        );
     }
 
 
@@ -116,7 +131,7 @@ public class SurveySubmissionService {
                 .surveyUuid(submission.getSurveyUuid())
                 .questionName(question.getName())
                 .textAnswer(textAnswer)
-                .questionData(question)
+                .questionInfo(question)
                 .answerInfo(answerInfo)
                 .build();
     }
