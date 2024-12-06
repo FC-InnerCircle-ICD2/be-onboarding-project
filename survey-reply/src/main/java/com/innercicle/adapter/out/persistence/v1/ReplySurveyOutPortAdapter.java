@@ -8,6 +8,8 @@ import com.innercicle.domain.ReplySurvey;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class ReplySurveyOutPortAdapter implements ReplySurveyOutPortV1, SearchReplySurveyOutPortV1 {
@@ -24,8 +26,15 @@ public class ReplySurveyOutPortAdapter implements ReplySurveyOutPortV1, SearchRe
 
     @Override
     public ReplySurvey searchReplySurvey(Long replySurveyId) {
-        ReplySurveyEntity replySurveyEntity = replySurveyRepository.findById(replySurveyId).orElseThrow(NotExistsReplySurveyException::new);
+        ReplySurveyEntity replySurveyEntity =
+            replySurveyRepository.findByIdAndSearchKeyword(replySurveyId).orElseThrow(NotExistsReplySurveyException::new);
         return replySurveyEntity.mapToDomain(replySurveyId);
+    }
+
+    @Override
+    public List<ReplySurvey> searchRepliesSurvey(Long replySurveyId, String searchKeyword) {
+        List<ReplySurveyEntity> repliesSurveyEntities = replySurveyRepository.findAllByIdOrSearchKeyword(replySurveyId, searchKeyword);
+        return List.of();
     }
 
 }

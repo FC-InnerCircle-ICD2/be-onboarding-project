@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -51,7 +50,7 @@ public class Survey {
          */
         private boolean required;
 
-        private List<String> options = new ArrayList<>();
+        private List<String> options;
 
     }
 
