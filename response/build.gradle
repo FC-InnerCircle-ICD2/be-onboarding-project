@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation project(':core')
+    implementation project(':survey')
+
+    runtimeOnly 'org.postgresql:postgresql'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+bootJar {
+    enabled = false // 실행 가능한 JAR이 필요하지 않음
+}
+
+jar {
+    enabled = true // 일반 JAR은 활성화
+}
