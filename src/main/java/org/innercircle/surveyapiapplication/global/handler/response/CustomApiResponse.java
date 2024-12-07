@@ -8,24 +8,24 @@ import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatu
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse<T> {
+public class CustomApiResponse<T> {
 
     private int code;
     private String message;
     private T data;
 
-    public static <T> ApiResponse<T> onSuccess() {
+    public static <T> CustomApiResponse<T> onSuccess() {
         CustomResponseStatus success = CustomResponseStatus.SUCCESS;
-        return new ApiResponse<>(success.getCode(), success.getMessage(), null);
+        return new CustomApiResponse<>(success.getCode(), success.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> onSuccess(T data) {
+    public static <T> CustomApiResponse<T> onSuccess(T data) {
         CustomResponseStatus success = CustomResponseStatus.SUCCESS;
-        return new ApiResponse<>(success.getCode(), success.getMessage(), data);
+        return new CustomApiResponse<>(success.getCode(), success.getMessage(), data);
     }
 
-    public static ApiResponse<Void> onError(ResponseStatus status) {
-        return new ApiResponse<>(status.getCode(), status.getMessage(), null);
+    public static CustomApiResponse<Void> onError(ResponseStatus status) {
+        return new CustomApiResponse<>(status.getCode(), status.getMessage(), null);
     }
 
 }
