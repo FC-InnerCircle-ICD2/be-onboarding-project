@@ -3,6 +3,7 @@ package org.brinst.surveyapi.controller.answer;
 import java.util.List;
 
 import org.brinst.surveycore.answer.dto.AnswerDTO;
+import org.brinst.surveycore.answer.dto.AnswerItemDTO;
 import org.brinst.surveycore.answer.service.AnswerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class AnswerController {
 	@PostMapping("/api/v1/survey/{surveyId}")
 	public ResponseEntity<HttpStatus> answerSurvey(
 		@PathVariable("surveyId") Long surveyId,
-		@RequestBody List<AnswerDTO.ReqDTO> answerDTO
+		@RequestBody List<AnswerItemDTO> answerDTO
 	) {
 		answerService.answerSurvey(surveyId, answerDTO);
 		return new ResponseEntity<>(HttpStatus.OK);

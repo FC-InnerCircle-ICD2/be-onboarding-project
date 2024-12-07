@@ -3,6 +3,7 @@ package org.brinst.surveycore.answer.service;
 import java.util.List;
 
 import org.brinst.surveycore.answer.dto.AnswerDTO;
+import org.brinst.surveycore.answer.dto.AnswerItemDTO;
 import org.brinst.surveycore.answer.entity.Answer;
 import org.brinst.surveycore.answer.mapper.AnswerMapper;
 import org.brinst.surveycore.answer.repository.AnswerRepository;
@@ -21,7 +22,7 @@ public class AnswerService {
 	private final SurveyService surveyService;
 
 	@Transactional
-	public void answerSurvey(Long surveyId, List<AnswerDTO.ReqDTO> answers) {
+	public void answerSurvey(Long surveyId, List<AnswerItemDTO> answers) {
 		SurveyVersion latestSurveyVersion = surveyService.getLatestSurveyVersion(surveyId);
 		Answer answer = Answer.registerAnswer(answers, latestSurveyVersion, validatorService);
 		answerRepository.save(answer);

@@ -4,16 +4,33 @@ import java.util.List;
 
 import org.brinst.surveycommon.enums.OptionType;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+@JsonSubTypes({
+	@JsonSubTypes.Type(value = AnswerItemDTO.ShortAnswer.class, name = "SHORT_ANSWER"),
+	@JsonSubTypes.Type(value = AnswerItemDTO.LongAnswer.class, name = "LONG_ANSWER"),
+	@JsonSubTypes.Type(value = AnswerItemDTO.SingleChoice.class, name = "SINGLE_CHOICE"),
+	@JsonSubTypes.Type(value = AnswerItemDTO.MultiChoice.class, name = "MULTI_CHOICE")
+})
 public abstract class AnswerItemDTO {
 	private Long itemId;
 	private OptionType type;
+
+	@JsonIgnore
+	public abstract Object getAnswerValue();
+
+	public AnswerItemDTO(Long itemId, OptionType type) {
+		this.itemId = itemId;
+		this.type = type;
+	}
 
 	@Getter
 	@NoArgsConstructor
@@ -23,6 +40,11 @@ public abstract class AnswerItemDTO {
 		public ShortAnswer(Long itemId, OptionType type, String answer) {
 			super(itemId, type);
 			this.answer = answer;
+		}
+
+		@Override
+		public String  getAnswerValue() {
+			return answer;
 		}
 	}
 
@@ -35,6 +57,11 @@ public abstract class AnswerItemDTO {
 			super(itemId, type);
 			this.answer = answer;
 		}
+
+		@Override
+		public Object getAnswerValue() {
+			return answer;
+		}
 	}
 
 	@Getter
@@ -46,6 +73,11 @@ public abstract class AnswerItemDTO {
 			super(itemId, type);
 			this.option = option;
 		}
+
+		@Override
+		public String getAnswerValue() {
+			return option;
+		}
 	}
 
 	@Getter
@@ -56,6 +88,11 @@ public abstract class AnswerItemDTO {
 		public MultiChoice(Long itemId, OptionType type, List<String> options) {
 			super(itemId, type);
 			this.options = options;
+		}
+
+		@Override
+		public List<String> getAnswerValue() {
+			return options;
 		}
 	}
 }

@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.brinst.surveycore.answer.dto.AnswerDTO;
+import org.brinst.surveycore.answer.dto.AnswerItemDTO;
 import org.brinst.surveycore.answer.service.ValidatorService;
 import org.brinst.surveycore.survey.entity.Survey;
 import org.brinst.surveycore.survey.entity.SurveyQuestion;
 import org.brinst.surveycore.survey.entity.SurveyVersion;
-import org.springframework.util.CollectionUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -36,12 +35,12 @@ public class Answer {
 	@OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AnswerParent> answers = new ArrayList<>();
 
-	public static Answer registerAnswer(List<AnswerDTO.ReqDTO> answerDTO, SurveyVersion surveyVersion,
+	public static Answer registerAnswer(List<AnswerItemDTO> answerDTO, SurveyVersion surveyVersion,
 		ValidatorService validatorService) {
 		Map<Long, SurveyQuestion> surveyQuestionMap = surveyVersion.getSurveyQuestions().stream()
 			.collect(Collectors.toMap(SurveyQuestion::getId, surveyQuestion -> surveyQuestion));
-		Map<Long, AnswerDTO.ReqDTO> answerItemIds = answerDTO.stream()
-			.collect(Collectors.toMap(AnswerDTO.ReqDTO::getItemId, answer -> answer));
+		Map<Long, AnswerItemDTO> answerItemIds = answerDTO.stream()
+			.collect(Collectors.toMap(AnswerItemDTO::getItemId, answer -> answer));
 
 		Answer answerEntity = new Answer(
 			surveyVersion.getSurvey(),
@@ -51,24 +50,23 @@ public class Answer {
 		validatorService.validate(surveyVersion, answerDTO);
 
 		surveyQuestionMap.forEach((id, question) -> {
-			AnswerDTO.ReqDTO reqDTO = answerItemIds.get(id);
+			AnswerItemDTO answerReq = answerItemIds.get(id);
 			// 필수값이 아닌 질문에 대해 null 응답 또는 빈 리스트인 경우 등록을 건너뛰기
-			if (reqDTO == null || CollectionUtils.isEmpty(reqDTO.getAnswers())) {
+			if (answerReq == null || answerReq.getAnswerValue() == null) {
 				return;
 			}
-			List<String> answer = reqDTO.getAnswers();
-			AnswerParent answerItemEntity = createAnswer(answerEntity, question, answer);
+			AnswerParent answerItemEntity = createAnswer(answerEntity, question, answerReq);
 			answerEntity.getAnswers().add(answerItemEntity);
 		});
 		return answerEntity;
 	}
 
-	private static AnswerParent createAnswer(Answer answer, SurveyQuestion question, List<String> answers) {
+	private static AnswerParent createAnswer(Answer answer, SurveyQuestion question, AnswerItemDTO answers) {
 		return switch (question.getOptionType()) {
-			case SHORT_ANSWER -> new ShortAnswer(answer, question, answers.get(0));
-			case LONG_ANSWER -> new LongAnswer(answer, question, answers.get(0));
-			case SINGLE_CHOICE -> new SingleChoiceAnswer(answer, question, answers.get(0));
-			case MULTIPLE_CHOICE -> new MultiChoiceAnswer(answer, question, answers);
+			case SHORT_ANSWER -> new ShortAnswer(answer, question, (String)answers.getAnswerValue());
+			case LONG_ANSWER -> new LongAnswer(answer, question, (String)answers.getAnswerValue());
+			case SINGLE_CHOICE -> new SingleChoiceAnswer(answer, question, (String)answers.getAnswerValue());
+			case MULTIPLE_CHOICE -> new MultiChoiceAnswer(answer, question, (List<String>)answers.getAnswerValue());
 		};
 	}
 
