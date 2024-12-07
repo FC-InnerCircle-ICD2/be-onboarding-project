@@ -1,18 +1,19 @@
 package net.gentledot.survey.service;
 
+import net.gentledot.survey.application.service.SurveyAnswerService;
+import net.gentledot.survey.application.service.in.model.request.SearchSurveyAnswerRequest;
+import net.gentledot.survey.application.service.in.model.request.SubmitSurveyAnswer;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.application.service.in.model.response.SearchSurveyAnswerResponse;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.exception.SurveyNotFoundException;
+import net.gentledot.survey.domain.exception.SurveySubmitValidationException;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.exception.SurveyNotFoundException;
-import net.gentledot.survey.exception.SurveySubmitValidationException;
-import net.gentledot.survey.repository.jpa.SurveyAnswerJpaRepository;
-import net.gentledot.survey.repository.jpa.SurveyJpaRepository;
-import net.gentledot.survey.service.in.model.request.SearchSurveyAnswerRequest;
-import net.gentledot.survey.service.in.model.request.SubmitSurveyAnswer;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.service.in.model.response.SearchSurveyAnswerResponse;
+import net.gentledot.survey.infra.repository.jpa.SurveyAnswerJpaRepository;
+import net.gentledot.survey.infra.repository.jpa.SurveyJpaRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static net.gentledot.survey.service.util.SurveyVaildator.validateSurveyAnswers;
+import static net.gentledot.survey.application.service.util.SurveyVaildator.validateSurveyAnswers;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest

@@ -9,11 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionRequest;
 import net.gentledot.survey.domain.common.BaseEntity;
 import net.gentledot.survey.domain.enums.UpdateType;
-import net.gentledot.survey.exception.ServiceError;
-import net.gentledot.survey.exception.SurveyNotFoundException;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionRequest;
+import net.gentledot.survey.domain.exception.ServiceError;
+import net.gentledot.survey.domain.exception.SurveyNotFoundException;
 
 import java.util.List;
 import java.util.Objects;

@@ -2,13 +2,13 @@ package net.gentledot.survey.repository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.repository.jpa.SurveyJpaRepository;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.infra.repository.jpa.SurveyJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,10 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionRequest;
 
 import java.util.Collections;
 import java.util.List;

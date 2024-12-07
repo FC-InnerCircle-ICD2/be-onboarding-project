@@ -6,13 +6,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.gentledot.survey.domain.enums.AnswerType;
+import net.gentledot.survey.domain.exception.ServiceError;
+import net.gentledot.survey.domain.exception.SurveySubmitValidationException;
 import net.gentledot.survey.domain.surveyanswer.variables.Attachment;
 import net.gentledot.survey.domain.surveyanswer.variables.DateTime;
 import net.gentledot.survey.domain.surveyanswer.variables.Selection;
 import net.gentledot.survey.domain.surveyanswer.variables.TextInput;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
-import net.gentledot.survey.exception.ServiceError;
-import net.gentledot.survey.exception.SurveySubmitValidationException;
 
 import java.util.List;
 

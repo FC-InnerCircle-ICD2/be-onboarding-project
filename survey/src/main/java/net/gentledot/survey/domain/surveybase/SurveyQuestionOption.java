@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.gentledot.survey.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
