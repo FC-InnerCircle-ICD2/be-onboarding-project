@@ -1,20 +1,27 @@
-package com.innercircle.common.domain.survey.response;
+package com.innercircle.command.domain.survey.response;
 
-import com.innercircle.common.domain.survey.question.QuestionType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@DiscriminatorValue("SINGLE_CHOICE")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SingleChoiceAnswerContent extends AnswerContent {
 
 	private String selectedOption;
 
-	public SingleChoiceAnswerContent(QuestionType type, String selectedOption) {
-		super(type);
+	SingleChoiceAnswerContent(String selectedOption) {
+		super();
 		this.selectedOption = selectedOption;
+	}
+
+	public static SingleChoiceAnswerContent of(String selectedOption) {
+		return new SingleChoiceAnswerContent(selectedOption);
 	}
 
 	@Override

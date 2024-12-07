@@ -1,8 +1,8 @@
 package com.innercircle.command.application.survey.response;
 
+import com.innercircle.command.domain.survey.response.AnswerContent;
+import com.innercircle.command.domain.survey.response.ShortTextAnswerContent;
 import com.innercircle.common.domain.survey.question.QuestionType;
-import com.innercircle.common.domain.survey.response.AnswerContent;
-import com.innercircle.common.domain.survey.response.ShortTextAnswerContent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,6 @@ public class ShortTextAnswerContentInput extends AnswerContentInput {
 
 	@Override
 	public AnswerContent convertToAnswerContent() {
-		return new ShortTextAnswerContent(this.getType(), this.text);
+		return ShortTextAnswerContent.of(this.text);
 	}
 }

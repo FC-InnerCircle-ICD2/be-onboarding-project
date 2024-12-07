@@ -1,8 +1,8 @@
 package com.innercircle.command.application.survey.response;
 
+import com.innercircle.command.domain.survey.response.AnswerContent;
+import com.innercircle.command.domain.survey.response.MultipleChoiceAnswerContent;
 import com.innercircle.common.domain.survey.question.QuestionType;
-import com.innercircle.common.domain.survey.response.AnswerContent;
-import com.innercircle.common.domain.survey.response.MultipleChoiceAnswerContent;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +21,6 @@ public class MultipleChoiceAnswerContentInput extends AnswerContentInput {
 
 	@Override
 	public AnswerContent convertToAnswerContent() {
-		return new MultipleChoiceAnswerContent(this.getType(), this.selectedOptions);
+		return MultipleChoiceAnswerContent.of(this.selectedOptions);
 	}
 }

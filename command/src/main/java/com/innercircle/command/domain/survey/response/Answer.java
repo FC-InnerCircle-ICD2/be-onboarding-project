@@ -1,13 +1,13 @@
 package com.innercircle.command.domain.survey.response;
 
 import com.innercircle.common.domain.survey.question.QuestionSnapshot;
-import com.innercircle.common.domain.survey.response.AnswerContent;
-import com.innercircle.common.infra.persistence.converter.AnswerContentConverter;
 import com.innercircle.common.infra.persistence.converter.QuestionSnapshotConverter;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +23,7 @@ public class Answer {
 	@Convert(converter = QuestionSnapshotConverter.class)
 	@Column(columnDefinition = "TEXT")
 	private QuestionSnapshot questionSnapshot;
-	@Convert(converter = AnswerContentConverter.class)
-	@Column(columnDefinition = "TEXT")
+	@ManyToOne(cascade = CascadeType.ALL)
 	private AnswerContent content;
 
 	public Answer(String id, String surveyResponseId, QuestionSnapshot questionSnapshot, AnswerContent content) {

@@ -1,10 +1,7 @@
 package com.innercircle.query.facade;
 
 import com.innercircle.common.domain.survey.question.QuestionSnapshot;
-import com.innercircle.common.domain.survey.response.LongTextAnswerContent;
-import com.innercircle.common.domain.survey.response.MultipleChoiceAnswerContent;
-import com.innercircle.common.domain.survey.response.ShortTextAnswerContent;
-import com.innercircle.common.domain.survey.response.SingleChoiceAnswerContent;
+import com.innercircle.common.domain.survey.question.QuestionType;
 import com.innercircle.query.controller.dto.AnswerContentDto;
 import com.innercircle.query.controller.dto.LongTextAnswerContentDto;
 import com.innercircle.query.controller.dto.MultipleChoiceAnswerContentDto;
@@ -20,6 +17,10 @@ import com.innercircle.query.infra.persistence.jparepository.QuestionJpaReposito
 import com.innercircle.query.infra.persistence.jparepository.SurveyJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyResponseJpaRepository;
 import com.innercircle.query.infra.persistence.model.survey.response.Answer;
+import com.innercircle.query.infra.persistence.model.survey.response.LongTextAnswerContent;
+import com.innercircle.query.infra.persistence.model.survey.response.MultipleChoiceAnswerContent;
+import com.innercircle.query.infra.persistence.model.survey.response.ShortTextAnswerContent;
+import com.innercircle.query.infra.persistence.model.survey.response.SingleChoiceAnswerContent;
 import com.innercircle.query.infra.persistence.model.survey.response.SurveyResponse;
 import java.util.List;
 import java.util.Map;
@@ -89,10 +90,10 @@ public class SurveyFacade {
 
 	private AnswerContentDto getAnswerContentDto(Answer answer) {
 		return switch (answer.getContent()) {
-			case ShortTextAnswerContent content -> new ShortTextAnswerContentDto(content.getType(), content.getText());
-			case LongTextAnswerContent content -> new LongTextAnswerContentDto(content.getType(), content.getText());
-			case SingleChoiceAnswerContent content -> new SingleChoiceAnswerContentDto(content.getType(), content.getSelectedOption());
-			case MultipleChoiceAnswerContent content -> new MultipleChoiceAnswerContentDto(content.getType(), content.getSelectedOptions());
+			case ShortTextAnswerContent content -> new ShortTextAnswerContentDto(QuestionType.SHORT_TEXT, content.getText());
+			case LongTextAnswerContent content -> new LongTextAnswerContentDto(QuestionType.LONG_TEXT, content.getText());
+			case SingleChoiceAnswerContent content -> new SingleChoiceAnswerContentDto(QuestionType.SINGLE_CHOICE, content.getSelectedOption());
+			case MultipleChoiceAnswerContent content -> new MultipleChoiceAnswerContentDto(QuestionType.MULTIPLE_CHOICE, content.getSelectedOptions());
 			default -> throw new IllegalArgumentException("Unexpected value: " + answer.getContent());
 		};
 	}

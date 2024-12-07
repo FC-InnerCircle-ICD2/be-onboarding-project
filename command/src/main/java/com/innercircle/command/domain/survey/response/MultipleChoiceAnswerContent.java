@@ -1,12 +1,15 @@
-package com.innercircle.common.domain.survey.response;
+package com.innercircle.command.domain.survey.response;
 
-import com.innercircle.common.domain.survey.question.QuestionType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
+@DiscriminatorValue("MULTIPLE_CHOICE")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MultipleChoiceAnswerContent extends AnswerContent {
@@ -15,9 +18,13 @@ public class MultipleChoiceAnswerContent extends AnswerContent {
 
 	private List<String> selectedOptions;
 
-	public MultipleChoiceAnswerContent(QuestionType type, List<String> selectedOptions) {
-		super(type);
+	MultipleChoiceAnswerContent(List<String> selectedOptions) {
+		super();
 		this.selectedOptions = selectedOptions;
+	}
+
+	public static MultipleChoiceAnswerContent of(List<String> selectedOptions) {
+		return new MultipleChoiceAnswerContent(selectedOptions);
 	}
 
 	@Override

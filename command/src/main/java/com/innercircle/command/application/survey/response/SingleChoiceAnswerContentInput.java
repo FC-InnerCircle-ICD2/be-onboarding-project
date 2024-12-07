@@ -1,8 +1,8 @@
 package com.innercircle.command.application.survey.response;
 
+import com.innercircle.command.domain.survey.response.AnswerContent;
+import com.innercircle.command.domain.survey.response.SingleChoiceAnswerContent;
 import com.innercircle.common.domain.survey.question.QuestionType;
-import com.innercircle.common.domain.survey.response.AnswerContent;
-import com.innercircle.common.domain.survey.response.SingleChoiceAnswerContent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,6 @@ public class SingleChoiceAnswerContentInput extends AnswerContentInput {
 
 	@Override
 	public AnswerContent convertToAnswerContent() {
-		return new SingleChoiceAnswerContent(this.getType(), this.selectedOption);
+		return SingleChoiceAnswerContent.of(this.selectedOption);
 	}
 }

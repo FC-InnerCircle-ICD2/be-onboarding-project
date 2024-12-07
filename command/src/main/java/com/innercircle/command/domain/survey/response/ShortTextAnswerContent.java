@@ -1,11 +1,14 @@
-package com.innercircle.common.domain.survey.response;
+package com.innercircle.command.domain.survey.response;
 
-import com.innercircle.common.domain.survey.question.QuestionType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@DiscriminatorValue("SHORT_TEXT")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ShortTextAnswerContent extends AnswerContent {
@@ -14,9 +17,12 @@ public class ShortTextAnswerContent extends AnswerContent {
 
 	private String text;
 
-	public ShortTextAnswerContent(QuestionType type, String text) {
-		super(type);
+	ShortTextAnswerContent(String text) {
 		this.text = text;
+	}
+
+	public static ShortTextAnswerContent of(String text) {
+		return new ShortTextAnswerContent(text);
 	}
 
 	@Override

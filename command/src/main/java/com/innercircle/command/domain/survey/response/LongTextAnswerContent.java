@@ -1,11 +1,14 @@
-package com.innercircle.common.domain.survey.response;
+package com.innercircle.command.domain.survey.response;
 
-import com.innercircle.common.domain.survey.question.QuestionType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@DiscriminatorValue("LONG_TEXT")
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LongTextAnswerContent extends AnswerContent {
@@ -14,9 +17,13 @@ public class LongTextAnswerContent extends AnswerContent {
 
 	private String text;
 
-	public LongTextAnswerContent(QuestionType type, String text) {
-		super(type);
+	LongTextAnswerContent(String text) {
+		super();
 		this.text = text;
+	}
+
+	public static LongTextAnswerContent of(String text) {
+		return new LongTextAnswerContent(text);
 	}
 
 	public void validate(boolean isRequired) {
