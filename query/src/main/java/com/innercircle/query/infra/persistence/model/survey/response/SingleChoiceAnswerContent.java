@@ -13,4 +13,8 @@ import lombok.NoArgsConstructor;
 public class SingleChoiceAnswerContent extends AnswerContent {
 
 	private String selectedOption;
+
+	public SingleChoiceAnswerContent(String selectedOption) {
+		this.selectedOption = selectedOption;
+	}
 }

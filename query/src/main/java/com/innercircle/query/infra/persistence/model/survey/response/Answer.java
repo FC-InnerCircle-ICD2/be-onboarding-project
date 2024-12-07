@@ -1,10 +1,8 @@
 package com.innercircle.query.infra.persistence.model.survey.response;
 
 import com.innercircle.common.domain.survey.question.QuestionSnapshot;
-import com.innercircle.common.infra.persistence.converter.QuestionSnapshotConverter;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -20,8 +18,7 @@ public class Answer {
 	@Id
 	private String id;
 	private String surveyResponseId;
-	@Convert(converter = QuestionSnapshotConverter.class)
-	@Column(columnDefinition = "TEXT")
+	@Embedded
 	private QuestionSnapshot questionSnapshot;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private AnswerContent content;

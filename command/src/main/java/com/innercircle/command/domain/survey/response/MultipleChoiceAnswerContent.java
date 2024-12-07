@@ -1,5 +1,7 @@
 package com.innercircle.command.domain.survey.response;
 
+import com.innercircle.common.infra.persistence.converter.StringListConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.util.List;
@@ -16,6 +18,7 @@ public class MultipleChoiceAnswerContent extends AnswerContent {
 
 	private static final int MAX_MULTIPLE_CHOICE_OPTIONS = 3;
 
+	@Convert(converter = StringListConverter.class)
 	private List<String> selectedOptions;
 
 	MultipleChoiceAnswerContent(List<String> selectedOptions) {

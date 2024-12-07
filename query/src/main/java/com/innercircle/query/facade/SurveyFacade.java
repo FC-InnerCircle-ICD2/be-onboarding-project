@@ -12,7 +12,7 @@ import com.innercircle.query.controller.dto.SurveyDto;
 import com.innercircle.query.controller.dto.SurveyResponsesDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto;
 import com.innercircle.query.controller.dto.SurveyResponseDto.AnswerDto;
-import com.innercircle.query.infra.persistence.jparepository.AnswerJpaRepository;
+import com.innercircle.query.infra.persistence.dao.AnswerDao;
 import com.innercircle.query.infra.persistence.jparepository.QuestionJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyJpaRepository;
 import com.innercircle.query.infra.persistence.jparepository.SurveyResponseJpaRepository;
@@ -31,14 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class SurveyFacade {
 
-	private final AnswerJpaRepository answerJpaRepository;
+	private final AnswerDao answerDao;
 	private final QuestionJpaRepository questionJpaRepository;
 	private final SurveyJpaRepository surveyJpaRepository;
 	private final SurveyResponseJpaRepository surveyResponseJpaRepository;
 
-	public SurveyFacade(AnswerJpaRepository answerJpaRepository, QuestionJpaRepository questionJpaRepository, SurveyJpaRepository surveyJpaRepository,
+	public SurveyFacade(AnswerDao answerDao, QuestionJpaRepository questionJpaRepository, SurveyJpaRepository surveyJpaRepository,
 			SurveyResponseJpaRepository surveyResponseJpaRepository) {
-		this.answerJpaRepository = answerJpaRepository;
+		this.answerDao = answerDao;
 		this.questionJpaRepository = questionJpaRepository;
 		this.surveyJpaRepository = surveyJpaRepository;
 		this.surveyResponseJpaRepository = surveyResponseJpaRepository;
@@ -59,12 +59,24 @@ public class SurveyFacade {
 	public SurveyResponsesDto getSurveyResponses(String surveyId) {
 		var survey = surveyJpaRepository.findById(surveyId).orElseThrow(SurveyNotFoundException::new);
 		var surveyResponseIds = surveyResponseJpaRepository.findAllBySurveyId(surveyId).stream().map(SurveyResponse::getId).toList();
-		var answers = answerJpaRepository.findBySurveyResponseIdIn(surveyResponseIds);
+		var answers = answerDao.findBySurveyResponseIdIn(surveyResponseIds);
 
 		var answerDtoMap = getAnswerDtoMap(answers);
 		var surveyResponseDtos = getSurveyResponseDtos(answerDtoMap);
 
 		return new SurveyResponsesDto(survey.getId(), survey.getName(), survey.getDescription(), surveyResponseDtos);
+	}
+
+	@Transactional(readOnly = true)
+	public List<AnswerDto> searchAnswers(String query) {
+		var answers = answerDao.search(query);
+		return answers.stream()
+				.map(answer -> {
+					var questionDto = getQuestionDto(answer.getQuestionSnapshot());
+					var answerContentDto = getAnswerContentDto(answer);
+					return new AnswerDto(answer.getId(), questionDto, answerContentDto);
+				})
+				.toList();
 	}
 
 	private Map<String, List<AnswerDto>> getAnswerDtoMap(List<Answer> answers) {
@@ -83,9 +95,8 @@ public class SurveyFacade {
 	}
 
 	private QuestionDto getQuestionDto(QuestionSnapshot questionSnapshot) {
-		return new QuestionDto(questionSnapshot.getId(), questionSnapshot.getName(),
-				questionSnapshot.getDescription(), questionSnapshot.isRequired(), questionSnapshot.getType(),
-				questionSnapshot.getOptions());
+		return new QuestionDto(questionSnapshot.getQuestionId(), questionSnapshot.getQuestionName(), questionSnapshot.getQuestionDescription(),
+				questionSnapshot.isQuestionRequired(), questionSnapshot.getQuestionType(), questionSnapshot.getQuestionOptions());
 	}
 
 	private AnswerContentDto getAnswerContentDto(Answer answer) {

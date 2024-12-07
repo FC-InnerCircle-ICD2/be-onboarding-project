@@ -57,7 +57,9 @@ Content-Type: application/json
         "type": "SINGLE_CHOICE",
         "name": "단일 선택 리스트 설문조사 이름",
         "description": "단일 선택 리스트 설문조사 설명",
-        "optionNames": ["option1"],
+        "optionNames": [
+          "option1"
+        ],
         "required": false
       }
     },
@@ -67,7 +69,11 @@ Content-Type: application/json
         "type": "MULTIPLE_CHOICE",
         "name": "다중 선택 리스트 설문조사 이름",
         "description": "다중 선택 리스트 설문조사 설명",
-        "optionNames": ["option1", "option2", "option3"],
+        "optionNames": [
+          "option1",
+          "option2",
+          "option3"
+        ],
         "required": false
       }
     },
@@ -166,4 +172,8 @@ Content-Type: application/json
 
 ### 설문조사 응답 조회 API
 GET http://localhost:10002/q/surveys/aa461574-7a47-49fa-9c90-2c42982d890c/responses
+Content-Type: application/json
+
+### 설문조사 응답 검색 API
+GET http://localhost:10002/q/answers/search?query=option1
 Content-Type: application/json

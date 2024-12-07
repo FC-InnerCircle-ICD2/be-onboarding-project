@@ -13,4 +13,8 @@ import lombok.NoArgsConstructor;
 public class ShortTextAnswerContent extends AnswerContent {
 
 	private String text;
+
+	public ShortTextAnswerContent(String text) {
+		this.text = text;
+	}
 }

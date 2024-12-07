@@ -85,6 +85,6 @@ public class Question {
 	}
 
 	public QuestionSnapshot getSnapshot() {
-		return new QuestionSnapshot(id, surveyId, name, description, required, type, options);
+		return new QuestionSnapshot(this.id, this.surveyId, this.name, this.description, this.required, this.type, this.options);
 	}
 }
