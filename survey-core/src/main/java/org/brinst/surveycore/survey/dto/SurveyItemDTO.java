@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.brinst.surveycommon.enums.OptionType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -30,9 +31,10 @@ public abstract class SurveyItemDTO {
 	private String description;
 	private boolean required;
 	private OptionType type;
-
+	@JsonIgnore
 	public abstract OptionType getOptionType();
-	public abstract List<String> getOptions();
+	@JsonIgnore
+	public abstract List<String> getOptionValue();
 
 	@Getter
 	@NoArgsConstructor
@@ -48,7 +50,7 @@ public abstract class SurveyItemDTO {
 		}
 
 		@Override
-		public List<String> getOptions() {
+		public List<String> getOptionValue() {
 			return List.of();
 		}
 	}
@@ -67,7 +69,7 @@ public abstract class SurveyItemDTO {
 		}
 
 		@Override
-		public List<String> getOptions() {
+		public List<String> getOptionValue() {
 			return List.of();
 		}
 	}
@@ -88,7 +90,7 @@ public abstract class SurveyItemDTO {
 		}
 
 		@Override
-		public List<String> getOptions() {
+		public List<String> getOptionValue() {
 			return List.of(option);
 		}
 	}
@@ -109,7 +111,7 @@ public abstract class SurveyItemDTO {
 		}
 
 		@Override
-		public List<String> getOptions() {
+		public List<String> getOptionValue() {
 			return options;
 		}
 	}

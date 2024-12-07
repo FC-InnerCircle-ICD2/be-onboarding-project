@@ -49,7 +49,7 @@ public class SurveyQuestion {
 		this.surveyVersion = surveyVersion;
 
 		if (createYNByType(optionType)) {
-			addSurveyOptions(itemDTO.getOptions());
+			addSurveyOptions(itemDTO.getOptionValue());
 		}
 	}
 
