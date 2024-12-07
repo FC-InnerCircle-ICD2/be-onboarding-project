@@ -6,7 +6,9 @@ import org.innercircle.surveyapiapplication.domain.surveyItem.infrastructure.Sur
 import org.innercircle.surveyapiapplication.domain.survey.domain.Survey;
 import org.innercircle.surveyapiapplication.domain.survey.infrastructure.SurveyRepository;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemUpdateRequest;
+import org.innercircle.surveyapiapplication.global.aop.RetryOnOptimisticLock;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,10 +17,13 @@ public class SurveyItemService {
     private final SurveyRepository surveyRepository;
     private final SurveyItemRepository surveyItemRepository;
 
+    @Transactional
+    @RetryOnOptimisticLock(maxRetries = 3)
     public SurveyItem createQuestion(Long surveyId, SurveyItem surveyItem) {
         Survey survey = surveyRepository.findById(surveyId);
         survey.addQuestion(surveyItem);
         surveyItem = surveyItemRepository.save(surveyItem);
+        surveyRepository.save(survey); // 낙관적락 동작을 위한 코드...
         return surveyItem;
     }
 
@@ -26,7 +31,6 @@ public class SurveyItemService {
         return surveyItemRepository.findByIdAndVersion(surveyId, questionId, questionVersion);
     }
 
-    // Todo: 낙관적 락 고민
     public SurveyItem updateQuestion(Long surveyId, Long questionId, SurveyItemUpdateRequest request) {
         SurveyItem surveyItem = surveyItemRepository.findLatestQuestionBySurveyIdAndSurveyItemId(surveyId, questionId);
         SurveyItem updatedItem = surveyItem.update(request.name(), request.description(), request.type(), request.required(), request.options());

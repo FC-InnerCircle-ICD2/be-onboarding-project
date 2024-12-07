@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class SurveyEntity extends BaseEntity {
 
     @Column(length = 1000, nullable = true)
     private String description;
+
+    @Version
+    private Integer version;
 
     public SurveyEntity(String name, String description) {
         this.name = name;

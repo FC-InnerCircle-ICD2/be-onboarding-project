@@ -42,7 +42,6 @@ public class SurveyService {
         return result;
     }
 
-    // Todo : 동시성에 따른 낙관적락
     public Survey updateSurvey(Long surveyId, SurveyUpdateRequest request) {
         Survey survey = surveyRepository.findById(surveyId);
         survey.update(request.name(), request.description());
