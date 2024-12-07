@@ -1,0 +1,92 @@
+buildscript {
+    ext {
+        //springBootVersion = '2.3.4.RELEASE' // current version
+        //springBootVersion = '2.4.13' // final patch
+        //springBootVersion = '2.5.14' // use gradle 7.5.1 above
+        //springBootVersion = '2.6.14' // final patch
+        springBootVersion = '2.7.9'  // final patch
+
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+allprojects {
+    group = 'com.survey.api'
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDirs = ["src/main/resources","src/main/java"]
+                includes = ["**/*"]
+                excludes = ["**/*.java"]
+            }
+        }
+    }
+
+    // 관리하는 모듈의 공통 dependencies
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-logging'
+        implementation 'org.springframework.boot:spring-boot-starter-json'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'com.fasterxml.jackson.core:jackson-databind'
+        runtimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+project(":common") {
+    bootJar.mainClass = ''
+    bootJar.enabled = false
+    jar.enabled = true
+}
+
+project(':common-api') {
+    dependencies {
+        api project(":common")
+    }
+    bootJar.enabled = false
+    jar.enabled = true
+}
+
+project(':survey-api') {
+    dependencies {
+        api project(":common-api")
+    }
+}
+
+bootJar.enabled = false 
+jar.enabled = true
