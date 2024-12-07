@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionOptionDto;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,8 +17,7 @@ import net.gentledot.survey.application.service.in.model.request.SurveyQuestionO
 public class SurveyQuestionOption {
     private String optionText;
 
-    public static SurveyQuestionOption from(SurveyQuestionOptionRequest option) {
-        // 다뤄질 타입에 따라 추가
-        return new SurveyQuestionOption(option.getOption());
+    public static SurveyQuestionOption from(SurveyQuestionOptionDto surveyQuestionOption) {
+        return new SurveyQuestionOption(surveyQuestionOption.getOption());
     }
 }

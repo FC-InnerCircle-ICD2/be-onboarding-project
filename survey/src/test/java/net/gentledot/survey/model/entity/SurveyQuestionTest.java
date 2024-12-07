@@ -1,12 +1,12 @@
 package net.gentledot.survey.model.entity;
 
 import lombok.extern.slf4j.Slf4j;
-import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionOptionDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,10 +29,10 @@ class SurveyItemTest {
                 List.of(
                         SurveyQuestion.of("question1", "this is question1",
                                 singleSelect, ItemRequired.REQUIRED,
-                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1")), SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option2")))),
+                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionDto("option1")), SurveyQuestionOption.from(new SurveyQuestionOptionDto("option2")))),
                         SurveyQuestion.of("question2", "this is question2",
                                 text, ItemRequired.OPTIONAL,
-                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1")))
+                                List.of(SurveyQuestionOption.from(new SurveyQuestionOptionDto("option1")))
                         )));
 
         log.info("created survey : {}", survey);

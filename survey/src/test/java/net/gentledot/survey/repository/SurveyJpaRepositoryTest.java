@@ -2,12 +2,12 @@ package net.gentledot.survey.repository;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionOptionDto;
 import net.gentledot.survey.infra.repository.jpa.SurveyJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,9 +33,9 @@ class SurveyJpaRepositoryTest {
     void createAndSaveSurveyTest() {
         // option 생성
         SurveyItemType singleSelect = SurveyItemType.SINGLE_SELECT;
-        SurveyQuestionOption option1 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option1"));
-        SurveyQuestionOption option2 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option2"));
-        SurveyQuestionOption option3 = SurveyQuestionOption.from(new SurveyQuestionOptionRequest("option3"));
+        SurveyQuestionOption option1 = SurveyQuestionOption.from(new SurveyQuestionOptionDto("option1"));
+        SurveyQuestionOption option2 = SurveyQuestionOption.from(new SurveyQuestionOptionDto("option2"));
+        SurveyQuestionOption option3 = SurveyQuestionOption.from(new SurveyQuestionOptionDto("option3"));
 
         // question 생성
         SurveyQuestion question1 = SurveyQuestion.of(

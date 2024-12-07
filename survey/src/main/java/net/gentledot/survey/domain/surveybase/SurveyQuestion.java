@@ -16,12 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
-import net.gentledot.survey.application.service.in.model.request.SurveyQuestionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionDto;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,25 +52,22 @@ public class SurveyQuestion {
         return new SurveyQuestion(null, itemName, itemDescription, itemType, required, null, options);
     }
 
-    public static SurveyQuestion from(SurveyQuestionRequest questionRequest) {
-        List<SurveyQuestionOptionRequest> questionRequestOptions = questionRequest.getOptions();
-        List<SurveyQuestionOption> options = Collections.emptyList();
-        if (questionRequestOptions != null) {
-            options = questionRequestOptions.stream()
-                    .map(SurveyQuestionOption::from)
-                    .collect(Collectors.toList());
-        }
+    public static SurveyQuestion from(SurveyQuestionDto questionRequest) {
+        List<SurveyQuestionOption> collectedQuestionOptions = questionRequest.getOptions()
+                .stream()
+                .map(SurveyQuestionOption::from)
+                .collect(Collectors.toList());
 
         return SurveyQuestion.of(
                 questionRequest.getQuestion(),
                 questionRequest.getDescription(),
                 questionRequest.getType(),
                 questionRequest.getRequired(),
-                options
+                collectedQuestionOptions
         );
     }
 
-    public void updateFromRequest(SurveyQuestionRequest questionRequest) {
+    public void updateFromRequest(SurveyQuestionDto questionRequest) {
         this.itemName = questionRequest.getQuestion();
         this.itemDescription = questionRequest.getDescription();
         this.itemType = questionRequest.getType();

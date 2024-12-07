@@ -13,6 +13,7 @@ import net.gentledot.survey.domain.exception.ServiceError;
 import net.gentledot.survey.domain.exception.SurveyNotFoundException;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,13 @@ public class SurveyService {
     @Transactional
     public SurveyCreateResponse createSurvey(SurveyCreateRequest surveyRequest) {
         SurveyValidator.validateRequest(surveyRequest);
-        List<SurveyQuestion> questions = surveyRequest.getQuestions().stream().map(SurveyQuestion::from).collect(Collectors.toList());
+
+        List<SurveyQuestionRequest> generateTargetQuestion = surveyRequest.getQuestions();
+        List<SurveyQuestion> questions = generateTargetQuestion.stream()
+                .map(SurveyQuestionDto::from)
+                .map(SurveyQuestion::from)
+                .collect(Collectors.toList());
+
 
         Survey survey = Survey.of(surveyRequest.getName(), surveyRequest.getDescription(), questions);
         Survey saved = surveyRepository.save(survey);
@@ -46,7 +53,9 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyId);
 
         survey.updateSurveyNameAndDesc(surveyRequest.getName(), surveyRequest.getDescription());
+
         for (SurveyQuestionRequest questionRequest : surveyRequest.getQuestions()) {
+            SurveyQuestionDto questionForUpdate = SurveyQuestionDto.from(questionRequest);
             UpdateType updateType = questionRequest.getUpdateType();
             if (updateType == null) {
                 updateType = UpdateType.ADD;
@@ -57,7 +66,8 @@ public class SurveyService {
                             .filter(question -> question.getId().equals(questionRequest.getQuestionId()))
                             .findFirst()
                             .orElseThrow(() -> new SurveyNotFoundException(ServiceError.INQUIRY_QUESTION_NOT_FOUND));
-                    existingQuestion.updateFromRequest(questionRequest);
+
+                    existingQuestion.updateFromRequest(questionForUpdate);
                     break;
                 case DELETE:
                     SurveyQuestion questionToRemove = survey.getQuestions().stream()
@@ -67,7 +77,7 @@ public class SurveyService {
                     survey.removeQuestion(questionToRemove);
                     break;
                 default:
-                    SurveyQuestion newQuestion = SurveyQuestion.from(questionRequest);
+                    SurveyQuestion newQuestion = SurveyQuestion.from(questionForUpdate);
                     survey.addQuestion(newQuestion);
                     break;
             }

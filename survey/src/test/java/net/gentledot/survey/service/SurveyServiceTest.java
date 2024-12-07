@@ -10,6 +10,8 @@ import net.gentledot.survey.domain.exception.SurveyCreationException;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionDto;
+import net.gentledot.survey.domain.surveybase.dto.SurveyQuestionOptionDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -142,6 +144,7 @@ class SurveyServiceTest {
 
     private List<SurveyQuestion> convertToSurveyQuestions(List<SurveyQuestionRequest> questionRequests) {
         return questionRequests.stream()
+                .map(SurveyQuestionDto::from)
                 .map(SurveyQuestion::from)
                 .collect(Collectors.toList());
     }
@@ -162,6 +165,6 @@ class SurveyServiceTest {
     }
 
     private SurveyQuestionOption convertToSurveyItemOption(SurveyQuestionOptionRequest optionRequest) {
-        return SurveyQuestionOption.from(new SurveyQuestionOptionRequest(optionRequest.getOption()));
+        return SurveyQuestionOption.from(new SurveyQuestionOptionDto(optionRequest.getOption()));
     }
 }
