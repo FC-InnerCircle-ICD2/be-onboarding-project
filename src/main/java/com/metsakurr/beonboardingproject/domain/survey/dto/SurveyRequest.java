@@ -1,6 +1,5 @@
 package com.metsakurr.beonboardingproject.domain.survey.dto;
 
-import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -36,20 +34,6 @@ public class SurveyRequest {
         }
 
         return questions.size() <= 10;
-    }
-
-
-    public Survey toEntity() {
-        Survey survey = Survey.builder()
-                .name(name)
-                .description(description)
-                .questions(new ArrayList<>())
-                .build();
-
-        questions.stream().map(QuestionRequest::toEntity).toList()
-                .forEach(survey::addQuestion);
-
-        return survey;
     }
 
     @Builder

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.metsakurr.beonboardingproject.common.entity.BaseEntity;
 import com.metsakurr.beonboardingproject.common.enums.ResponseCode;
 import com.metsakurr.beonboardingproject.common.exception.ServiceException;
+import com.metsakurr.beonboardingproject.domain.survey.dto.QuestionRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -42,12 +43,24 @@ public class Question extends BaseEntity {
     @Column(name = "required_yn", nullable = false)
     private boolean isRequired;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Option> options = new ArrayList<>();
+    @Convert(converter = StringListConverter.class)
+    private List<String> options;
 
-    public void addOptions(Option option) {
-        this.options.add(option);
-        option.setQuestion(this);
+    public static Question create(QuestionRequest request) {
+        return Question.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .questionType(QuestionType.valueOf(request.getQuestionType()))
+                .options(request.getOptions())
+                .build();
+    }
+
+    public void update(QuestionRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.questionType = QuestionType.valueOf(request.getQuestionType());
+        this.isRequired = request.getIsRequired();
+        this.options = request.getOptions();
     }
 
     @Builder
@@ -57,7 +70,7 @@ public class Question extends BaseEntity {
             String description,
             QuestionType questionType,
             boolean isRequired,
-            List<Option> options
+            List<String> options
     ) {
         this.survey = survey;
         this.name = name;
@@ -87,33 +100,18 @@ public class Question extends BaseEntity {
                             .map(String::trim)
                             .map(Long::parseLong)
                             .toList();
-                    List<Long> optionIdxs = options.stream().map(Option::getIdx).toList();
+//                    List<Long> optionIdxs = options.stream().map(Option::getIdx).toList();
 
-                    boolean isContains = optionIdxs.stream()
-                            .anyMatch(selectedOption::contains);
-                    if (!isContains) {
-                        throw new ServiceException(ResponseCode.INVALID_OPTION_IDX);
-                    }
+//                    boolean isContains = optionIdxs.stream()
+//                            .anyMatch(selectedOption::contains);
+//                    if (!isContains) {
+//                        throw new ServiceException(ResponseCode.INVALID_OPTION_IDX);
+//                    }
                 } catch (NumberFormatException ex) {
                     throw new ServiceException(ResponseCode.INVALID_OPTION_IDX);
                 }
                 break;
         }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        Question question = (Question) obj;
-
-        if(!Objects.equals(name, question.getName())) return false;
-        if(!Objects.equals(description, question.getDescription())) return false;
-        if(questionType != question.getQuestionType()) return false;
-        if(isRequired != question.isRequired()) return false;
-
-        return new HashSet<>(options).equals(new HashSet<>(question.getOptions()));
     }
 }
 

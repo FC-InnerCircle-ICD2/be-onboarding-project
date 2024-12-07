@@ -17,8 +17,10 @@ public enum ResponseCode {
     NOT_FOUND_SURVEY("40010", "유효하지 않은 설문조사입니다."),
     NOT_FOUND_ANSWER("40011", "응답해야 하는 문항에 대한 항목이 없습니다."),
     NOT_FOUND_SURVEY_IDX("40012", "idx[설문조사 식별자]가 필요합니다."),
-    NOT_FOUND_SUBMISSION("40013", "유효하지 않은 설문조사 식별자 입니다.")
+    NOT_FOUND_SUBMISSION("40013", "유효하지 않은 설문조사 식별자 입니다."),
 
+    FAIL_JSON_TO_STRING("50001", "json을 String으로 변경할 수 없습니다."),
+    FAIL_STRING_TO_JSON("50002", "String을 json으로 변경할 수 없습니다."),
     ;
 
     private final String code;

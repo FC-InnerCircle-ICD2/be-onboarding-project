@@ -1,6 +1,5 @@
 package com.metsakurr.beonboardingproject.domain.survey.repository;
 
-import com.metsakurr.beonboardingproject.domain.survey.entity.QOption;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QQuestion;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QSurvey;
 import com.metsakurr.beonboardingproject.domain.survey.entity.Survey;
@@ -26,13 +25,13 @@ public class SurveyRepository {
     public Optional<Survey> findById(long idx) {
         QSurvey survey = QSurvey.survey;
         QQuestion question = QQuestion.question;
-        QOption option = QOption.option;
+//        QOption option = QOption.option;
 
         return Optional.ofNullable(
                 queryFactory.select(survey)
                         .from(survey)
                         .leftJoin(survey.questions, question).fetchJoin()
-                        .leftJoin(question.options, option)
+//                        .leftJoin(question.options, option)
                         .where(survey.idx.eq(idx))
                         .fetchOne()
         );

@@ -1,8 +1,6 @@
 package com.metsakurr.beonboardingproject.domain.survey.dto;
 
 import com.metsakurr.beonboardingproject.common.validation.ValidQuestionType;
-import com.metsakurr.beonboardingproject.domain.survey.entity.Option;
-import com.metsakurr.beonboardingproject.domain.survey.entity.Question;
 import com.metsakurr.beonboardingproject.domain.survey.entity.QuestionType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
@@ -11,11 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -56,22 +50,6 @@ public class QuestionRequest {
 
     public boolean getIsRequired() {
         return this.isRequired;
-    }
-
-    public Question toEntity() {
-        Question question = Question.builder()
-                .name(name)
-                .description(description)
-                .questionType(QuestionType.valueOf(questionType))
-                .isRequired(isRequired)
-                .options(new ArrayList<>())
-                .build();
-        Optional.ofNullable(options)
-                .orElseGet(Collections::emptyList).stream()
-                .map(Option::of).toList()
-                .forEach(question::addOptions);
-
-        return question;
     }
 
     @Builder

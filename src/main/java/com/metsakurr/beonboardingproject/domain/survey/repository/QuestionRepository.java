@@ -27,4 +27,12 @@ public class QuestionRepository {
                 .where(question.survey.idx.eq(surveyId))
                 .fetch();
     }
+
+    @Transactional
+    public void delete(long idx) {
+        QQuestion question = QQuestion.question;
+        queryFactory.delete(question)
+                .where(question.idx.eq(idx))
+                .execute();
+    }
 }
