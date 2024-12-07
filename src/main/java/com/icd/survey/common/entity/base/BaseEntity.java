@@ -1,4 +1,4 @@
-package com.icd.survey.api.entity.base;
+package com.icd.survey.common.entity.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

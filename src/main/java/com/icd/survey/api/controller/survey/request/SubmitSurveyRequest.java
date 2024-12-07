@@ -1,4 +1,4 @@
-package com.icd.survey.api.dto.survey.request;
+package com.icd.survey.api.controller.survey.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

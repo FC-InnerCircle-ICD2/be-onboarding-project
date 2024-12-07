@@ -1,4 +1,4 @@
-package com.icd.survey.api.repository.survey;
+package com.icd.survey.api.entity.survey.repository;
 
 import com.icd.survey.api.entity.survey.SurveyItem;
 import org.springframework.data.jpa.repository.JpaRepository;

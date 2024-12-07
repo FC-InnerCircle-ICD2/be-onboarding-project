@@ -1,4 +1,4 @@
-package com.icd.survey.api.dto.survey.response;
+package com.icd.survey.api.controller.survey.response;
 
 import lombok.*;
 

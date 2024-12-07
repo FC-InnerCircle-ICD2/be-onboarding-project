@@ -1,4 +1,4 @@
-package com.icd.survey.api.dto.survey.request;
+package com.icd.survey.api.controller.survey.request;
 
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import jakarta.validation.Valid;

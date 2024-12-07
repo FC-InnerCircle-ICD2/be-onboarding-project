@@ -1,10 +1,10 @@
 package com.icd.survey.api.business.survey;
 
-import com.icd.survey.api.repository.survey.AnswerOptionRepository;
-import com.icd.survey.api.repository.survey.ItemAnswerRepository;
-import com.icd.survey.api.repository.survey.SurveyItemRepository;
-import com.icd.survey.api.repository.survey.SurveyRepository;
-import com.icd.survey.api.repository.survey.query.SurveyQueryRepository;
+import com.icd.survey.api.entity.survey.repository.AnswerOptionRepository;
+import com.icd.survey.api.entity.survey.repository.ItemAnswerRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyItemRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyRepository;
+import com.icd.survey.api.entity.survey.repository.query.SurveyQueryRepository;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

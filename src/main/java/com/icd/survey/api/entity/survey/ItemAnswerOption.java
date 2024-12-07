@@ -1,6 +1,7 @@
 package com.icd.survey.api.entity.survey;
 
 import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
+import com.icd.survey.common.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "item_answer_option")
-public class ItemAnswerOption {
+public class ItemAnswerOption extends BaseEntity {
     @Id
     @Column(name = "option_seq", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +27,10 @@ public class ItemAnswerOption {
     private Long itemSeq;
 
 
-    public void itemKeySet(Long itemSeq){
+    public void itemKeySet(Long itemSeq) {
         this.itemSeq = itemSeq;
     }
+
     public static ItemAnswerOption createItemResponseOptionRequest(ItemAnswerOptionDto dto) {
         ItemAnswerOption itemResponseOption = new ItemAnswerOption();
         itemResponseOption.itemSeq = dto.getItemSeq();

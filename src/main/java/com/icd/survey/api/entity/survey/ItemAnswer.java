@@ -6,6 +6,7 @@ import com.icd.survey.api.entity.survey.embedable.MultiChoice;
 import com.icd.survey.api.entity.survey.embedable.ShortAnswer;
 import com.icd.survey.api.entity.survey.embedable.SingleChoice;
 import com.icd.survey.api.enums.survey.ResponseType;
+import com.icd.survey.common.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,17 +19,13 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @Table(name = "item_answer")
-public class ItemAnswer {
+public class ItemAnswer extends BaseEntity {
     @Id
     @Column(name = "answer_seq", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerSeq;
     @Column(name = "is_optional_answer", nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isOptionalAnswer;
-    /*@Column(name = "answer", nullable = true)
-    private String answer;
-    @Column(name = "option_seq", nullable = true)
-    private Long optionSeq;*/
     @Column(name = "option_answer", nullable = true)
     private String optionAnswer;
     @Column(name = "response_type", nullable = false)

@@ -1,4 +1,4 @@
-package com.icd.survey.api.repository.survey.query;
+package com.icd.survey.api.entity.survey.repository.query;
 
 import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;

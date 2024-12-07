@@ -1,9 +1,5 @@
 package com.icd.survey.api.service.survey;
 
-import com.icd.survey.api.dto.survey.request.CreateSurveyRequest;
-import com.icd.survey.api.dto.survey.request.SubmitSurveyRequest;
-import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
-import com.icd.survey.api.dto.survey.request.UpdateSurveyUpdateRequest;
 import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
@@ -12,6 +8,10 @@ import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
+import com.icd.survey.api.service.survey.command.CreateSurveyCommand;
+import com.icd.survey.api.service.survey.command.SubmitSurveyCommand;
+import com.icd.survey.api.service.survey.command.SurveyItemCommand;
+import com.icd.survey.api.service.survey.command.UpdateSurveyCommand;
 import com.icd.survey.common.CommonUtils;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
@@ -34,43 +34,42 @@ public class SurveyService {
     private final SurveyQueryBusiness surveyQueryBusiness;
     private final SurveyActionBusiness surveyActionBusiness;
 
-    public void createSurvey(CreateSurveyRequest request) {
+    public void createSurvey(CreateSurveyCommand command) {
 
-        request.setIpAddress(CommonUtils.getRequestIp());
 
         /* ip 당 설문조사 이름 체크 */
-        if (Boolean.TRUE.equals(surveyQueryBusiness.isExistedUserSurvey(request.getSurveyName(), request.getIpAddress()))) {
+        if (Boolean.TRUE.equals(surveyQueryBusiness.isExistedUserSurvey(command.surveyName(), command.ipAddress()))) {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND, "ip 당 설문조사 이름은 중복될 수 없습니다.");
         }
 
         /* 설문 조사 엔티티 save */
-        Long surveySeq = surveyActionBusiness.saveSurvey(request.createSurveyDtoRequest()).getSurveySeq();
+        Long surveySeq = surveyActionBusiness.saveSurvey(command.createSurveyDtoRequest()).getSurveySeq();
 
         /* 설문 조사 항목 save */
-        surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
+        surveyActionBusiness.saveSurveyItemList(command.surveyItemCommandList(), surveySeq);
     }
 
-    public void updateSurvey(UpdateSurveyUpdateRequest request) {
+    public void updateSurvey(UpdateSurveyCommand command) {
 
         /* 엔티티 확인 */
-        Survey survey = checkSurveyBySeq(request.getSurveySeq());
+        Survey survey = checkSurveyBySeq(command.surveySeq());
 
         survey.deletedCheck();
 
         Long surveySeq = survey.getSurveySeq();
 
-        survey.update(request.createSurveyDtoRequest());
+        survey.update(command.createSurveyDtoRequest());
 
         /* 기존의 설문조사 항목들 모두 disable 처리. */
         surveyActionBusiness.updateSurveyItemAsDisabled(surveySeq);
 
         /* 설문 조사 항목 save */
-        surveyActionBusiness.saveSurveyItemList(request.getSurveyItemList(), surveySeq);
+        surveyActionBusiness.saveSurveyItemList(command.surveyItemCommandList(), surveySeq);
     }
 
-    public void submitSurvey(SubmitSurveyRequest request) {
+    public void submitSurvey(SubmitSurveyCommand command) {
 
-        Survey survey = checkSurveyBySeq(request.getSurveySeq());
+        Survey survey = checkSurveyBySeq(command.surveySeq());
 
         if (Boolean.FALSE.equals(survey.getIpAddress().equals(CommonUtils.getRequestIp()))) {
             throw new ApiException(ExceptionResponseType.ENTITY_NOT_FNOUND);
@@ -88,9 +87,9 @@ public class SurveyService {
                 .map(SurveyItem::getItemSeq)
                 .collect(Collectors.toSet());
 
-        List<SurveyItemRequest> itemRequestList = request.getSurveyItemList();
+        List<SurveyItemCommand> itemRequestList = command.surveyItemList();
 
-        itemRequestList.forEach(x -> essentialItemSeqSet.remove(x.getItemSeq()));
+        itemRequestList.forEach(x -> essentialItemSeqSet.remove(x.itemse()));
 
         if (Boolean.FALSE.equals(essentialItemSeqSet.isEmpty())) {
             throw new ApiException(ExceptionResponseType.ILLEGAL_ARGUMENT, "필수 항목 값을 입력 해 주세요");

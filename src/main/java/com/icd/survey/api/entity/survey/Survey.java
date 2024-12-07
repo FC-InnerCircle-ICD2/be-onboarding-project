@@ -1,13 +1,12 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.entity.base.BaseEntity;
+import com.icd.survey.common.entity.base.BaseEntity;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;

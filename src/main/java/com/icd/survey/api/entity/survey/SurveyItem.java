@@ -1,11 +1,10 @@
 package com.icd.survey.api.entity.survey;
 
-import com.icd.survey.api.entity.base.BaseEntity;
+import com.icd.survey.common.entity.base.BaseEntity;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 

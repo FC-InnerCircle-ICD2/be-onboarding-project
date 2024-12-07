@@ -1,16 +1,16 @@
 package com.icd.survey.api.business.survey;
 
-import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
-import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
+import com.icd.survey.api.controller.survey.request.ItemOptionRequest;
+import com.icd.survey.api.controller.survey.request.SurveyItemRequest;
 import com.icd.survey.api.entity.survey.Survey;
 import com.icd.survey.api.entity.survey.SurveyItem;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
-import com.icd.survey.api.repository.survey.AnswerOptionRepository;
-import com.icd.survey.api.repository.survey.ItemAnswerRepository;
-import com.icd.survey.api.repository.survey.SurveyItemRepository;
-import com.icd.survey.api.repository.survey.SurveyRepository;
-import com.icd.survey.api.repository.survey.query.SurveyQueryRepository;
+import com.icd.survey.api.entity.survey.repository.AnswerOptionRepository;
+import com.icd.survey.api.entity.survey.repository.ItemAnswerRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyItemRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyRepository;
+import com.icd.survey.api.entity.survey.repository.query.SurveyQueryRepository;
 import com.icd.survey.api.service.survey.business.SurveyActionBusiness;
 import com.icd.survey.api.service.survey.business.SurveyQueryBusiness;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package com.icd.survey.api.repository.survey;
+package com.icd.survey.api.repository;
 
 import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
@@ -8,6 +8,10 @@ import com.icd.survey.api.entity.survey.dto.ItemAnswerDto;
 import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
+import com.icd.survey.api.entity.survey.repository.AnswerOptionRepository;
+import com.icd.survey.api.entity.survey.repository.ItemAnswerRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyItemRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyRepository;
 import com.icd.survey.api.enums.survey.ResponseType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

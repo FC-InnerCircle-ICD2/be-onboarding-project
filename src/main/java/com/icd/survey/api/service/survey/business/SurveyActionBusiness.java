@@ -1,8 +1,8 @@
 package com.icd.survey.api.service.survey.business;
 
-import com.icd.survey.api.dto.survey.request.ItemOptionRequest;
-import com.icd.survey.api.dto.survey.request.SurveyAnswerRequest;
-import com.icd.survey.api.dto.survey.request.SurveyItemRequest;
+import com.icd.survey.api.controller.survey.request.ItemOptionRequest;
+import com.icd.survey.api.controller.survey.request.SurveyAnswerRequest;
+import com.icd.survey.api.controller.survey.request.SurveyItemRequest;
 import com.icd.survey.api.entity.survey.ItemAnswer;
 import com.icd.survey.api.entity.survey.ItemAnswerOption;
 import com.icd.survey.api.entity.survey.Survey;
@@ -12,11 +12,12 @@ import com.icd.survey.api.entity.survey.dto.ItemAnswerOptionDto;
 import com.icd.survey.api.entity.survey.dto.SurveyDto;
 import com.icd.survey.api.entity.survey.dto.SurveyItemDto;
 import com.icd.survey.api.enums.survey.ResponseType;
-import com.icd.survey.api.repository.survey.AnswerOptionRepository;
-import com.icd.survey.api.repository.survey.ItemAnswerRepository;
-import com.icd.survey.api.repository.survey.SurveyItemRepository;
-import com.icd.survey.api.repository.survey.SurveyRepository;
-import com.icd.survey.api.repository.survey.query.SurveyQueryRepository;
+import com.icd.survey.api.entity.survey.repository.AnswerOptionRepository;
+import com.icd.survey.api.entity.survey.repository.ItemAnswerRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyItemRepository;
+import com.icd.survey.api.entity.survey.repository.SurveyRepository;
+import com.icd.survey.api.entity.survey.repository.query.SurveyQueryRepository;
+import com.icd.survey.api.service.survey.command.SurveyItemCommand;
 import com.icd.survey.exception.ApiException;
 import com.icd.survey.exception.response.emums.ExceptionResponseType;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class SurveyActionBusiness {
         itemAnswerRepository.save(ItemAnswer.createItemResponseRequest(answerDto));
     }
 
-    public void saveSurveyItemList(List<SurveyItemRequest> itemRequsList, Long surveySeq) {
+    public void saveSurveyItemList(List<SurveyItemCommand> itemRequsList, Long surveySeq) {
         itemRequsList.forEach(x -> {
             x.validationCheck();
 

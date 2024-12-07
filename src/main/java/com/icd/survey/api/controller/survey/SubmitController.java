@@ -1,6 +1,6 @@
 package com.icd.survey.api.controller.survey;
 
-import com.icd.survey.api.dto.survey.request.SubmitSurveyRequest;
+import com.icd.survey.api.controller.survey.request.SubmitSurveyRequest;
 import com.icd.survey.api.service.survey.SurveyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
