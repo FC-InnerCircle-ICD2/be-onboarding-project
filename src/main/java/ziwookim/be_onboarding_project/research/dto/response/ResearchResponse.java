@@ -1,7 +1,11 @@
 package ziwookim.be_onboarding_project.research.dto.response;
 
-import lombok.*;
-import ziwookim.be_onboarding_project.research.model.ResearchItemVo;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ziwookim.be_onboarding_project.research.model.ResearchVo;
 
 import java.util.List;
