@@ -1,6 +1,6 @@
 package com.practice.survey.response.service;
 
-import com.practice.survey.common.response.ApiResponse;
+import com.practice.survey.common.response.ResponseTemplate;
 import com.practice.survey.common.response.StatusEnum;
 import com.practice.survey.response.model.dto.ResponseSaveDto;
 import com.practice.survey.response.model.dto.ResponseSaveRequestDto;
@@ -12,8 +12,6 @@ import com.practice.survey.responseItem.repository.ResponseItemRepository;
 import com.practice.survey.surveyItem.model.dto.SurveyItemReadDto;
 import com.practice.survey.surveyItem.model.entity.SurveyItem;
 import com.practice.survey.surveyItem.repository.SurveyItemRepository;
-import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionReadDto;
-import com.practice.survey.surveyItemOption.model.entity.SurveyItemOption;
 import com.practice.survey.surveyItemOption.repository.SurveyItemOptionRepository;
 import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
 import com.practice.survey.surveyVersion.repository.SurveyVersionRepository;
@@ -24,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +36,7 @@ public class ResponseServiceImpl implements ResponseService {
     private final SurveyItemOptionRepository surveyItemOptionRepository;
 
     @Override
-    public ApiResponse<StatusEnum> createResponse(ResponseSaveRequestDto responseSaveRequestDto) {
+    public ResponseTemplate<StatusEnum> createResponse(ResponseSaveRequestDto responseSaveRequestDto) {
 
         // 설문조사 아이디 기반 설문조사 찾기
         Survey survey = surveyRepository.findBySurveyId(responseSaveRequestDto.getSurveyId());
@@ -72,7 +68,7 @@ public class ResponseServiceImpl implements ResponseService {
 //            필수 필드 응답 여부 검사 : 모든 필수 항목에 대응하는 응답이 있는지 확인합니다.
             // 필수 필드가 비어있을 경우 에러
             if(isRequired && responseValueList.isEmpty()) {
-                return new ApiResponse<StatusEnum>().serverError(StatusEnum.REQUIRED_FIELD_MISSING);
+                return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.REQUIRED_FIELD_MISSING);
             }
 
             // 입력 유형(inputType) 검사 : 응답 값이 설문 항목의 예상 입력 유형과 일치하는지 확인합니다.
@@ -81,7 +77,7 @@ public class ResponseServiceImpl implements ResponseService {
             // MULTIPLE_CHOICE : 2개 이상의 응답값이 있을 경우 통과. 2개 미만일 경우 에러
             if(inputType.equals("MULTIPLE_CHOICE")) {
                 if(responseValueList.size() < 2) {
-                    return new ApiResponse<StatusEnum>().serverError(StatusEnum.MULTIPLE_CHOICE_TOO_SHORT);
+                    return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.MULTIPLE_CHOICE_TOO_SHORT);
                 }
             }
             // 다중 선택이 아닌데 응답값이 1개가 아닐 경우 에러
@@ -89,10 +85,10 @@ public class ResponseServiceImpl implements ResponseService {
                 if(responseValueList.size() != 1) {
                     // SINGLE_CHOICE : 1개의 응답값만 있을 경우 통과. 응답값이 1개가 아닐 경우 에러
                     if(inputType.equals("SINGLE_CHOICE")) {
-                        return new ApiResponse<StatusEnum>().serverError(StatusEnum.SINGLE_CHOICE_MISMATCH);
+                        return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.SINGLE_CHOICE_MISMATCH);
                     }
                     else{
-                        return new ApiResponse<StatusEnum>().serverError(StatusEnum.INPUT_TYPE_MISMATCH);
+                        return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.INPUT_TYPE_MISMATCH);
                     }
                 }
             }
@@ -100,14 +96,14 @@ public class ResponseServiceImpl implements ResponseService {
             if(inputType.equals("SHORT_TEXT")) {
                 String responseValue = responseValueList.get(0);
                 if(responseValue.length() >= 20) {
-                    return new ApiResponse<StatusEnum>().serverError(StatusEnum.SHORT_TEXT_TOO_LONG);
+                    return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.SHORT_TEXT_TOO_LONG);
                 }
             }
             // LONG_TEXT : 20자 이상 200자 이하는 통과. 20자 미만이거나 200자 초과일 경우 에러
             if(inputType.equals("LONG_TEXT")) {
                 String responseValue = responseValueList.get(0);
                 if(responseValue.length() < 20 || responseValue.length() > 200) {
-                    return new ApiResponse<StatusEnum>().serverError(StatusEnum.LONG_TEXT_LENGTH_MISMATCH);
+                    return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.LONG_TEXT_LENGTH_MISMATCH);
                 }
             }
 
@@ -122,7 +118,7 @@ public class ResponseServiceImpl implements ResponseService {
 
                 for(String responseValue : responseValueList) {
                     if(!optionTextList.contains(responseValue)) {
-                        return new ApiResponse<StatusEnum>().serverError(StatusEnum.INVALID_OPTION);
+                        return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.INVALID_OPTION);
                     }
                 }
             }
@@ -145,7 +141,7 @@ public class ResponseServiceImpl implements ResponseService {
             }
         }
 
-        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+        return new ResponseTemplate<StatusEnum>().responseOk(StatusEnum.SUCCESS);
     }
 
 //    public void checkInputType(SurveyItemReadDto surveyItemReadDto, ResponseItemSaveRequestDto responseItemSaveRequestDto) {

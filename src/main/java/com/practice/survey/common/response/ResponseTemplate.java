@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class ApiResponse<T> {
+public class ResponseTemplate<T> {
     @JsonProperty("common")
     private Common common;
 
@@ -18,30 +18,30 @@ public class ApiResponse<T> {
     private Value<T> data;
 
     @JsonIgnore
-    public ApiResponse<T> responseOk() {
-        return ApiResponse.<T>builder()
+    public ResponseTemplate<T> responseOk() {
+        return ResponseTemplate.<T>builder()
                 .common(Common.builder().build().responseOk())
                 .build();
     }
 
     @JsonIgnore
-    public ApiResponse<T> responseOk(T value) {
-        return ApiResponse.<T>builder()
+    public ResponseTemplate<T> responseOk(T value) {
+        return ResponseTemplate.<T>builder()
                 .data(Value.<T>builder().build().responseOk(value))
                 .common(Common.builder().build().responseOk())
                 .build();
     }
 
     @JsonIgnore
-    public ApiResponse<T> serverError(StatusEnum status) {
-        return ApiResponse.<T>builder()
+    public ResponseTemplate<T> serverError(StatusEnum status) {
+        return ResponseTemplate.<T>builder()
                 .common(Common.builder().build().serverError(status))
                 .build();
     }
 
     @JsonIgnore
-    public ApiResponse<T> serverError(int code, String message) {
-        return ApiResponse.<T>builder()
+    public ResponseTemplate<T> serverError(int code, String message) {
+        return ResponseTemplate.<T>builder()
                 .common(Common.builder().build().serverError(code, message))
                 .build();
     }

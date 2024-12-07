@@ -1,6 +1,6 @@
 package com.practice.survey.common.handler;
 
-import com.practice.survey.common.response.ApiResponse;
+import com.practice.survey.common.response.ResponseTemplate;
 import com.practice.survey.common.response.StatusEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse methodValidException(MethodArgumentNotValidException exception, HttpServletRequest httpServletRequest) {
+    public ResponseTemplate methodValidException(MethodArgumentNotValidException exception, HttpServletRequest httpServletRequest) {
 
         log.error("MethodArgumentNotValidException url: {}", httpServletRequest.getRequestURI(), exception);
 
         ValidationException errorResponse = makeErrorResponse(exception.getBindingResult());
 
-        return ApiResponse.builder().build().serverError(errorResponse.getCode(), errorResponse.getMessage());
+        return ResponseTemplate.builder().build().serverError(errorResponse.getCode(), errorResponse.getMessage());
     }
 
     private ValidationException makeErrorResponse(BindingResult bindingResult) {
@@ -54,8 +54,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public ApiResponse handleAllExceptions(Exception exception, HttpServletRequest request) {
+    public ResponseTemplate handleAllExceptions(Exception exception, HttpServletRequest request) {
         log.error("Unexpected Exception: {}", exception);
-        return ApiResponse.builder().build().serverError(StatusEnum.INTERNAL_SERVER_ERROR);
+        return ResponseTemplate.builder().build().serverError(StatusEnum.INTERNAL_SERVER_ERROR);
     }
 }
