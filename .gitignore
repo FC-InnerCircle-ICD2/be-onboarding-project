@@ -1,0 +1,23 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# gradle
+.gradle
+
+# intellij
+.idea
+
+# git
+.git-config
+
+#build
+build/*
+
+#.DS_Store
+.DS_Store
