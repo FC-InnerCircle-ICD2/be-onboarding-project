@@ -13,5 +13,5 @@ public interface SurveyService {
 
     public ResponseTemplate<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto);
 
-    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(Long surveyId);
+    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(Long surveyId, String itemName, String responseValue);
 }
