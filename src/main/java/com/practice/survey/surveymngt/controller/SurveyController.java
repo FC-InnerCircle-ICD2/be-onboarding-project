@@ -6,6 +6,7 @@ import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
 import com.practice.survey.surveymngt.model.dto.SurveyResponseDto;
 import com.practice.survey.surveymngt.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -236,43 +237,59 @@ public class SurveyController {
     @GetMapping("/getSurveyResponse")
     @Operation(
             summary = "설문조사 응답 조회",
-            description = "지정된 설문조사 ID로 설문조사 응답을 조회합니다.",
+            description = """
+                지정된 설문조사 ID, 항목 이름, 응답 값을 사용하여 설문조사 응답을 조회합니다.
+                """,
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "설문조사 응답 조회 성공",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = SurveyResponseDto.class),
-                                    examples = @ExampleObject(
-                                            value = """
-                                                    {
-                                                        "common": {
-                                                            "code": 200,
-                                                            "message": "Success"
-                                                        },
-                                                        "data": {
-                                                            "value": [
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = SurveyResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            name = "응답 예시 1",
+                                                            summary = "surveyId만 포함된 요청의 응답 예시",
+                                                            value = """
                                                                 {
-                                                                    "surveyName": "설문조사1",
-                                                                    "surveyDescription": "설문조사1 설명",
-                                                                    "versionNumber": 1,
-                                                                    "itemName": "질문1",
-                                                                    "itemDescription": "설명1",
-                                                                    "itemNumber": 1,
-                                                                    "respondentId": "답변자1",
-                                                                    "responseValue": "SHORT_TEXT_test"
+                                                                    "common": {
+                                                                        "code": 200,
+                                                                        "message": "Success"
+                                                                    },
+                                                                    "data": {
+                                                                        "value": [
+                                                                            {
+                                                                                "surveyName": "설문조사1",
+                                                                                "surveyDescription": "설문조사1 설명",
+                                                                                "versionNumber": 1,
+                                                                                "itemName": "질문1",
+                                                                                "itemDescription": "설명1",
+                                                                                "itemNumber": 1,
+                                                                                "respondentId": "답변자1",
+                                                                                "responseValue": "SHORT_TEXT_test"
+                                                                            }
+                                                                        ]
+                                                                    }
                                                                 }
-                                                            ]
-                                                        }
-                                                    }
-                                                    """
+                                                                """
+                                                    )
+                                            }
                                     )
-                            )
+                            }
                     )
             }
     )
-    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(@RequestParam(required = true) Long surveyId, @RequestParam(required = false) String itemName, @RequestParam(required = false) String responseValue) {
-        return surveyService.getSurveyResponse(surveyId,itemName,responseValue);
+    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(
+            @Parameter(description = "설문조사 ID", required = true, example = "1")
+            @RequestParam(required = true) Long surveyId,
+
+            @Parameter(description = "설문조사 항목 이름", required = false, example = "질문1")
+            @RequestParam(required = false) String itemName,
+
+            @Parameter(description = "응답 값", required = false, example = "TEXT")
+            @RequestParam(required = false) String responseValue) {
+        return surveyService.getSurveyResponse(surveyId, itemName, responseValue);
     }
 }
