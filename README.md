@@ -1,115 +1,1089 @@
-# 이너써클 BE 온보딩 프로젝트
-
-## 온보딩 프로젝트의 목적
-
-- 공통된 내용과 기술스택을 이용한 기술 경험 수준 평가
-- 최대한 과거에 경험 해보시지 못한 주제를 선정하여 기술적으로 챌린지 하실 수 있게끔 구성
-- 점수를 매기거나 합격과 불합격을 구분하는 목적은 아님.
-- 서로가 서로에게 도움 줄 수 있는 각자의 강점을 파악하기 위하여 진행
-  - 꼼꼼한 요구사항 분석과 문서화
-  - 새로운 기술적 접근 방식
-  - 안정적인 아키텍처 구성
-
-## Introduction
-
-- “설문조사 서비스"를 구현하려고 합니다.
-- “온보딩 프로젝트 기능 요구사항"을 구현해 주시기 바랍니다.
-- 온보딩 프로젝트 기능 요구 사항 및 기술 요구사항이 충족되지 않은 결과물은 코드레벨 평가를 진행하지 않습니다.
-- 아래의 “코드레벨 평가항목"으로 코드를 평가합니다.
-- “설문조사 서비스"의 API 명세를 함께 제출해주세요.
-- 우대사항은 직접 구현하지 않더라도 README에 적용 방법 등을 구체적으로 명시해주시는 것으로 대체 할 수 있습니다.
-
-## 온보딩 프로젝트 기능 요구사항
-
-### 개요
-
-- “설문조사 서비스”는 설문조사 양식을 만들고, 만들어진 양식을 기반으로 응답을 받을 수 있는 서비스입니다. (e.g. Google Forms, Tally, Typeform)
-- 설문조사 양식은 [설문조사 이름], [설문조사 설명], [설문 받을 항목]의 구성으로 이루어져있습니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
+### [✏️ 설문조사 요구사항 api별 기능 정리와 예외 처리 문구](https://www.notion.so/api-663ae4b40f164b0e8af22c3d6796c4dc?pvs=4)
 
 
-### 1. 설문조사 생성 API
+## API 명세서
 
-- 요청 값에는 [설문조사 이름], [설문조사 설명], [설문 받을 항목]이 포함됩니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
-    - [단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 합니다.
-- [설문 받을 항목]은 1개 ~ 10개까지 포함 할 수 있습니다.
+| Method | Uri | Description | 개발 완료 여부 |
+| --- | --- | --- | --- |
+| POST | /research/add | 설문조사 등록 API | O |
+| POST | /research/edit | 설문조사 수정 API | O |
+| POST | /research/submit | 설문조사 응답 제출 API | O |
+| GET | /research/get/research-submit | 설문조사 응답 조회 API | O |
+| GET | /research/search/research-answer | 설문조사 항목 및 답변 값 검색 API | O |
 
+---
 
-### 2. 설문조사 수정 API
+## // TODO
 
-- 요청 값에는 [설문조사 이름], [설문조사 설명], [설문 받을 항목]이 포함됩니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
-    - [단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 합니다.
-- [설문 받을 항목]이 추가/변경/삭제 되더라도 기존 응답은 유지되어야 합니다.
+- [ ]  ExceptionHandler 처리 → 실패 ㅠ (참고한 코드와 동일한 구성으로 Exception, CommonResponse 등 처리 해놓았는데 Exception 발생시 정상적으로 처리가 잘 이루어 지지 않는 것 같습니다.,
+- [x]  @OneToMany @ManyToOne 관계 CRUD 처리에 대한 이해
+- [ ]  Swagger로 API 명세서 작성 → 실패…
+- [x]  @CreatedDate, @LastModifiedDate 처리
+- [ ]  테스트 코드 작성
 
+---
 
-### 3. 설문조사 응답 제출 API
+## `POST` 설문조사 등록 API
 
-- 요청 값에는 [설문 받을 항목]에 대응되는 응답 값이 포함됩니다.
-- 응답 값은 설문조사의 [설문 받을 항목]과 일치해야만 응답 할 수 있습니다.
+`/research/add`
 
+### Request
 
-### 4. 설문조사 응답 조회 API
+| Field | Data Type | Example Value | Description | Description2 |
+| --- | --- | --- | --- | --- |
+| **title** | String | "title" | 설문 제목 |  |
+| **description** | String | "description" | 설문 설명 |  |
+| **itemVoList** | List |  | 설문 항목 리스트 | itemVoList의 길이는 최소 1에서 최대 10 |
+| **itemVoList[n]** | **ItemVo** |  | First item in the item list. |  |
+| - name | String | "itemName1" | 설문 항목명 |  |
+| - description | String | "itemDescription1" | 설문 항목 설명 |  |
+| - itemType | Integer | 1 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| - itemChoiceList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| -- itemChoiceList[m] | **ItemChoice** |  |  |  |
+| --- content | String | "itemChoiceContent1_1" | 설문 항목 선택 값 |  |
+| - isRequired | Boolean | true | 필수 입력 여부 |  |
 
-- 요청 값에는 [설문조사 식별자]가 포함됩니다.
-- 해당 설문조사의 전체 응답을 조회합니다.
-- **(Advanced)** 설문 응답 항목의 이름과 응답 값을 기반으로 검색 할 수 있습니다.
+### requestBody Example
 
-<br/>
+```json
+{
+    "title": "title",
+    "description": "description",
+    "itemVoList": [
+        {
+            "name": "itemName1",
+            "description": "itemDescription1",
+            "itemType": 1,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent1_1"
+                },
+                {
+                    "content": "itemChoiceContent1_2"
+                },
+                {
+                    "content": "itemChoiceContent1_3"
+                },
+                {
+                    "content": "itemChoiceContent1_4"
+                },
+                {
+                    "content": "itemChoiceContent1_5"
+                }
+            ],
+            "isRequired": true
+        },
+        {
+            "name": "itemName2",
+            "description": "itemDescription2",
+            "itemType": 2,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent2_1"
+                },
+                {
+                    "content": "itemChoiceContent2_2"
+                },
+                {
+                    "content": "itemChoiceContent2_3"
+                },
+                {
+                    "content": "itemChoiceContent2_4"
+                },
+                {
+                    "content": "itemChoiceContent2_5"
+                }
+            ],
+            "isRequired": true
+        },
+        {
+            "name": "itemName3",
+            "description": "itemDescription3",
+            "itemType": 3,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent3_1"
+                },
+                {
+                    "content": "itemChoiceContent3_2"
+                },
+                {
+                    "content": "itemChoiceContent3_3"
+                },
+                {
+                    "content": "itemChoiceContent3_4"
+                },
+                {
+                    "content": "itemChoiceContent3_5"
+                }
+            ],
+            "isRequired": true
+        },
+        {
+            "name": "itemName4",
+            "description": "itemDescription4",
+            "itemType": 4,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent4_1"
+                },
+                {
+                    "content": "itemChoiceContent4_2"
+                },
+                {
+                    "content": "itemChoiceContent4_3"
+                },
+                {
+                    "content": "itemChoiceContent4_4"
+                },
+                {
+                    "content": "itemChoiceContent4_5"
+                }
+            ],
+            "isRequired": true
+        }
+    ]
 
-> 💡 주어진 요구사항 이외의 추가 기능 구현에 대한 제약은 없으며, 새롭게 구현한 기능이 있을 경우 README 파일에 기재 해주세요.
+}
+```
 
-<br/>
+### Response
 
-## 기술 요구 사항
+| Field | Data Type | Example Value | Description | Description2 |
+| --- | --- | --- | --- | --- |
+| researchId | Long (Number) | 1 | 설문 id |  |
+| **title** | String | "title" | 설문 제목 |  |
+| **description** | String | "description" | 설문 설명 |  |
+| researchItemResponseList | List |  | 설문 항목 리스트 | itemVoList의 길이는 최소 1에서 최대 10 |
+| researchItemResponseList**[n]** | **ItemVo** |  | First item in the item list. |  |
+| - researchItemId | Long (Number) | 1 | 설문 항목 id |  |
+| - name | String | "itemName1" | 설문 항목명 |  |
+| - description | String | "itemDescription1" | 설문 항목 설명 |  |
+| - itemType | Integer | 1 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| - itemTypeName | String | “SHORT_ANSWER” | 설문 항목 유형 | SHORT_ANSWER: 단답형
+LONG_SENTENCE: 장문형
+SINGLE_SELECTION: 단일 선택형
+MULTIPLE_SELECTION: 다중 선택형 |
+| - researchItemChoiceResponseList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| -- researchItemChoiceResponseList[m] | **ItemChoice** |  |  |  |
+| --- researchItemChoiceId | Long (Number) | 1 | 설문 항목 선택 id |  |
+| --- content | String | "itemChoiceContent1" | 설문 항목 선택 값 |  |
+| - isRequired | Boolean | false | 필수 입력 여부 |  |
 
-- JAVA 11 이상 또는 Kotlin 사용
-- Spring Boot 사용
-- Gradle 기반의 프로젝트
-- 온보딩 프로젝트 기능 요구사항은 서버(백엔드)에서 구현/처리
-- 구현을 보여줄 수 있는 화면(프론트엔드)은 구현 금지
-- DB는 인메모리 RDBMS(예: h2)를 사용하며 DB 컨트롤은 JPA로 구현. (NoSQL 사용 X)
-- API의 HTTP Method는 자유롭게 선택해주세요.
-- 에러 응답, 에러 코드는 자유롭게 정의해주세요.
-- 외부 라이브러리 및 오픈소스 사용 가능 (단, README 파일에 사용한 오픈 소스와 사용 목적을 명확히 명시해 주세요.)
+### responseBody Example
 
-## 코드레벨 평가 항목
+```json
+{
+    "researchId": 1,
+    "title": "description",
+    "description": null,
+    "researchItemResponseList": [
+        {
+            "researchItemId": 1,
+            "name": "itemName1",
+            "description": "itemDescription1",
+            "itemType": 1,
+            "itemTypeName": "SHORT_ANSWER",
+            "isRequired": true,
+            "researchItemChoiceResponseList": []
+        },
+        {
+            "researchItemId": 2,
+            "name": "itemName2",
+            "description": "itemDescription2",
+            "itemType": 2,
+            "itemTypeName": "LONG_SENTENCE",
+            "isRequired": true,
+            "researchItemChoiceResponseList": []
+        },
+        {
+            "researchItemId": 3,
+            "name": "itemName3",
+            "description": "itemDescription3",
+            "itemType": 3,
+            "itemTypeName": "SINGLE_SELECTION",
+            "isRequired": true,
+            "researchItemChoiceResponseList": [
+                {
+                    "researchItemChoiceId": 1,
+                    "content": "itemChoiceContent3_1"
+                },
+                {
+                    "researchItemChoiceId": 2,
+                    "content": "itemChoiceContent3_2"
+                },
+                {
+                    "researchItemChoiceId": 3,
+                    "content": "itemChoiceContent3_3"
+                },
+                {
+                    "researchItemChoiceId": 4,
+                    "content": "itemChoiceContent3_4"
+                },
+                {
+                    "researchItemChoiceId": 5,
+                    "content": "itemChoiceContent3_5"
+                }
+            ]
+        },
+        {
+            "researchItemId": 4,
+            "name": "itemName4",
+            "description": "itemDescription4",
+            "itemType": 4,
+            "itemTypeName": "MULTIPLE_SELECTION",
+            "isRequired": true,
+            "researchItemChoiceResponseList": [
+                {
+                    "researchItemChoiceId": 6,
+                    "content": "itemChoiceContent4_1"
+                },
+                {
+                    "researchItemChoiceId": 7,
+                    "content": "itemChoiceContent4_2"
+                },
+                {
+                    "researchItemChoiceId": 8,
+                    "content": "itemChoiceContent4_3"
+                },
+                {
+                    "researchItemChoiceId": 9,
+                    "content": "itemChoiceContent4_4"
+                },
+                {
+                    "researchItemChoiceId": 10,
+                    "content": "itemChoiceContent4_5"
+                }
+            ]
+        }
+    ]
+}
+```
 
-온보딩 프로젝트는 다음 내용을 고려하여 평가 하게 됩니다.
+---
 
-- 프로젝트 구성 방법 및 관련된 시스템 아키텍처 설계 방법이 적절한가?
-- 작성한 애플리케이션 코드의 가독성이 좋고 의도가 명확한가?
-    - e.g. 불필요한(사용되지) 않는 코드의 존재 여부, 일정한 코드 컨벤션 등
-- 작성한 테스트 코드는 적절한 범위의 테스트를 수행하고 있는가?
-    - e.g. 유닛/통합 테스트 등
-- Spring Boot의 기능을 적절히 사용하고 있는가?
-- 예외 처리(Exception Handling)은 적절히 수행하고 있는가?
+## `POST` 설문조사 수정 API
 
-## 우대사항
+`/research/edit`
 
-- 프로젝트 구성 추가 요건: 멀티 모듈 구성 및 모듈간 의존성 제약
-- Back-end 추가 요건
-    - 트래픽이 많고, 저장되어 있는 데이터가 많음을 염두에 둔 구현
-    - 다수의 서버, 인스턴스에서 동작할 수 있음을 염두에 둔 구현
-    - 동시성 이슈가 발생할 수 있는 부분을 염두에 둔 구현
- 
-## 온보딩 프로젝트 제출 방식
+### Request
 
-### 소스코드
+| Field | Data Type | Example Value | Description | Description2 |
+| --- | --- | --- | --- | --- |
+| researchId | Long (Number) | 1 | 설문 id |  |
+| **title** | String | "title_edited" | 설문 제목 |  |
+| **description** | String | "description_edited" | 설문 설명 |  |
+| **itemVoList** | List |  | 설문 항목 리스트 | itemVoList의 길이는 최소 1에서 최대 10 |
+| **itemVoList[n]** | **ItemVo** |  | First item in the item list. |  |
+| - name | String | "itemName1_edited" | 설문 항목명 |  |
+| - description | String | "itemDescription1_edited" | 설문 항목 설명 |  |
+| - itemType | Integer | 1 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| - itemChoiceList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| -- itemChoiceList[m] | **ItemChoice** |  |  |  |
+| --- content | String | "itemChoiceContent1_1_edited" | 설문 항목 선택 값 |  |
+| - isRequired | Boolean | false | 필수 입력 여부 |  |
 
-- 본 Repository에 main 브랜치를 포크하여 작업을 시작합니다.
-- SpringBoot 프로젝트를 신규로 설정하고, 개인별로 main 브랜치에 PR을 공개적으로 먼저 작성한 후에 작업을 시작합니다.
-  - 이때 PR에는 WIP 레이블을 붙여서 작업 중임을 알게 해주세요.
-  - 코드를 마무리해서 리뷰받을 준비가 되면 WIP 레이블을 제거하고, Needs Review 레이블을 추가해주세요.
-  - 피드백을 받은 후 추가 작업을 진행할 때는 WIP 레이블을 다시 추가하고 Needs Review 레이블을 제거해주세요.
-- 최소 기능 단위로 완성할 때 마다 커밋합니다.
+### requestBody Example
 
-### 기능 점검을 위한 빌드 결과물
+```json
+{
+    "researchId": 1,
+    "title": "title_edited",
+    "description": "description_edited",
+    "itemVoList": [
+        {
+            "name": "itemName1_edited",
+            "description": "itemDescription1_edited",
+            "itemType": 3,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent1_1_edited"
+                },
+                {
+                    "content": "itemChoiceContent1_2_edited"
+                },
+                {
+                    "content": "itemChoiceContent1_3_edited"
+                },
+                {
+                    "content": "itemChoiceContent1_4_edited"
+                },
+                {
+                    "content": "itemChoiceContent1_5_edited"
+                }
+            ],
+            "isRequired": false
+        },
+        {
+            "name": "itemName2_edited",
+            "description": "itemDescription2_edited",
+            "itemType": 4,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent2_1_edited"
+                },
+                {
+                    "content": "itemChoiceContent2_2_edited"
+                },
+                {
+                    "content": "itemChoiceContent2_3_edited"
+                },
+                {
+                    "content": "itemChoiceContent2_4_edited"
+                },
+                {
+                    "content": "itemChoiceContent2_5_edited"
+                }
+            ],
+            "isRequired": true
+        },
+        {
+            "name": "itemName3_edited",
+            "description": "itemDescription3_edited",
+            "itemType": 1,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent3_1"
+                },
+                {
+                    "content": "itemChoiceContent3_2_edited"
+                },
+                {
+                    "content": "itemChoiceContent3_3_edited"
+                },
+                {
+                    "content": "itemChoiceContent3_4_edited"
+                },
+                {
+                    "content": "itemChoiceContent3_5_edited"
+                }
+            ],
+            "isRequired": true
+        },
+        {
+            "name": "itemName4_edited",
+            "description": "itemDescription4_edited",
+            "itemType": 2,
+            "itemChoiceList" : [
+                {
+                    "content": "itemChoiceContent4_1_edited"
+                },
+                {
+                    "content": "itemChoiceContent4_2_edited"
+                },
+                {
+                    "content": "itemChoiceContent4_3_edited"
+                },
+                {
+                    "content": "itemChoiceContent4_4_edited"
+                },
+                {
+                    "content": "itemChoiceContent4_5_edited"
+                }
+            ],
+            "isRequired": false
+        }
+    ]
 
-빌드 결과물을 Executable jar 형태로 만들어 위 Branch에 함께 업로드 하시고, README에 다운로드 링크 정보를 넣어주시기 바랍니다. GitHub의 용량 문제로 업로드가 안되는 경우 다른 곳(개인 구글 드라이브 등)에 업로드 한 후 해당 다운로드 링크 정보를 README에 넣어주셔도 됩니다.
+}
+```
 
-해당 파일을 다운로드 및 실행(e.g. java -jar project.jar)하여 요구 사항 기능 검증을 진행하게 됩니다. 해당 파일을 다운로드할 수 없거나 실행 시 에러가 발생하는 경우에는 기능 점검을 진행하지 않습니다. 온보딩 프로젝트 제출 전 해당 실행 파일 다운로드 및 정상 동작 여부를 체크해 주시기 바랍니다.
+### Response
+
+| Field | Data Type | Example Value | Description | Description2 |
+| --- | --- | --- | --- | --- |
+| researchId | Long (Number) | 1 | 설문 id |  |
+| **title** | String | "title_edited" | 설문 제목 |  |
+| **description** | String | "description_edited" | 설문 설명 |  |
+| researchItemResponseList | List |  | 설문 항목 리스트 | researchItemResponseList의 길이는 최소 1에서 최대 10 |
+| researchItemResponseList**[n]** | **ItemVo** |  | First item in the item list. |  |
+| - researchItemId | Long (Number) | 1 | 설문 항목 id |  |
+| - name | String | "itemName1_edited" | 설문 항목명 |  |
+| - description | String | "itemDescription1_edited" | 설문 항목 설명 |  |
+| - itemType | Integer | 1 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| - itemTypeName | String | “SHORT_ANSWER” | 설문 항목 유형 | SHORT_ANSWER: 단답형
+LONG_SENTENCE: 장문형
+SINGLE_SELECTION: 단일 선택형
+MULTIPLE_SELECTION: 다중 선택형 |
+| - researchItemChoiceResponseList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| -- researchItemChoiceResponseList[m] | **ItemChoice** |  |  |  |
+| --- researchItemChoiceId | Long (Number) | "5" | 설문 항목 선택 id |  |
+| --- content | String | "itemChoiceContent1_1_edited" | 설문 항목 선택 값 |  |
+| - isRequired | Boolean | false | 필수 입력 여부 |  |
+
+### responseBody Example
+
+```json
+{
+    "researchId": 1,
+    "title": "title_edited",
+    "description": "description_edited",
+    "researchItemResponseList": [
+        {
+            "researchItemId": 5,
+            "name": "itemName1_edited",
+            "description": "itemDescription1_edited",
+            "itemType": 3,
+            "itemTypeName": "SINGLE_SELECTION",
+            "isRequired": false,
+            "researchItemChoiceResponseList": [
+                {
+                    "researchItemChoiceId": 11,
+                    "content": "itemChoiceContent1_1_edited"
+                },
+                {
+                    "researchItemChoiceId": 12,
+                    "content": "itemChoiceContent1_2_edited"
+                },
+                {
+                    "researchItemChoiceId": 13,
+                    "content": "itemChoiceContent1_3_edited"
+                },
+                {
+                    "researchItemChoiceId": 14,
+                    "content": "itemChoiceContent1_4_edited"
+                },
+                {
+                    "researchItemChoiceId": 15,
+                    "content": "itemChoiceContent1_5_edited"
+                }
+            ]
+        },
+        {
+            "researchItemId": 6,
+            "name": "itemName2_edited",
+            "description": "itemDescription2_edited",
+            "itemType": 4,
+            "itemTypeName": "MULTIPLE_SELECTION",
+            "isRequired": true,
+            "researchItemChoiceResponseList": [
+                {
+                    "researchItemChoiceId": 16,
+                    "content": "itemChoiceContent2_1_edited"
+                },
+                {
+                    "researchItemChoiceId": 17,
+                    "content": "itemChoiceContent2_2_edited"
+                },
+                {
+                    "researchItemChoiceId": 18,
+                    "content": "itemChoiceContent2_3_edited"
+                },
+                {
+                    "researchItemChoiceId": 19,
+                    "content": "itemChoiceContent2_4_edited"
+                },
+                {
+                    "researchItemChoiceId": 20,
+                    "content": "itemChoiceContent2_5_edited"
+                }
+            ]
+        },
+        {
+            "researchItemId": 7,
+            "name": "itemName3_edited",
+            "description": "itemDescription3_edited",
+            "itemType": 1,
+            "itemTypeName": "SHORT_ANSWER",
+            "isRequired": true,
+            "researchItemChoiceResponseList": []
+        },
+        {
+            "researchItemId": 8,
+            "name": "itemName4_edited",
+            "description": "itemDescription4_edited",
+            "itemType": 2,
+            "itemTypeName": "LONG_SENTENCE",
+            "isRequired": false,
+            "researchItemChoiceResponseList": []
+        }
+    ]
+}
+```
+
+---
+
+## `POST` 설문조사 응답 제출 API
+
+`/research/submit`
+
+### Request
+
+| Field | Data Type | Example Value | Description | Description2 |
+| --- | --- | --- | --- | --- |
+| **researchId** | Long (Number) | 1 | 응답할 설문 id |  |
+| **answerVoList** | List |  | 답변 리스트 |  |
+| **answerVoList[n]** | **AnswerVo** |  |  |  |
+| - answer | Long (Number) | 13 | A numeric answer. | itemTypeName: SINGLE_SELECTION |
+| - answer | List<Long> | [16, 18] | An array of Longs as an answer. | itemTypeName: MULTIPLE_SELECTION |
+| - answer | String | "한글도 입력 됩니다." | A string answer in string. | itemTypeName: 
+SHORT_ANSWER or
+LONG_SENTENCE |
+| - answer | String | "" | empty string answer. | 답변 생략 케이스 |
+
+### requestBody Example
+
+```json
+{
+    "researchId": 1,
+    "answerVoList": [
+        {
+            "answer": 13
+        },
+        {
+            "answer": [16, 18]
+        },
+        {
+            "answer": "한글도 입력 됩니다."
+        },
+        {
+            "answer": ""
+        }
+    ]
+
+}
+```
+
+### Response
+
+| Field | Data Type | Example Value | Description | Description |
+| --- | --- | --- | --- | --- |
+| **researchAnswerId** | Long
+(Number) | 1 | 설문 응답 답변 id |  |
+| **data** | Object |  | 설문 응답 데이터 |  |
+| --- researchId | Long
+(Number) | 1 | 설문 id |  |
+| --- title | String | "title_edited" | 설문 제목 |  |
+| --- description | String | "description_edited" | 설문 설명 |  |
+| --- researchAnswerItemResponseList | List |  | 설문 응답 항목 리스트 |  |
+| ---- researchAnswerItemResponseList[n] | **ResearchItemResponse** |  | First item in the item list. |  |
+| ------ researchItemId | Long
+(Number) | 5 | 설문 항목 id |  |
+| ------ name | String | "itemName1_edited" | 설문 항목명 |  |
+| ------ description | String | "itemDescription1_edited" | 설문 항목 설명 |  |
+| ------ itemType | Integer | 3 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| ------ itemTypeName | String | "SINGLE_SELECTION" | 설문 항목 유형 | SHORT_ANSWER: 단답형
+LONG_SENTENCE: 장문형
+SINGLE_SELECTION: 단일 선택형
+MULTIPLE_SELECTION: 다중 선택형 |
+| ------ isRequired | Boolean | false | 필수 입력 여부 |  |
+| ------ researchItemChoiceResponseList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| ------- researchItemChoiceResponseList[m] | **ItemChoiceResponse** |  |  |  |
+| -------- researchItemChoiceId | Long
+(Number) | 11 | 설문 항목 선택 id |  |
+| -------- content | String | "itemChoiceContent1_1_edited" | 설문 항목 선택 값 |  |
+| ---- answer | Integer or Array or String | 13 (or [16, 18]) or "한글도 입력 됩니다." | 응답 값 |  |
+
+### responseBody Example
+
+```json
+{
+    "researchAnswerId": 1,
+    "data": {
+        "researchId": 1,
+        "title": "title_edited",
+        "description": "description_edited",
+        "researchAnswerItemResponseList": [
+            {
+                "researchItemId": 5,
+                "name": "itemName1_edited",
+                "description": "itemDescription1_edited",
+                "itemType": 3,
+                "itemTypeName": "SINGLE_SELECTION",
+                "isRequired": false,
+                "researchItemChoiceResponseList": [
+                    {
+                        "researchItemChoiceId": 11,
+                        "content": "itemChoiceContent1_1_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 12,
+                        "content": "itemChoiceContent1_2_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 13,
+                        "content": "itemChoiceContent1_3_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 14,
+                        "content": "itemChoiceContent1_4_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 15,
+                        "content": "itemChoiceContent1_5_edited"
+                    }
+                ],
+                "answer": 13
+            },
+            {
+                "researchItemId": 6,
+                "name": "itemName2_edited",
+                "description": "itemDescription2_edited",
+                "itemType": 4,
+                "itemTypeName": "MULTIPLE_SELECTION",
+                "isRequired": true,
+                "researchItemChoiceResponseList": [
+                    {
+                        "researchItemChoiceId": 16,
+                        "content": "itemChoiceContent2_1_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 17,
+                        "content": "itemChoiceContent2_2_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 18,
+                        "content": "itemChoiceContent2_3_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 19,
+                        "content": "itemChoiceContent2_4_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 20,
+                        "content": "itemChoiceContent2_5_edited"
+                    }
+                ],
+                "answer": [
+                    16,
+                    18
+                ]
+            },
+            {
+                "researchItemId": 7,
+                "name": "itemName3_edited",
+                "description": "itemDescription3_edited",
+                "itemType": 1,
+                "itemTypeName": "SHORT_ANSWER",
+                "isRequired": true,
+                "researchItemChoiceResponseList": [],
+                "answer": "한글도 입력 됩니다."
+            },
+            {
+                "researchItemId": 8,
+                "name": "itemName4_edited",
+                "description": "itemDescription4_edited",
+                "itemType": 2,
+                "itemTypeName": "LONG_SENTENCE",
+                "isRequired": false,
+                "researchItemChoiceResponseList": [],
+                "answer": ""
+            }
+        ]
+    }
+}
+```
+
+---
+
+## `GET` 설문조사 응답 조회 API
+
+`/research/get/research-submit`
+
+### Request
+
+| Field | Data Type | Example Value | Description | Description |
+| --- | --- | --- | --- | --- |
+| **researchAnswerId** | Long(Number) | 1 | 설문 응답 답변 id |  |
+
+### request Example uri
+
+`/research/get/research-answer?researchAnswerId=1`
+
+### Response
+
+| Field | Data Type | Example Value | Description | Description |
+| --- | --- | --- | --- | --- |
+| **researchAnswerId** | Long
+(Number) | 1 | 설문 응답 답변 id |  |
+| **data** | Object |  | 설문 응답 데이터 |  |
+| --- researchId | Long
+(Number) | 1 | 설문 id |  |
+| --- title | String | "title_edited" | 설문 제목 |  |
+| --- description | String | "description_edited" | 설문 설명 |  |
+| --- researchAnswerItemResponseList | List |  | 설문 응답 항목 리스트 |  |
+| ---- researchAnswerItemResponseList[n] | **ResearchItemResponse** |  | First item in the item list. |  |
+| ------ researchItemId | Long
+(Number) | 5 | 설문 항목 id |  |
+| ------ name | String | "itemName1_edited" | 설문 항목명 |  |
+| ------ description | String | "itemDescription1_edited" | 설문 항목 설명 |  |
+| ------ itemType | Integer | 3 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| ------ itemTypeName | String | "SINGLE_SELECTION" | 설문 항목 유형 | SHORT_ANSWER: 단답형
+LONG_SENTENCE: 장문형
+SINGLE_SELECTION: 단일 선택형
+MULTIPLE_SELECTION: 다중 선택형 |
+| ------ isRequired | Boolean | false | 필수 입력 여부 |  |
+| ------ researchItemChoiceResponseList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| ------- researchItemChoiceResponseList[m] | **ItemChoiceResponse** |  |  |  |
+| -------- researchItemChoiceId | Long
+(Number) | 11 | 설문 항목 선택 id |  |
+| -------- content | String | "itemChoiceContent1_1_edited" | 설문 항목 선택 값 |  |
+| ---- answer | Integer or Array or String | 13 (or [16, 18]) or "한글도 입력 됩니다." | 응답 값 |  |
+
+### responseBody Example
+
+```json
+{
+    "researchAnswerId": 1,
+    "data": {
+        "researchId": 1,
+        "title": "title_edited",
+        "description": "description_edited",
+        "researchAnswerItemResponseList": [
+            {
+                "researchItemId": 5,
+                "name": "itemName1_edited",
+                "description": "itemDescription1_edited",
+                "itemType": 3,
+                "itemTypeName": "SINGLE_SELECTION",
+                "isRequired": false,
+                "researchItemChoiceResponseList": [
+                    {
+                        "researchItemChoiceId": 11,
+                        "content": "itemChoiceContent1_1_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 12,
+                        "content": "itemChoiceContent1_2_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 13,
+                        "content": "itemChoiceContent1_3_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 14,
+                        "content": "itemChoiceContent1_4_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 15,
+                        "content": "itemChoiceContent1_5_edited"
+                    }
+                ],
+                "answer": 13
+            },
+            {
+                "researchItemId": 6,
+                "name": "itemName2_edited",
+                "description": "itemDescription2_edited",
+                "itemType": 4,
+                "itemTypeName": "MULTIPLE_SELECTION",
+                "isRequired": true,
+                "researchItemChoiceResponseList": [
+                    {
+                        "researchItemChoiceId": 16,
+                        "content": "itemChoiceContent2_1_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 17,
+                        "content": "itemChoiceContent2_2_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 18,
+                        "content": "itemChoiceContent2_3_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 19,
+                        "content": "itemChoiceContent2_4_edited"
+                    },
+                    {
+                        "researchItemChoiceId": 20,
+                        "content": "itemChoiceContent2_5_edited"
+                    }
+                ],
+                "answer": [
+                    16,
+                    18
+                ]
+            },
+            {
+                "researchItemId": 7,
+                "name": "itemName3_edited",
+                "description": "itemDescription3_edited",
+                "itemType": 1,
+                "itemTypeName": "SHORT_ANSWER",
+                "isRequired": true,
+                "researchItemChoiceResponseList": [],
+                "answer": "한글도 입력 됩니다."
+            },
+            {
+                "researchItemId": 8,
+                "name": "itemName4_edited",
+                "description": "itemDescription4_edited",
+                "itemType": 2,
+                "itemTypeName": "LONG_SENTENCE",
+                "isRequired": false,
+                "researchItemChoiceResponseList": [],
+                "answer": ""
+            }
+        ]
+    }
+}
+```
+
+---
+
+## `GET` 설문조사 항목명, 응답 값 검색 API
+
+`/research/search/research-answer`
+
+### Request
+
+| Field | Data Type | Example Value | Description | Description |
+| --- | --- | --- | --- | --- |
+| keyword | String | "한글" | 검색어 |  |
+
+### request Example uri
+
+`/research/search/research-answer?keyword=한글`
+
+### Response
+
+| Field | Data Type | Example Value | Description | Description |
+| --- | --- | --- | --- | --- |
+| researchAnswerList | List |  | 설문 응답 리스트 |  |
+| researchAnswerList[N] |  |  |  |  |
+| **researchAnswerId** | Long
+(Number) | 1 | 설문 응답 답변 id |  |
+| **data** | Object |  | 설문 응답 데이터 |  |
+| —-- researchId | Long
+(Number) | 1 | 설문 id |  |
+| -—- title | String | "title_edited" | 설문 제목 |  |
+| --— description | String | "description_edited" | 설문 설명 |  |
+| -—- researchAnswerItemResponseList | List |  | 설문 응답 항목 리스트 |  |
+| -—-- researchAnswerItemResponseList[n] | **ResearchItemResponse** |  | First item in the item list. |  |
+| -—---- researchItemId | Long
+(Number) | 5 | 설문 항목 id |  |
+| -—---- name | String | "itemName1_edited" | 설문 항목명 |  |
+| --—--- description | String | "itemDescription1_edited" | 설문 항목 설명 |  |
+| -—---- itemType | Integer | 3 | 설문 항목 유형 | 1: 단답형
+2: 장문형
+3: 단일 선택형
+4: 다중 선택형 |
+| ---—-- itemTypeName | String | "SINGLE_SELECTION" | 설문 항목 유형 | SHORT_ANSWER: 단답형
+LONG_SENTENCE: 장문형
+SINGLE_SELECTION: 단일 선택형
+MULTIPLE_SELECTION: 다중 선택형 |
+| -----— isRequired | Boolean | false | 필수 입력 여부 |  |
+| -----— researchItemChoiceResponseList | List |  | 설문 항목 선택 리스트 | itemType 값이 3, 4일 경우에만 itemChoiceList 데이터 저장됨. |
+| ------— researchItemChoiceResponseList[m] | **ItemChoiceResponse** |  |  |  |
+| -------— researchItemChoiceId | Long
+(Number) | 11 | 설문 항목 선택 id |  |
+| ------—- content | String | "itemChoiceContent1_1_edited" | 설문 항목 선택 값 |  |
+| ---— answer | Integer or Array or String | 13 (or [16, 18]) or "한글도 입력 됩니다." | 응답 값 |  |
+
+### responseBody Example
+
+```json
+{
+    "researchAnswerList": [
+        {
+            "researchAnswerId": 1,
+            "data": {
+                "researchId": 1,
+                "title": "title_edited",
+                "description": "description_edited",
+                "researchAnswerItemResponseList": [
+                    {
+                        "researchItemId": 5,
+                        "name": "itemName1_edited",
+                        "description": "itemDescription1_edited",
+                        "itemType": 3,
+                        "itemTypeName": "SINGLE_SELECTION",
+                        "isRequired": false,
+                        "researchItemChoiceResponseList": [
+                            {
+                                "researchItemChoiceId": 11,
+                                "content": "itemChoiceContent1_1_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 12,
+                                "content": "itemChoiceContent1_2_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 13,
+                                "content": "itemChoiceContent1_3_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 14,
+                                "content": "itemChoiceContent1_4_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 15,
+                                "content": "itemChoiceContent1_5_edited"
+                            }
+                        ],
+                        "answer": 13
+                    },
+                    {
+                        "researchItemId": 6,
+                        "name": "itemName2_edited",
+                        "description": "itemDescription2_edited",
+                        "itemType": 4,
+                        "itemTypeName": "MULTIPLE_SELECTION",
+                        "isRequired": true,
+                        "researchItemChoiceResponseList": [
+                            {
+                                "researchItemChoiceId": 16,
+                                "content": "itemChoiceContent2_1_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 17,
+                                "content": "itemChoiceContent2_2_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 18,
+                                "content": "itemChoiceContent2_3_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 19,
+                                "content": "itemChoiceContent2_4_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 20,
+                                "content": "itemChoiceContent2_5_edited"
+                            }
+                        ],
+                        "answer": [
+                            17
+                        ]
+                    },
+                    {
+                        "researchItemId": 7,
+                        "name": "itemName3_edited",
+                        "description": "itemDescription3_edited",
+                        "itemType": 1,
+                        "itemTypeName": "SHORT_ANSWER",
+                        "isRequired": true,
+                        "researchItemChoiceResponseList": [],
+                        "answer": "한글도 입력 됩니다. 222"
+                    },
+                    {
+                        "researchItemId": 8,
+                        "name": "itemName4_edited",
+                        "description": "itemDescription4_edited",
+                        "itemType": 2,
+                        "itemTypeName": "LONG_SENTENCE",
+                        "isRequired": false,
+                        "researchItemChoiceResponseList": [],
+                        "answer": "요요"
+                    }
+                ]
+            }
+        },
+        {
+            "researchAnswerId": 2,
+            "data": {
+                "researchId": 1,
+                "title": "title_edited",
+                "description": "description_edited",
+                "researchAnswerItemResponseList": [
+                    {
+                        "researchItemId": 5,
+                        "name": "itemName1_edited",
+                        "description": "itemDescription1_edited",
+                        "itemType": 3,
+                        "itemTypeName": "SINGLE_SELECTION",
+                        "isRequired": false,
+                        "researchItemChoiceResponseList": [
+                            {
+                                "researchItemChoiceId": 11,
+                                "content": "itemChoiceContent1_1_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 12,
+                                "content": "itemChoiceContent1_2_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 13,
+                                "content": "itemChoiceContent1_3_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 14,
+                                "content": "itemChoiceContent1_4_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 15,
+                                "content": "itemChoiceContent1_5_edited"
+                            }
+                        ],
+                        "answer": 13
+                    },
+                    {
+                        "researchItemId": 6,
+                        "name": "itemName2_edited",
+                        "description": "itemDescription2_edited",
+                        "itemType": 4,
+                        "itemTypeName": "MULTIPLE_SELECTION",
+                        "isRequired": true,
+                        "researchItemChoiceResponseList": [
+                            {
+                                "researchItemChoiceId": 16,
+                                "content": "itemChoiceContent2_1_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 17,
+                                "content": "itemChoiceContent2_2_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 18,
+                                "content": "itemChoiceContent2_3_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 19,
+                                "content": "itemChoiceContent2_4_edited"
+                            },
+                            {
+                                "researchItemChoiceId": 20,
+                                "content": "itemChoiceContent2_5_edited"
+                            }
+                        ],
+                        "answer": [
+                            16,
+                            18
+                        ]
+                    },
+                    {
+                        "researchItemId": 7,
+                        "name": "itemName3_edited",
+                        "description": "itemDescription3_edited",
+                        "itemType": 1,
+                        "itemTypeName": "SHORT_ANSWER",
+                        "isRequired": true,
+                        "researchItemChoiceResponseList": [],
+                        "answer": "한글도 입력 됩니다."
+                    },
+                    {
+                        "researchItemId": 8,
+                        "name": "itemName4_edited",
+                        "description": "itemDescription4_edited",
+                        "itemType": 2,
+                        "itemTypeName": "LONG_SENTENCE",
+                        "isRequired": false,
+                        "researchItemChoiceResponseList": [],
+                        "answer": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
+
