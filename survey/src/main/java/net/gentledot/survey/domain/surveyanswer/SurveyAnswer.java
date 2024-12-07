@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.gentledot.survey.domain.common.BaseEntity;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
 import net.gentledot.survey.domain.exception.ServiceError;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 @Getter
 @ToString(exclude = "survey")
 @Entity
-public class SurveyAnswer {
+public class SurveyAnswer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

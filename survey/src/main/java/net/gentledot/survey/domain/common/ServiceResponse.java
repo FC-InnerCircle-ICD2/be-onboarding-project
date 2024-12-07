@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import net.gentledot.survey.domain.exception.Error;
 import net.gentledot.survey.domain.exception.ServiceError;
 
 @ToString
@@ -12,7 +13,7 @@ import net.gentledot.survey.domain.exception.ServiceError;
 public class ServiceResponse<T> {
     private final boolean success;
     private final T data;
-    private final Error error;
+    private final net.gentledot.survey.domain.exception.Error error;
 
     public static <T> ServiceResponse<T> success(T data) {
         return new ServiceResponse<>(true, data, null);

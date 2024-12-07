@@ -1,8 +1,7 @@
-package net.gentledot.survey.domain.common;
+package net.gentledot.survey.domain.exception;
 
 import lombok.Getter;
 import lombok.ToString;
-import net.gentledot.survey.domain.exception.ServiceError;
 
 @Getter
 @ToString
