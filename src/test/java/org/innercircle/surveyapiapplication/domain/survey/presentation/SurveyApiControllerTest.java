@@ -14,14 +14,15 @@ import org.innercircle.surveyapiapplication.domain.surveyItem.fixture.SurveyItem
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemCreateRequest;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemInquiryResponse;
 import org.innercircle.surveyapiapplication.domain.surveyItem.presentation.dto.SurveyItemUpdateRequest;
+import org.innercircle.surveyapiapplication.domain.surveySubmission.application.SurveySubmissionService;
 import org.innercircle.surveyapiapplication.global.exception.CustomResponseStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,11 +44,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 class SurveyApiControllerTest {
 
-    @MockitoBean
+    @MockBean
     private SurveyService surveyService;
 
-    @MockitoBean
+    @MockBean
     private SurveyItemService surveyItemService;
+
+    @MockBean
+    private SurveySubmissionService surveySubmissionService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -205,8 +209,7 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.questionResponses[0].name").value(surveyItemInquiryResponse.name()),
                 jsonPath("$.data.questionResponses[0].description").value(surveyItemInquiryResponse.description()),
                 jsonPath("$.data.questionResponses[0].type").value(surveyItemInquiryResponse.type().name()),
-                jsonPath("$.data.questionResponses[0].required").value(surveyItemInquiryResponse.required()),
-                jsonPath("$.data.questionResponses[0].options").value(surveyItemInquiryResponse.options())
+                jsonPath("$.data.questionResponses[0].required").value(surveyItemInquiryResponse.required())
             );
 
         verify(surveyService, times(1)).createSurvey(surveyCreateRequest.toDomain());
@@ -230,7 +233,7 @@ class SurveyApiControllerTest {
 
         // when
         when(
-            surveyItemService.createQuestion(eq(surveyId), any(SurveyItem.class))
+            surveyItemService.createSurveyItem(eq(surveyId), any(SurveyItem.class))
         ).thenReturn(surveyItem);
 
         SurveyItemInquiryResponse surveyItemInquiryResponse = SurveyItemInquiryResponse.from(surveyItem);
@@ -255,7 +258,7 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.options").value(surveyItemInquiryResponse.options())
             );
 
-        verify(surveyItemService, times(1)).createQuestion(eq(surveyId), any(SurveyItem.class));
+        verify(surveyItemService, times(1)).createSurveyItem(eq(surveyId), any(SurveyItem.class));
     }
 
     @Test
@@ -277,7 +280,7 @@ class SurveyApiControllerTest {
 
         // when
         when(
-            surveyItemService.updateQuestion(eq(surveyId), eq(surveyItem.getId()), any(SurveyItemUpdateRequest.class))
+            surveyItemService.updateSurveyItem(eq(surveyId), eq(surveyItem.getId()), any(SurveyItemUpdateRequest.class))
         ).thenReturn(surveyItem);
 
         SurveyItemInquiryResponse surveyItemInquiryResponse = SurveyItemInquiryResponse.from(surveyItem);
@@ -298,11 +301,10 @@ class SurveyApiControllerTest {
                 jsonPath("$.data.name").value(request.name()),
                 jsonPath("$.data.description").value(request.description()),
                 jsonPath("$.data.type").value(request.type().name()),
-                jsonPath("$.data.required").value(request.required()),
-                jsonPath("$.data.options").value(request.options())
+                jsonPath("$.data.required").value(request.required())
             );
 
-        verify(surveyItemService, times(1)).updateQuestion(surveyId, surveyItem.getId(), request);
+        verify(surveyItemService, times(1)).updateSurveyItem(surveyId, surveyItem.getId(), request);
     }
 
 }

@@ -14,7 +14,7 @@ public enum CustomResponseStatus implements ResponseStatus {
 
     // survey exception
     NOT_FOUND_SURVEY(HttpStatus.NOT_FOUND, 2500, "해당 설문조사는 존재하지 않습니다."),
-    QUESTION_SIZE_FULL(HttpStatus.BAD_REQUEST, 2501, "설문항목은 최대 10개까지 가능합니다."),
+    SURVEY_ITEM_SIZE_FULL(HttpStatus.BAD_REQUEST, 2501, "설문항목은 최대 10개까지 가능합니다."),
 
     // survey item exception
     NOT_FOUND_SURVEY_ITEM(HttpStatus.NOT_FOUND, 2600, "해당 설문항목은 존재하지 않습니다."),

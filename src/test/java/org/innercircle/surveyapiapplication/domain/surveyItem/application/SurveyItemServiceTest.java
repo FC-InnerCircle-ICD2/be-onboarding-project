@@ -44,7 +44,7 @@ class SurveyItemServiceTest {
         // when
         Survey savedSurvey = surveyRepository.save(survey);
         SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem();
-        surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem);
+        surveyItemService.createSurveyItem(savedSurvey.getId(), targetSurveyItem);
 
         SurveyItem savedSurveyItem = surveyItemService.findByIdAndVersion(survey.getId(), targetSurveyItem.getId(), targetSurveyItem.getVersion());
 
@@ -80,10 +80,10 @@ class SurveyItemServiceTest {
         // when & then
         SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem(11L);
 
-        assertThatThrownBy(() -> surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem))
+        assertThatThrownBy(() -> surveyItemService.createSurveyItem(savedSurvey.getId(), targetSurveyItem))
             .isInstanceOf(CustomException.class)
             .extracting(e -> ((CustomException) e).getStatus())
-            .isEqualTo(CustomResponseStatus.QUESTION_SIZE_FULL);
+            .isEqualTo(CustomResponseStatus.SURVEY_ITEM_SIZE_FULL);
     }
 
     @Test
@@ -96,7 +96,7 @@ class SurveyItemServiceTest {
 
         Survey savedSurvey = surveyRepository.save(survey);
         SurveyItem targetSurveyItem = SurveyItemFixture.createTextSurveyItem();
-        surveyItemService.createQuestion(savedSurvey.getId(), targetSurveyItem);
+        surveyItemService.createSurveyItem(savedSurvey.getId(), targetSurveyItem);
 
         SurveyItemUpdateRequest request = new SurveyItemUpdateRequest(
             "변경설문항목이름",
@@ -107,7 +107,7 @@ class SurveyItemServiceTest {
         );
 
         // when
-        MultiChoiceSurveyItem updatedQuestion = (MultiChoiceSurveyItem) surveyItemService.updateQuestion(survey.getId(), targetSurveyItem.getId(), request);
+        MultiChoiceSurveyItem updatedQuestion = (MultiChoiceSurveyItem) surveyItemService.updateSurveyItem(survey.getId(), targetSurveyItem.getId(), request);
 
         // then
         assertThat(updatedQuestion.getId()).isEqualTo(targetSurveyItem.getId());

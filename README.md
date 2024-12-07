@@ -5,7 +5,7 @@
   - [x] Post /api/v1/surveys
   - [x] item은 1 ~ 10개까지 포함가능
   - [x] 단일 선택 리스트, 다중 선택 리스트의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 한다.
-- [x]  설문조사 수정 API
+- [x]  설문조사 조회 API
   - [x] GET /api/v1/surveys/{surveyId}
 - [x]  설문항목 수정 API
   - [x] PATCH /api/v1/surveys/{surveyId}/survey-item/{surveyItemId}
@@ -15,6 +15,8 @@
   - [x] POST /{surveyId}/survey-item/{surveyItemId}/{surveyItemVersion}/survey-submission
   - [x] 설문받을 항목에 대응되는 응답 값이 포함.
   - [x] 응답 값은 설문조사의 설문받을 항목과 일치해야만 응답 가능
+- [x] 설문 전체 응답 조회 API
+  - [x] GET /api/v1/surveys/{surveyId}/response
   - [ ] (advanced) 설문 응답 항목의 이름과 응답 값을 기반으로 검색할 수 있다.
 
 ### 응답 데이터 예시

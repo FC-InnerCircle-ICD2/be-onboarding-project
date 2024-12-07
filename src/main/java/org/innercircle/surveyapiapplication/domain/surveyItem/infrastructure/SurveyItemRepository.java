@@ -12,7 +12,7 @@ public interface SurveyItemRepository {
 
     SurveyItem findByIdAndVersion(Long surveyId, Long questionId, int version);
 
-    SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId);
+    SurveyItem findLatestSurveyItemBySurveyIdAndSurveyItemId(Long surveyId, Long questionId);
 
     List<SurveyItem> findBySurveyId(Long surveyId);
 

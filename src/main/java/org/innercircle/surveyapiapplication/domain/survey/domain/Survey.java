@@ -33,7 +33,7 @@ public class Survey {
     public Survey(String name, String description, List<SurveyItem> surveyItems) {
         this.name = name;
         this.description = description;
-        this.addQuestions(surveyItems);
+        this.addSurveyItems(surveyItems);
     }
 
     public Survey(String name, String description) {
@@ -41,17 +41,17 @@ public class Survey {
         this.description = description;
     }
 
-    public Survey addQuestions(List<SurveyItem> surveyItems) {
+    public Survey addSurveyItems(List<SurveyItem> surveyItems) {
         if (this.surveyItems.size() + surveyItems.size() > 10) {
-            throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
+            throw new CustomException(CustomResponseStatus.SURVEY_ITEM_SIZE_FULL);
         }
-        surveyItems.forEach(this::addQuestion);
+        surveyItems.forEach(this::addSurveyItem);
         return this;
     }
 
-    public Survey addQuestion(SurveyItem surveyItem) {
+    public Survey addSurveyItem(SurveyItem surveyItem) {
         if (this.surveyItems.size() >= 10) {
-            throw new CustomException(CustomResponseStatus.QUESTION_SIZE_FULL);
+            throw new CustomException(CustomResponseStatus.SURVEY_ITEM_SIZE_FULL);
         }
         surveyItems.add(surveyItem);
         surveyItem.setSurveyId(this.getId());

@@ -36,7 +36,7 @@ public class SurveyItemRepositoryImpl implements SurveyItemRepository {
     }
 
     @Override
-    public SurveyItem findLatestQuestionBySurveyIdAndSurveyItemId(Long surveyId, Long questionId) {
+    public SurveyItem findLatestSurveyItemBySurveyIdAndSurveyItemId(Long surveyId, Long questionId) {
         return surveyItemJpaRepository.findLatestSurveyItemBySurveyIdAndSurveyItemId(surveyId, questionId)
             .orElseThrow(() -> new CustomException(CustomResponseStatus.NOT_FOUND_SURVEY_ITEM))
             .toDomain();

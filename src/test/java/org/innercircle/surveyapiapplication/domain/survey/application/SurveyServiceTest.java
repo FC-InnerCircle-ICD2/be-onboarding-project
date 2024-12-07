@@ -174,10 +174,10 @@ class SurveyServiceTest {
             new TextSurveyItem(11L, "설문조사이름", "설문항목설명", false)
         );
 
-        assertThatThrownBy(() -> survey.addQuestions(surveyItems))
+        assertThatThrownBy(() -> survey.addSurveyItems(surveyItems))
             .isInstanceOf(CustomException.class)
             .extracting(e -> ((CustomException) e).getStatus())
-            .isEqualTo(CustomResponseStatus.QUESTION_SIZE_FULL);
+            .isEqualTo(CustomResponseStatus.SURVEY_ITEM_SIZE_FULL);
     }
 
     @Test

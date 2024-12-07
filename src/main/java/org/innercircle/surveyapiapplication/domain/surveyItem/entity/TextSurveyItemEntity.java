@@ -13,8 +13,8 @@ import org.innercircle.surveyapiapplication.domain.surveyItem.domain.TextSurveyI
 @DiscriminatorValue("TEXT")
 public class TextSurveyItemEntity extends SurveyItemEntity {
 
-    public TextSurveyItemEntity(Long questionId, int questionVersion, String name, String description, boolean required, Long surveyId) {
-        super(questionId, questionVersion, name, description, required, surveyId);
+    public TextSurveyItemEntity(Long surveyItemId, int surveyItemVersion, String name, String description, boolean required, Long surveyId) {
+        super(surveyItemId, surveyItemVersion, name, description, required, surveyId);
     }
 
     @Override
