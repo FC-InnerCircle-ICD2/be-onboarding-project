@@ -12,8 +12,44 @@
 ## 프로젝트 구조
 
 ```
-비지니스 로직의 변경이 외부 로직에 영향이 가지 않도록 패키지 구조를 개선할 예정입니다.
-(survey-0.0.2 로 반영 예정)
+survey
+├── SurveyApplication.java
+├── application
+│   └── service
+│       ├── SurveyAnswerService.java
+│       ├── SurveyService.java
+│       └── in
+│           └── model
+│               └── request
+│                   ├── SearchSurveyAnswerRequest.java
+│                   ├── SubmitSurveyAnswer.java
+│                   ├── SurveyCreateRequest.java
+│                   ├── SurveyQuestionRequest.java
+│                   └── SurveyUpdateRequest.java
+│               └── response
+│                   ├── SearchSurveyAnswerResponse.java
+│                   ├── SurveyCreateResponse.java
+│                   └── SurveyUpdateResponse.java
+├── domain
+│   ├── common
+│   │   └── ServiceResponse.java
+│   ├── enums
+│   │   └── UpdateType.java
+│   ├── exception
+│   │   ├── ServiceError.java
+│   │   └── SurveyNotFoundException.java
+│   └── surveybase
+│       ├── Survey.java
+│       ├── SurveyQuestion.java
+│       └── dto
+│           └── SurveyQuestionDto.java
+├── infra
+│   └── repository
+│       └── jpa
+│           └── SurveyJpaRepository.java
+└── web
+    └── controller
+        └── SurveyController.java
 ```
 
 ## API 명세
