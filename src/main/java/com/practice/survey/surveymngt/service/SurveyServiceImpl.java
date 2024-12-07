@@ -1,6 +1,6 @@
 package com.practice.survey.surveymngt.service;
 
-import com.practice.survey.common.response.ApiResponse;
+import com.practice.survey.common.response.ResponseTemplate;
 import com.practice.survey.common.response.StatusEnum;
 import com.practice.survey.surveyItem.model.dto.SurveyItemSaveRequestDto;
 import com.practice.survey.surveyItem.model.entity.SurveyItem;
@@ -37,7 +37,7 @@ public class SurveyServiceImpl implements SurveyService{
     private final SurveyRespositoryWrapper surveyRespositoryWrapper;
 
     @Override
-    public ApiResponse<StatusEnum> createSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException {
+    public ResponseTemplate<StatusEnum> createSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException {
 
         int surveyVersionNumber=1; // 최초 생성이므로 1
         List<SurveyItemSaveRequestDto> surveyItemSaveRequestDtos = surveyRequestDto.getSurveyItems();
@@ -46,7 +46,7 @@ public class SurveyServiceImpl implements SurveyService{
         // 1. 설문조사 이름 중복 체크 -> 향후 유효성 체크로 처리 가능한지 확인
         String surveyName= surveyRequestDto.getName();
         if(surveyRepository.existsByName(surveyName)){
-            return new ApiResponse<StatusEnum>().serverError(StatusEnum.SURVEY_ALREADY_EXISTS);
+            return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.SURVEY_ALREADY_EXISTS);
         }
 
         // 2. 설문조사 inputType에 따른 option 체크 -> 향후 유효성 체크로 처리
@@ -55,13 +55,13 @@ public class SurveyServiceImpl implements SurveyService{
             // item의 input_type이 SINGLE_CHOICE, MULTIPLE_CHOICE인 경우에 option 없을 경우 에러 처리
             if (itemDto.getInputType().equals(SINGLE_CHOICE) || itemDto.getInputType().equals(MULTIPLE_CHOICE)) {
                 if (itemDto.getOptions().size() == 0) {
-                    return new ApiResponse<StatusEnum>().serverError(StatusEnum.OPTION_REQUIRED);
+                    return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.OPTION_REQUIRED);
                 }
             }
             // 그 외의 경우에는 option이 없으므로, 만약 option이 존재한다면 에러 처리
             else {
                 if (itemDto.getOptions() != null) {
-                    return new ApiResponse<StatusEnum>().serverError(StatusEnum.OPTION_NOT_REQUIRED);
+                    return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.OPTION_NOT_REQUIRED);
                 }
             }
         }
@@ -76,11 +76,11 @@ public class SurveyServiceImpl implements SurveyService{
         // 설문조사 항목 저장
         saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
 
-        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+        return new ResponseTemplate<StatusEnum>().responseOk(StatusEnum.SUCCESS);
     }
 
     @Override
-    public ApiResponse<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException{
+    public ResponseTemplate<StatusEnum> updateSurvey(SurveyRequestDto surveyRequestDto) throws NullPointerException{
 
         // 설문조사 이름 기반 설문조사 찾기
         Survey survey = surveyRepository.findByName(surveyRequestDto.getName());
@@ -96,15 +96,15 @@ public class SurveyServiceImpl implements SurveyService{
         // 설문조사 항목 저장
         saveSurveyItemAndOption(surveyItemSaveRequestDtos, surveyVersion);
 
-        return new ApiResponse<StatusEnum>().responseOk(StatusEnum.SUCCESS);
+        return new ResponseTemplate<StatusEnum>().responseOk(StatusEnum.SUCCESS);
     }
 
     @Override
-    public ApiResponse<List<SurveyResponseDto>> getSurveyResponse(Long surveyId) {
+    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(Long surveyId) {
 
         List<SurveyResponseDto> SurveyResponseDtos = surveyRespositoryWrapper.getSurveyResponse(surveyId);
 
-        return new ApiResponse<List<SurveyResponseDto>>().responseOk(SurveyResponseDtos);
+        return new ResponseTemplate<List<SurveyResponseDto>>().responseOk(SurveyResponseDtos);
     }
 
     private SurveyVersion saveSurveyVersion(Survey survey, int surveyVersionNumber){

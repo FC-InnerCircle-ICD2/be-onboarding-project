@@ -47,6 +47,8 @@ dependencies {
 //	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
 //	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 //	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	// 스웨거
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 tasks.named('test') {
