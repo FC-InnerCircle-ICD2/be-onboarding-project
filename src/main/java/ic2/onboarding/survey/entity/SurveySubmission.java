@@ -27,10 +27,10 @@ public class SurveySubmission extends BaseEntity {
 
     // 답변 시점의 설문 정보
     @JdbcTypeCode(SqlTypes.JSON)
-    private SurveyInfo surveyData;
+    private SurveyInfo surveyInfo;
 
     // 답변 내용
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<AnswerInfo> answerData;
+    private List<AnswerInfo> answerInfos;
 
 }

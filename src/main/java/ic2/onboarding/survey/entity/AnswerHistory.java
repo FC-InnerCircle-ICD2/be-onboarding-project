@@ -32,7 +32,7 @@ public class AnswerHistory extends BaseEntity {
 
     // 답변 시점의 설문 정보
     @JdbcTypeCode(SqlTypes.JSON)
-    private SurveyInfo.Question questionData;
+    private SurveyInfo.Question questionInfo;
 
     // 답변 내용
     @JdbcTypeCode(SqlTypes.JSON)

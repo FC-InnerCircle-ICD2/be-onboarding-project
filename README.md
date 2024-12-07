@@ -1,24 +1,26 @@
-- DB 접속(로컬실행)
-- H2 Console
-  - http://localhost:8080/h2-console
-  - JDBC URL: jdbc:h2:mem:test
-  - User Name: sa
+### 테이블 설계
 
+![image](https://github.com/user-attachments/assets/a72cfbbf-697c-4991-b12e-1221db709dce)
+- DB 접속(로컬실행)
+  - H2 Console
+    - http://localhost:8080/h2-console
+    - JDBC URL: jdbc:h2:mem:test
+    - User Name: sa
 - API 문서
   - http://localhost:8080/swagger-ui/index.html (로컬실행)
-  - [온라인으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/17963716/survey_ksb.json)
-
+  - [온라인으로 바로보기](https://redocly.github.io/redoc/?url=https://github.com/user-attachments/files/18027424/survey_ksb.json)
 - jar 다운로드
   - https://drive.google.com/file/d/15vBMIY7dVEULLbzPP0A2vp1sUdMuEgdf/view?usp=sharing
     - java -jar survey-0.0.1-SNAPSHOT.jar
 
-- 고민
+### 고민
+
   - (초기구현) 모든 정보를 RDB 컬럼으로 관리
     - 요구사항을 구현하기 위한 코드가 복잡해졌음
     - 기능이 추가된다면 데이터 관리가 매우 힘들어지고 많은 양의 코드를 작성해야 할 것 같았음
     - 결국 JSON 형태를 저장하지만 검색을 고려한 구현으로 바꾸어야 함을 느낌
   - (현재) 설문 정보와 질문 정보를 JSON 형태로 저장
-    - 코드의 양을 많이 줄일 수 있었고, 단순해짐
+    - 코드의 양을 많이 줄일 수 있었고, 단순해졌음
     - 질문이름=답변내용 검색을 위해 조회용 "답변이력" 테이블을 이용
     - 설문조사 제출시 해당 시점의 질문정보와 답변내용을 쪼개어 저장
     - 컬럼 인덱스를 활용해 질문 조회를 고려하고, 응답은 JSON
