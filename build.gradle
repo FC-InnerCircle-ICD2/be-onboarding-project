@@ -1,7 +1,8 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.0'
-	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.5'
+//	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' // QueryDSL 플러그인 추가
 }
 
 group = 'com.practice'
@@ -17,10 +18,15 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	querydsl.extendsFrom compileClasspath
 }
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	set('queryDslVersion', "5.0.0")  // 사용 중인 QueryDSL 버전에 맞게 수정
 }
 
 dependencies {
@@ -31,8 +37,41 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//	implementation 'javax.validation:validation-api:2.0.1.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// QueryDSL 관련 의존성 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+	// querydsl 구성에 querydsl-apt 추가
+	querydsl "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+//	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
+//	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+//	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	// 스웨거
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.annotationProcessorPath = configurations.querydsl + configurations.annotationProcessor
+	options.generatedSourceOutputDirectory = file(querydslDir) // Java 17 이상에서 사용
+}
+
+tasks.named('clean') {
+	doFirst {
+		delete querydslDir
+	}
 }

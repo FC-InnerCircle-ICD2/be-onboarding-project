@@ -112,6 +112,46 @@
 
 # 프로젝트 설명
 
+## 컨벤션
+
+### 브랜치 관리 전략
+
+⚙️ github-flow
+
+![image](https://github.com/user-attachments/assets/9ec9ad98-a991-44d7-8613-1966725b85ab)
+
+* **main(master)**: 서비스을 직접 배포하는 역할을 하는 브랜치입니다.
+* **feature(기능)**: 각 기능 별 개발 브랜치입니다.
+* **develop(개발)**: feature에서 개발된 내용을 가지고 있는 브랜치입니다.
+* **release(배포)**: 배포를 하기 전 내용을 QA(품질 검사)하기 위한 브랜치입니다.
+* **hotfix(빨리 고치기)**: main 브랜치로 배포를 하고 나서 버그가 생겼을 때 빨리 고치기 위한 브랜치입니다.
+
+## git 커밋 컨벤션
+
+### 1. Commit 메시지 구조
+기본적인 커밋 메시지 구조는 제목,본문,꼬리말 세가지 파트로 나누고, 각 파트는 빈줄을 두어 구분한다.
+
+```
+type : subject
+
+body
+
+footer
+```
+
+### 2. Commit Type
+타입은 태그와 제목으로 구성되고, 태그는 영어로 쓰되 첫 문자는 대문자로 한다.
+
+태그 : 제목의 형태이며, :뒤에만 space가 있음에 유의한다.
+
+* feat : 새로운 기능 추가
+* fix : 버그 수정
+* docs : 문서 수정
+* style : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+* refactor : 코드 리펙토링
+* test : 테스트 코드, 리펙토링 테스트 코드 추가
+* chore : 빌드 업무 수정, 패키지 매니저 수정
+
 ## DB 모델링
 
 ![image](https://github.com/user-attachments/assets/ee3ed37c-4510-40e7-bbb8-4509bd67661a)
@@ -127,9 +167,9 @@
 
 ---
 
-### 데이터베이스 모델 개요
+### 엔티티 설명
 
-주요 엔티티와 관계는 다음과 같습니다:
+주요 엔티티는 다음과 같습니다:
 
 1. **Survey**: 설문조사의 기본 정보
 2. **SurveyVersion**: 설문조사의 버전 관리
@@ -137,102 +177,6 @@
 4. **SurveyItemOption**: 선택형 항목의 선택지
 5. **Response**: 설문 응답
 6. **ResponseItem**: 각 설문 응답의 개별 항목 응답
-
----
-
-### 테이블 설계
-
-#### 1. **Survey 테이블**
-
-**설명**: 설문조사의 기본 정보를 저장합니다.
-
-**필드**:
-
-* **survey\_id** (PK): 설문조사 식별자
-* **name**: 설문조사 이름 (`VARCHAR(255)`)
-* **description**: 설문조사 설명 (`TEXT`)
-* **created\_at**: 생성 일시 (`DATETIME` 또는 `TIMESTAMP`)
-* **updated\_at**: 수정 일시 (`DATETIME` 또는 `TIMESTAMP`)
-
-#### 2. **SurveyVersion 테이블**
-
-**설명**: 설문조사의 버전을 관리합니다.
-
-**필드**:
-
-* **version\_id** (PK): 버전 식별자
-* **survey\_id** (FK): Survey 테이블의 외래키
-* **version\_number**: 버전 번호 (`INT`)
-* **created\_at**: 버전 생성 일시
-* **updated\_at**: 버전 수정 일시
-
-**관계**: 하나의 Survey는 여러 SurveyVersion을 가질 수 있습니다.
-
-#### 3. **SurveyItem 테이블**
-
-**설명**: 각 설문 버전에 대한 설문 항목을 저장합니다.
-
-**필드**:
-
-* **item\_id** (PK): 설문 항목 식별자
-* **version\_id** (FK): SurveyVersion 테이블의 외래키
-* **item\_number**: 설문 항목 순서 (`INT`)
-* **name**: 설문 항목 이름 (`VARCHAR(255)`)
-* **description**: 설문 항목 설명 (`TEXT`)
-* **input\_type**: 입력 형태 (`ENUM('SHORT_TEXT', 'LONG_TEXT', 'SINGLE_CHOICE', 'MULTIPLE_CHOICE')`)
-* **is\_required**: 필수 여부 (`BOOLEAN`)
-* **created\_at**: 생성 일시
-* **updated\_at**: 수정 일시
-
-**관계**: 하나의 SurveyVersion은 여러 SurveyItem을 가질 수 있습니다.
-
-#### 4. **SurveyItemOption 테이블**
-
-**설명**: 선택형 항목의 선택지를 저장합니다.
-
-**필드**:
-
-* **option\_id** (PK): 선택지 식별자
-* **item\_id** (FK): SurveyItem 테이블의 외래키
-* **option\_number**: 선택지 순서 (`INT`)
-* **option\_text**: 선택지 내용 (`VARCHAR(255)`)
-* **created\_at**: 생성 일시
-* **updated\_at**: 수정 일시
-
-**관계**: 하나의 SurveyItem은 여러 SurveyItemOption을 가질 수 있습니다.
-
-#### 5. **Response 테이블**
-
-**설명**: 설문 응답의 기본 정보를 저장합니다.
-
-**필드**:
-
-* **response\_id** (PK): 응답 식별자
-* **version\_id** (FK): SurveyVersion 테이블의 외래키
-* **submitted\_at**: 응답 제출 일시
-* **respondent\_id**: 응답자 식별자 (`VARCHAR(255)`, 익명 가능)
-* **created\_at**: 생성 일시
-* **updated\_at**: 수정 일시
-
-**관계**: 하나의 SurveyVersion에 여러 Response가 있을 수 있습니다.
-
-#### 6. **ResponseItem 테이블**
-
-**설명**: 각 응답의 개별 설문 항목에 대한 응답을 저장합니다.
-
-**필드**:
-
-* **response\_item\_id** (PK): 응답 항목 식별자
-* **response\_id** (FK): Response 테이블의 외래키
-* **item\_id** (FK): SurveyItem 테이블의 외래키
-* **value**: 응답 값 (`TEXT`)
-* **created\_at**: 생성 일시
-* **updated\_at**: 수정 일시
-
-**관계**:
-
-* 하나의 Response는 여러 ResponseItem을 가집니다.
-* 각 ResponseItem은 하나의 SurveyItem에 대응됩니다.
 
 ---
 

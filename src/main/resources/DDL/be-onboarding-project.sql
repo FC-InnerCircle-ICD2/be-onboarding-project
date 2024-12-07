@@ -14,7 +14,7 @@ CREATE TABLE SurveyVersion (
     version_number INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Survey(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Survey(survey_id) ON UPDATE CASCADE
 );
 
 -- SurveyItem 테이블
@@ -24,11 +24,11 @@ CREATE TABLE SurveyItem (
     item_number INT NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    input_type VARCHAR(20) CHECK (input_type IN ('SHORT_TEXT', 'LONG_TEXT', 'SINGLE_CHOICE', 'MULTIPLE_CHOICE')) NOT NULL,
+    input_type VARCHAR(20) NOT NULL,
     is_required BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (version_id) REFERENCES SurveyVersion(version_id)
+    FOREIGN KEY (version_id) REFERENCES SurveyVersion(version_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- SurveyItemOption 테이블
@@ -39,18 +39,18 @@ CREATE TABLE SurveyItemOption (
     option_text VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (item_id) REFERENCES SurveyItem(item_id)
+    FOREIGN KEY (item_id) REFERENCES SurveyItem(item_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Response 테이블
 CREATE TABLE Response (
     response_id INT AUTO_INCREMENT PRIMARY KEY,
-    version_id INT NOT NULL,
+    version_id INT,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     respondent_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (version_id) REFERENCES SurveyVersion(version_id)
+    FOREIGN KEY (version_id) REFERENCES SurveyVersion(version_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ResponseItem 테이블
@@ -58,9 +58,9 @@ CREATE TABLE ResponseItem (
     response_item_id INT AUTO_INCREMENT PRIMARY KEY,
     response_id INT NOT NULL,
     item_id INT NOT NULL,
-    `value` TEXT,
+    response_value TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (response_id) REFERENCES Response(response_id),
-    FOREIGN KEY (item_id) REFERENCES SurveyItem(item_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (response_id) REFERENCES Response(response_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES SurveyItem(item_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
