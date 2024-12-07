@@ -13,11 +13,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.gentledot.survey.application.service.in.model.request.SubmitSurveyAnswer;
 import net.gentledot.survey.domain.enums.ItemRequired;
 import net.gentledot.survey.domain.enums.SurveyItemType;
 import net.gentledot.survey.domain.exception.ServiceError;
 import net.gentledot.survey.domain.exception.SurveySubmitValidationException;
+import net.gentledot.survey.domain.surveyanswer.dto.SubmitSurveyAnswerDto;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import net.gentledot.survey.domain.surveybase.SurveyQuestionOption;
@@ -45,7 +45,7 @@ public class SurveyAnswer {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "surveyAnswer")
     private List<SurveyAnswerSubmission> answers;
 
-    public static SurveyAnswer of(Survey survey, List<SubmitSurveyAnswer> submitSurveyAnswers) {
+    public static SurveyAnswer of(Survey survey, List<SubmitSurveyAnswerDto> submitSurveyAnswers) {
         Map<Long, SurveyQuestion> surveyQuestionMap = survey.getQuestions()
                 .stream().collect(Collectors.toMap(
                         SurveyQuestion::getId,

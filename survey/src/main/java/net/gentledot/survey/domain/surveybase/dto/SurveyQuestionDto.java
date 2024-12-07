@@ -1,6 +1,7 @@
 package net.gentledot.survey.domain.surveybase.dto;
 
 import lombok.Getter;
+import lombok.ToString;
 import net.gentledot.survey.application.service.in.model.request.SurveyQuestionOptionRequest;
 import net.gentledot.survey.application.service.in.model.request.SurveyQuestionRequest;
 import net.gentledot.survey.domain.enums.ItemRequired;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 public class SurveyQuestionDto {
     private final Long questionId;

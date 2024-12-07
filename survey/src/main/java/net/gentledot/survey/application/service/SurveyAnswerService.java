@@ -11,6 +11,7 @@ import net.gentledot.survey.domain.exception.ServiceError;
 import net.gentledot.survey.domain.exception.SurveyNotFoundException;
 import net.gentledot.survey.domain.surveyanswer.SurveyAnswer;
 import net.gentledot.survey.domain.surveyanswer.SurveyAnswerSubmission;
+import net.gentledot.survey.domain.surveyanswer.dto.SubmitSurveyAnswerDto;
 import net.gentledot.survey.domain.surveybase.Survey;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,11 @@ public class SurveyAnswerService {
         // 설문조사 항목과 응답 값 검증
         validateSurveyAnswers(survey, answers);
 
-        SurveyAnswer surveyAnswer = SurveyAnswer.of(survey, answers);
+        List<SubmitSurveyAnswerDto> collectedSubmitAnswers = answers.stream()
+                .map(SubmitSurveyAnswerDto::from)
+                .collect(Collectors.toList());
+
+        SurveyAnswer surveyAnswer = SurveyAnswer.of(survey, collectedSubmitAnswers);
         surveyAnswerRepository.save(surveyAnswer);
     }
 

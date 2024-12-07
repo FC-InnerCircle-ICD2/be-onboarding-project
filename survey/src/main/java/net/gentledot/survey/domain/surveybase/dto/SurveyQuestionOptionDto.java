@@ -1,10 +1,15 @@
 package net.gentledot.survey.domain.surveybase.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
-@AllArgsConstructor
+
+@ToString
 @Getter
 public class SurveyQuestionOptionDto {
     private final String option;
+
+    public SurveyQuestionOptionDto(String option) {
+        this.option = option;
+    }
 }
