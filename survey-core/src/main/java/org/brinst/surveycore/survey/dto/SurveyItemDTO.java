@@ -15,11 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonTypeInfo(
-	use = JsonTypeInfo.Id.NAME, // JSON에 타입 정보를 문자열로 저장
-	include = JsonTypeInfo.As.PROPERTY, // 타입 정보를 속성으로 포함
-	property = "type" // JSON에서 타입 정보를 담을 필드 이름
-)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = SurveyItemDTO.ShortAnswer.class, name = "SHORT_ANSWER"),
 	@JsonSubTypes.Type(value = SurveyItemDTO.LongAnswer.class, name = "LONG_ANSWER"),
