@@ -1,0 +1,10 @@
+SET foreign_key_checks = 0;
+TRUNCATE TABLE account;
+TRUNCATE TABLE survey;
+TRUNCATE TABLE survey_question_options;
+TRUNCATE TABLE survey_questions;
+ALTER TABLE account AUTO_INCREMENT = 1;
+ALTER TABLE survey AUTO_INCREMENT = 1;
+ALTER TABLE survey_question_options AUTO_INCREMENT = 1;
+ALTER TABLE survey_questions AUTO_INCREMENT = 1;
+SET foreign_key_checks = 1;
