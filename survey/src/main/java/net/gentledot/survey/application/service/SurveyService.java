@@ -6,7 +6,7 @@ import net.gentledot.survey.application.service.in.model.request.SurveyUpdateReq
 import net.gentledot.survey.application.service.in.model.response.SurveyCreateResponse;
 import net.gentledot.survey.application.service.in.model.response.SurveyUpdateResponse;
 import net.gentledot.survey.application.service.out.SurveyRepository;
-import net.gentledot.survey.application.service.util.SurveyVaildator;
+import net.gentledot.survey.application.service.util.SurveyValidator;
 import net.gentledot.survey.domain.surveybase.Survey;
 import net.gentledot.survey.domain.surveybase.SurveyQuestion;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class SurveyService {
 
     @Transactional
     public SurveyCreateResponse createSurvey(SurveyCreateRequest surveyRequest) {
-        SurveyVaildator.validateRequest(surveyRequest);
+        SurveyValidator.validateRequest(surveyRequest);
         List<SurveyQuestion> questions = surveyRequest.getQuestions().stream().map(SurveyQuestion::from).collect(Collectors.toList());
 
         Survey survey = Survey.of(surveyRequest.getName(), surveyRequest.getDescription(), questions);
@@ -36,7 +36,7 @@ public class SurveyService {
 
     @Transactional
     public SurveyUpdateResponse updateSurvey(SurveyUpdateRequest surveyRequest) {
-        SurveyVaildator.validateRequest(surveyRequest);
+        SurveyValidator.validateRequest(surveyRequest);
 
         String surveyId = surveyRequest.getId();
         Survey survey = surveyRepository.findById(surveyId);

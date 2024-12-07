@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static net.gentledot.survey.application.service.util.SurveyVaildator.validateSurveyAnswers;
+import static net.gentledot.survey.application.service.util.SurveyValidator.validateSurveyAnswers;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest

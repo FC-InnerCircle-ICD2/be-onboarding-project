@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.gentledot.survey.application.service.util.SurveyVaildator.validateSurveyAnswers;
+import static net.gentledot.survey.application.service.util.SurveyValidator.validateSurveyAnswers;
 
 @Slf4j
 @Service

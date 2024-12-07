@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SurveyVaildator {
+public class SurveyValidator {
 
     public static final int MAXIMUM_QUESTION_COUNT = 10;
 
