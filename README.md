@@ -1,122 +1,207 @@
 # 이너써클 BE 온보딩 프로젝트
 
-## 온보딩 프로젝트의 목적
+### 기능명세서
+- [x] 설문조사 생성 API
+  - [x] Post /api/v1/surveys
+  - [x] item은 1 ~ 10개까지 포함가능
+  - [x] 단일 선택 리스트, 다중 선택 리스트의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 한다.
+- [x]  설문조사 수정 API
+  - [x] GET /api/v1/surveys/{surveyId}
+- [x]  설문항목 수정 API
+  - [x] PATCH /api/v1/surveys/{surveyId}/survey-item/{surveyItemId}
+  - [x] 단일 선택 리스트, 다중 선택 리스트의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 한다.
+  - [x] 설문받을 항목이 추가, 변경, 삭제되더라도 기존 응답은 유지되어야 한다
+- [x] 설문조사 응답 생성 API
+  - [x] POST /{surveyId}/survey-item/{surveyItemId}/{surveyItemVersion}/survey-submission
+  - [x] 설문받을 항목에 대응되는 응답 값이 포함.
+  - [x] 응답 값은 설문조사의 설문받을 항목과 일치해야만 응답 가능
+  - [ ] (advanced) 설문 응답 항목의 이름과 응답 값을 기반으로 검색할 수 있다.
 
-- 공통된 내용과 기술스택을 이용한 기술 경험 수준 평가
-- 최대한 과거에 경험 해보시지 못한 주제를 선정하여 기술적으로 챌린지 하실 수 있게끔 구성
-- 점수를 매기거나 합격과 불합격을 구분하는 목적은 아님.
-- 서로가 서로에게 도움 줄 수 있는 각자의 강점을 파악하기 위하여 진행
-    - 꼼꼼한 요구사항 분석과 문서화
-    - 새로운 기술적 접근 방식
-    - 안정적인 아키텍처 구성
+### 응답 데이터 예시
+<details>
+  <summary>설문 생성 후 조회 응답</summary>
 
-## Introduction
+```
+{
+    "code": 1000,
+    "message": "요청 정상 처리되었습니다.",
+    "data": {
+        "id": 1,
+        "name": "Customer Satisfaction Survey",
+        "description": "Survey to evaluate customer satisfaction with our services",
+        "questionResponses": [
+            {
+                "id": 7098992976706910464,
+                "version": 1,
+                "name": "What is your name?",
+                "description": "Please provide your full name.",
+                "type": "TEXT",
+                "required": true,
+                "surveyId": 1,
+                "options": []
+            },
+            {
+                "id": 8121888864774276615,
+                "version": 1,
+                "name": "Please describe your experience with our service.",
+                "description": "Feel free to provide as much detail as you like.",
+                "type": "PARAGRAPH",
+                "required": true,
+                "surveyId": 1,
+                "options": []
+            },
+            {
+                "id": 2397051438838496245,
+                "version": 1,
+                "name": "How satisfied are you with our service?",
+                "description": "Choose one of the options below.",
+                "type": "SINGLE_CHOICE_ANSWER",
+                "required": true,
+                "surveyId": 1,
+                "options": [
+                    "Very Satisfied",
+                    "Satisfied",
+                    "Neutral",
+                    "Dissatisfied",
+                    "Very Dissatisfied"
+                ]
+            },
+            {
+                "id": 3588147029527278395,
+                "version": 1,
+                "name": "Which of the following features did you use?",
+                "description": "Select all that apply.",
+                "type": "MULTI_CHOICE_ANSWER",
+                "required": false,
+                "surveyId": 1,
+                "options": [
+                    "Online Booking",
+                    "Customer Support",
+                    "Mobile App",
+                    "Website"
+                ]
+            }
+        ]
+    }
+}
+```
+</details>
 
-- “설문조사 서비스"를 구현하려고 합니다.
-- “온보딩 프로젝트 기능 요구사항"을 구현해 주시기 바랍니다.
-- 온보딩 프로젝트 기능 요구 사항 및 기술 요구사항이 충족되지 않은 결과물은 코드레벨 평가를 진행하지 않습니다.
-- 아래의 “코드레벨 평가항목"으로 코드를 평가합니다.
-- “설문조사 서비스"의 API 명세를 함께 제출해주세요.
-- 우대사항은 직접 구현하지 않더라도 README에 적용 방법 등을 구체적으로 명시해주시는 것으로 대체 할 수 있습니다.
+<details>
+  <summary>설문 수정 후 조회 응답</summary>
 
-## 온보딩 프로젝트 기능 요구사항
+```
+{
+    "code": 1000,
+    "message": "요청 정상 처리되었습니다.",
+    "data": {
+        "id": 7098992976706910464,    -- 단답형이 단항선택형으로 수정
+        "version": 2,
+        "name": "How satisfied are you with our service?",
+        "description": "Choose one of the options below.",
+        "type": "SINGLE_CHOICE_ANSWER",
+        "required": true,
+        "surveyId": 1,
+        "options": [
+            "Very Satisfied",
+            "Satisfied",
+            "Neutral",
+            "Dissatisfied",
+            "Very Dissatisfied"
+        ]
+    }
+}
+```
+</details>
 
-### 개요
+<details>
+  <summary>설문 제출 후 조회 응답</summary>
 
-- “설문조사 서비스”는 설문조사 양식을 만들고, 만들어진 양식을 기반으로 응답을 받을 수 있는 서비스입니다. (e.g. Google Forms, Tally, Typeform)
-- 설문조사 양식은 [설문조사 이름], [설문조사 설명], [설문 받을 항목]의 구성으로 이루어져있습니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
+```
+{
+    "code": 1000,
+    "message": "요청 정상 처리되었습니다.",
+    "data": null
+}
+```
+</details>
 
-### 1. 설문조사 생성 API
+<details>
+  <summary>설문 응답 전체 조회 응답</summary>
 
-- 요청 값에는 [설문조사 이름], [설문조사 설명], [설문 받을 항목]이 포함됩니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
-    - [단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 합니다.
-- [설문 받을 항목]은 1개 ~ 10개까지 포함 할 수 있습니다.
+```
+{
+    "code": 1000,
+    "message": "요청 정상 처리되었습니다.",
+    "data": [
+        {
+            "surveyItemId": 7098992976706910464,
+            "surveyItemVersion": 1,
+            "surveyItemName": "What is your name?",
+            "surveyItemDescription": "Please provide your full name.",
+            "type": "TEXT",
+            "required": true,
+            "submissionInquiryResponses": []
+        },
+        {
+            "surveyItemId": 8121888864774276615,
+            "surveyItemVersion": 1,
+            "surveyItemName": "Please describe your experience with our service.",
+            "surveyItemDescription": "Feel free to provide as much detail as you like.",
+            "type": "PARAGRAPH",
+            "required": true,
+            "submissionInquiryResponses": []
+        },
+        {
+            "surveyItemId": 2397051438838496245,
+            "surveyItemVersion": 1,
+            "surveyItemName": "How satisfied are you with our service?",
+            "surveyItemDescription": "Choose one of the options below.",
+            "type": "SINGLE_CHOICE_ANSWER",
+            "required": true,
+            "submissionInquiryResponses": []
+        },
+        {
+            "surveyItemId": 3588147029527278395,
+            "surveyItemVersion": 1,
+            "surveyItemName": "Which of the following features did you use?",
+            "surveyItemDescription": "Select all that apply.",
+            "type": "MULTI_CHOICE_ANSWER",
+            "required": false,
+            "submissionInquiryResponses": []
+        },
+        {
+            "surveyItemId": 7098992976706910464,
+            "surveyItemVersion": 2,
+            "surveyItemName": "How satisfied are you with our service?",
+            "surveyItemDescription": "Choose one of the options below.",
+            "type": "SINGLE_CHOICE_ANSWER",
+            "required": true,
+            "submissionInquiryResponses": [
+                {
+                    "surveySubmissionId": 1,
+                    "surveyItemId": 7098992976706910464,
+                    "surveyItemVersion": 2,
+                    "response": "Very Satisfied"
+                }
+            ]
+        }
+    ]
+}
+```
+</details>
 
-### 2. 설문조사 수정 API
+### 고민포인트
+1. 다양한 타입의 설문항목을 어떻게 요청받을 것인가?
+  - 이 부분은 래민님의 코드를 보고 바로 이해해버렸습니다.. 참고하여 리팩토링 진행하겠습니다.
 
-- 요청 값에는 [설문조사 이름], [설문조사 설명], [설문 받을 항목]이 포함됩니다.
-- [설문 받을 항목]은 [항목 이름], [항목 설명], [항목 입력 형태], [항목 필수 여부]의 구성으로 이루어져있습니다.
-- [항목 입력 형태]는 [단답형], [장문형], [단일 선택 리스트], [다중 선택 리스트]의 구성으로 이루어져있습니다.
-    - [단일 선택 리스트], [다중 선택 리스트]의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 합니다.
-- [설문 받을 항목]이 추가/변경/삭제 되더라도 기존 응답은 유지되어야 합니다.
+2. 패키지간 의존성은 어떻게 관리할 것인가?
+  - 이 부분은 정말 모르겠습니다. 프로젝트의 설계부터 다시 진행되어야한다고 판단하고 있습니다. 관련 문서나 자료를 찾아봐도 패키지간 의존성에 대해 정확히 명시해 놓은 자료가 보이지 않아 혼란스럽습니다. 사실 이 부분은 은탄환이 없이 개발자 역량에 따라 갈리는 부분인가 싶기도 합니다.
 
-### 3. 설문조사 응답 제출 API
+3. 도메인과 Jpa 엔티티를 분리하여 차후 JPA를 걷어내야하는 상황이 되어도 도메인과 서비스 컴포넌트는 지킬수 있게 하였는데 과연 의미가 있는 행위였는가?
+  - 도메인과 Jpa 엔티티를 분리하여 개발한 것은 처음인데, 도메인 로직은 도메인에, Jpa entity는 persistence 정도만 담당하게 하여 도메인을 특정 기술에 종속되지 않게하는 것은 좋은 방법이였다고 생각합니다. 허나 실제 프로덕트 레벨로 올라가면 JPA를 걷어낸다는 건 프로젝트를 새로 만드는 것과 큰 차이가 없다고 생각하여 이게 과연 의미가 있는가 라는 생각도 듭니다.
 
-- 요청 값에는 [설문 받을 항목]에 대응되는 응답 값이 포함됩니다.
-- 응답 값은 설문조사의 [설문 받을 항목]과 일치해야만 응답 할 수 있습니다.
-
-### 4. 설문조사 응답 조회 API
-
-- 요청 값에는 [설문조사 식별자]가 포함됩니다.
-- 해당 설문조사의 전체 응답을 조회합니다.
-- **(Advanced)** 설문 응답 항목의 이름과 응답 값을 기반으로 검색 할 수 있습니다.
-
-<br/>
-
-> 💡 주어진 요구사항 이외의 추가 기능 구현에 대한 제약은 없으며, 새롭게 구현한 기능이 있을 경우 README 파일에 기재 해주세요.
-
-<br/>
-
-## 기술 요구 사항
-
-- JAVA 11 이상 또는 Kotlin 사용
-- Spring Boot 사용
-- Gradle 기반의 프로젝트
-- 온보딩 프로젝트 기능 요구사항은 서버(백엔드)에서 구현/처리
-- 구현을 보여줄 수 있는 화면(프론트엔드)은 구현 금지
-- DB는 인메모리 RDBMS(예: h2)를 사용하며 DB 컨트롤은 JPA로 구현. (NoSQL 사용 X)
-- API의 HTTP Method는 자유롭게 선택해주세요.
-- 에러 응답, 에러 코드는 자유롭게 정의해주세요.
-- 외부 라이브러리 및 오픈소스 사용 가능 (단, README 파일에 사용한 오픈 소스와 사용 목적을 명확히 명시해 주세요.)
-
-## 코드레벨 평가 항목
-
-온보딩 프로젝트는 다음 내용을 고려하여 평가 하게 됩니다.
-
-- 프로젝트 구성 방법 및 관련된 시스템 아키텍처 설계 방법이 적절한가?
-- 작성한 애플리케이션 코드의 가독성이 좋고 의도가 명확한가?
-    - e.g. 불필요한(사용되지) 않는 코드의 존재 여부, 일정한 코드 컨벤션 등
-- 작성한 테스트 코드는 적절한 범위의 테스트를 수행하고 있는가?
-    - e.g. 유닛/통합 테스트 등
-- Spring Boot의 기능을 적절히 사용하고 있는가?
-- 예외 처리(Exception Handling)은 적절히 수행하고 있는가?
-
-## 우대사항
-
-- 프로젝트 구성 추가 요건: 멀티 모듈 구성 및 모듈간 의존성 제약
-- Back-end 추가 요건
-    - 트래픽이 많고, 저장되어 있는 데이터가 많음을 염두에 둔 구현
-    - 다수의 서버, 인스턴스에서 동작할 수 있음을 염두에 둔 구현
-    - 동시성 이슈가 발생할 수 있는 부분을 염두에 둔 구현
-
-## 온보딩 프로젝트 제출 방식
-
-### 소스코드
-
-- 본 Repository에 main 브랜치를 포크하여 작업을 시작합니다.
-- SpringBoot 프로젝트를 신규로 설정하고, 개인별로 main 브랜치에 PR을 공개적으로 먼저 작성한 후에 작업을 시작합니다.
-    - 이때 PR에는 WIP 레이블을 붙여서 작업 중임을 알게 해주세요.
-    - 코드를 마무리해서 리뷰받을 준비가 되면 WIP 레이블을 제거하고, Needs Review 레이블을 추가해주세요.
-    - 피드백을 받은 후 추가 작업을 진행할 때는 WIP 레이블을 다시 추가하고 Needs Review 레이블을 제거해주세요.
-- 최소 기능 단위로 완성할 때 마다 커밋합니다.
-
-### 기능 점검을 위한 빌드 결과물
-
-빌드 결과물을 Executable jar 형태로 만들어 위 Branch에 함께 업로드 하시고, README에 다운로드 링크 정보를 넣어주시기 바랍니다. GitHub의 용량 문제로 업로드가 안되는 경우 다른 곳(개인
-구글 드라이브 등)에 업로드 한 후 해당 다운로드 링크 정보를 README에 넣어주셔도 됩니다.
-
-해당 파일을 다운로드 및 실행(e.g. java -jar project.jar)하여 요구 사항 기능 검증을 진행하게 됩니다. 해당 파일을 다운로드할 수 없거나 실행 시 에러가 발생하는 경우에는 기능 점검을 진행하지
-않습니다. 온보딩 프로젝트 제출 전 해당 실행 파일 다운로드 및 정상 동작 여부를 체크해 주시기 바랍니다.
-
-### 리뷰 요청
-- 2024-11-29
-  - 기능 : 도메인 및 Jpa Entity 객체 설계, 설문조사 생성 비즈니스 로직구현
-  - 리뷰 문의점
-    - 이번 사전과제에서는 도메인 객체와 Jpa의 Entity를 나눠서 도메인 객체는 비즈니스 로직을, Entity는 영속화와 관련된 로직을 담당하게 설계를 의도했습니다. 이러한 방식의 개발은 처음이라 해당 설계 포인트가 적절한지, 각 객체에 온전한 책임이 할당되었는지 궁금합니다.
-    - 요구사항 생성과 관련한 테스트가 테스트로서의 기능을 하고 있는지 궁금합니다. 자사에서는 Junit을 통한 테스트를 진행하지 않아 잘 모르기에 남들보다 더 구체적으로 알려주셔도 괜찮습니다.
-    - 로깅에 대해서 보통 어떤방식으로 진행하시는지 궁금합니다.
-    - 기타 의도를 모르겠는 코드, 맘에 안드는 부분 모두 편하게 말씀해주시면 감사하겠습니다. 제가 제일 못한다고 생각하기에 열심히 맞아가면서 배워보려합니다.
+4. 설문항목의 응답을 설문항목의 Version 을 두어 관리한 부분
+  - 설문항목은 특성 상 1개의 항목에 많은 답변이 존재하게 됩니다. 이러한 답변에 질문을 스냅샷하는게 DB 용량부분에서 좋지않다고 생각하여 설문항목에 Version을 두고 Join으로 풀어나갔습니다. 이 방식에 대해서 피드백 요청드립니다.
+  - 또한 설문항목 수정이 빈번하게 일어날 것인가 라는 부분에도 그렇지 않다라고 판단이 되어 많은 Version으로 인해 문제가 발생하긴 어렵다고 판단하였습니다.
+  
