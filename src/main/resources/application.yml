@@ -18,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # 시작 시 테이블 생성, 종료 시 테이블 삭제
+      ddl-auto: update # 시작 시 테이블 생성, 종료 시 테이블 삭제
     show-sql: true # 실행된 SQL 쿼리를 콘솔에 출력
 #      ddl-auto: update  # 개발 중에는 update 사용 >> 애플리케이션이 시작될 때 기존 스키마를 업데이트하여, 새로운 엔티티나 컬럼을 추가
     properties:

@@ -13,6 +13,10 @@ java {
 	}
 }
 
+springBoot {
+    mainClass = 'com.ic2.obd.SurveyApplication'
+}
+
 repositories {
 	mavenCentral()
 }
