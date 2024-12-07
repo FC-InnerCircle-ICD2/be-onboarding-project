@@ -1,5 +1,265 @@
 # 이너써클 BE 온보딩 프로젝트
 
+## jar 파일 경로
+- [command](https://github.com/Raemerrr/be-onboarding-project/blob/main/command/build/libs/command-0.0.1-SNAPSHOT.jar)
+- [query](https://github.com/Raemerrr/be-onboarding-project/blob/main/query/build/libs/query-0.0.1-SNAPSHOT.jar)
+
+## 방향성
+페이징이나 자세한 제약 조건이 없기에 나름대로 제약 조건을 설정하고 진행하였습니다~!
+최대한 연관 관계를 맺지 않으려 하였습니다. 🥲
+
+* common: 공통으로 필요한 내용을 담은 모듈입니다. (그러나.. 큰 의미 없음)
+* command: Survey 명령(생성, 수정, 삭제(?)) 관련 로직을 모아둔 모듈입니다.
+* query: Survey 조회 관련 로직을 모아둔 모듈입니다.
+
+## 응답 예시
+<details>
+<summary>설문 생성 후 조회 응답 예시</summary>
+
+```json
+{
+  "id": "284bfd69-bf89-4c33-873b-60adbef3c215",
+  "title": "설문조사 이름",
+  "description": "설문조사 설명",
+  "questions": [
+    {
+      "id": "f74c9b03-8335-4a0f-a68a-9f8a39694171",
+      "name": "단일 선택 리스트 설문조사 이름",
+      "description": "단일 선택 리스트 설문조사 설명",
+      "required": false,
+      "type": "SINGLE_CHOICE",
+      "options": ["option1"]
+    },
+    {
+      "id": "fb1d0b48-bb85-4e72-98bf-9f6e084236d8",
+      "name": "다중 선택 리스트 설문조사 이름",
+      "description": "다중 선택 리스트 설문조사 설명",
+      "required": true,
+      "type": "MULTIPLE_CHOICE",
+      "options": ["option1", "option2", "option3"]
+    },
+    {
+      "id": "87fb4d51-4afa-472d-9a84-c7a193017380",
+      "name": "단답형 설문조사 이름",
+      "description": "단답형 설문조사 설명",
+      "required": true,
+      "type": "SHORT_TEXT",
+      "options": []
+    },
+    {
+      "id": "e8fe4b17-39ef-421b-954e-9d79ebcdf7e4",
+      "name": "장문형 설문조사 이름",
+      "description": "장문형 설문조사 설명",
+      "required": true,
+      "type": "LONG_TEXT",
+      "options": []
+    }
+  ],
+  "responses": []
+}
+
+```
+</details>
+
+<details>
+<summary>설문 수정 후 조회 응답 예시</summary>
+
+```json
+{
+  "id": "284bfd69-bf89-4c33-873b-60adbef3c215",
+  "title": "설문조사 이름",
+  "description": "설문조사 설명",
+  "questions": [
+    {
+      "id": "f74c9b03-8335-4a0f-a68a-9f8a39694171",
+      "name": "단일 선택 리스트 설문조사 이름",
+      "description": "단일 선택 리스트 설문조사 설명",
+      "required": false,
+      "type": "SINGLE_CHOICE",
+      "options": ["option1"]
+    },
+    {
+      "id": "fb1d0b48-bb85-4e72-98bf-9f6e084236d8",
+      "name": "다중 선택 리스트 설문조사 이름",
+      "description": "다중 선택 리스트 설문조사 설명",
+      "required": true,
+      "type": "MULTIPLE_CHOICE",
+      "options": ["option1", "option2", "변경한 옵션"]
+    },
+    {
+      "id": "87fb4d51-4afa-472d-9a84-c7a193017380",
+      "name": "단답형 설문조사 이름",
+      "description": "단답형 설문조사 설명",
+      "required": false,
+      "type": "SHORT_TEXT",
+      "options": []
+    },
+    {
+      "id": "e8fe4b17-39ef-421b-954e-9d79ebcdf7e4",
+      "name": "장문형 설문조사 이름",
+      "description": "장문형 설문조사 설명 수정",
+      "required": true,
+      "type": "LONG_TEXT",
+      "options": []
+    }
+  ],
+  "responses": []
+}
+
+```
+</details>
+
+<details>
+<summary>설문 응답 후 조회 응답 예시</summary>
+
+> 설문 항목이 수정 가능한 요구사항이 있어 태양님의 피드백을 받아, QuestionSnapshot을 저장하는 형태로 변경하였음.
+```json
+{
+  "id": "495312e0-96e1-40c8-9105-7910d452c3d1",
+  "title": "설문조사 이름",
+  "description": "설문조사 설명",
+  "responses": [
+    {
+      "id": "efa3e146-0375-46f1-a78b-2a21cb063594",
+      "answers": [
+        {
+          "id": "968fe84b-b3aa-4811-b6b4-98d5a818972e",
+          "question": {
+            "id": "978d2112-5e91-40f0-a675-ca054b591d58",
+            "name": "단일 선택 리스트 설문조사 이름",
+            "description": "단일 선택 리스트 설문조사 설명",
+            "required": true,
+            "type": "SINGLE_CHOICE",
+            "options": ["option1"]
+          },
+          "content": {
+            "type": "SINGLE_CHOICE",
+            "selectedOption": "option1"
+          }
+        },
+        {
+          "id": "807dec5f-9c04-493c-a8e3-781d00aa9ff9",
+          "question": {
+            "id": "b33851ad-14b0-440c-a781-42d90edd413d",
+            "name": "다중 선택 리스트 설문조사 이름",
+            "description": "다중 선택 리스트 설문조사 설명",
+            "required": true,
+            "type": "MULTIPLE_CHOICE",
+            "options": ["option1", "option2", "option3"]
+          },
+          "content": {
+            "type": "MULTIPLE_CHOICE",
+            "selectedOptions": ["option1", "option2"]
+          }
+        },
+        {
+          "id": "8e37896a-860f-4b0b-9ed3-f4923d8a27be",
+          "question": {
+            "id": "ade1b2bd-691c-44b6-b3f9-4fef1a207a69",
+            "name": "단답형 설문조사 이름",
+            "description": "단답형 설문조사 설명",
+            "required": true,
+            "type": "SHORT_TEXT",
+            "options": []
+          },
+          "content": {
+            "type": "SHORT_TEXT",
+            "text": "단답형 설문조사 응답"
+          }
+        },
+        {
+          "id": "dbd43615-4df3-4878-a10a-53c10049ca26",
+          "question": {
+            "id": "592633c8-7239-4df9-aa2c-eb1ee3cbc16a",
+            "name": "장문형 설문조사 이름",
+            "description": "장문형 설문조사 설명",
+            "required": true,
+            "type": "LONG_TEXT",
+            "options": []
+          },
+          "content": {
+            "type": "LONG_TEXT",
+            "text": "장문형 설문조사 응답"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+</details>
+
+<details>
+<summary>설문 응답 검색 응답 예시</summary>
+
+> `option1` 검색 시 응답 값 혹은 설문 항목과 비교하여 검색함.
+```json
+[
+  {
+    "id": "cddde811-b1ed-488c-9513-8728f987ca90",
+    "question": {
+      "id": "94e5db31-f8f1-420a-8f52-d7ca53a0645c",
+      "name": "단일 선택 리스트 설문조사 이름",
+      "description": "단일 선택 리스트 설문조사 설명",
+      "required": true,
+      "type": "SINGLE_CHOICE",
+      "options": [
+        "option1"
+      ]
+    },
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "selectedOption": "option1"
+    }
+  },
+  {
+    "id": "ef129bd4-8e9d-4629-afe2-d4b27c3143c6",
+    "question": {
+      "id": "cc1a3c2d-a36c-465a-b1be-8836e08f5229",
+      "name": "다중 선택 리스트 설문조사 이름",
+      "description": "다중 선택 리스트 설문조사 설명",
+      "required": true,
+      "type": "MULTIPLE_CHOICE",
+      "options": [
+        "option1",
+        "option2",
+        "option3"
+      ]
+    },
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "selectedOptions": [
+        "option1",
+        "option2"
+      ]
+    }
+  }
+]
+```
+</details>
+
+### 기능 명세서
+- [x] 설문조사 생성 API
+  - [x] POST /c/surveys
+  - [x] item은 1 ~ 10개까지 포함 가능
+  - [x] 단일 선택 리스트, 다중 선택 리스트의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 한다.
+- [x] 설문조사 조회 API
+  - [x] GET /q/surveys/{surveyId}
+- [x] 설문조사 수정 API
+  - [x] PATCH /c/surveys/{surveyId}
+  - [x] 단일 선택 리스트, 다중 선택 리스트의 경우 선택 할 수 있는 후보를 요청 값에 포함하여야 한다.
+  - [x] 설문받을 항목이 추가, 변경, 삭제되더라도 기존 응답은 유지되어야 한다.
+- [x] 설문조사 응답 생성 API
+  - [x] POST /surveys/{surveyId}/responses
+  - [x] 설문받을 항목에 대응되는 응답 값이 포함.
+  - [x] 응답 값은 설문조사의 설문받을 항목과 일치해야만 응답 가능.
+- [x] 설문조사 응답 조회 API
+  - [x] GET /q/surveys/{id}/responses
+  - [x] 요청 값에는 설문조사 식별자가 포함됨.
+  - [x] 해당 설문조사의 전체 응답을 조회됨.
+  - [x] (Advanced) 설문 응답 항목의 이름과 응답 값을 기반으로 검색할 수 있다.
+    - GET /q/answers/search?query=option1
+
 ## 온보딩 프로젝트의 목적
 
 - 공통된 내용과 기술스택을 이용한 기술 경험 수준 평가

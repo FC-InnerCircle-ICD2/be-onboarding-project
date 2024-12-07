@@ -1,0 +1,179 @@
+### 설문조사 생성 API
+POST http://localhost:10001/c/surveys
+Content-Type: application/json
+
+{
+  "name": "설문조사 이름",
+  "description": "설문조사 설명",
+  "questionInputs": [
+    {
+      "type": "SINGLE_CHOICE",
+      "name": "단일 선택 리스트 설문조사 이름",
+      "description": "단일 선택 리스트 설문조사 설명",
+      "optionNames": [
+        "option1"
+      ],
+      "required": true
+    },
+    {
+      "type": "MULTIPLE_CHOICE",
+      "name": "다중 선택 리스트 설문조사 이름",
+      "description": "다중 선택 리스트 설문조사 설명",
+      "optionNames": [
+        "option1",
+        "option2",
+        "option3"
+      ],
+      "required": true
+    },
+    {
+      "type": "SHORT_TEXT",
+      "name": "단답형 설문조사 이름",
+      "description": "단답형 설문조사 설명",
+      "required": true
+    },
+    {
+      "type": "LONG_TEXT",
+      "name": "장문형 설문조사 이름",
+      "description": "장문형 설문조사 설명",
+      "required": true
+    }
+  ]
+}
+
+### 설문조사 조회 API
+GET http://localhost:10002/q/surveys/aa461574-7a47-49fa-9c90-2c42982d890c
+Content-Type: application/json
+
+### 설문조사 수정 API
+PATCH http://localhost:10001/c/surveys/aa461574-7a47-49fa-9c90-2c42982d890c
+Content-Type: application/json
+
+{
+  "updateInputs": [
+    {
+      "questionId": "ae8e336c-d53f-4c15-b416-61195fde6f36",
+      "question": {
+        "type": "SINGLE_CHOICE",
+        "name": "단일 선택 리스트 설문조사 이름",
+        "description": "단일 선택 리스트 설문조사 설명",
+        "optionNames": [
+          "option1"
+        ],
+        "required": false
+      }
+    },
+    {
+      "questionId": "3258fd5c-a501-4a0d-8667-a25e6eb54b34",
+      "question": {
+        "type": "MULTIPLE_CHOICE",
+        "name": "다중 선택 리스트 설문조사 이름",
+        "description": "다중 선택 리스트 설문조사 설명",
+        "optionNames": [
+          "option1",
+          "option2",
+          "option3"
+        ],
+        "required": false
+      }
+    },
+    {
+      "questionId": "c63bed91-522d-4d41-9de9-aecf45d067c7",
+      "question": {
+        "type": "SHORT_TEXT",
+        "name": "단답형 설문조사 이름",
+        "description": "단답형 설문조사 설명",
+        "required": true
+      }
+    },
+    {
+      "questionId": "47a6a892-4697-4d0c-a0cc-e0d118e402d3",
+      "question": {
+        "type": "LONG_TEXT",
+        "name": "장문형 설문조사 이름",
+        "description": "장문형 설문조사 설명",
+        "required": true
+      }
+    }
+  ]
+}
+
+### 설문조사 응답 생성 API
+POST http://localhost:10001/c/surveys/aa461574-7a47-49fa-9c90-2c42982d890c/responses
+Content-Type: application/json
+
+{
+  "responseInputs": [
+    {
+      "questionId": "ae8e336c-d53f-4c15-b416-61195fde6f36",
+      "question": {
+        "type": "SINGLE_CHOICE",
+        "name": "단일 선택 리스트 설문조사 이름",
+        "description": "단일 선택 리스트 설문조사 설명",
+        "optionNames": [
+          "option1"
+        ],
+        "required": false
+      },
+      "answerContent": {
+        "type": "SINGLE_CHOICE",
+        "selectedOption": "option1"
+      }
+    },
+    {
+      "questionId": "3258fd5c-a501-4a0d-8667-a25e6eb54b34",
+      "question": {
+        "type": "MULTIPLE_CHOICE",
+        "name": "다중 선택 리스트 설문조사 이름",
+        "description": "다중 선택 리스트 설문조사 설명",
+        "optionNames": [
+          "option1",
+          "option2",
+          "option3"
+        ],
+        "required": false
+      },
+      "answerContent": {
+        "type": "MULTIPLE_CHOICE",
+        "selectedOptions": [
+          "option1",
+          "option2"
+        ]
+      }
+    },
+    {
+      "questionId": "c63bed91-522d-4d41-9de9-aecf45d067c7",
+      "question": {
+        "type": "SHORT_TEXT",
+        "name": "단답형 설문조사 이름",
+        "description": "단답형 설문조사 설명",
+        "required": true
+      },
+      "answerContent": {
+        "type": "SHORT_TEXT",
+        "text": "단답형 설문조사 응답"
+      }
+    },
+    {
+      "questionId": "47a6a892-4697-4d0c-a0cc-e0d118e402d3",
+      "question": {
+        "type": "LONG_TEXT",
+        "name": "장문형 설문조사 이름",
+        "description": "장문형 설문조사 설명",
+        "required": true
+      },
+      "answerContent": {
+        "type": "LONG_TEXT",
+        "text": "장문형 설문조사 응답"
+      }
+    }
+  ]
+}
+
+### 설문조사 응답 조회 API
+GET http://localhost:10002/q/surveys/aa461574-7a47-49fa-9c90-2c42982d890c/responses
+Content-Type: application/json
+
+### 설문조사 응답 검색 API
+GET http://localhost:10002/q/answers/search?query=option1
+Content-Type: application/json
