@@ -233,7 +233,7 @@ public class SurveyController {
         return surveyService.updateSurvey(surveyRequestDto);
     }
 
-    @GetMapping("/getSurveyResponse/{surveyId}")
+    @GetMapping("/getSurveyResponse")
     @Operation(
             summary = "설문조사 응답 조회",
             description = "지정된 설문조사 ID로 설문조사 응답을 조회합니다.",
@@ -272,7 +272,7 @@ public class SurveyController {
                     )
             }
     )
-    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(@PathVariable Long surveyId) {
-        return surveyService.getSurveyResponse(surveyId);
+    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(@RequestParam(required = true) Long surveyId, @RequestParam(required = false) String itemName, @RequestParam(required = false) String responseValue) {
+        return surveyService.getSurveyResponse(surveyId,itemName,responseValue);
     }
 }

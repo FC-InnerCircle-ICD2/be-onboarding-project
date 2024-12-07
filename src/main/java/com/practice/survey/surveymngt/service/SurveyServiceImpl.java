@@ -100,9 +100,9 @@ public class SurveyServiceImpl implements SurveyService{
     }
 
     @Override
-    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(Long surveyId) {
+    public ResponseTemplate<List<SurveyResponseDto>> getSurveyResponse(Long surveyId, String itemName, String responseValue) {
 
-        List<SurveyResponseDto> SurveyResponseDtos = surveyRespositoryWrapper.getSurveyResponse(surveyId);
+        List<SurveyResponseDto> SurveyResponseDtos = surveyRespositoryWrapper.getSurveyResponse(surveyId,itemName,responseValue);
 
         return new ResponseTemplate<List<SurveyResponseDto>>().responseOk(SurveyResponseDtos);
     }
