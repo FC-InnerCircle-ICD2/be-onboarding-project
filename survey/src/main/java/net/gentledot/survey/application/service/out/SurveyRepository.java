@@ -6,4 +6,6 @@ public interface SurveyRepository {
     Survey findById(String surveyId);
 
     Survey save(Survey survey);
+
+    boolean existsById(String surveyId);
 }

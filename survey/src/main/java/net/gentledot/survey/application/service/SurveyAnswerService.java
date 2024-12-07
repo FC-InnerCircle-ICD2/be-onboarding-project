@@ -5,45 +5,53 @@ import net.gentledot.survey.application.service.in.model.request.SearchSurveyAns
 import net.gentledot.survey.application.service.in.model.request.SubmitSurveyAnswer;
 import net.gentledot.survey.application.service.in.model.response.SearchSurveyAnswerResponse;
 import net.gentledot.survey.application.service.in.model.response.SurveyAnswerValue;
-import net.gentledot.survey.application.service.out.SurveyAnswerOut;
-import net.gentledot.survey.application.service.out.SurveyOut;
+import net.gentledot.survey.application.service.out.SurveyAnswerRepository;
+import net.gentledot.survey.application.service.out.SurveyRepository;
 import net.gentledot.survey.domain.exception.ServiceError;
 import net.gentledot.survey.domain.exception.SurveyNotFoundException;
 import net.gentledot.survey.domain.surveyanswer.SurveyAnswer;
 import net.gentledot.survey.domain.surveyanswer.SurveyAnswerSubmission;
+import net.gentledot.survey.domain.surveybase.Survey;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.gentledot.survey.application.service.util.SurveyVaildator.validateSurveyAnswers;
+
 @Slf4j
 @Service
 public class SurveyAnswerService {
-    private final SurveyOut surveyOut;
-    private final SurveyAnswerOut surveyAnswerOut;
+    private final SurveyRepository surveyRepository;
+    private final SurveyAnswerRepository surveyAnswerRepository;
 
-    public SurveyAnswerService(SurveyOut surveyOut, SurveyAnswerOut surveyAnswerOut) {
-        this.surveyOut = surveyOut;
-        this.surveyAnswerOut = surveyAnswerOut;
+    public SurveyAnswerService(SurveyRepository surveyRepository, SurveyAnswerRepository surveyAnswerRepository) {
+        this.surveyRepository = surveyRepository;
+        this.surveyAnswerRepository = surveyAnswerRepository;
     }
-
 
     @Transactional
     public void submitSurveyAnswer(String surveyId, List<SubmitSurveyAnswer> answers) {
-        surveyAnswerOut.save(surveyId, answers);
+        Survey survey = surveyRepository.findById(surveyId);
+
+        // 설문조사 항목과 응답 값 검증
+        validateSurveyAnswers(survey, answers);
+
+        SurveyAnswer surveyAnswer = SurveyAnswer.of(survey, answers);
+        surveyAnswerRepository.save(surveyAnswer);
     }
 
     @Transactional(readOnly = true)
     public SearchSurveyAnswerResponse getSurveyAnswers(SearchSurveyAnswerRequest request) {
         String surveyId = request.getSurveyId();
-        boolean isExists = surveyOut.existsById(surveyId);
+        boolean isExists = surveyRepository.existsById(surveyId);
 
         if (!isExists) {
             throw new SurveyNotFoundException(ServiceError.INQUIRY_SURVEY_NOT_FOUND);
         }
 
-        List<SurveyAnswer> allSurveyAnswers = surveyAnswerOut.findAllBySurveyId(surveyId);
+        List<SurveyAnswer> allSurveyAnswers = surveyAnswerRepository.findAllBySurveyId(surveyId);
 
         List<SurveyAnswerValue> answerValues = allSurveyAnswers.stream()
                 .map(surveyAnswer -> {
