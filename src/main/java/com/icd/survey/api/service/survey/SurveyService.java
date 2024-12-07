@@ -84,8 +84,7 @@ public class SurveyService {
         // 필수 항목 값 queue
         Set<Long> essentialItemSeqSet = itemList
                 .stream()
-                .filter(x -> (Boolean.TRUE.equals(x.getIsEssential()) && Boolean.FALSE.equals(x.getIsEssential()))
-                )
+                .filter(x -> (Boolean.TRUE.equals(x.getIsEssential())))
                 .map(SurveyItem::getItemSeq)
                 .collect(Collectors.toSet());
 
