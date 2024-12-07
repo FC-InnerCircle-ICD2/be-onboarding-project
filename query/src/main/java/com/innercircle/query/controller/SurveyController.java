@@ -1,7 +1,7 @@
 package com.innercircle.query.controller;
 
+import com.innercircle.query.controller.dto.AnswerDto;
 import com.innercircle.query.controller.dto.SurveyDto;
-import com.innercircle.query.controller.dto.SurveyResponseDto.AnswerDto;
 import com.innercircle.query.controller.dto.SurveyResponsesDto;
 import com.innercircle.query.facade.SurveyFacade;
 import java.util.List;
