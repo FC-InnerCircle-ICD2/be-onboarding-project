@@ -2,7 +2,7 @@
 
 ## 결과물
 
-- survey-0.0.1-snapshot :  [link](https://drive.google.com/file/d/1bApriMoOtBiOqIos_ZoUDWulUqX9LOQ1/view?usp=sharing)
+- survey-0.0.2 : [link](https://drive.google.com/file/d/1NhW3JJawDR2HDqhkIQM0nTDb1lmeH0HD/view?usp=sharing)
 
 ## 프로젝트 소개
 
