@@ -3,7 +3,9 @@ package org.brinst.surveycore.survey.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.brinst.surveycommon.enums.ErrorCode;
 import org.brinst.surveycommon.enums.OptionType;
+import org.brinst.surveycommon.exception.GlobalException;
 import org.brinst.surveycore.answer.entity.AnswerParent;
 import org.brinst.surveycore.survey.dto.SurveyItemDTO;
 import org.springframework.util.CollectionUtils;
@@ -72,6 +74,8 @@ public class SurveyQuestion {
 					.map(option -> new SurveyOption(option, this))
 					.toList()
 			);
+		} else {
+			throw new GlobalException(ErrorCode.BAD_REQUEST, "옵션값을 하나 이상 입력해주세요");
 		}
 	}
 }
