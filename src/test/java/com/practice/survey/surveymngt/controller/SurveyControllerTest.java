@@ -1,11 +1,8 @@
 package com.practice.survey.surveymngt.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.survey.common.response.StatusEnum;
-import com.practice.survey.surveyItem.model.dto.SurveyItemDto;
 import com.practice.survey.surveyItem.model.dto.SurveyItemSaveRequestDto;
 import com.practice.survey.surveyItem.model.enums.InputType;
-import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionDto;
 import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionSaveRequestDto;
 import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
 import com.practice.survey.surveymngt.model.entity.Survey;
@@ -13,7 +10,6 @@ import com.practice.survey.surveyItemOption.repository.SurveyItemOptionRepositor
 import com.practice.survey.surveyItem.repository.SurveyItemRepository;
 import com.practice.survey.surveymngt.repository.SurveyRepository;
 import com.practice.survey.surveyVersion.repository.SurveyVersionRepository;
-import com.practice.survey.surveymngt.service.SurveyService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
