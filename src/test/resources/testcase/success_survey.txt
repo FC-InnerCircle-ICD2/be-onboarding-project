@@ -1,0 +1,28 @@
+{
+  "name": "설문조사 저장 테스트",
+  "description": "정상적인 설문조사 데이터 저장",
+  "surveyItemList": [
+    {
+      "name": "첫 번째 질문",
+      "description": "간단한 질문입니다.",
+      "itemType": "SHORT_TEXT",
+      "required": true,
+      "active": true,
+      "itemContentList": [
+        "매우 만족",
+        "만족",
+        "보통",
+        "불만족",
+        "매우 불만족"
+      ]
+    },
+    {
+      "name": "두 번째 질문",
+      "description": "또 다른 질문입니다.",
+      "itemType": "SHORT_TEXT",
+      "required": false,
+      "active": true,
+      "itemContentList": []
+    }
+  ]
+}
