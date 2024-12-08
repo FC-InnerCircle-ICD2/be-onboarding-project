@@ -3,6 +3,7 @@ package com.innercircle.surveryproject.modules.controller;
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyDto;
 import com.innercircle.surveryproject.modules.dto.SurveyUpdateDto;
+import com.innercircle.surveryproject.modules.dto.validators.SurveyCreateDtoValidator;
 import com.innercircle.surveryproject.modules.global.ResponseUtils;
 import com.innercircle.surveryproject.modules.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,6 +27,12 @@ import org.springframework.web.bind.annotation.*;
 public class SurveyController {
 
     private final SurveyService surveyService;
+    private final SurveyCreateDtoValidator surveyCreateDtoValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(surveyCreateDtoValidator);
+    }
 
     /**
      * 설문조사 등록 API
@@ -36,7 +45,12 @@ public class SurveyController {
         @ApiResponse(responseCode = "400", description = "설문조사 등록에 실패하였습니다.")
     })
     @PostMapping
-    public ResponseEntity createSurvey(@RequestBody @Validated SurveyCreateDto surveyCreateDto) {
+    public ResponseEntity createSurvey(@RequestBody @Validated SurveyCreateDto surveyCreateDto, BindingResult bindingResult) {
+
+        // 검증 에러 처리
+        if (bindingResult.hasErrors()) {
+            return ResponseUtils.error("설문조사 등록에 실패하였습니다.",bindingResult.getAllErrors());
+        }
 
         SurveyDto surveyDto = surveyService.createSurvey(surveyCreateDto);
 
