@@ -16,6 +16,11 @@ import java.util.List;
 public class SurveyItemDto {
 
     /**
+     * 설문조사 항목 식별자
+     */
+    private Long surveyItemId;
+
+    /**
      * 이름
      */
     private String name;
@@ -36,13 +41,6 @@ public class SurveyItemDto {
     private Boolean required;
 
     /**
-     * 활성화 여부
-     * 설문조사 수정 시 기존에 생성한 데이터를 삭제한 경우
-     * FALSE 처리
-     */
-    private Boolean active;
-
-    /**
      * 설문조사 항목 별 콘텐츠
      */
     private List<String> itemContentList;
@@ -52,7 +50,6 @@ public class SurveyItemDto {
         this.description = surveyItem.getDescription();
         this.itemType = surveyItem.getItemType();
         this.required = surveyItem.getRequired();
-        this.active = surveyItem.getActive();
         this.itemContentList = surveyItem.getItemContentList();
     }
 

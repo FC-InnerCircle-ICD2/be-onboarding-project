@@ -3,6 +3,7 @@ package com.innercircle.surveryproject.modules.service;
 import com.innercircle.surveryproject.infra.exceptions.InvalidInputException;
 import com.innercircle.surveryproject.modules.dto.SurveyCreateDto;
 import com.innercircle.surveryproject.modules.dto.SurveyDto;
+import com.innercircle.surveryproject.modules.dto.SurveyItemDto;
 import com.innercircle.surveryproject.modules.dto.SurveyUpdateDto;
 import com.innercircle.surveryproject.modules.entity.Survey;
 import com.innercircle.surveryproject.modules.entity.SurveyItem;
@@ -59,9 +60,41 @@ public class SurveyService {
         Survey survey =
             surveyRepository.findById(surveyUpdateDto.getId()).orElseThrow(() -> new InvalidInputException("일치하는 설문조사를 찾을 수 없습니다."));
 
-        survey.update(surveyUpdateDto);
+        List<SurveyItemDto> surveyItemDtoList = surveyUpdateDto.getSurveyItemDtoList();
+
+        List<Long> existingSurveyItemIds = survey.getSurveyItemList().stream()
+            .map(SurveyItem::getId)
+            .toList();
+
+        for (SurveyItemDto surveyItemDto : surveyItemDtoList) {
+
+            if (isExistSurveyItem(existingSurveyItemIds, surveyItemDto)) {
+                SurveyItem existingItem = survey.getSurveyItemById(surveyItemDto.getSurveyItemId());
+                if (!existingItem.equalsDto(surveyItemDto)) {
+                    existingItem.updateFromDto(surveyItemDto);
+                }
+                existingItem.setActive(true);
+            } else {
+                SurveyItem newSurveyItem = SurveyItem.from(surveyItemDto);
+                newSurveyItem.setActive(true);
+                survey.addSurveyItem(newSurveyItem);
+            }
+        }
+
+        List<SurveyItem> toDeactivateSurveyItems = survey.getSurveyItemList().stream()
+            .filter(item -> surveyItemDtoList.stream()
+                .noneMatch(dto -> dto.getSurveyItemId() != null && dto.getSurveyItemId().equals(item.getId())))
+            .toList();
+
+        for (SurveyItem itemToDeactivate : toDeactivateSurveyItems) {
+            itemToDeactivate.setActive(false);
+        }
 
         return SurveyDto.from(survey);
+    }
+
+    private boolean isExistSurveyItem(List<Long> surveyItemList, SurveyItemDto surveyItemDto) {
+        return surveyItemDto.getSurveyItemId() != null && surveyItemList.contains(surveyItemDto.getSurveyItemId());
     }
 
     /**

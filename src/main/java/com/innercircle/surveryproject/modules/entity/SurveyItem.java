@@ -49,6 +49,7 @@ public class SurveyItem {
     /**
      * 활성화여부
      */
+    @Setter
     private Boolean active = Boolean.TRUE;
 
     @Setter
@@ -68,7 +69,6 @@ public class SurveyItem {
         this.itemType = surveyItemDto.getItemType();
         this.required = surveyItemDto.getRequired();
         this.itemContentList = surveyItemDto.getItemContentList();
-        this.active = surveyItemDto.getActive();
     }
 
     public static SurveyItem from(SurveyItemDto surveyItemDto) {
@@ -89,6 +89,21 @@ public class SurveyItem {
 
     public Long getSurveyId() {
         return this.survey.getId();
+    }
+
+    public boolean equalsDto(SurveyItemDto surveyItemDto) {
+        return this.id.equals(surveyItemDto.getSurveyItemId())
+            && this.name.equals(surveyItemDto.getName())
+            && this.description.equals(surveyItemDto.getDescription())
+            && this.itemType.equals(surveyItemDto.getItemType())
+            && this.itemContentList.equals(surveyItemDto.getItemContentList());
+    }
+
+    public void updateFromDto(SurveyItemDto surveyItemDto) {
+        this.name = surveyItemDto.getName();
+        this.description = surveyItemDto.getDescription();
+        this.itemType = surveyItemDto.getItemType();
+        this.itemContentList = surveyItemDto.getItemContentList();
     }
 
 }

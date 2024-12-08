@@ -32,10 +32,6 @@
 - [ ] 우대사항 : 다수의 서버, 인스턴스에서 동작할 수 있음을 염두에 둔 구현
 - [ ] 우대사항 : 동시성 이슈가 발생할 수 있는 부분을 염두에 둔 구현
 
-## ERD
-
-![SURVEY.png](SURVEY.png)
-
 ## API 명세서
 
 [https://documenter.getpostman.com/view/8163668/2sAYBa8Uk6](https://documenter.getpostman.com/view/8163668/2sAYBa8Uk6)
