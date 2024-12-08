@@ -37,7 +37,10 @@ public enum StatusEnum {
     , NOT_NULL_VIOLATE(7000, "널값이 들어갔습니다.")
     , DATA_LENGTH_VIOLATE(7001, "데이터 길이가 지켜지지 않았습니다.")
     , NOT_EMPTY_VIOLATE(7003, "빈값이 들어갔습니다.")
-    ;
+    , METHOD_NOT_SUPPORTED(7004, "지원하지 않는 메소드입니다.")
+    ,UNSUPPORTED_MEDIA_TYPE(7005, "지원하지 않는 미디어 타입입니다.")
+    ,MISSING_PARAMETER(7006, "필수 파라미터가 누락되었습니다.")
+    ,VALIDATION_ERROR(7007, "유효성 검사 오류입니다.");
 
     private int code;
 
