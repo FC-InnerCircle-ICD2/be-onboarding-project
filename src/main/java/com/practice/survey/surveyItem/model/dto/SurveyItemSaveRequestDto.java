@@ -1,5 +1,6 @@
 package com.practice.survey.surveyItem.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.practice.survey.surveyItem.model.entity.SurveyItem;
 import com.practice.survey.surveyItem.model.enums.InputType;
 import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionSaveRequestDto;
@@ -27,7 +28,8 @@ public class SurveyItemSaveRequestDto {
     @NotNull
     private InputType inputType;  // 입력 형태 (SHORT_TEXT, LONG_TEXT, SINGLE_CHOICE, MULTIPLE_CHOICE 등)
 
-    private boolean isRequired;  // 필수 여부
+    @JsonProperty("required")
+    private boolean required;  // 필수 여부
 
     private List<SurveyItemOptionSaveRequestDto> options;  // 항목의 선택지 리스트 (옵션이 있는 경우)
 
@@ -36,7 +38,7 @@ public class SurveyItemSaveRequestDto {
                 .name(name)
                 .description(description)
                 .inputType(inputType)
-                .isRequired(isRequired)
+                .required(required)
                 .version(version)
                 .itemNumber(itemNumber)
                 .build();

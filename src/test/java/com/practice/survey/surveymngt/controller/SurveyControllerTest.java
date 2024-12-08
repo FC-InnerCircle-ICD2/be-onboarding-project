@@ -2,14 +2,17 @@ package com.practice.survey.surveymngt.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.survey.surveyItem.model.dto.SurveyItemSaveRequestDto;
+import com.practice.survey.surveyItem.model.entity.SurveyItem;
 import com.practice.survey.surveyItem.model.enums.InputType;
 import com.practice.survey.surveyItemOption.model.dto.SurveyItemOptionSaveRequestDto;
+import com.practice.survey.surveyVersion.model.entity.SurveyVersion;
 import com.practice.survey.surveymngt.model.dto.SurveyRequestDto;
 import com.practice.survey.surveymngt.model.entity.Survey;
 import com.practice.survey.surveyItemOption.repository.SurveyItemOptionRepository;
 import com.practice.survey.surveyItem.repository.SurveyItemRepository;
 import com.practice.survey.surveymngt.repository.SurveyRepository;
 import com.practice.survey.surveyVersion.repository.SurveyVersionRepository;
+import com.practice.survey.surveymngt.service.SurveyService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -134,10 +137,15 @@ public class SurveyControllerTest {
                 .andExpect(status().isOk());
 
         // then
+        // 설문조사 이름 매칭 확인
         Survey foundSurvey = surveyRepository.findByName("설문조사 이름1");
         assertThat(foundSurvey).isNotNull();
         assertThat(foundSurvey.getName()).isEqualTo("설문조사 이름1");
-
+        // 설문조사 아이템의 필수 여부가 true로 저장되었는지 확인
+        SurveyVersion surveyVersion = surveyVersionRepository.findBySurvey(foundSurvey);
+        List<SurveyItem> surveyItem = surveyItemRepository.findByVersion(surveyVersion);
+        assertThat(surveyItem.get(0).getIsRequired()).isTrue();
+        assertThat(surveyItem.get(1).getIsRequired()).isTrue();
     }
 
     @DisplayName("[Controller] 설문조사 수정 테스트")

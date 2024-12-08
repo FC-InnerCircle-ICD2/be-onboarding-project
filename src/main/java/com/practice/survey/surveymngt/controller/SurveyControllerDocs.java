@@ -43,7 +43,7 @@ public interface SurveyControllerDocs {
                                                           "name": "질문1",
                                                           "description": "설명1",
                                                           "inputType": "SINGLE_CHOICE",
-                                                          "isRequired": true,
+                                                          "required": true,
                                                           "options": [
                                                             {
                                                               "optionNumber": 1,
@@ -60,7 +60,7 @@ public interface SurveyControllerDocs {
                                                           "name": "질문2",
                                                           "description": "설명2",
                                                           "inputType": "LONG_TEXT",
-                                                          "isRequired": true
+                                                          "required": true
                                                         }
                                                       ]
                                                     }
@@ -79,21 +79,21 @@ public interface SurveyControllerDocs {
                                                           "name": "질문1",
                                                           "description": "설명1",
                                                           "inputType": "SHORT_TEXT",
-                                                          "isRequired": true
+                                                          "required": true
                                                         },
                                                         {
                                                           "itemNumber": 2,
                                                           "name": "질문2",
                                                           "description": "설명2",
                                                           "inputType": "LONG_TEXT",
-                                                          "isRequired": true
+                                                          "required": true
                                                         },
                                                         {
                                                           "itemNumber": 3,
                                                           "name": "질문3",
                                                           "description": "설명3",
                                                           "inputType": "SINGLE_CHOICE",
-                                                          "isRequired": true,
+                                                          "required": true,
                                                           "options": [
                                                             {
                                                               "optionNumber": 1,
@@ -110,14 +110,14 @@ public interface SurveyControllerDocs {
                                                           "name": "질문4",
                                                           "description": "설명4",
                                                           "inputType": "LONG_TEXT",
-                                                          "isRequired": false
+                                                          "required": false
                                                         },
                                                         {
                                                           "itemNumber": 5,
                                                           "name": "질문5",
                                                           "description": "설명5",
                                                           "inputType": "MULTIPLE_CHOICE",
-                                                          "isRequired": true,
+                                                          "required": true,
                                                           "options": [
                                                             {
                                                               "optionNumber": 1,
@@ -188,7 +188,7 @@ public interface SurveyControllerDocs {
                                                           "name": "수정질문1",
                                                           "description": "수정설명1",
                                                           "inputType": "SHORT_TEXT",
-                                                          "isRequired": false
+                                                          "required": false
                                                         }
                                                       ]
                                                     }

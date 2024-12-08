@@ -63,17 +63,17 @@ public class ResponseService {
             List<String> responseValueList = responseItemSaveRequestDto.getResponseValue();
             
             String inputType = String.valueOf(surveyItemReadDto.getInputType());
-            boolean isRequired = surveyItemReadDto.getIsRequired();
+            boolean required = surveyItemReadDto.isRequired();
 
 //            필수 필드 응답 여부 검사 : 모든 필수 항목에 대응하는 응답이 있는지 확인합니다.
             // 필수 필드가 비어있을 경우 에러
-            if(isRequired && responseValueList.isEmpty()) {
+            if(required && responseValueList.isEmpty()) {
                 return new ResponseTemplate<StatusEnum>().serverError(StatusEnum.REQUIRED_FIELD_MISSING);
             }
 
             // 입력 유형(inputType) 검사 : 응답 값이 설문 항목의 예상 입력 유형과 일치하는지 확인합니다.
 //            checkInputType(surveyItemReadDto, responseItemSaveRequestDto); // 이후 모듈화
-            if(!isRequired) continue; // 필수 응답 항목이 아닌 경우, 아래 유효성 검사를 생략합니다.
+            if(!required) continue; // 필수 응답 항목이 아닌 경우, 아래 유효성 검사를 생략합니다.
             // MULTIPLE_CHOICE : 2개 이상의 응답값이 있을 경우 통과. 2개 미만일 경우 에러
             if(inputType.equals("MULTIPLE_CHOICE")) {
                 if(responseValueList.size() < 2) {

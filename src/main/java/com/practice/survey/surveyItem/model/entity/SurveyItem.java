@@ -38,17 +38,10 @@ public class SurveyItem extends BaseTime {
     private InputType inputType;
 
     @Column(nullable = false)
-    private boolean isRequired;
+    private boolean required;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "version_id", nullable = false)
     private SurveyVersion version;
 
-    public boolean getIsRequired() {
-        return isRequired;
-    }
-
-    public List<SurveyItemOptionDto> getOptions() {
-        return null;
-    }
 }
