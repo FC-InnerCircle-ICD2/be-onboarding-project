@@ -43,27 +43,25 @@ public class SurveyAnswerService {
 
         List<SurveyItemResponseDto> surveyItemResponseDtoList = surveyAnswerCreateDto.getSurveyItemResponseDtoList();
 
+        Survey survey = surveyRepository.findById(surveyAnswerCreateDto.getSurveyId()).orElseThrow(() -> new InvalidInputException(
+            "일치하는 설문조사를 찾을 수 없습니다."));
         List<SurveyAnswerMapValue> surveyAnswerMapValueList = new ArrayList<>();
         for (SurveyItemResponseDto surveyItemResponseDto : surveyItemResponseDtoList) {
-            Optional<SurveyItem> optionalSurveyItem =
+            SurveyItem surveyItem =
                 surveyItemRepository.findBySurvey_IdAndId(surveyAnswerCreateDto.getSurveyId(),
-                                                          surveyItemResponseDto.getSurveyItemId());
+                                                          surveyItemResponseDto.getSurveyItemId()).orElseThrow(()-> new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다."));
 
-            if (optionalSurveyItem.isEmpty()) {
-                throw new InvalidInputException("일치하는 설문조사 항목을 찾을 수 없습니다.");
-            }
-
-            SurveyItem surveyItem = optionalSurveyItem.get();
             if (Boolean.TRUE.equals(surveyItem.getRequired()) && (surveyItemResponseDto.getAnswer() == null
                 || surveyItemResponseDto.getAnswer().isEmpty())) {
                 throw new InvalidInputException("필수 항목을 입력해주세요.");
             }
 
-            surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItemResponseDto.getSurveyItemId(),
+            surveyAnswerMapValueList.add(SurveyAnswerMapValue.from(surveyItem,
+                                                                    surveyItemResponseDto.getSurveyItemId(),
                                                                    surveyItemResponseDto.getAnswer()));
         }
 
-        SurveyAnswer surveyAnswer = SurveyAnswer.from(surveyAnswerCreateDto);
+        SurveyAnswer surveyAnswer = SurveyAnswer.from(survey,surveyAnswerCreateDto);
         surveyAnswerMapValueList.forEach(surveyAnswerMapValue -> surveyAnswerMapValue.setSurveyAnswer(surveyAnswer));
         surveyAnswer.getSurveyAnswerDetails().addAll(surveyAnswerMapValueList);
 

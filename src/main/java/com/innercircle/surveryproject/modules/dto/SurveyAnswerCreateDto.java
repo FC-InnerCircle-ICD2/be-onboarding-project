@@ -25,6 +25,7 @@ public class SurveyAnswerCreateDto {
      */
     private Long surveyId;
 
+
     /**
      * 설문조사 응답 내용
      */

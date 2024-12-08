@@ -33,19 +33,31 @@ public class SurveyAnswer extends BaseEntity {
     private String username;
 
     /**
+     * 설문조사 이름
+     */
+    private String name;
+
+    /**
+     * 설문조사 설명
+     */
+    private String description;
+
+    /**
      * 설문조사 응답 결과
      */
     @Setter
     @OneToMany(mappedBy = "surveyAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyAnswerMapValue> surveyAnswerDetails = new ArrayList<>(); // 설문 항목별 응답 관리
+    private List<SurveyAnswerMapValue> surveyAnswerDetails = new ArrayList<>();
 
-    public SurveyAnswer(SurveyAnswerCreateDto surveyCreateDto) {
+    public SurveyAnswer(Survey survey, SurveyAnswerCreateDto surveyCreateDto) {
         this.surveyAnswerId = SurveyAnswerId.of(surveyCreateDto.getSurveyId(), surveyCreateDto.getPhoneNumber());
         this.username = surveyCreateDto.getUsername();
+        this.name = survey.getName();
+        this.description = survey.getDescription();
     }
 
-    public static SurveyAnswer from(SurveyAnswerCreateDto surveyCreateDto) {
-        return new SurveyAnswer(surveyCreateDto);
+    public static SurveyAnswer from(Survey survey, SurveyAnswerCreateDto surveyCreateDto) {
+        return new SurveyAnswer(survey,surveyCreateDto);
     }
 
     public Long getSurveyId() {

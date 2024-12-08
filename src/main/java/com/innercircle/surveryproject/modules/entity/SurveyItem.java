@@ -53,7 +53,7 @@ public class SurveyItem {
     private Boolean active = Boolean.TRUE;
 
     @Setter
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
@@ -91,6 +91,11 @@ public class SurveyItem {
         return this.survey.getId();
     }
 
+    /**
+     * dto를 기준으로 기존 값이랑 같은지 비교
+     * @param surveyItemDto
+     * @return
+     */
     public boolean equalsDto(SurveyItemDto surveyItemDto) {
         return this.id.equals(surveyItemDto.getSurveyItemId())
             && this.name.equals(surveyItemDto.getName())
@@ -99,6 +104,10 @@ public class SurveyItem {
             && this.itemContentList.equals(surveyItemDto.getItemContentList());
     }
 
+    /**
+     * dto를 기준으로 설문조사 항목 업데이트
+     * @param surveyItemDto
+     */
     public void updateFromDto(SurveyItemDto surveyItemDto) {
         this.name = surveyItemDto.getName();
         this.description = surveyItemDto.getDescription();
