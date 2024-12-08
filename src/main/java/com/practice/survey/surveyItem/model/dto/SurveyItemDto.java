@@ -27,9 +27,7 @@ public class SurveyItemDto {
 
     private InputType inputType;
 
-    private boolean isRequired;
-
-//    private List<SurveyItemOptionDto> options;
+    private boolean required;
 
     public SurveyItem toEntity(SurveyVersion version) {
         return SurveyItem.builder()
@@ -39,7 +37,7 @@ public class SurveyItemDto {
                 .name(name)
                 .description(description)
                 .inputType(inputType)
-                .isRequired(isRequired)
+                .required(required)
                 .build();
     }
 }

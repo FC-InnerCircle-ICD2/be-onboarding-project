@@ -16,25 +16,16 @@ public class SurveyItemReadDto {
 
     private Long itemId;
 
-//    private int itemNumber;
-
     private InputType inputType;
 
-    private boolean isRequired;
-
-//    private List<SurveyItemOptionDto> options;
+    private boolean required;
 
     public static SurveyItemReadDto fromEntity(SurveyItem item) {
         return SurveyItemReadDto.builder()
                 .itemId(item.getItemId())
                 .inputType(item.getInputType())
-                .isRequired(item.getIsRequired())
-//                .options(item.getOptions())
+                .required(item.isRequired())
                 .build();
-    }
-
-    public boolean getIsRequired() {
-        return isRequired;
     }
 
 }

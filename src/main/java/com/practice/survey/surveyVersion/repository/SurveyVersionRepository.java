@@ -15,4 +15,5 @@ public interface SurveyVersionRepository extends JpaRepository<SurveyVersion, Lo
 
     SurveyVersion findBySurvey_SurveyIdAndVersionNumber(Long surveyId, int versionNumber);
 
+    SurveyVersion findBySurvey(Survey survey);
 }
