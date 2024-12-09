@@ -48,6 +48,11 @@ public class ResponseUtils {
         return ResponseEntity.status(status).body(apiResponse);
     }
 
+    public static <T> ResponseEntity<?> error(String message, T data) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), message, data);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+    }
+
     @Data
     public static class ApiResponse<T> {
 
