@@ -30,22 +30,19 @@ public class QuestionResponse {
 	@ApiModelProperty(notes = "항목 필수 여부", example = "true", required = true, dataType = "boolean")
 	private boolean required;
 
-	@ApiModelProperty(notes = "설문 받을 항목 응답", example = "010-xxxx-xxxx", dataType = "string")
-	private String answer;
 
 	@ApiModelProperty(notes = "선택할 수 있는 후보")
 	private List<OptionResponse> options = new ArrayList<>();
 
 	@Builder
 	public QuestionResponse(Long id, String name, String description, String type, boolean required,
-		List<OptionResponse> options, String answer) {
+		List<OptionResponse> options) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.required = required;
 		this.options = options;
-		this.answer = answer;
 	}
 
 	public static QuestionResponse from(Question question) {
@@ -55,7 +52,6 @@ public class QuestionResponse {
 			.description(question.getDescription())
 			.type(question.getType().name())
 			.required(question.isRequired())
-			.answer(question.getAnswer())
 			.options(question.getOptions().stream().map(OptionResponse::from).collect(Collectors.toList()))
 			.build();
 	}

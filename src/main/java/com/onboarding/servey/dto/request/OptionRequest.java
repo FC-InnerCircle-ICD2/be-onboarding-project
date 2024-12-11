@@ -1,5 +1,7 @@
 package com.onboarding.servey.dto.request;
 
+import com.onboarding.servey.domain.Option;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -12,4 +14,10 @@ public class OptionRequest {
 
 	@ApiModelProperty(notes = "번호", example = "1", required = true, dataType = "int")
 	private Integer number;
+
+	public Option of() {
+		return Option.builder()
+			.number(number)
+			.build();
+	}
 }

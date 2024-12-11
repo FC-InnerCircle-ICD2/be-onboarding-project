@@ -1,20 +1,36 @@
 package com.onboarding.servey.dto.request;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.onboarding.servey.domain.AnswerContent;
+import com.onboarding.servey.model.QuestionType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ApiModel(description = "설문 받을 항목 응답")
+@JsonTypeInfo(
+	use = JsonTypeInfo.Id.NAME,
+	include = As.EXISTING_PROPERTY,
+	property = "type",
+	visible = true
+)
+@JsonSubTypes({
+	@Type(value = AnswerContentShortRequest.class, name = "SHORT_TYPE"),
+	@Type(value = AnswerContentLongRequest.class, name = "LONG_TYPE"),
+	@Type(value = AnswerContentSingleRequest.class, name = "SINGLE_LIST"),
+	@Type(value = AnswerContentMultiRequest.class, name = "MULTI_LIST")
+})
 @Getter
 @NoArgsConstructor
-public class AnswerRequest {
+public abstract class AnswerRequest {
 
-	@ApiModelProperty(notes = "설문 받을 항목 식별자", example = "1", required = true, dataType = "int")
-	private Long id;
+	protected QuestionType type;
 
-	@ApiModelProperty(notes = "설문 받을 항목 응답",
-		example = "항목 입력 형태가 MULTI_LIST 인 경우 선택할 수 있는 후보 식별자를 파이프(|)로 연결해주세요. ex) 1|3",
-		dataType = "string")
-	private String answer;
+	protected AnswerRequest(QuestionType type) {
+		this.type = type;
+	}
+
+	public abstract AnswerContent convertToAnswerRequest();
 }

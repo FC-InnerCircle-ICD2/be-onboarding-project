@@ -18,7 +18,6 @@ public interface ServeyRepository extends JpaRepository<Servey, Long> {
 		+ "		FROM Servey s1 "
 		+ "		LEFT JOIN s1.questions q "
 		+ "		WHERE (:name IS NULL OR :name = '' OR q.name LIKE CONCAT('%', :name, '%'))"
-		+ "		AND (:answer IS NULL OR :answer = '' OR q.answer LIKE CONCAT('%', :answer, '%'))"
 		+ "	)")
-	Page<Servey> findServeysByNameAndAnswer(Pageable pageable, @Param("name") String name, @Param("answer") String answer);
+	Page<Servey> findServeysByNameAndAnswer(Pageable pageable, @Param("name") String name);
 }

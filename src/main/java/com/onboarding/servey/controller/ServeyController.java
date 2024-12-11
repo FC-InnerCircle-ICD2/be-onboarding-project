@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onboarding.common.controller.ApiController;
-import com.onboarding.servey.dto.request.AnswerRequest;
 import com.onboarding.servey.dto.request.OptionRequest;
 import com.onboarding.servey.dto.request.QuestionRequest;
+import com.onboarding.servey.dto.request.QuestionReplyRequest;
 import com.onboarding.servey.dto.request.ServeyRequest;
 import com.onboarding.servey.dto.response.ServeyResponse;
 import com.onboarding.servey.service.ServeyService;
@@ -48,15 +48,6 @@ public class ServeyController extends ApiController {
 
 	private final ServeyService serveyService;
 
-	@ApiOperation(value = "설문조사 응답 조회", notes = "설문조사 응답을 조회합니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "serveyId", value = "설문조사 ID", required = true, dataType = "long", paramType = "path")
-	})
-	@GetMapping(value = "/servey/{serveyId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ServeyResponse> survey(@PathVariable @NotNull Long serveyId) {
-		return ResponseEntity.ok(serveyService.servey(serveyId));
-	}
-
 	@ApiOperation(value = "설문조사 응답 조회", notes = "설문 응답 항목의 이름과 응답 값을 기반으로 조회합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "answer", value = "응답", dataType = "string", paramType = "query"),
@@ -67,16 +58,25 @@ public class ServeyController extends ApiController {
 		@PageableDefault(sort = {"id"}) Pageable pageable,
 		@RequestParam(required = false) String name,
 		@RequestParam(required = false) String answer) {
-		return ResponseEntity.ok(serveyService.servey(pageable, name, answer));
+		return ResponseEntity.ok(serveyService.servey(pageable, name));
 	}
 
 	@ApiOperation(value = "설문조사 응답 제출", notes = "설문조사 응답을 제출합니다.")
 	@PatchMapping(value = "/servey/{serveyId}/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> submit(
 		@PathVariable @NotNull Long serveyId,
-		@Valid @RequestBody List<AnswerRequest> answerRequest) {
-		serveyService.submit(serveyId, answerRequest);
+		@Valid @RequestBody List<QuestionReplyRequest> questionReplyRequest) {
+		serveyService.submit(serveyId, questionReplyRequest);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@ApiOperation(value = "설문조사 조회", notes = "설문조사 응답을 조회합니다.")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "serveyId", value = "설문조사 ID", required = true, dataType = "long", paramType = "path")
+	})
+	@GetMapping(value = "/servey/{serveyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ServeyResponse> survey(@PathVariable @NotNull Long serveyId) {
+		return ResponseEntity.ok(serveyService.servey(serveyId));
 	}
 
 	@ApiOperation(value = "설문조사 생성", notes = "설문조사를 생성합니다.")

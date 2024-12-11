@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import com.onboarding.common.validation.Type;
+import com.onboarding.servey.domain.Question;
+import com.onboarding.servey.model.QuestionType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,4 +37,13 @@ public class QuestionRequest {
 	@ApiModelProperty(notes = "선택할 수 있는 후보")
 	@Valid
 	private List<OptionRequest> options;
+
+	public Question of() {
+		return Question.builder()
+			.name(name)
+			.description(description)
+			.type(QuestionType.of(type))
+			.required(required)
+			.build();
+	}
 }

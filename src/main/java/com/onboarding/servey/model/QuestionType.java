@@ -1,4 +1,4 @@
-package com.onboarding.servey.domain;
+package com.onboarding.servey.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

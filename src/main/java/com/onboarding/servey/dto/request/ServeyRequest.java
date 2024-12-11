@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.onboarding.servey.domain.Servey;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -26,8 +28,14 @@ public class ServeyRequest {
 
 	@ApiModelProperty(notes = "설문 받을 항목")
 	@Size(min = 1, max = 10, message = "설문 받을 항목은 1개 ~ 10개까지 포함 할 수 있습니다.")
-
 	@Valid
 	private List<QuestionRequest> questions;
+
+	public Servey of() {
+		return Servey.builder()
+			.name(name)
+			.description(description)
+			.build();
+	}
 }
 

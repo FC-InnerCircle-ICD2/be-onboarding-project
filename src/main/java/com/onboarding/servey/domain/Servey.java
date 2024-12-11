@@ -9,9 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.onboarding.common.domain.BaseEntity;
-import com.onboarding.servey.dto.request.ServeyRequest;
+import com.onboarding.common.exception.BaseException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,7 +29,6 @@ public class Servey extends BaseEntity {
 	@Column(nullable = false)
 	private String description;
 
-	@JsonManagedReference
 	@OneToMany(mappedBy = "servey", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Question> questions = new ArrayList<>();
 
@@ -45,21 +43,14 @@ public class Servey extends BaseEntity {
 		question.setServey(this);
 	}
 
-	public static Servey of(ServeyRequest serveyRequest) {
-		return Servey.builder()
-			.name(serveyRequest.getName())
-			.description(serveyRequest.getDescription())
-			.build();
+	public void edit(String name, String description) {
+		this.name = name;
+		this.description = description;
 	}
 
-	public ServeyEditor.ServeyEditorBuilder toEditor() {
-		return ServeyEditor.builder()
-			.name(name)
-			.description(description);
-	}
-
-	public void edit(ServeyEditor serveyEditor) {
-		name = serveyEditor.getName();
-		description = serveyEditor.getDescription();
+	public void validate() {
+		if (questions.isEmpty()) {
+			throw new BaseException("설문 받을 항목은 1개 이상이어야 합니다.");
+		}
 	}
 }
