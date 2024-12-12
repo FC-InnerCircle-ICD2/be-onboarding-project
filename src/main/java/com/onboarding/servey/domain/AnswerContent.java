@@ -17,4 +17,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AnswerContent extends BaseEntity {
 
+	public abstract void validate(boolean required);
 }

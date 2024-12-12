@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onboarding.common.controller.ApiController;
 import com.onboarding.servey.dto.request.OptionRequest;
-import com.onboarding.servey.dto.request.QuestionRequest;
 import com.onboarding.servey.dto.request.QuestionReplyRequest;
+import com.onboarding.servey.dto.request.QuestionRequest;
 import com.onboarding.servey.dto.request.ServeyRequest;
+import com.onboarding.servey.dto.response.QuestionReplyResponse;
 import com.onboarding.servey.dto.response.ServeyResponse;
 import com.onboarding.servey.service.ServeyService;
 
@@ -50,15 +50,13 @@ public class ServeyController extends ApiController {
 
 	@ApiOperation(value = "설문조사 응답 조회", notes = "설문 응답 항목의 이름과 응답 값을 기반으로 조회합니다.")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "answer", value = "응답", dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "name", value = "설문 받을 항목 이름", dataType = "string", paramType = "query")
+		@ApiImplicitParam(name = "query", value = "설문 받을 항목 이름 및 응답", dataType = "string", paramType = "query")
 	})
 	@GetMapping(value = "/servey", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<ServeyResponse>> survey(
+	public ResponseEntity<List<QuestionReplyResponse>> survey(
 		@PageableDefault(sort = {"id"}) Pageable pageable,
-		@RequestParam(required = false) String name,
-		@RequestParam(required = false) String answer) {
-		return ResponseEntity.ok(serveyService.servey(pageable, name));
+		@RequestParam(required = false) String query) {
+		return ResponseEntity.ok(serveyService.servey(pageable, query));
 	}
 
 	@ApiOperation(value = "설문조사 응답 제출", notes = "설문조사 응답을 제출합니다.")

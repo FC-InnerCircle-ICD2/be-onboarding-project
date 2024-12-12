@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AnswerContentMultiRequest extends AnswerRequest {
 
-	private List<String> optionId;
+	private List<String> optionIds;
 
 	public AnswerContentMultiRequest(QuestionType type, List<String> optionId) {
 		super(type);
-		this.optionId = optionId;
+		this.optionIds = optionId;
 	}
 
 	@Override
 	public AnswerContent convertToAnswerRequest() {
 		return AnswerContentMulti.builder()
-			.optionId(optionId)
+			.optionId(optionIds)
 			.build();
 	}
 }

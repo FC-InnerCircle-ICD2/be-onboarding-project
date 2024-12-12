@@ -6,7 +6,11 @@ import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import com.onboarding.common.converter.LongListConverter;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.util.CollectionUtils;
+
+import com.onboarding.common.converter.StringListConverter;
+import com.onboarding.common.exception.BaseException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,11 +23,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AnswerContentMulti extends AnswerContent {
 
-	@Convert(converter = LongListConverter.class)
-	private List<String> optionId;
+	@Convert(converter = StringListConverter.class)
+	private List<String> optionIds;
 
 	@Builder
 	public AnswerContentMulti(List<String> optionId) {
-		this.optionId = optionId;
+		this.optionIds = optionId;
+	}
+
+	@Override
+	public void validate(boolean required) {
+		if (required && CollectionUtils.isEmpty(optionIds)) {
+			throw new BaseException("응답이 입력되지 않았습니다.");
+		}
+		for (String optionId : optionIds) {
+			if (!NumberUtils.isCreatable(optionId)) {
+				throw new BaseException("올바른 응답값이 아닙니다.");
+			}
+		}
 	}
 }

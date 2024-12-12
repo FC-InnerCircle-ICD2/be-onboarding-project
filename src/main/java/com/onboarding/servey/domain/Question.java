@@ -80,4 +80,14 @@ public class Question extends BaseEntity {
 			throw new BaseException("SINGLE_LIST(단일 선택 리스트) 또는 MULTI_LIST(다중 선택 리스트)인 경우 선택할 수 있는 후보를 포함하여야 합니다.");
 		}
 	}
+
+	public QuestionSnapShot getSnapShot() {
+		return QuestionSnapShot.builder()
+			.questionId(this.getId())
+			.name(name)
+			.description(description)
+			.type(type)
+			.required(required)
+			.build();
+	}
 }

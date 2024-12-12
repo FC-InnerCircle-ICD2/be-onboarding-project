@@ -8,7 +8,7 @@ import javax.persistence.AttributeConverter;
 
 import org.springframework.util.CollectionUtils;
 
-public class LongListConverter implements AttributeConverter<List<String>, String> {
+public class StringListConverter implements AttributeConverter<List<String>, String> {
 
 	private static final String DELIMITER = ",";
 

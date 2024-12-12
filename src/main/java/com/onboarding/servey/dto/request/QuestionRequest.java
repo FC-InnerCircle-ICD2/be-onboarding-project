@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
-import com.onboarding.common.validation.Type;
 import com.onboarding.servey.domain.Question;
 import com.onboarding.servey.model.QuestionType;
 
@@ -28,8 +27,7 @@ public class QuestionRequest {
 
 	@ApiModelProperty(notes = "항목 입력 형태", example = "SINGLE_LIST", required = true,
 		allowableValues = "SHORT_TYPE, LONG_TYPE, SINGLE_LIST, MULTI_LIST", dataType = "string")
-	@Type
-	private String type;
+	private QuestionType type;
 
 	@ApiModelProperty(notes = "항목 필수 여부", example = "true", required = true, dataType = "boolean")
 	private boolean required;
@@ -42,7 +40,7 @@ public class QuestionRequest {
 		return Question.builder()
 			.name(name)
 			.description(description)
-			.type(QuestionType.of(type))
+			.type(type)
 			.required(required)
 			.build();
 	}

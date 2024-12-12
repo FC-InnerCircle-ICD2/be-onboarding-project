@@ -1,6 +1,7 @@
 package com.onboarding.servey.domain;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,15 +20,21 @@ import lombok.NoArgsConstructor;
 public class Answer extends BaseEntity {
 
 	private Long serveyId;
-	private Long questionId;
+
+	@Embedded
+	private QuestionSnapShot questionSnapShot;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	private AnswerContent content;
 
 	@Builder
-	public Answer(Long serveyId, Long questionId, AnswerContent content) {
+	public Answer(Long serveyId, QuestionSnapShot questionSnapShot, AnswerContent content) {
 		this.serveyId = serveyId;
-		this.questionId = questionId;
+		this.questionSnapShot = questionSnapShot;
 		this.content = content;
+	}
+
+	public void validate() {
+		content.validate(questionSnapShot.isRequired());
 	}
 }
